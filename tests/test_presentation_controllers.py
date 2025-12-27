@@ -419,6 +419,89 @@ class TestResultsController:
             assert data["average_score"] == 80.0
             assert data["total_results"] == 3
 
+    def test_get_result_analysis_report(self, temp_db):
+        """결과 분석 리포트 조회 테스트"""
+        from backend.presentation.controllers.results import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+        from backend.infrastructure.repositories.test_repository import SqliteTestRepository
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.domain.entities.result import Result
+        from backend.domain.entities.test import Test
+        from backend.domain.entities.user import User
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+
+            # 테스트 및 결과 생성
+            test_repo = SqliteTestRepository(db=db)
+            result_repo = SqliteResultRepository(db=db)
+
+            questions = [
+                Question(id=1, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                        question_text="Q1", choices=["A", "B", "C", "D"], correct_answer="A",
+                        explanation="Exp1", difficulty=1),
+                Question(id=2, level=JLPTLevel.N5, question_type=QuestionType.GRAMMAR,
+                        question_text="Q2", choices=["A", "B", "C", "D"], correct_answer="B",
+                        explanation="Exp2", difficulty=2),
+                Question(id=3, level=JLPTLevel.N5, question_type=QuestionType.READING,
+                        question_text="Q3", choices=["A", "B", "C", "D"], correct_answer="C",
+                        explanation="Exp3", difficulty=3)
+            ]
+            test = Test(id=0, title="N5 Test", level=JLPTLevel.N5, questions=questions, time_limit_minutes=30)
+            saved_test = test_repo.save(test)
+
+            # 결과 생성 (문제 유형별 분석 포함)
+            question_type_analysis = {
+                "vocabulary": {"correct": 1, "total": 1},
+                "grammar": {"correct": 0, "total": 1},
+                "reading": {"correct": 1, "total": 1}
+            }
+            result = Result(
+                id=0, test_id=saved_test.id, user_id=saved_user.id,
+                score=66.67, assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N5,
+                correct_answers_count=2, total_questions_count=3, time_taken_minutes=20,
+                question_type_analysis=question_type_analysis
+            )
+            saved_result = result_repo.save(result)
+
+            # 리포트 조회
+            response = client.get(f"/{saved_result.id}/report")
+            assert response.status_code == 200
+            data = response.json()
+            
+            # 리포트 구조 검증
+            assert "summary" in data
+            assert "question_type_analysis" in data
+            assert "strengths" in data
+            assert "weaknesses" in data
+            assert "recommendations" in data
+            assert "improvement_areas" in data
+            
+            # 요약 정보 검증
+            assert data["summary"]["score"] == 66.67
+            assert data["summary"]["performance_level"] == "needs_improvement"
+            assert data["summary"]["is_passed"] is False
+            
+            # 강점/약점 분석 검증
+            assert len(data["strengths"]) > 0
+            assert len(data["weaknesses"]) > 0
+            assert "grammar" in [w["type"] for w in data["weaknesses"]]
+
 
 class TestTestsController:
     """Tests 컨트롤러 테스트"""

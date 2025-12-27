@@ -145,3 +145,120 @@ async def get_user_average_score(user_id: int):
         "average_score": round(avg_score, 2),
         "total_results": len(repo.find_by_user_id(user_id))
     }
+
+@router.get("/{result_id}/report")
+async def get_result_analysis_report(result_id: int):
+    """결과 분석 리포트 생성
+    
+    테스트 결과를 기반으로 상세한 분석 리포트를 생성합니다.
+    리포트에는 다음이 포함됩니다:
+    - 전체 성취도 요약
+    - 문제 유형별 상세 분석
+    - 강점/약점 분석
+    - 개선 방향 제시
+    - 학습 추천
+    """
+    repo = get_result_repository()
+    result = repo.find_by_id(result_id)
+
+    if not result:
+        raise HTTPException(status_code=404, detail="결과를 찾을 수 없습니다")
+
+    # 리포트 생성
+    report = _generate_analysis_report(result)
+    return report
+
+def _generate_analysis_report(result: Result) -> Dict:
+    """결과 분석 리포트 생성"""
+    # 요약 정보
+    summary = {
+        "score": result.score,
+        "correct_answers_count": result.correct_answers_count,
+        "total_questions_count": result.total_questions_count,
+        "accuracy_percentage": result.get_accuracy_percentage(),
+        "performance_level": result.get_performance_level(),
+        "is_passed": result.is_passed(),
+        "time_taken_minutes": result.time_taken_minutes,
+        "time_efficiency": result.get_time_efficiency(),
+        "assessed_level": result.assessed_level.value,
+        "recommended_level": result.recommended_level.value,
+        "level_progression": result.get_level_progression()
+    }
+
+    # 문제 유형별 상세 분석
+    question_type_analysis = {}
+    for q_type, stats in result.question_type_analysis.items():
+        accuracy = (stats["correct"] / stats["total"] * 100) if stats["total"] > 0 else 0
+        question_type_analysis[q_type] = {
+            "correct": stats["correct"],
+            "total": stats["total"],
+            "accuracy": round(accuracy, 2),
+            "performance": "excellent" if accuracy >= 85 else ("good" if accuracy >= 70 else "needs_improvement")
+        }
+
+    # 강점/약점 분석
+    strengths = []
+    weaknesses = []
+    improvement_areas = []
+
+    for q_type, analysis in question_type_analysis.items():
+        if analysis["performance"] == "excellent":
+            strengths.append({
+                "type": q_type,
+                "accuracy": analysis["accuracy"],
+                "message": f"{q_type.capitalize()} 영역에서 우수한 성과를 보였습니다."
+            })
+        elif analysis["performance"] == "needs_improvement":
+            weaknesses.append({
+                "type": q_type,
+                "accuracy": analysis["accuracy"],
+                "message": f"{q_type.capitalize()} 영역에서 개선이 필요합니다."
+            })
+            improvement_areas.append({
+                "type": q_type,
+                "current_accuracy": analysis["accuracy"],
+                "target_accuracy": 70.0,
+                "recommendation": f"{q_type.capitalize()} 문제를 더 많이 연습하세요."
+            })
+
+    # 학습 추천
+    recommendations = []
+    if result.score < 70:
+        recommendations.append({
+            "priority": "high",
+            "category": "overall",
+            "message": "기본 문법과 어휘를 복습하고 정기적으로 연습하세요."
+        })
+    elif result.score < 85:
+        recommendations.append({
+            "priority": "medium",
+            "category": "improvement",
+            "message": "약점 영역에 집중하고 더 복잡한 문장 구조를 연습하세요."
+        })
+    else:
+        recommendations.append({
+            "priority": "low",
+            "category": "maintenance",
+            "message": "우수한 성과를 유지하고 더 높은 레벨의 콘텐츠에 도전하세요."
+        })
+
+    # 약점 영역별 추천 추가
+    for area in improvement_areas:
+        recommendations.append({
+            "priority": "high",
+            "category": area["type"],
+            "message": area["recommendation"]
+        })
+
+    # 상세 피드백
+    feedback = result.get_detailed_feedback()
+
+    return {
+        "summary": summary,
+        "question_type_analysis": question_type_analysis,
+        "strengths": strengths,
+        "weaknesses": weaknesses,
+        "improvement_areas": improvement_areas,
+        "recommendations": recommendations,
+        "feedback": feedback
+    }
