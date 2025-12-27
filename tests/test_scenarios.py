@@ -120,41 +120,84 @@ class TestPostScenarios:
 
     def test_scenario_post_crud_flow(self, app_client):
         """시나리오: 게시글 CRUD 플로우"""
-        # 1. 게시글 목록 조회
+        # 1. 사용자 생성 (게시글 작성자)
+        import time
+        unique_email = f"author_{int(time.time())}@example.com"
+        unique_username = f"author_{int(time.time())}"
+        
+        user_response = app_client.post(
+            "/api/v1/users/",
+            json={
+                "email": unique_email,
+                "username": unique_username,
+                "target_level": "N5"
+            }
+        )
+        assert user_response.status_code == 200
+        user_data = user_response.json()
+        author_id = user_data["data"]["id"]
+
+        # 2. 게시글 목록 조회 (빈 목록)
         response = app_client.get("/api/v1/posts/")
         assert response.status_code == 200
         data = response.json()
-        assert "message" in data
-        assert "게시글 목록 조회" in data["message"]
+        assert isinstance(data, list)
+        assert len(data) == 0
 
-        # 2. 게시글 생성
-        response = app_client.post("/api/v1/posts/")
-        assert response.status_code == 200
+        # 3. 게시글 생성
+        response = app_client.post(
+            "/api/v1/posts/",
+            json={
+                "title": "Test Post",
+                "content": "This is a test post content",
+                "author_id": author_id,
+                "published": False
+            }
+        )
+        assert response.status_code == 201
         data = response.json()
-        assert "message" in data
-        assert "게시글 생성" in data["message"]
+        assert data["title"] == "Test Post"
+        assert data["content"] == "This is a test post content"
+        assert data["author_id"] == author_id
+        post_id = data["id"]
 
-        # 3. 특정 게시글 조회
-        post_id = 1
+        # 4. 특정 게시글 조회
         response = app_client.get(f"/api/v1/posts/{post_id}")
         assert response.status_code == 200
         data = response.json()
-        assert "message" in data
-        assert str(post_id) in data["message"]
+        assert data["id"] == post_id
+        assert data["title"] == "Test Post"
 
-        # 4. 게시글 수정
-        response = app_client.put(f"/api/v1/posts/{post_id}")
+        # 5. 게시글 목록 조회 (게시글 포함)
+        response = app_client.get("/api/v1/posts/")
         assert response.status_code == 200
         data = response.json()
-        assert "message" in data
-        assert str(post_id) in data["message"]
+        assert isinstance(data, list)
+        assert len(data) == 1
+        assert data[0]["id"] == post_id
 
-        # 5. 게시글 삭제
+        # 6. 게시글 수정
+        response = app_client.put(
+            f"/api/v1/posts/{post_id}",
+            json={
+                "title": "Updated Post",
+                "content": "Updated content",
+                "published": True
+            }
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["title"] == "Updated Post"
+        assert data["content"] == "Updated content"
+        assert data["published"] is True
+
+        # 7. 게시글 삭제
         response = app_client.delete(f"/api/v1/posts/{post_id}")
-        assert response.status_code == 200
-        data = response.json()
-        assert "message" in data
-        assert str(post_id) in data["message"]
+        assert response.status_code == 204
+
+        # 8. 삭제 확인
+        response = app_client.get(f"/api/v1/posts/{post_id}")
+        assert response.status_code == 404
 
 
 class TestIntegratedScenarios:

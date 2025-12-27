@@ -119,6 +119,20 @@ class Database:
                 )
             """)
 
+            # 게시글 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS posts (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    author_id INTEGER NOT NULL,
+                    published BOOLEAN DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (author_id) REFERENCES users(id)
+                )
+            """)
+
             conn.commit()
 
 
