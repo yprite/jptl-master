@@ -37,6 +37,11 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 - **푸시 자동화**: 모든 커밋 후 즉시 원격 저장소에 푸시합니다
   - `git push origin <브랜치명>` 형식으로 푸시합니다
   - 첫 푸시 시 `-u` 옵션을 사용하여 upstream을 설정합니다
+- **PR 자동 생성**: 작업 완료 후 자동으로 Pull Request를 생성합니다
+  - GitHub CLI (`gh`)를 사용하여 PR 생성 (`gh pr create --title "type(scope): subject" --body "작업 설명"`)
+  - PR은 기본적으로 `develop` 브랜치로 향하도록 설정합니다
+  - PR 제목은 커밋 메시지 형식을 따릅니다
+  - PR 본문에는 작업 내용, 변경사항, 테스트 결과를 포함합니다
 - **작업 완료 전 브랜치 유지**: 작업이 완전히 끝날 때까지 브랜치를 유지합니다
 
 ## 코드 품질 및 스타일
@@ -149,6 +154,11 @@ footer
    - 최종 테스트 실행 및 통과 확인
    - 모든 변경사항 커밋 및 푸시 확인
    - 브랜치 상태 확인
+   - Pull Request 자동 생성
+     - GitHub CLI 사용: `gh pr create --title "type(scope): subject" --body "작업 설명 및 변경사항" --base develop`
+     - PR 제목은 마지막 커밋 메시지 형식을 따릅니다
+     - PR 본문에는 작업 내용, 주요 변경사항, 테스트 결과를 포함합니다
+     - PR 생성 후 PR URL을 사용자에게 알립니다
 
 ### 15. 리뷰 및 피드백 시 준수사항
 - DEVELOPMENT_GUIDELINES.md 위반 사항 즉시 지적
