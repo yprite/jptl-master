@@ -166,70 +166,221 @@ class TestUsersController:
 class TestPostsController:
     """Posts 컨트롤러 테스트"""
 
-    def test_get_posts(self):
-        """게시글 목록 조회 테스트"""
+    @pytest.fixture
+    def temp_db(self):
+        """임시 데이터베이스 파일 생성"""
+        with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as f:
+            db_path = f.name
+        yield db_path
+        if os.path.exists(db_path):
+            os.unlink(db_path)
+
+    @pytest.fixture
+    def test_user(self, temp_db):
+        """테스트용 사용자 생성"""
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db)
+        user = User(
+            id=None,
+            email="author@example.com",
+            username="author",
+            target_level=JLPTLevel.N5
+        )
+        return repo.save(user)
+
+    def test_get_posts_empty(self, temp_db):
+        """게시글 목록 조회 테스트 (빈 목록)"""
         from backend.presentation.controllers.posts import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.get("/")
-        assert response.status_code == 200
-        assert "게시글 목록 조회" in response.json()["message"]
 
-    def test_create_post(self):
-        """게시글 생성 테스트"""
+        with patch('backend.presentation.controllers.posts.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/")
+            assert response.status_code == 200
+            data = response.json()
+            assert isinstance(data, list)
+            assert len(data) == 0
+
+    def test_create_post_success(self, temp_db, test_user):
+        """게시글 생성 성공 테스트"""
         from backend.presentation.controllers.posts import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.post("/")
-        assert response.status_code == 200
-        assert "게시글 생성" in response.json()["message"]
 
-    def test_get_post(self):
-        """특정 게시글 조회 테스트"""
+        with patch('backend.presentation.controllers.posts.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.post(
+                "/",
+                json={
+                    "title": "Test Post",
+                    "content": "This is a test post content",
+                    "author_id": test_user.id,
+                    "published": False
+                }
+            )
+
+            assert response.status_code == 201
+            data = response.json()
+            assert data["title"] == "Test Post"
+            assert data["content"] == "This is a test post content"
+            assert data["author_id"] == test_user.id
+            assert data["published"] is False
+            assert "id" in data
+
+    def test_get_post_success(self, temp_db, test_user):
+        """특정 게시글 조회 성공 테스트"""
         from backend.presentation.controllers.posts import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.post_repository import SqlitePostRepository
+        from backend.domain.entities.post import Post
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.get("/1")
-        assert response.status_code == 200
-        assert "게시글 1 조회" in response.json()["message"]
 
-    def test_update_post(self):
-        """게시글 수정 테스트"""
+        with patch('backend.presentation.controllers.posts.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 게시글 생성
+            post_repo = SqlitePostRepository(db)
+            post = Post(
+                id=None,
+                title="Test Post",
+                content="Test content",
+                author_id=test_user.id,
+                published=True
+            )
+            saved_post = post_repo.save(post)
+
+            # 게시글 조회
+            response = client.get(f"/{saved_post.id}")
+            assert response.status_code == 200
+            data = response.json()
+            assert data["id"] == saved_post.id
+            assert data["title"] == "Test Post"
+            assert data["content"] == "Test content"
+
+    def test_get_post_not_found(self, temp_db):
+        """게시글 조회 실패 테스트 (존재하지 않는 게시글)"""
         from backend.presentation.controllers.posts import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.put("/1")
-        assert response.status_code == 200
-        assert "게시글 1 수정" in response.json()["message"]
 
-    def test_delete_post(self):
-        """게시글 삭제 테스트"""
+        with patch('backend.presentation.controllers.posts.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/999")
+            assert response.status_code == 404
+            assert "게시글을 찾을 수 없습니다" in response.json()["detail"]
+
+    def test_update_post_success(self, temp_db, test_user):
+        """게시글 수정 성공 테스트"""
         from backend.presentation.controllers.posts import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.post_repository import SqlitePostRepository
+        from backend.domain.entities.post import Post
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.delete("/1")
-        assert response.status_code == 200
-        assert "게시글 1 삭제" in response.json()["message"]
+
+        with patch('backend.presentation.controllers.posts.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 게시글 생성
+            post_repo = SqlitePostRepository(db)
+            post = Post(
+                id=None,
+                title="Original Title",
+                content="Original content",
+                author_id=test_user.id,
+                published=False
+            )
+            saved_post = post_repo.save(post)
+
+            # 게시글 수정
+            response = client.put(
+                f"/{saved_post.id}",
+                json={
+                    "title": "Updated Title",
+                    "content": "Updated content",
+                    "published": True
+                }
+            )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["title"] == "Updated Title"
+            assert data["content"] == "Updated content"
+            assert data["published"] is True
+
+    def test_delete_post_success(self, temp_db, test_user):
+        """게시글 삭제 성공 테스트"""
+        from backend.presentation.controllers.posts import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.post_repository import SqlitePostRepository
+        from backend.domain.entities.post import Post
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.posts.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 게시글 생성
+            post_repo = SqlitePostRepository(db)
+            post = Post(
+                id=None,
+                title="Test Post",
+                content="Test content",
+                author_id=test_user.id,
+                published=False
+            )
+            saved_post = post_repo.save(post)
+
+            # 게시글 삭제
+            response = client.delete(f"/{saved_post.id}")
+            assert response.status_code == 204
+
+            # 삭제 확인
+            response = client.get(f"/{saved_post.id}")
+            assert response.status_code == 404
 
 
 class TestResultsController:
