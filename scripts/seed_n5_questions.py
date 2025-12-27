@@ -177,6 +177,104 @@ def create_n5_sample_questions():
             explanation="Aさんは「これをください」と言っています。これは「これを買います」という意味です。",
             difficulty=2
         ),
+        
+        # 추가 어휘 문제
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.VOCABULARY,
+            question_text="「学校」の読み方は何ですか？",
+            choices=["がっこう", "がくこう", "がっこ", "がくこ"],
+            correct_answer="がっこう",
+            explanation="「学校」は「がっこう」と読みます。教育機関を意味します。",
+            difficulty=1
+        ),
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.VOCABULARY,
+            question_text="「友達」の読み方は何ですか？",
+            choices=["ともだち", "とんだち", "ともたち", "とんたち"],
+            correct_answer="ともだち",
+            explanation="「友達」は「ともだち」と読みます。친구를 의미합니다。",
+            difficulty=1
+        ),
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.VOCABULARY,
+            question_text="「見る」の意味は何ですか？",
+            choices=["듣다", "보다", "읽다", "쓰다"],
+            correct_answer="보다",
+            explanation="「見る」は「보다」という意味です。視覚で何かを認識する動作を表します。",
+            difficulty=1
+        ),
+        
+        # 추가 문법 문제
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.GRAMMAR,
+            question_text="私は毎日6時___起きます。",
+            choices=["を", "が", "に", "で"],
+            correct_answer="に",
+            explanation="「に」は時間を表す助詞です。「6時に起きます」は「6시에 일어납니다」という意味です。",
+            difficulty=2
+        ),
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.GRAMMAR,
+            question_text="電車___会社に行きます。",
+            choices=["を", "が", "に", "で"],
+            correct_answer="で",
+            explanation="「で」は手段や方法を表す助詞です。「電車で行きます」は「전철로 갑니다」という意味です。",
+            difficulty=2
+        ),
+        
+        # 추가 독해 문제
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.READING,
+            question_text="私は毎日図書館で勉強します。図書館は静かで、集中できます。\n\n筆者はなぜ図書館で勉強しますか？",
+            choices=["本が多いから", "静かで集中できるから", "友達がいるから", "近いから"],
+            correct_answer="静かで集中できるから",
+            explanation="本文によると、図書館は静かで、集中できるので、筆者は図書館で勉強します。",
+            difficulty=2
+        ),
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.READING,
+            question_text="今日は土曜日です。私は公園で散歩をします。天気がいいです。\n\n筆者はどこで散歩をしますか？",
+            choices=["学校", "図書館", "公園", "家"],
+            correct_answer="公園",
+            explanation="本文によると、筆者は公園で散歩をします。",
+            difficulty=1
+        ),
+        
+        # 추가 청해 문제
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.LISTENING,
+            question_text="（会話）\nA: 今何時ですか？\nB: 3時です。\nA: ありがとうございます。\n\n今何時ですか？",
+            choices=["2時", "3時", "4時", "5時"],
+            correct_answer="3時",
+            explanation="Bさんは「3時です」と言っています。",
+            difficulty=1
+        ),
+        Question(
+            id=0,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.LISTENING,
+            question_text="（会話）\nA: どこへ行きますか？\nB: 図書館へ行きます。\nA: 一緒に行きましょう。\n\nBさんはどこへ行きますか？",
+            choices=["学校", "図書館", "公園", "家"],
+            correct_answer="図書館",
+            explanation="Bさんは「図書館へ行きます」と言っています。",
+            difficulty=1
+        ),
     ]
     
     return questions
