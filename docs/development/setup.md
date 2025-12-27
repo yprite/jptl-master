@@ -8,6 +8,61 @@
 - Git
 - VS Code 또는 Cursor (권장)
 
+## Git 저장소 설정
+
+### 1. Git 초기화
+```bash
+# 프로젝트 루트에서 Git 저장소 초기화
+git init
+
+# 기본 브랜치 설정 (main)
+git checkout -b main
+
+# 개발 브랜치 생성
+git checkout -b develop
+```
+
+### 2. Git 사용자 정보 설정
+```bash
+# 사용자 정보 설정 (실제 정보로 변경 필요)
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
+```
+
+### 3. .gitignore 파일 생성
+프로젝트 루트에 `.gitignore` 파일을 생성하여 불필요한 파일들을 제외합니다.
+
+### 4. 초기 커밋
+```bash
+# 모든 파일 추가
+git add .
+
+# 초기 커밋
+git commit -m "chore: 프로젝트 초기 설정"
+```
+
+### 5. 원격 리포지토리 연결
+```bash
+# GitHub 리포지토리 연결 (실제 URL로 변경)
+git remote add origin https://github.com/username/repository.git
+
+# 브랜치 푸시
+git push -u origin main
+git push -u origin develop
+```
+
+### 6. 브랜치 전략 확인
+```bash
+# 브랜치 상태 확인
+git branch -a
+
+# 결과 예시:
+# * develop
+#   main
+#   remotes/origin/develop
+#   remotes/origin/main
+```
+
 ## 프로젝트 클론 및 설정
 
 ```bash
