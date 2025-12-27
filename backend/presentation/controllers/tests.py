@@ -2,16 +2,18 @@
 JLPT 시험 관리 API 컨트롤러
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Request
 from pydantic import BaseModel
 from typing import Optional, List, Dict
 from datetime import datetime
 
 from backend.domain.entities.test import Test
+from backend.domain.entities.user import User
 from backend.domain.value_objects.jlpt import JLPTLevel, TestStatus, QuestionType
 from backend.infrastructure.repositories.test_repository import SqliteTestRepository
 from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
 from backend.infrastructure.config.database import get_database
+from backend.presentation.controllers.auth import get_current_user
 
 router = APIRouter()
 
@@ -24,10 +26,9 @@ class TestCreateRequest(BaseModel):
     question_types: Optional[List[QuestionType]] = None  # None이면 모든 유형, 지정하면 해당 유형만
 
 class TestStartRequest(BaseModel):
-    user_id: int  # TODO: 세션 인증 구현 후 제거
+    pass  # user_id는 세션에서 가져옴
 
 class TestSubmitRequest(BaseModel):
-    user_id: int  # TODO: 세션 인증 구현 후 제거
     answers: Dict[int, str]  # question_id -> answer
 
 class QuestionResponse(BaseModel):
@@ -227,7 +228,11 @@ async def create_test(request: TestCreateRequest):
     )
 
 @router.post("/{test_id}/start", response_model=TestResponse)
-async def start_test(test_id: int, request: TestStartRequest):
+async def start_test(
+    test_id: int,
+    request: TestStartRequest,
+    current_user: User = Depends(get_current_user)
+):
     """시험 시작"""
     repo = get_test_repository()
     test = repo.find_by_id(test_id)
@@ -263,7 +268,11 @@ async def start_test(test_id: int, request: TestStartRequest):
     )
 
 @router.post("/{test_id}/submit")
-async def submit_test(test_id: int, request: TestSubmitRequest):
+async def submit_test(
+    test_id: int,
+    request: TestSubmitRequest,
+    current_user: User = Depends(get_current_user)
+):
     """시험 제출"""
     from backend.infrastructure.repositories.result_repository import SqliteResultRepository
     from backend.domain.entities.result import Result
@@ -278,9 +287,7 @@ async def submit_test(test_id: int, request: TestSubmitRequest):
     if not test:
         raise HTTPException(status_code=404, detail="시험을 찾을 수 없습니다")
 
-    user = user_repo.find_by_id(request.user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다")
+    user = current_user
 
     try:
         # 테스트 완료 처리
@@ -315,7 +322,7 @@ async def submit_test(test_id: int, request: TestSubmitRequest):
         result = Result(
             id=0,
             test_id=test.id,
-            user_id=request.user_id,
+            user_id=current_user.id,
             score=score,
             assessed_level=assessed_level,
             recommended_level=recommended_level,
