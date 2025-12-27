@@ -5,7 +5,9 @@ DDD(Domain-Driven Design) 기반으로 구현
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from datetime import datetime
+import secrets
 
 from backend.presentation.controllers import router as api_router
 from backend.infrastructure.config.database import get_database
@@ -17,6 +19,14 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
+)
+
+# 세션 미들웨어 설정
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=secrets.token_urlsafe(32),  # 세션 암호화를 위한 시크릿 키
+    max_age=86400,  # 세션 유효 기간: 24시간
+    same_site="lax"
 )
 
 # CORS 미들웨어 설정
