@@ -3,25 +3,291 @@ JLPT 시험 관리 API 컨트롤러
 """
 
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import Optional, List, Dict
+from datetime import datetime
+
+from backend.domain.entities.test import Test
+from backend.domain.value_objects.jlpt import JLPTLevel, TestStatus
+from backend.infrastructure.repositories.test_repository import SqliteTestRepository
+from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+from backend.infrastructure.config.database import get_database
 
 router = APIRouter()
 
-@router.get("/")
-async def get_tests():
-    """시험 목록 조회"""
-    raise HTTPException(status_code=404, detail="시험 관리 API가 아직 구현되지 않았습니다")
+# Pydantic 요청/응답 모델
+class TestCreateRequest(BaseModel):
+    title: str
+    level: JLPTLevel
+    question_count: int = 20
+    time_limit_minutes: int = 60
 
-@router.get("/{test_id}")
+class TestStartRequest(BaseModel):
+    user_id: int  # TODO: 세션 인증 구현 후 제거
+
+class TestSubmitRequest(BaseModel):
+    user_id: int  # TODO: 세션 인증 구현 후 제거
+    answers: Dict[int, str]  # question_id -> answer
+
+class QuestionResponse(BaseModel):
+    id: int
+    level: str
+    question_type: str
+    question_text: str
+    choices: List[str]
+    difficulty: int
+
+class TestResponse(BaseModel):
+    id: int
+    title: str
+    level: str
+    status: str
+    time_limit_minutes: int
+    questions: List[QuestionResponse]
+    started_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+
+class TestListResponse(BaseModel):
+    id: int
+    title: str
+    level: str
+    status: str
+    time_limit_minutes: int
+    question_count: int
+
+# 의존성 주입 함수
+def get_test_repository() -> SqliteTestRepository:
+    """테스트 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteTestRepository(db)
+
+def get_question_repository() -> SqliteQuestionRepository:
+    """문제 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteQuestionRepository(db)
+
+@router.get("/", response_model=List[TestListResponse])
+async def get_tests(level: Optional[JLPTLevel] = None):
+    """시험 목록 조회"""
+    repo = get_test_repository()
+
+    if level:
+        tests = repo.find_by_level(level)
+    else:
+        tests = repo.find_all()
+
+    return [
+        TestListResponse(
+            id=test.id,
+            title=test.title,
+            level=test.level.value,
+            status=test.status.value,
+            time_limit_minutes=test.time_limit_minutes,
+            question_count=len(test.questions)
+        )
+        for test in tests
+    ]
+
+@router.get("/{test_id}", response_model=TestResponse)
 async def get_test(test_id: int):
     """특정 시험 정보 조회"""
-    raise HTTPException(status_code=404, detail="시험 관리 API가 아직 구현되지 않았습니다")
+    repo = get_test_repository()
+    test = repo.find_by_id(test_id)
 
-@router.post("/{test_id}/start")
-async def start_test(test_id: int):
+    if not test:
+        raise HTTPException(status_code=404, detail="시험을 찾을 수 없습니다")
+
+    return TestResponse(
+        id=test.id,
+        title=test.title,
+        level=test.level.value,
+        status=test.status.value,
+        time_limit_minutes=test.time_limit_minutes,
+        questions=[
+            QuestionResponse(
+                id=q.id,
+                level=q.level.value,
+                question_type=q.question_type.value,
+                question_text=q.question_text,
+                choices=q.choices,
+                difficulty=q.difficulty
+            )
+            for q in test.questions
+        ],
+        started_at=test.started_at,
+        completed_at=test.completed_at
+    )
+
+@router.post("/", response_model=TestResponse)
+async def create_test(request: TestCreateRequest):
+    """새 시험 생성"""
+    question_repo = get_question_repository()
+    test_repo = get_test_repository()
+
+    # 레벨별 랜덤 문제 조회
+    questions = question_repo.find_random_by_level(request.level, limit=request.question_count)
+
+    if len(questions) < request.question_count:
+        raise HTTPException(
+            status_code=400,
+            detail=f"요청한 문제 수({request.question_count})보다 적은 문제({len(questions)})만 사용 가능합니다"
+        )
+
+    # 테스트 생성
+    test = Test(
+        id=0,
+        title=request.title,
+        level=request.level,
+        questions=questions,
+        time_limit_minutes=request.time_limit_minutes
+    )
+
+    saved_test = test_repo.save(test)
+
+    return TestResponse(
+        id=saved_test.id,
+        title=saved_test.title,
+        level=saved_test.level.value,
+        status=saved_test.status.value,
+        time_limit_minutes=saved_test.time_limit_minutes,
+        questions=[
+            QuestionResponse(
+                id=q.id,
+                level=q.level.value,
+                question_type=q.question_type.value,
+                question_text=q.question_text,
+                choices=q.choices,
+                difficulty=q.difficulty
+            )
+            for q in saved_test.questions
+        ],
+        started_at=saved_test.started_at,
+        completed_at=saved_test.completed_at
+    )
+
+@router.post("/{test_id}/start", response_model=TestResponse)
+async def start_test(test_id: int, request: TestStartRequest):
     """시험 시작"""
-    raise HTTPException(status_code=404, detail="시험 관리 API가 아직 구현되지 않았습니다")
+    repo = get_test_repository()
+    test = repo.find_by_id(test_id)
+
+    if not test:
+        raise HTTPException(status_code=404, detail="시험을 찾을 수 없습니다")
+
+    try:
+        test.start_test()
+        saved_test = repo.save(test)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    return TestResponse(
+        id=saved_test.id,
+        title=saved_test.title,
+        level=saved_test.level.value,
+        status=saved_test.status.value,
+        time_limit_minutes=saved_test.time_limit_minutes,
+        questions=[
+            QuestionResponse(
+                id=q.id,
+                level=q.level.value,
+                question_type=q.question_type.value,
+                question_text=q.question_text,
+                choices=q.choices,
+                difficulty=q.difficulty
+            )
+            for q in saved_test.questions
+        ],
+        started_at=saved_test.started_at,
+        completed_at=saved_test.completed_at
+    )
 
 @router.post("/{test_id}/submit")
-async def submit_test(test_id: int):
+async def submit_test(test_id: int, request: TestSubmitRequest):
     """시험 제출"""
-    raise HTTPException(status_code=404, detail="시험 관리 API가 아직 구현되지 않았습니다")
+    from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+    from backend.domain.entities.result import Result
+    from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+
+    db = get_database()
+    test_repo = get_test_repository()
+    result_repo = SqliteResultRepository(db=db)
+    user_repo = SqliteUserRepository(db=db)
+
+    test = test_repo.find_by_id(test_id)
+    if not test:
+        raise HTTPException(status_code=404, detail="시험을 찾을 수 없습니다")
+
+    user = user_repo.find_by_id(request.user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다")
+
+    try:
+        # 테스트 완료 처리
+        test.complete_test(request.answers)
+        saved_test = test_repo.save(test)
+
+        # 결과 분석 및 저장
+        score = saved_test.score
+        assessed_level = test.level  # 간단히 테스트 레벨을 평가 레벨로 사용
+        recommended_level = test.level  # TODO: 점수 기반 레벨 추천 로직 구현
+
+        # 문제 유형별 분석
+        question_type_analysis = {}
+        for question in test.questions:
+            q_type = question.question_type.value
+            if q_type not in question_type_analysis:
+                question_type_analysis[q_type] = {"correct": 0, "total": 0}
+            
+            question_type_analysis[q_type]["total"] += 1
+            user_answer = request.answers.get(question.id)
+            if user_answer and question.is_correct_answer(user_answer):
+                question_type_analysis[q_type]["correct"] += 1
+
+        # 소요 시간 계산
+        if test.started_at and test.completed_at:
+            time_taken_seconds = (test.completed_at - test.started_at).total_seconds()
+            time_taken = max(1, int(time_taken_seconds / 60))  # 최소 1분
+        else:
+            time_taken = test.time_limit_minutes
+
+        # Result 생성 및 저장
+        result = Result(
+            id=0,
+            test_id=test.id,
+            user_id=request.user_id,
+            score=score,
+            assessed_level=assessed_level,
+            recommended_level=recommended_level,
+            correct_answers_count=saved_test.get_correct_answers_count(),
+            total_questions_count=len(test.questions),
+            time_taken_minutes=time_taken,
+            question_type_analysis=question_type_analysis
+        )
+
+        saved_result = result_repo.save(result)
+
+        # 사용자 통계 업데이트
+        user.total_tests_taken += 1
+        user_repo.save(user)
+
+        return {
+            "success": True,
+            "data": {
+                "test_id": saved_test.id,
+                "result_id": saved_result.id,
+                "score": score,
+                "correct_answers": saved_test.get_correct_answers_count(),
+                "total_questions": len(test.questions),
+                "time_taken_minutes": time_taken,
+                "assessed_level": assessed_level.value,
+                "recommended_level": recommended_level.value,
+                "question_type_analysis": question_type_analysis,
+                "performance_level": saved_result.get_performance_level(),
+                "is_passed": saved_result.is_passed(),
+                "feedback": saved_result.get_detailed_feedback()
+            },
+            "message": "시험이 성공적으로 제출되었습니다"
+        }
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
