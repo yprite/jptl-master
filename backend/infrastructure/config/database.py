@@ -76,7 +76,9 @@ class Database:
                     status TEXT DEFAULT 'created',
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     started_at TIMESTAMP,
-                    completed_at TIMESTAMP
+                    completed_at TIMESTAMP,
+                    user_answers TEXT,
+                    score REAL
                 )
             """)
 
