@@ -174,8 +174,8 @@ class User:
         Returns:
             bool: 응시 가능 여부
         """
-        # 목표 레벨보다 높은 레벨의 시험은 응시할 수 없음
-        if test_level < self.target_level:
+        # 목표 레벨보다 어려운(높은) 레벨의 시험은 응시할 수 없음
+        if test_level > self.target_level:
             return False
         return True
 

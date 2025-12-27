@@ -148,10 +148,10 @@ class TestUser:
         user = User(id=1, email="test@example.com", username="testuser", target_level=JLPTLevel.N3)
 
         # Then
-        assert user.can_take_test(JLPTLevel.N5) is False  # 목표 레벨보다 낮은 레벨
-        assert user.can_take_test(JLPTLevel.N4) is False  # 목표 레벨보다 낮은 레벨
+        assert user.can_take_test(JLPTLevel.N5) is True   # 목표 레벨보다 쉬운 레벨
+        assert user.can_take_test(JLPTLevel.N4) is True   # 목표 레벨보다 쉬운 레벨
         assert user.can_take_test(JLPTLevel.N3) is True   # 목표 레벨
-        assert user.can_take_test(JLPTLevel.N2) is True   # 목표 레벨보다 높은 레벨
+        assert user.can_take_test(JLPTLevel.N2) is False  # 목표 레벨보다 어려운 레벨
 
     def test_get_recommended_level(self):
         """추천 학습 레벨 반환 테스트"""
@@ -195,7 +195,7 @@ class TestUser:
     def test_user_creation_with_none_id(self):
         """ID 없이 User 생성 시 None으로 설정되는지 테스트"""
         # Given & When
-        user = User(email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+        user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
 
         # Then
         assert user.id is None
@@ -207,20 +207,20 @@ class TestUser:
         """User 검증 edge case 테스트"""
         # Given - 빈 문자열이지만 공백만 있는 경우
         with pytest.raises(ValueError, match="사용자명은 비어있을 수 없습니다"):
-            User(email="test@example.com", username="   ", target_level=JLPTLevel.N5)
+            User(id=None, email="test@example.com", username="   ", target_level=JLPTLevel.N5)
 
         # Given - 이메일 형식이 잘못된 경우
         with pytest.raises(ValueError, match="올바른 이메일 형식이 아닙니다"):
-            User(email="invalid-email", username="testuser", target_level=JLPTLevel.N5)
+            User(id=None, email="invalid-email", username="testuser", target_level=JLPTLevel.N5)
 
         # Given - 목표 레벨이 잘못된 경우
         with pytest.raises(ValueError, match="목표 레벨은 유효한 JLPTLevel이어야 합니다"):
-            User(email="test@example.com", username="testuser", target_level="invalid")
+            User(id=None, email="test@example.com", username="testuser", target_level="invalid")
 
     def test_user_learning_progress_operations(self):
         """학습 진행 상황 조작 테스트"""
         # Given
-        user = User(email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+        user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
 
         # When - 학습 진행 업데이트
         user.update_learning_progress(JLPTLevel.N4, tests_taken=2)
@@ -244,26 +244,26 @@ class TestUser:
     def test_user_level_assessment(self):
         """레벨 평가 관련 메서드 테스트"""
         # Given
-        user_n5 = User(email="test@example.com", username="testuser", target_level=JLPTLevel.N5, current_level=JLPTLevel.N5)
+        user_n5 = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5, current_level=JLPTLevel.N5)
 
         # Then - 시험 응시 가능 여부
         assert user_n5.can_take_test(JLPTLevel.N5) is True   # 목표 레벨
-        assert user_n5.can_take_test(JLPTLevel.N4) is True   # 더 높은 레벨
-        assert user_n5.can_take_test(JLPTLevel.N3) is False  # 더 낮은 레벨
+        assert user_n5.can_take_test(JLPTLevel.N4) is False  # 더 어려운 레벨
+        assert user_n5.can_take_test(JLPTLevel.N3) is False  # 더 어려운 레벨
 
         # Then - 추천 레벨 (현재 레벨이 있는 경우)
         assert user_n5.get_recommended_level() == JLPTLevel.N5
 
         # Given - 현재 레벨이 없는 경우
-        user_no_current = User(email="test@example.com", username="testuser", target_level=JLPTLevel.N4)
+        user_no_current = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N4)
 
         # Then - 목표 레벨을 추천
         assert user_no_current.get_recommended_level() == JLPTLevel.N4
 
         # Then - 레벨 업 후보 여부
-        assert user_n5.is_level_up_candidate(JLPTLevel.N4) is True   # N5에서 N4로 (레벨 값 상승)
+        assert user_n5.is_level_up_candidate(JLPTLevel.N4) is True   # N5에서 N4로 레벨 업
         assert user_n5.is_level_up_candidate(JLPTLevel.N5) is False  # 같은 레벨
-        assert user_n5.is_level_up_candidate(JLPTLevel.N3) is False  # N5에서 N3로 (레벨 값 하락)
+        assert user_n5.is_level_up_candidate(JLPTLevel.N3) is True   # N5에서 N3로 레벨 업
 
     def test_user_string_representation(self):
         """User 문자열 표현 테스트"""
