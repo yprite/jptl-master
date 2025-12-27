@@ -235,31 +235,258 @@ class TestPostsController:
 class TestResultsController:
     """Results 컨트롤러 테스트"""
 
-    def test_get_results_not_implemented(self):
-        """결과 목록 조회 미구현 테스트"""
+    @pytest.fixture
+    def temp_db(self):
+        """임시 데이터베이스 파일 생성"""
+        with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as f:
+            db_path = f.name
+        yield db_path
+        if os.path.exists(db_path):
+            os.unlink(db_path)
+
+    def test_get_results_empty(self, temp_db):
+        """결과 목록 조회 (빈 목록) 테스트"""
         from backend.presentation.controllers.results import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.get("/")
-        assert response.status_code == 404
-        assert "결과 조회 API가 아직 구현되지 않았습니다" in response.json()["detail"]
 
-    def test_get_result_not_implemented(self):
-        """상세 결과 조회 미구현 테스트"""
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/")
+            assert response.status_code == 200
+            data = response.json()
+            assert isinstance(data, list)
+            assert len(data) == 0
+
+    def test_get_result_not_found(self, temp_db):
+        """존재하지 않는 결과 조회 테스트"""
         from backend.presentation.controllers.results import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.get("/1")
-        assert response.status_code == 404
-        assert "결과 조회 API가 아직 구현되지 않았습니다" in response.json()["detail"]
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/999")
+            assert response.status_code == 404
+            assert "결과를 찾을 수 없습니다" in response.json()["detail"]
+
+    def test_get_result_success(self, temp_db):
+        """결과 조회 성공 테스트"""
+        from backend.presentation.controllers.results import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+        from backend.domain.entities.result import Result
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 결과 생성
+            result_repo = SqliteResultRepository(db=db)
+            result = Result(
+                id=0, test_id=1, user_id=1, score=85.0,
+                assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N4,
+                correct_answers_count=17, total_questions_count=20,
+                time_taken_minutes=45
+            )
+            saved_result = result_repo.save(result)
+
+            response = client.get(f"/{saved_result.id}")
+            assert response.status_code == 200
+            data = response.json()
+            assert data["id"] == saved_result.id
+            assert data["score"] == 85.0
+            assert data["test_id"] == 1
+            assert data["user_id"] == 1
+
+    def test_get_results_by_user_id(self, temp_db):
+        """사용자별 결과 조회 테스트"""
+        from backend.presentation.controllers.results import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+        from backend.domain.entities.result import Result
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 여러 결과 생성
+            result_repo = SqliteResultRepository(db=db)
+            r1 = Result(id=0, test_id=1, user_id=1, score=75.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N5,
+                       correct_answers_count=15, total_questions_count=20,
+                       time_taken_minutes=50)
+            r2 = Result(id=0, test_id=2, user_id=1, score=85.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N4,
+                       correct_answers_count=17, total_questions_count=20,
+                       time_taken_minutes=45)
+            r3 = Result(id=0, test_id=1, user_id=2, score=80.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N5,
+                       correct_answers_count=16, total_questions_count=20,
+                       time_taken_minutes=48)
+
+            result_repo.save(r1)
+            result_repo.save(r2)
+            result_repo.save(r3)
+
+            # user_id=1의 결과만 조회
+            response = client.get("/?user_id=1")
+            assert response.status_code == 200
+            data = response.json()
+            assert len(data) == 2
+            assert all(r["user_id"] == 1 for r in data)
+
+    def test_get_results_by_test_id(self, temp_db):
+        """테스트별 결과 조회 테스트"""
+        from backend.presentation.controllers.results import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+        from backend.domain.entities.result import Result
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 여러 결과 생성
+            result_repo = SqliteResultRepository(db=db)
+            r1 = Result(id=0, test_id=1, user_id=1, score=75.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N5,
+                       correct_answers_count=15, total_questions_count=20,
+                       time_taken_minutes=50)
+            r2 = Result(id=0, test_id=2, user_id=1, score=85.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N4,
+                       correct_answers_count=17, total_questions_count=20,
+                       time_taken_minutes=45)
+            r3 = Result(id=0, test_id=1, user_id=2, score=80.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N5,
+                       correct_answers_count=16, total_questions_count=20,
+                       time_taken_minutes=48)
+
+            result_repo.save(r1)
+            result_repo.save(r2)
+            result_repo.save(r3)
+
+            # test_id=1의 결과만 조회
+            response = client.get("/?test_id=1")
+            assert response.status_code == 200
+            data = response.json()
+            assert len(data) == 2
+            assert all(r["test_id"] == 1 for r in data)
+
+    def test_get_recent_results_by_user(self, temp_db):
+        """사용자의 최근 결과 조회 테스트"""
+        from backend.presentation.controllers.results import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+        from backend.domain.entities.result import Result
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 여러 결과 생성
+            result_repo = SqliteResultRepository(db=db)
+            for i in range(15):
+                result = Result(
+                    id=0, test_id=1, user_id=1, score=75.0 + i,
+                    assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N5,
+                    correct_answers_count=15, total_questions_count=20,
+                    time_taken_minutes=50
+                )
+                result_repo.save(result)
+
+            # 최근 10개 조회
+            response = client.get("/users/1/recent?limit=10")
+            assert response.status_code == 200
+            data = response.json()
+            assert len(data) == 10
+
+    def test_get_user_average_score(self, temp_db):
+        """사용자 평균 점수 조회 테스트"""
+        from backend.presentation.controllers.results import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+        from backend.domain.entities.result import Result
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 여러 결과 생성
+            result_repo = SqliteResultRepository(db=db)
+            r1 = Result(id=0, test_id=1, user_id=1, score=70.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N5,
+                       correct_answers_count=14, total_questions_count=20,
+                       time_taken_minutes=50)
+            r2 = Result(id=0, test_id=2, user_id=1, score=80.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N5,
+                       correct_answers_count=16, total_questions_count=20,
+                       time_taken_minutes=45)
+            r3 = Result(id=0, test_id=3, user_id=1, score=90.0,
+                       assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N4,
+                       correct_answers_count=18, total_questions_count=20,
+                       time_taken_minutes=40)
+
+            result_repo.save(r1)
+            result_repo.save(r2)
+            result_repo.save(r3)
+
+            # 평균 점수 조회
+            response = client.get("/users/1/average-score")
+            assert response.status_code == 200
+            data = response.json()
+            assert data["user_id"] == 1
+            assert data["average_score"] == 80.0
+            assert data["total_results"] == 3
 
 
 class TestTestsController:
