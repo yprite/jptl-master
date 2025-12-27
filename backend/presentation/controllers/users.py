@@ -2,7 +2,7 @@
 JLPT 사용자 관리 API 컨트롤러
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Request
 from pydantic import BaseModel
 from typing import Optional
 
@@ -10,6 +10,7 @@ from backend.domain.entities.user import User
 from backend.domain.value_objects.jlpt import JLPTLevel
 from backend.infrastructure.repositories.user_repository import SqliteUserRepository
 from backend.infrastructure.config.database import get_database
+from backend.presentation.controllers.auth import get_current_user
 
 router = APIRouter()
 
@@ -85,17 +86,56 @@ async def create_user(request: Optional[UserCreateRequest] = None):
     }
 
 @router.get("/me")
-async def get_current_user():
+async def get_current_user_info(current_user: User = Depends(get_current_user)):
     """현재 로그인된 사용자 정보 조회"""
-    # TODO: 세션 기반 인증 구현 후 사용자 정보 반환
-    # 현재는 임시로 404 반환
-    raise HTTPException(status_code=404, detail="사용자 인증 시스템이 아직 구현되지 않았습니다")
+    return {
+        "success": True,
+        "data": UserResponse(
+            id=current_user.id,
+            email=current_user.email,
+            username=current_user.username,
+            target_level=current_user.target_level,
+            current_level=current_user.current_level,
+            total_tests_taken=current_user.total_tests_taken,
+            study_streak=current_user.study_streak
+        ),
+        "message": "사용자 정보 조회 성공"
+    }
 
 @router.put("/me")
-async def update_current_user(request: UserUpdateRequest):
+async def update_current_user_info(
+    request: UserUpdateRequest,
+    current_user: User = Depends(get_current_user)
+):
     """현재 사용자 정보 업데이트"""
-    # TODO: 세션 기반 인증 구현 후 사용자 정보 업데이트
-    raise HTTPException(status_code=404, detail="사용자 인증 시스템이 아직 구현되지 않았습니다")
+    repo = get_user_repository()
+    
+    # 업데이트할 필드 적용
+    if request.username is not None:
+        # 사용자명 중복 확인 (자신 제외)
+        if repo.exists_by_username(request.username) and current_user.username != request.username:
+            raise HTTPException(status_code=400, detail="이미 사용중인 사용자명입니다")
+        current_user.username = request.username
+    
+    if request.target_level is not None:
+        current_user.target_level = request.target_level
+    
+    # 저장
+    updated_user = repo.save(current_user)
+    
+    return {
+        "success": True,
+        "data": UserResponse(
+            id=updated_user.id,
+            email=updated_user.email,
+            username=updated_user.username,
+            target_level=updated_user.target_level,
+            current_level=updated_user.current_level,
+            total_tests_taken=updated_user.total_tests_taken,
+            study_streak=updated_user.study_streak
+        ),
+        "message": "사용자 정보가 성공적으로 업데이트되었습니다"
+    }
 
 @router.get("/{user_id}")
 async def get_user(user_id: int):
