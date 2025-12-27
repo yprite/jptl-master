@@ -1,18 +1,19 @@
 """
-블로그 시스템 메인 애플리케이션
+JLPT 자격 검증 프로그램 메인 애플리케이션
 DDD(Domain-Driven Design) 기반으로 구현
 """
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
 
 from presentation.controllers import router as api_router
-from infrastructure.config.database import create_tables
+from infrastructure.config.database import get_database
 
 # FastAPI 애플리케이션 생성
 app = FastAPI(
-    title="블로그 시스템 API",
-    description="DDD 기반 블로그 시스템",
+    title="JLPT Skill Assessment Platform API",
+    description="JLPT 자격 검증 및 실력 향상 지원 플랫폼",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -28,25 +29,41 @@ app.add_middleware(
 )
 
 # API 라우터 등록
-app.include_router(api_router, prefix="/api/v1")
+app.include_router(api_router, prefix="/api")
 
 @app.on_event("startup")
 async def startup_event():
     """애플리케이션 시작 시 실행"""
-    await create_tables()
+    # 데이터베이스 연결 확인 (자동으로 테이블 생성됨)
+    db = get_database()
+    with db.get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+    print("Database connection established")
 
 @app.get("/")
 async def root():
-    """헬스 체크 엔드포인트"""
-    return {"message": "블로그 시스템 API", "status": "running"}
+    """기본 헬스 체크 엔드포인트"""
+    return {"message": "JLPT Skill Assessment Platform API", "status": "running"}
 
-@app.get("/health")
+@app.get("/api/health")
 async def health_check():
     """상세 헬스 체크"""
+    # 데이터베이스 연결 상태 확인
+    try:
+        db = get_database()
+        with db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT 1")
+            db_status = "healthy"
+    except Exception:
+        db_status = "unhealthy"
+
     return {
-        "status": "healthy",
+        "status": "healthy" if db_status == "healthy" else "unhealthy",
+        "database": db_status,
         "version": "1.0.0",
-        "timestamp": "2024-12-27"
+        "timestamp": datetime.now().isoformat()
     }
 
 if __name__ == "__main__":
