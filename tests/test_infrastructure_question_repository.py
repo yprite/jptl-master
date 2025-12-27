@@ -401,3 +401,150 @@ class TestSqliteQuestionRepository:
         with pytest.raises((ValueError, json.JSONDecodeError)):
             QuestionMapper.to_entity(row_invalid_json)
 
+    def test_question_repository_find_random_by_level_and_types_single_type(self, temp_db):
+        """QuestionRepository find_random_by_level_and_types 단일 유형 테스트"""
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteQuestionRepository(db=db)
+
+        # N5 레벨의 여러 유형 문제 생성
+        for i in range(5):
+            q = Question(
+                id=0, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                question_text=f"Vocab Q{i+1}", choices=["A", "B"], correct_answer="A",
+                explanation=f"E{i+1}", difficulty=1
+            )
+            repo.save(q)
+
+        for i in range(5):
+            q = Question(
+                id=0, level=JLPTLevel.N5, question_type=QuestionType.GRAMMAR,
+                question_text=f"Grammar Q{i+1}", choices=["A", "B"], correct_answer="A",
+                explanation=f"E{i+1}", difficulty=1
+            )
+            repo.save(q)
+
+        # VOCABULARY 유형만 랜덤으로 3개 조회
+        questions = repo.find_random_by_level_and_types(
+            JLPTLevel.N5, [QuestionType.VOCABULARY], limit=3
+        )
+        assert len(questions) == 3
+        assert all(q.level == JLPTLevel.N5 for q in questions)
+        assert all(q.question_type == QuestionType.VOCABULARY for q in questions)
+
+    def test_question_repository_find_random_by_level_and_types_multiple_types(self, temp_db):
+        """QuestionRepository find_random_by_level_and_types 다중 유형 테스트"""
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteQuestionRepository(db=db)
+
+        # N5 레벨의 여러 유형 문제 생성
+        for i in range(5):
+            q = Question(
+                id=0, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                question_text=f"Vocab Q{i+1}", choices=["A", "B"], correct_answer="A",
+                explanation=f"E{i+1}", difficulty=1
+            )
+            repo.save(q)
+
+        for i in range(5):
+            q = Question(
+                id=0, level=JLPTLevel.N5, question_type=QuestionType.GRAMMAR,
+                question_text=f"Grammar Q{i+1}", choices=["A", "B"], correct_answer="A",
+                explanation=f"E{i+1}", difficulty=1
+            )
+            repo.save(q)
+
+        for i in range(5):
+            q = Question(
+                id=0, level=JLPTLevel.N5, question_type=QuestionType.READING,
+                question_text=f"Reading Q{i+1}", choices=["A", "B"], correct_answer="A",
+                explanation=f"E{i+1}", difficulty=1
+            )
+            repo.save(q)
+
+        # VOCABULARY와 GRAMMAR 유형만 랜덤으로 8개 조회
+        questions = repo.find_random_by_level_and_types(
+            JLPTLevel.N5, [QuestionType.VOCABULARY, QuestionType.GRAMMAR], limit=8
+        )
+        assert len(questions) == 8
+        assert all(q.level == JLPTLevel.N5 for q in questions)
+        assert all(q.question_type in [QuestionType.VOCABULARY, QuestionType.GRAMMAR] for q in questions)
+
+    def test_question_repository_find_random_by_level_and_types_all_types(self, temp_db):
+        """QuestionRepository find_random_by_level_and_types 모든 유형 테스트"""
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteQuestionRepository(db=db)
+
+        # N5 레벨의 모든 유형 문제 생성
+        types = [QuestionType.VOCABULARY, QuestionType.GRAMMAR, QuestionType.READING, QuestionType.LISTENING]
+        for q_type in types:
+            for i in range(3):
+                q = Question(
+                    id=0, level=JLPTLevel.N5, question_type=q_type,
+                    question_text=f"{q_type.value} Q{i+1}", choices=["A", "B"], correct_answer="A",
+                    explanation=f"E{i+1}", difficulty=1
+                )
+                repo.save(q)
+
+        # 모든 유형에서 랜덤으로 10개 조회
+        questions = repo.find_random_by_level_and_types(
+            JLPTLevel.N5, types, limit=10
+        )
+        assert len(questions) == 10
+        assert all(q.level == JLPTLevel.N5 for q in questions)
+        assert all(q.question_type in types for q in questions)
+
+    def test_question_repository_find_random_by_level_and_types_insufficient_questions(self, temp_db):
+        """QuestionRepository find_random_by_level_and_types 문제 부족 시 테스트"""
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteQuestionRepository(db=db)
+
+        # N5 레벨의 VOCABULARY 유형 문제 3개만 생성
+        for i in range(3):
+            q = Question(
+                id=0, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                question_text=f"Vocab Q{i+1}", choices=["A", "B"], correct_answer="A",
+                explanation=f"E{i+1}", difficulty=1
+            )
+            repo.save(q)
+
+        # 10개를 요청하지만 3개만 반환
+        questions = repo.find_random_by_level_and_types(
+            JLPTLevel.N5, [QuestionType.VOCABULARY], limit=10
+        )
+        assert len(questions) == 3
+        assert all(q.question_type == QuestionType.VOCABULARY for q in questions)
+
+    def test_question_repository_find_random_by_level_and_types_empty_result(self, temp_db):
+        """QuestionRepository find_random_by_level_and_types 결과 없음 테스트"""
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteQuestionRepository(db=db)
+
+        # 다른 레벨의 문제만 생성
+        q = Question(
+            id=0, level=JLPTLevel.N4, question_type=QuestionType.VOCABULARY,
+            question_text="Q1", choices=["A", "B"], correct_answer="A",
+            explanation="E1", difficulty=1
+        )
+        repo.save(q)
+
+        # N5 레벨의 VOCABULARY 유형 조회 (결과 없음)
+        questions = repo.find_random_by_level_and_types(
+            JLPTLevel.N5, [QuestionType.VOCABULARY], limit=10
+        )
+        assert len(questions) == 0
+

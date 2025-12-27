@@ -8,7 +8,7 @@ from typing import Optional, List, Dict
 from datetime import datetime
 
 from backend.domain.entities.test import Test
-from backend.domain.value_objects.jlpt import JLPTLevel, TestStatus
+from backend.domain.value_objects.jlpt import JLPTLevel, TestStatus, QuestionType
 from backend.infrastructure.repositories.test_repository import SqliteTestRepository
 from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
 from backend.infrastructure.config.database import get_database
@@ -21,6 +21,7 @@ class TestCreateRequest(BaseModel):
     level: JLPTLevel
     question_count: int = 20
     time_limit_minutes: int = 60
+    question_types: Optional[List[QuestionType]] = None  # None이면 모든 유형, 지정하면 해당 유형만
 
 class TestStartRequest(BaseModel):
     user_id: int  # TODO: 세션 인증 구현 후 제거
@@ -124,13 +125,19 @@ async def create_test(request: TestCreateRequest):
     question_repo = get_question_repository()
     test_repo = get_test_repository()
 
-    # 레벨별 랜덤 문제 조회
-    questions = question_repo.find_random_by_level(request.level, limit=request.question_count)
+    # 유형 필터링이 지정된 경우 해당 유형들만 조회, 아니면 모든 유형 조회
+    if request.question_types:
+        questions = question_repo.find_random_by_level_and_types(
+            request.level, request.question_types, limit=request.question_count
+        )
+    else:
+        questions = question_repo.find_random_by_level(request.level, limit=request.question_count)
 
     if len(questions) < request.question_count:
+        available_types = ", ".join([qt.value for qt in request.question_types]) if request.question_types else "모든 유형"
         raise HTTPException(
             status_code=400,
-            detail=f"요청한 문제 수({request.question_count})보다 적은 문제({len(questions)})만 사용 가능합니다"
+            detail=f"요청한 문제 수({request.question_count})보다 적은 문제({len(questions)})만 사용 가능합니다. (레벨: {request.level.value}, 유형: {available_types})"
         )
 
     # 테스트 생성
