@@ -7,8 +7,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 
-from presentation.controllers import router as api_router
-from infrastructure.config.database import get_database
+from backend.presentation.controllers import router as api_router
+from backend.infrastructure.config.database import get_database
 
 # FastAPI 애플리케이션 생성
 app = FastAPI(

@@ -5,7 +5,7 @@ JLPT 헬스 체크 컨트롤러
 from fastapi import APIRouter
 from datetime import datetime
 
-from infrastructure.config.database import get_database
+from backend.infrastructure.config.database import get_database
 
 router = APIRouter()
 
