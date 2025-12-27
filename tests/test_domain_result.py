@@ -168,3 +168,106 @@ class TestResult:
         # When & Then
         expected_repr = "Result(id=1, test_id=1, user_id=1, score=85.5, assessed_level=N5, recommended=N4)"
         assert repr(result) == expected_repr
+
+    def test_result_validation_edge_cases(self):
+        """Result 검증 edge case 테스트"""
+        # 정답 개수가 음수
+        with pytest.raises(ValueError, match="정답 개수는 0 이상의 정수여야 합니다"):
+            Result(id=1, test_id=1, user_id=1, score=50.0, assessed_level=JLPTLevel.N5,
+                  recommended_level=JLPTLevel.N5, correct_answers_count=-1, total_questions_count=2,
+                  time_taken_minutes=10)
+
+        # 총 문제 개수가 0 이하
+        with pytest.raises(ValueError, match="총 문제 개수는 1 이상의 정수여야 합니다"):
+            Result(id=1, test_id=1, user_id=1, score=50.0, assessed_level=JLPTLevel.N5,
+                  recommended_level=JLPTLevel.N5, correct_answers_count=1, total_questions_count=0,
+                  time_taken_minutes=10)
+
+        # 소요 시간이 1분 미만
+        with pytest.raises(ValueError, match="소요 시간은 1분 이상이어야 합니다"):
+            Result(id=1, test_id=1, user_id=1, score=50.0, assessed_level=JLPTLevel.N5,
+                  recommended_level=JLPTLevel.N5, correct_answers_count=1, total_questions_count=2,
+                  time_taken_minutes=0)
+
+        # 점수가 정수가 아닌 경우 (float는 허용)
+        result_float = Result(id=1, test_id=1, user_id=1, score=75.5, assessed_level=JLPTLevel.N5,
+                             recommended_level=JLPTLevel.N5, correct_answers_count=15, total_questions_count=20,
+                             time_taken_minutes=10)
+        assert result_float.score == 75.5
+
+    def test_get_level_progression(self):
+        """레벨 진전 상태 반환 테스트"""
+        # Given - 레벨 업
+        result_level_up = Result(id=1, test_id=1, user_id=1, score=85.0, assessed_level=JLPTLevel.N5,
+                                recommended_level=JLPTLevel.N4, correct_answers_count=17, total_questions_count=20,
+                                time_taken_minutes=20)
+
+        # Given - 레벨 유지
+        result_maintain = Result(id=2, test_id=1, user_id=1, score=75.0, assessed_level=JLPTLevel.N5,
+                                recommended_level=JLPTLevel.N5, correct_answers_count=15, total_questions_count=20,
+                                time_taken_minutes=20)
+
+        # Given - 레벨 다운
+        result_level_down = Result(id=3, test_id=1, user_id=1, score=60.0, assessed_level=JLPTLevel.N4,
+                                 recommended_level=JLPTLevel.N5, correct_answers_count=12, total_questions_count=20,
+                                 time_taken_minutes=20)
+
+        # When & Then
+        assert result_level_up.get_level_progression() == "level_up"
+        assert result_maintain.get_level_progression() == "maintain"
+        assert result_level_down.get_level_progression() == "level_down"
+
+    def test_get_detailed_feedback(self):
+        """상세 피드백 생성 테스트"""
+        # Given - 우수한 성적
+        result_excellent = Result(id=1, test_id=1, user_id=1, score=90.0, assessed_level=JLPTLevel.N5,
+                                 recommended_level=JLPTLevel.N4, correct_answers_count=18, total_questions_count=20,
+                                 time_taken_minutes=10)
+
+        # Given - 보통 성적
+        result_good = Result(id=2, test_id=1, user_id=1, score=75.0, assessed_level=JLPTLevel.N5,
+                            recommended_level=JLPTLevel.N5, correct_answers_count=15, total_questions_count=20,
+                            time_taken_minutes=20)
+
+        # Given - 개선 필요
+        result_needs_improvement = Result(id=3, test_id=1, user_id=1, score=60.0, assessed_level=JLPTLevel.N5,
+                                         recommended_level=JLPTLevel.N5, correct_answers_count=12, total_questions_count=20,
+                                         time_taken_minutes=50)
+
+        # When
+        feedback_excellent = result_excellent.get_detailed_feedback()
+        feedback_good = result_good.get_detailed_feedback()
+        feedback_needs_improvement = result_needs_improvement.get_detailed_feedback()
+
+        # Then
+        assert "overall_performance" in feedback_excellent
+        assert "time_management" in feedback_excellent
+        assert "level_recommendation" in feedback_excellent
+        assert "study_suggestions" in feedback_excellent
+
+        assert "Outstanding performance" in feedback_excellent["overall_performance"]
+        assert "Excellent time management" in feedback_excellent["time_management"]
+        assert "Great progress" in feedback_excellent["level_recommendation"]
+
+        assert "Good performance" in feedback_good["overall_performance"]
+        assert "Performance needs improvement" in feedback_needs_improvement["overall_performance"]
+        assert "Consider improving time management" in feedback_needs_improvement["time_management"]
+
+    def test_result_hash(self):
+        """Result 해시 테스트"""
+        # Given
+        result1 = Result(id=1, test_id=1, user_id=1, score=80.0, assessed_level=JLPTLevel.N5,
+                        recommended_level=JLPTLevel.N4, correct_answers_count=16, total_questions_count=20,
+                        time_taken_minutes=20)
+
+        result2 = Result(id=1, test_id=2, user_id=2, score=70.0, assessed_level=JLPTLevel.N4,
+                        recommended_level=JLPTLevel.N3, correct_answers_count=14, total_questions_count=20,
+                        time_taken_minutes=25)
+
+        result3 = Result(id=2, test_id=1, user_id=1, score=80.0, assessed_level=JLPTLevel.N5,
+                        recommended_level=JLPTLevel.N4, correct_answers_count=16, total_questions_count=20,
+                        time_taken_minutes=20)
+
+        # Then
+        assert hash(result1) == hash(result2)  # 같은 ID
+        assert hash(result1) != hash(result3)  # 다른 ID

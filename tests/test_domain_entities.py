@@ -282,3 +282,58 @@ class TestUser:
         expected_repr = "User(id=1, username='testuser', target=N5, current=N4, tests=5)"
         assert repr(user) == expected_repr
 
+    def test_user_validation_edge_cases_detailed(self):
+        """User 검증 상세 edge case 테스트"""
+        # 이메일이 None인 경우
+        with pytest.raises(ValueError, match="이메일은 필수 항목입니다"):
+            User(id=1, email=None, username="testuser")
+
+        # 이메일이 빈 문자열인 경우
+        with pytest.raises(ValueError, match="이메일은 필수 항목입니다"):
+            User(id=1, email="", username="testuser")
+
+        # 사용자명이 None인 경우
+        with pytest.raises(ValueError, match="사용자명은 문자열이어야 합니다"):
+            User(id=1, email="test@example.com", username=None)
+
+        # 사용자명이 50자 초과
+        with pytest.raises(ValueError, match="사용자명은 50자를 초과할 수 없습니다"):
+            User(id=1, email="test@example.com", username="a" * 51)
+
+        # ID가 음수인 경우
+        with pytest.raises(ValueError, match="ID는 양의 정수여야 합니다"):
+            User(id=-1, email="test@example.com", username="testuser")
+
+        # ID가 0인 경우
+        with pytest.raises(ValueError, match="ID는 양의 정수여야 합니다"):
+            User(id=0, email="test@example.com", username="testuser")
+
+    def test_user_equality_with_none_id(self):
+        """ID가 None인 User의 동등성 비교 테스트"""
+        # Given
+        user1 = User(id=None, email="test@example.com", username="testuser")
+        user2 = User(id=None, email="test@example.com", username="testuser")
+        user3 = User(id=None, email="different@example.com", username="testuser")
+
+        # Then
+        assert user1 == user2  # 같은 이메일
+        assert user1 != user3  # 다른 이메일
+
+    def test_user_hash(self):
+        """User 해시 테스트"""
+        # Given
+        user1 = User(id=1, email="test@example.com", username="testuser")
+        user2 = User(id=1, email="different@example.com", username="different")
+        user3 = User(id=2, email="test@example.com", username="testuser")
+
+        # Then
+        assert hash(user1) == hash(user2)  # 같은 ID
+        assert hash(user1) != hash(user3)  # 다른 ID
+
+        # ID가 None인 경우
+        user4 = User(id=None, email="test@example.com", username="testuser")
+        user5 = User(id=None, email="test@example.com", username="testuser")
+        # None ID는 해시 가능하지만 동일한 해시를 보장하지 않을 수 있음
+        assert isinstance(hash(user4), int)
+        assert isinstance(hash(user5), int)
+

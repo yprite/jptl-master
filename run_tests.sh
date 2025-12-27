@@ -10,10 +10,9 @@ source backend/venv/bin/activate
 # 커버리지 임계값 설정
 BACKEND_COVERAGE_THRESHOLD=80
 
-# 도메인 테스트 실행 (커버리지 포함)
-# API 테스트는 fastapi 설치 후 별도 실행
+# 모든 테스트 실행 (커버리지 포함)
 echo "📊 테스트 실행 및 커버리지 측정 중..."
-TEST_OUTPUT=$(python -m pytest tests/test_domain_*.py -v --tb=short --cov --cov-report=term-missing --cov-report=json 2>&1)
+TEST_OUTPUT=$(python -m pytest tests/ -v --tb=short --cov --cov-report=term-missing --cov-report=json 2>&1)
 TEST_EXIT_CODE=$?
 
 # 테스트 실패 시 종료

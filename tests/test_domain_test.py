@@ -192,3 +192,143 @@ class TestTestStatus:
         assert TestStatus.IN_PROGRESS.value == "in_progress"
         assert TestStatus.COMPLETED.value == "completed"
         assert TestStatus.EXPIRED.value == "expired"
+
+    def test_test_validation_edge_cases(self):
+        """Test 검증 edge case 테스트"""
+        # 제목이 공백만 있는 경우
+        with pytest.raises(ValueError, match="테스트 제목은 비어있을 수 없습니다"):
+            Test(id=1, title="   ", level=JLPTLevel.N5, questions=[], time_limit_minutes=30)
+
+        # 제목이 200자 초과
+        with pytest.raises(ValueError, match="테스트 제목은 200자를 초과할 수 없습니다"):
+            Test(id=1, title="a" * 201, level=JLPTLevel.N5, questions=[], time_limit_minutes=30)
+
+        # 시간 제한이 480분 초과
+        with pytest.raises(ValueError, match="시간 제한은 480분\\(8시간\\)을 초과할 수 없습니다"):
+            Test(id=1, title="Test", level=JLPTLevel.N5, questions=[], time_limit_minutes=481)
+
+    def test_start_test_validation(self):
+        """테스트 시작 검증 테스트"""
+        # Given
+        test = Test(id=1, title="Test", level=JLPTLevel.N5, questions=[], time_limit_minutes=30)
+        test.start_test()
+
+        # When - 이미 시작한 테스트를 다시 시작하려고 시도
+        with pytest.raises(ValueError, match="테스트를 시작할 수 없는 상태입니다"):
+            test.start_test()
+
+        # Given - 완료된 테스트
+        test.complete_test({})
+
+        # When - 완료된 테스트를 시작하려고 시도
+        with pytest.raises(ValueError, match="테스트를 시작할 수 없는 상태입니다"):
+            test.start_test()
+
+    def test_complete_test_validation(self):
+        """테스트 완료 검증 테스트"""
+        # Given - 시작하지 않은 테스트
+        test = Test(id=1, title="Test", level=JLPTLevel.N5, questions=[], time_limit_minutes=30)
+
+        # When - 시작하지 않은 테스트를 완료하려고 시도
+        with pytest.raises(ValueError, match="테스트를 완료할 수 없는 상태입니다"):
+            test.complete_test({})
+
+        # Given - 완료된 테스트
+        test.start_test()
+        test.complete_test({})
+
+        # When - 이미 완료된 테스트를 다시 완료하려고 시도
+        with pytest.raises(ValueError, match="테스트를 완료할 수 없는 상태입니다"):
+            test.complete_test({})
+
+    def test_calculate_score_validation(self):
+        """점수 계산 검증 테스트"""
+        # Given - 완료되지 않은 테스트
+        test = Test(id=1, title="Test", level=JLPTLevel.N5, questions=[], time_limit_minutes=30)
+
+        # When - 완료되지 않은 테스트의 점수를 계산하려고 시도
+        with pytest.raises(ValueError, match="완료된 테스트만 점수를 계산할 수 있습니다"):
+            test.calculate_score()
+
+        # Given - 시작했지만 완료하지 않은 테스트
+        test.start_test()
+
+        # When - 완료되지 않은 테스트의 점수를 계산하려고 시도
+        with pytest.raises(ValueError, match="완료된 테스트만 점수를 계산할 수 있습니다"):
+            test.calculate_score()
+
+    def test_get_time_remaining_validation(self):
+        """남은 시간 계산 검증 테스트"""
+        # Given - 시작하지 않은 테스트
+        test = Test(id=1, title="Test", level=JLPTLevel.N5, questions=[], time_limit_minutes=30)
+
+        # When - 시작하지 않은 테스트의 남은 시간을 계산하려고 시도
+        with pytest.raises(ValueError, match="시작되지 않은 테스트입니다"):
+            test.get_time_remaining()
+
+    def test_get_correct_answers_count(self):
+        """정답 개수 반환 테스트"""
+        # Given
+        questions = [
+            Question(id=1, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                    question_text="Q1", choices=["A", "B"], correct_answer="A",
+                    explanation="Exp1", difficulty=1),
+            Question(id=2, level=JLPTLevel.N5, question_type=QuestionType.GRAMMAR,
+                    question_text="Q2", choices=["A", "B"], correct_answer="B",
+                    explanation="Exp2", difficulty=1),
+            Question(id=3, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                    question_text="Q3", choices=["A", "B"], correct_answer="A",
+                    explanation="Exp3", difficulty=1)
+        ]
+        test = Test(id=1, title="Test", level=JLPTLevel.N5, questions=questions, time_limit_minutes=30)
+        test.start_test()
+        test.complete_test({1: "A", 2: "B", 3: "B"})  # 2개 정답
+
+        # When & Then
+        assert test.get_correct_answers_count() == 2
+
+        # 완료되지 않은 테스트
+        test2 = Test(id=2, title="Test", level=JLPTLevel.N5, questions=questions, time_limit_minutes=30)
+        with pytest.raises(ValueError, match="완료된 테스트만 정답 개수를 확인할 수 있습니다"):
+            test2.get_correct_answers_count()
+
+    def test_get_incorrect_answers_count(self):
+        """오답 개수 반환 테스트"""
+        # Given
+        questions = [
+            Question(id=1, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                    question_text="Q1", choices=["A", "B"], correct_answer="A",
+                    explanation="Exp1", difficulty=1),
+            Question(id=2, level=JLPTLevel.N5, question_type=QuestionType.GRAMMAR,
+                    question_text="Q2", choices=["A", "B"], correct_answer="B",
+                    explanation="Exp2", difficulty=1),
+            Question(id=3, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                    question_text="Q3", choices=["A", "B"], correct_answer="A",
+                    explanation="Exp3", difficulty=1)
+        ]
+        test = Test(id=1, title="Test", level=JLPTLevel.N5, questions=questions, time_limit_minutes=30)
+        test.start_test()
+        test.complete_test({1: "A", 2: "B", 3: "B"})  # 2개 정답, 1개 오답
+
+        # When & Then
+        assert test.get_incorrect_answers_count() == 1
+
+        # 완료되지 않은 테스트
+        test2 = Test(id=2, title="Test", level=JLPTLevel.N5, questions=questions, time_limit_minutes=30)
+        with pytest.raises(ValueError, match="완료된 테스트만 오답 개수를 확인할 수 있습니다"):
+            test2.get_incorrect_answers_count()
+
+    def test_test_hash(self):
+        """Test 해시 테스트"""
+        # Given
+        questions = [Question(id=1, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                             question_text="Q", choices=["A", "B"], correct_answer="A",
+                             explanation="E", difficulty=1)]
+
+        test1 = Test(id=1, title="Test", level=JLPTLevel.N5, questions=questions, time_limit_minutes=30)
+        test2 = Test(id=1, title="Different", level=JLPTLevel.N4, questions=[], time_limit_minutes=60)
+        test3 = Test(id=2, title="Test", level=JLPTLevel.N5, questions=questions, time_limit_minutes=30)
+
+        # Then
+        assert hash(test1) == hash(test2)  # 같은 ID
+        assert hash(test1) != hash(test3)  # 다른 ID

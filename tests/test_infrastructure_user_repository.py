@@ -172,3 +172,222 @@ class TestSqliteUserRepository:
         assert data['study_streak'] == 3
         assert 'vocabulary' in data['preferred_question_types']
         assert 'grammar' in data['preferred_question_types']
+
+    def test_user_repository_update(self, temp_db):
+        """UserRepository 업데이트 기능 테스트"""
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db=db)
+
+        # 사용자 생성
+        user = User(
+            id=None,
+            email="test@example.com",
+            username="testuser",
+            target_level=JLPTLevel.N5
+        )
+        saved_user = repo.save(user)
+
+        # 사용자 업데이트
+        saved_user.update_profile(username="updateduser", target_level=JLPTLevel.N4)
+        updated_user = repo.save(saved_user)
+
+        # 업데이트 확인
+        found_user = repo.find_by_id(updated_user.id)
+        assert found_user.username == "updateduser"
+        assert found_user.target_level == JLPTLevel.N4
+
+    def test_user_repository_find_all(self, temp_db):
+        """UserRepository find_all 기능 테스트"""
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db=db)
+
+        # 여러 사용자 생성
+        user1 = User(id=None, email="user1@example.com", username="user1", target_level=JLPTLevel.N5)
+        user2 = User(id=None, email="user2@example.com", username="user2", target_level=JLPTLevel.N4)
+        user3 = User(id=None, email="user3@example.com", username="user3", target_level=JLPTLevel.N3)
+
+        repo.save(user1)
+        repo.save(user2)
+        repo.save(user3)
+
+        # 모든 사용자 조회
+        all_users = repo.find_all()
+        assert len(all_users) == 3
+
+    def test_user_repository_delete(self, temp_db):
+        """UserRepository delete 기능 테스트"""
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db=db)
+
+        # 사용자 생성
+        user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+        saved_user = repo.save(user)
+
+        # 삭제
+        repo.delete(saved_user)
+
+        # 삭제 확인
+        found_user = repo.find_by_id(saved_user.id)
+        assert found_user is None
+
+    def test_user_repository_exists_by_id(self, temp_db):
+        """UserRepository exists_by_id 기능 테스트"""
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db=db)
+
+        # 사용자 생성
+        user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+        saved_user = repo.save(user)
+
+        # 존재 확인
+        assert repo.exists_by_id(saved_user.id) is True
+        assert repo.exists_by_id(999) is False
+
+    def test_user_repository_exists_by_email(self, temp_db):
+        """UserRepository exists_by_email 기능 테스트"""
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db=db)
+
+        # 사용자 생성
+        user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+        repo.save(user)
+
+        # 존재 확인
+        assert repo.exists_by_email("test@example.com") is True
+        assert repo.exists_by_email("nonexistent@example.com") is False
+
+    def test_user_repository_exists_by_username(self, temp_db):
+        """UserRepository exists_by_username 기능 테스트"""
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db=db)
+
+        # 사용자 생성
+        user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+        repo.save(user)
+
+        # 존재 확인
+        assert repo.exists_by_username("testuser") is True
+        assert repo.exists_by_username("nonexistent") is False
+
+    def test_user_mapper_edge_cases(self):
+        """UserMapper edge case 테스트"""
+        import sqlite3
+        from datetime import datetime
+        from backend.infrastructure.repositories.user_mapper import UserMapper
+
+        # 모의 Row 객체 생성
+        class MockRow:
+            def __init__(self, data):
+                self.data = data
+
+            def __getitem__(self, key):
+                return self.data[key]
+
+        # preferred_question_types가 None인 경우
+        row_none_types = MockRow({
+            'id': 1,
+            'email': 'test@example.com',
+            'username': 'testuser',
+            'target_level': 'N5',
+            'current_level': None,
+            'total_tests_taken': 0,
+            'study_streak': 0,
+            'preferred_question_types': None,
+            'created_at': '2024-01-01T00:00:00',
+            'updated_at': '2024-01-02T00:00:00'
+        })
+
+        user = UserMapper.to_entity(row_none_types)
+        assert user.preferred_question_types == []
+
+        # 잘못된 JSON 형식의 preferred_question_types
+        row_invalid_json = MockRow({
+            'id': 1,
+            'email': 'test@example.com',
+            'username': 'testuser',
+            'target_level': 'N5',
+            'current_level': None,
+            'total_tests_taken': 0,
+            'study_streak': 0,
+            'preferred_question_types': 'invalid json',
+            'created_at': '2024-01-01T00:00:00',
+            'updated_at': '2024-01-02T00:00:00'
+        })
+
+        user = UserMapper.to_entity(row_invalid_json)
+        assert user.preferred_question_types == []
+
+        # 잘못된 datetime 형식
+        row_invalid_datetime = MockRow({
+            'id': 1,
+            'email': 'test@example.com',
+            'username': 'testuser',
+            'target_level': 'N5',
+            'current_level': None,
+            'total_tests_taken': 0,
+            'study_streak': 0,
+            'preferred_question_types': None,
+            'created_at': 'invalid datetime',
+            'updated_at': 'invalid datetime'
+        })
+
+        user = UserMapper.to_entity(row_invalid_datetime)
+        assert isinstance(user.created_at, datetime)
+        assert isinstance(user.updated_at, datetime)
+
+    def test_database_get_database_singleton(self):
+        """get_database 싱글톤 패턴 테스트"""
+        from backend.infrastructure.config.database import get_database, Database
+        import tempfile
+        import os
+
+        # 임시 데이터베이스 경로 설정
+        with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as f:
+            temp_db_path = f.name
+
+        try:
+            # 싱글톤 인스턴스 확인
+            db1 = get_database()
+            db2 = get_database()
+            assert db1 is db2
+        finally:
+            # 정리
+            if os.path.exists(temp_db_path):
+                os.unlink(temp_db_path)
+
+    def test_database_ensure_directory_exists(self):
+        """데이터베이스 디렉토리 생성 테스트"""
+        import tempfile
+        import os
+        from backend.infrastructure.config.database import Database
+
+        # 임시 디렉토리 생성
+        temp_dir = tempfile.mkdtemp()
+        db_path = os.path.join(temp_dir, "subdir", "test.db")
+
+        try:
+            db = Database(db_path=db_path)
+            # 디렉토리가 생성되었는지 확인
+            assert os.path.exists(os.path.dirname(db_path))
+        finally:
+            # 정리
+            import shutil
+            shutil.rmtree(temp_dir, ignore_errors=True)

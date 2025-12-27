@@ -53,6 +53,7 @@ async def create_user(request: UserCreateRequest):
 
     # 사용자 생성
     user = User(
+        id=None,
         email=request.email,
         username=request.username,
         target_level=request.target_level
