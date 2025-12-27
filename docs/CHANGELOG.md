@@ -1,50 +1,36 @@
-# 변경 이력 (Changelog)
+# 변경 이력 (AI 파싱용)
 
-모든 중요한 변경사항을 버전별로 기록합니다. [Keep a Changelog](https://keepachangelog.com/) 형식을 따릅니다.
+## 메타데이터
+형식: Keep a Changelog
+현재_버전: Unreleased
+마지막_릴리즈: 0.1.0 (2024-12-27)
 
-## [Unreleased]
+## Unreleased
 
 ### Added
-- 프로젝트 초기 설정
-- DDD 기반 아키텍처 설계
-- 개발 가이드라인 및 .cursorrules 설정
-- 기본 문서화 구조 구축
+프로젝트_초기_설정: DDD 기반 아키텍처 설계 및 개발 환경 구성 (2024-12-27)
+문서화_구조: AI 친화적 문서 포맷으로 전체 문서 재구성 (2024-12-27)
+태스크_관리: AI 파싱 최적화된 스프린트 및 백로그 시스템 구축 (2024-12-27)
 
 ### Changed
-- N/A
+문서_포맷: 사람이 읽기 쉬운 형식에서 AI 파싱 최적화 포맷으로 전환 (2024-12-27)
 
-### Deprecated
-- N/A
-
-### Removed
-- N/A
-
-### Fixed
-- N/A
-
-### Security
-- N/A
-
-## [0.1.0] - 2024-12-XX
+## 0.1.0 (2024-12-27)
 
 ### Added
-- 프로젝트 구조 초기화
-- 개발 환경 구성
-- 기본 테스트 설정
+프로젝트_초기화: 기본 폴더 구조 및 설정 파일 생성
+테스트_환경: pytest 기반 테스트 인프라 구축
+도메인_모델링: User, Test, Question, Result 엔티티 TDD 구현
 
----
+## 버전_관리_규칙
+MAJOR: 호환되지_않는_변경
+MINOR: 새로운_기능_하위_호환
+PATCH: 버그_수정_하위_호환
 
-## 버전 관리 규칙
-
-- **MAJOR.MINOR.PATCH** 형식 사용
-- **MAJOR**: 호환되지 않는 변경
-- **MINOR**: 새로운 기능 (하위 호환)
-- **PATCH**: 버그 수정 (하위 호환)
-
-### 변경 유형
-- **Added**: 새로운 기능
-- **Changed**: 기존 기능 변경
-- **Deprecated**: 곧 제거될 기능
-- **Removed**: 기능 제거
-- **Fixed**: 버그 수정
-- **Security**: 보안 관련 수정
+## 변경_유형
+Added: 새로운_기능
+Changed: 기존_기능_변경
+Deprecated: 곧_제거될_기능
+Removed: 기능_제거
+Fixed: 버그_수정
+Security: 보안_관련_수정
