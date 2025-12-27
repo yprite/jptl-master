@@ -522,6 +522,164 @@ class TestTestsController:
             assert data["level"] == "N5"
             assert len(data["questions"]) == 20
 
+    def test_create_test_with_question_types_filter(self, temp_db):
+        """유형 필터링을 사용한 시험 생성 테스트"""
+        from backend.presentation.controllers.tests import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 여러 유형의 문제 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            
+            # VOCABULARY 유형 10개
+            for i in range(10):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"Vocab Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # GRAMMAR 유형 10개
+            for i in range(10):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.GRAMMAR,
+                    question_text=f"Grammar Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # READING 유형 10개
+            for i in range(10):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.READING,
+                    question_text=f"Reading Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # VOCABULARY와 GRAMMAR 유형만 필터링하여 시험 생성
+            response = client.post(
+                "/",
+                json={
+                    "title": "N5 어휘/문법 테스트",
+                    "level": "N5",
+                    "question_count": 15,
+                    "time_limit_minutes": 60,
+                    "question_types": ["vocabulary", "grammar"]
+                }
+            )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["id"] > 0
+            assert data["title"] == "N5 어휘/문법 테스트"
+            assert data["level"] == "N5"
+            assert len(data["questions"]) == 15
+            
+            # 모든 문제가 VOCABULARY 또는 GRAMMAR 유형인지 확인
+            question_types = [q["question_type"] for q in data["questions"]]
+            assert all(qt in ["vocabulary", "grammar"] for qt in question_types)
+            assert not any(qt == "reading" for qt in question_types)
+
+    def test_create_test_with_single_question_type(self, temp_db):
+        """단일 유형 필터링을 사용한 시험 생성 테스트"""
+        from backend.presentation.controllers.tests import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 여러 유형의 문제 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            
+            # VOCABULARY 유형 10개
+            for i in range(10):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"Vocab Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # GRAMMAR 유형 10개
+            for i in range(10):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.GRAMMAR,
+                    question_text=f"Grammar Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # VOCABULARY 유형만 필터링하여 시험 생성
+            response = client.post(
+                "/",
+                json={
+                    "title": "N5 어휘 테스트",
+                    "level": "N5",
+                    "question_count": 8,
+                    "time_limit_minutes": 60,
+                    "question_types": ["vocabulary"]
+                }
+            )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["id"] > 0
+            assert data["title"] == "N5 어휘 테스트"
+            assert len(data["questions"]) == 8
+            
+            # 모든 문제가 VOCABULARY 유형인지 확인
+            question_types = [q["question_type"] for q in data["questions"]]
+            assert all(qt == "vocabulary" for qt in question_types)
+
     def test_start_test_success(self, temp_db):
         """시험 시작 성공 테스트"""
         from backend.presentation.controllers.tests import router

@@ -128,3 +128,39 @@ class SqliteQuestionRepository:
             # limit만큼 반환
             return questions[:limit]
 
+    def find_random_by_level_and_types(
+        self, 
+        level: JLPTLevel, 
+        question_types: List[QuestionType], 
+        limit: int = 10
+    ) -> List[Question]:
+        """레벨과 유형들로 랜덤 문제 조회"""
+        if not question_types:
+            return []
+
+        with self.db.get_connection() as conn:
+            # 유형 값 리스트 생성
+            type_values = [qt.value for qt in question_types]
+            
+            # IN 절을 위한 플레이스홀더 생성
+            placeholders = ','.join(['?'] * len(type_values))
+            
+            # 해당 레벨과 유형들의 문제 조회
+            query = f"""
+                SELECT * FROM questions 
+                WHERE level = ? AND question_type IN ({placeholders})
+            """
+            params = [level.value] + type_values
+            cursor = conn.execute(query, params)
+            rows = cursor.fetchall()
+
+            if not rows:
+                return []
+
+            # 랜덤으로 선택
+            questions = [QuestionMapper.to_entity(row) for row in rows]
+            random.shuffle(questions)
+
+            # limit만큼 반환
+            return questions[:limit]
+
