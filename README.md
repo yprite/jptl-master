@@ -92,7 +92,25 @@ python scripts/seed_n5_questions.py
 python -m scripts.seed_n5_questions
 ```
 
-#### Docker를 사용한 실행 (권장)
+#### 통합 실행 스크립트 (권장)
+
+프로젝트 루트에서 `run.sh` 스크립트를 사용하여 백엔드와 프론트엔드를 동시에 실행할 수 있습니다:
+
+```bash
+# 실행 권한 부여 (최초 1회만)
+chmod +x run.sh
+
+# 백엔드와 프론트엔드 동시 실행
+./run.sh
+```
+
+이 스크립트는:
+- 백엔드 서버를 `http://localhost:8000`에서 실행
+- 프론트엔드 서버를 `http://localhost:3000`에서 실행
+- Ctrl+C로 두 서버를 동시에 종료
+- 로그는 `.backend.log`와 `.frontend.log`에 저장
+
+#### Docker를 사용한 실행
 
 ```bash
 # 프로덕션 환경 실행
