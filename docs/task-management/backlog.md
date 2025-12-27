@@ -20,13 +20,13 @@
 ### 🎯 에픽 (Epics)
 
 #### EPIC-JLPT-001: 사용자 관리 및 인증 (경량화)
-**우선순위**: P0 | **상태**: ✅ Done (도메인 완료)
+**우선순위**: P0 | **상태**: 🔄 In Progress (API 준비)
 **설명**: JLPT 학습자 관리 및 세션 기반 인증
 **완료된 하위 태스크**:
 - ✅ User 도메인 모델 TDD 구현
 - ✅ 세션 기반 인증 설계 (JWT 대신)
-- ⏳ SQLite 기반 사용자 리포지토리 구현
-- ⏳ FastAPI 세션 미들웨어 구현
+- ✅ SQLite 기반 사용자 리포지토리 구현
+- 🔄 FastAPI 컨트롤러 구조 구현 (Flask 전환 예정)
 - ⏳ 로그인/로그아웃 API 엔드포인트
 
 #### EPIC-JLPT-002: N5 진단 테스트 시스템
@@ -120,16 +120,16 @@
 - ResultRepository 구현 (생성/조회)
 - 데이터베이스 마이그레이션 스크립트
 
-#### TECH-JLPT-002: FastAPI 기반 REST API
-**우선순위**: P0 | **상태**: 📋 Ready | **스토리 포인트**: 10
-**설명**: 경량화된 FastAPI로 RESTful API 엔드포인트 구현
+#### TECH-JLPT-002: Flask 기반 REST API (경량화)
+**우선순위**: P0 | **상태**: 🔄 In Progress | **스토리 포인트**: 8
+**설명**: FastAPI에서 Flask로 전환하여 경량 RESTful API 구현
 **하위 태스크**:
-- 의존성 주입 컨테이너 설정
-- 헬스 체크 엔드포인트 (/api/health)
-- 사용자 인증 API (/api/auth/*)
-- 테스트 관리 API (/api/tests/*)
-- 결과 조회 API (/api/results/*)
-- 에러 처리 및 로깅 미들웨어
+- 🔄 Flask 앱 설정 및 SQLite 연동
+- 🔄 헬스 체크 엔드포인트 (/api/health)
+- 🔄 사용자 관리 API (/api/users/*)
+- ⏳ 테스트 관리 API (/api/tests/*)
+- ⏳ 결과 조회 API (/api/results/*)
+- ⏳ 세션 기반 인증 미들웨어
 
 #### TECH-JLPT-003: 세션 기반 인증 시스템
 **우선순위**: P0 | **상태**: 📋 Ready | **스토리 포인트**: 5
