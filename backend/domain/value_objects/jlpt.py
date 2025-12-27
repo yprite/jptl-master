@@ -6,6 +6,17 @@ JLPT 레벨과 문제 유형을 표현하는 값 객체들
 from enum import Enum
 
 
+class TestStatus(Enum):
+    """테스트 상태 열거형"""
+    CREATED = "created"          # 생성됨
+    IN_PROGRESS = "in_progress"  # 진행 중
+    COMPLETED = "completed"      # 완료됨
+    EXPIRED = "expired"          # 만료됨
+
+    def __str__(self) -> str:
+        return self.value
+
+
 class JLPTLevel(Enum):
     """JLPT 레벨 열거형"""
     N5 = "N5"  # 초급
