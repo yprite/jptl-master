@@ -1,10 +1,10 @@
 # 현재 스프린트 (Sprint)
 
 ## 스프린트 정보
-- **스프린트 번호**: Sprint #1
+- **스프린트 번호**: Sprint #1 (JLPT)
 - **기간**: 2024-12-27 ~ 2025-01-03 (1주)
-- **목표**: 블로그 시스템의 기본 DDD 아키텍처 구축 및 핵심 도메인 모델링
-- **프로젝트**: 블로그 시스템 (사용자, 게시글, 댓글 도메인)
+- **목표**: JLPT 자격 검증 프로그램 MVP 개발 (사용자 관리 + N5 진단 테스트)
+- **프로젝트**: JLPT Skill Assessment Platform
 - **상태**: 진행 중
 
 ## 스프린트 백로그
@@ -15,41 +15,35 @@
 ### 🟠 High (P1)
 | 태스크 ID | 제목 | 담당자 | 상태 | 우선순위 | 스토리 포인트 |
 |-----------|------|--------|------|----------|---------------|
-| TASK-001 | 프로젝트 기본 구조 설정 (backend/, frontend/, tests/) | AI Assistant | ⏳ In Progress | P1 | 3 |
-| TASK-002 | Git 저장소 초기화 및 브랜치 전략 설정 | AI Assistant | 📋 Backlog | P1 | 2 |
-| TASK-003 | DDD 기반 백엔드 기본 구조 구현 | AI Assistant | 📋 Backlog | P1 | 8 |
-| TASK-004 | User 도메인 모델 TDD 방식으로 구현 | AI Assistant | 📋 Backlog | P1 | 5 |
-| TASK-005 | Post 도메인 모델 TDD 방식으로 구현 | AI Assistant | 📋 Backlog | P1 | 5 |
+| JLPT-001 | JLPT 프로젝트 요구사항 정의 및 문서화 | AI Assistant | ✅ Done | P1 | 2 |
+| JLPT-002 | JLPT 도메인 모델링 (User, Test, Question, Result) | AI Assistant | ⏳ In Progress | P1 | 5 |
+| JLPT-003 | User 도메인 TDD 방식으로 재구현 (JLPT 학습자 모델) | AI Assistant | 📋 Backlog | P1 | 3 |
+| JLPT-004 | Question 도메인 TDD 방식으로 구현 | AI Assistant | 📋 Backlog | P1 | 5 |
+| JLPT-005 | Test 도메인 TDD 방식으로 구현 | AI Assistant | 📋 Backlog | P1 | 4 |
+| JLPT-006 | Result 도메인 TDD 방식으로 구현 | AI Assistant | 📋 Backlog | P1 | 4 |
 
 ### 🟡 Medium (P2)
 | 태스크 ID | 제목 | 담당자 | 상태 | 우선순위 | 스토리 포인트 |
 |-----------|------|--------|------|----------|---------------|
-| TASK-006 | 개발 가이드라인 문서화 | AI Assistant | ✅ Done | P2 | 3 |
-| TASK-007 | 테스트 환경 구축 (pytest, React Testing Library) | AI Assistant | 📋 Backlog | P2 | 3 |
-| TASK-008 | 프론트엔드 기본 구조 설정 (Next.js, TypeScript) | AI Assistant | 📋 Backlog | P2 | 4 |
+| JLPT-007 | JLPT N5 진단 테스트 API 구현 | AI Assistant | 📋 Backlog | P2 | 8 |
+| JLPT-008 | 테스트 결과 분석 및 리포트 생성 | AI Assistant | 📋 Backlog | P2 | 5 |
+| JLPT-009 | React 기반 프론트엔드 구조 설정 | AI Assistant | 📋 Backlog | P2 | 6 |
+| JLPT-010 | 기본 UI 컴포넌트 구현 (Test UI, Result UI) | AI Assistant | 📋 Backlog | P2 | 6 |
 
 ### 🟢 Low (P3)
 | 태스크 ID | 제목 | 담당자 | 상태 | 우선순위 | 스토리 포인트 |
 |-----------|------|--------|------|----------|---------------|
-| TASK-009 | README 및 프로젝트 문서화 | AI Assistant | 📋 Backlog | P3 | 2 |
-| TASK-010 | Docker 환경 설정 | AI Assistant | 📋 Backlog | P3 | 2 |
+| JLPT-011 | README 및 프로젝트 문서 업데이트 | AI Assistant | 📋 Backlog | P3 | 2 |
+| JLPT-012 | Docker 환경 설정 | AI Assistant | 📋 Backlog | P3 | 3 |
+| JLPT-013 | 기본 테스트 데이터 준비 (N5 문제 샘플) | AI Assistant | 📋 Backlog | P3 | 2 |
 
 ## 진행 상황
 
 ### 완료된 작업 (✅ Done)
-- [x] TASK-004: 개발 가이드라인 문서화 (완료일: YYYY-MM-DD)
-
-### 완료된 작업 (✅ Done)
-- [x] TASK-001: 프로젝트 기본 구조 설정 (완료일: 2024-12-27)
-- [x] TASK-002: Git 저장소 초기화 및 브랜치 전략 설정 (완료일: 2024-12-27)
-- [x] TASK-003: DDD 기반 백엔드 기본 구조 구현 (완료일: 2024-12-27)
-- [x] TASK-004: User 도메인 모델 TDD 방식으로 구현 (완료일: 2024-12-27)
-
-### 완료된 작업 (✅ Done)
-- [x] TASK-005: Post 도메인 모델 TDD 방식으로 구현 (완료일: 2024-12-27)
+- [x] JLPT-001: JLPT 프로젝트 요구사항 정의 및 문서화 (완료일: 2024-12-27)
 
 ### 진행 중 작업 (⏳ In Progress)
-- [ ] TASK-007: 테스트 환경 구축 (pytest, React Testing Library) (진행률: 0%)
+- [ ] JLPT-002: JLPT 도메인 모델링 (User, Test, Question, Result) (진행률: 30%)
 
 ### 차단된 작업 (🚫 Blocked)
 *현재 차단된 작업 없음*
