@@ -25,6 +25,23 @@ fi
 
 echo "$TEST_OUTPUT"
 
+# 시나리오 테스트 실행
+echo ""
+echo "🎭 시나리오 테스트 실행 중..."
+SCENARIO_OUTPUT=$(python -m pytest tests/test_scenarios.py -v --tb=short 2>&1)
+SCENARIO_EXIT_CODE=$?
+
+# 시나리오 테스트 실패 시 종료
+if [ $SCENARIO_EXIT_CODE -ne 0 ]; then
+    echo "$SCENARIO_OUTPUT"
+    echo ""
+    echo "❌ 시나리오 테스트가 실패했습니다."
+    exit $SCENARIO_EXIT_CODE
+fi
+
+echo "$SCENARIO_OUTPUT"
+echo "✅ 시나리오 테스트 통과!"
+
 # 커버리지 결과 파싱
 if [ -f "coverage.json" ]; then
     # coverage.json에서 전체 커버리지 추출
