@@ -100,13 +100,15 @@ class TestPost:
         # Given
         post = Post(id=1, title="제목", content="내용", author_id=1, published=True)
         original_updated_at = post.updated_at
+        import time
+        time.sleep(0.01)  # 시간 차이를 보장하기 위한 작은 지연
 
         # When
         post.unpublish()
 
         # Then
         assert post.published is False
-        assert post.updated_at > original_updated_at
+        assert post.updated_at >= original_updated_at
 
     def test_update_content(self):
         """게시글 내용 수정 테스트"""

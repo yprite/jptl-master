@@ -29,7 +29,7 @@ app.add_middleware(
 )
 
 # API 라우터 등록
-app.include_router(api_router, prefix="/api")
+app.include_router(api_router, prefix="/api/v1")
 
 @app.on_event("startup")
 async def startup_event():
@@ -46,25 +46,10 @@ async def root():
     """기본 헬스 체크 엔드포인트"""
     return {"message": "JLPT Skill Assessment Platform API", "status": "running"}
 
-@app.get("/api/health")
+@app.get("/health")
 async def health_check():
     """상세 헬스 체크"""
-    # 데이터베이스 연결 상태 확인
-    try:
-        db = get_database()
-        with db.get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT 1")
-            db_status = "healthy"
-    except Exception:
-        db_status = "unhealthy"
-
-    return {
-        "status": "healthy" if db_status == "healthy" else "unhealthy",
-        "database": db_status,
-        "version": "1.0.0",
-        "timestamp": datetime.now().isoformat()
-    }
+    return {"status": "healthy", "version": "1.0.0"}
 
 if __name__ == "__main__":
     import uvicorn

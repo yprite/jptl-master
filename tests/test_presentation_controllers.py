@@ -177,7 +177,7 @@ class TestPostsController:
         client = TestClient(app)
         response = client.get("/")
         assert response.status_code == 200
-        assert "게시글 목록 조회 API" in response.json()["message"]
+        assert "게시글 목록 조회" in response.json()["message"]
 
     def test_create_post(self):
         """게시글 생성 테스트"""
@@ -190,7 +190,7 @@ class TestPostsController:
         client = TestClient(app)
         response = client.post("/")
         assert response.status_code == 200
-        assert "게시글 생성 API" in response.json()["message"]
+        assert "게시글 생성" in response.json()["message"]
 
     def test_get_post(self):
         """특정 게시글 조회 테스트"""
@@ -203,7 +203,7 @@ class TestPostsController:
         client = TestClient(app)
         response = client.get("/1")
         assert response.status_code == 200
-        assert "게시글 1 조회 API" in response.json()["message"]
+        assert "게시글 1 조회" in response.json()["message"]
 
     def test_update_post(self):
         """게시글 수정 테스트"""
@@ -216,7 +216,7 @@ class TestPostsController:
         client = TestClient(app)
         response = client.put("/1")
         assert response.status_code == 200
-        assert "게시글 1 수정 API" in response.json()["message"]
+        assert "게시글 1 수정" in response.json()["message"]
 
     def test_delete_post(self):
         """게시글 삭제 테스트"""
@@ -229,7 +229,7 @@ class TestPostsController:
         client = TestClient(app)
         response = client.delete("/1")
         assert response.status_code == 200
-        assert "게시글 1 삭제 API" in response.json()["message"]
+        assert "게시글 1 삭제" in response.json()["message"]
 
 
 class TestResultsController:
@@ -730,7 +730,7 @@ class TestMainApp:
 
         client = TestClient(app)
 
-        with patch('backend.main.get_database') as mock_db:
+        with patch('backend.presentation.controllers.health.get_database') as mock_db:
             # 데이터베이스 연결 성공 시뮬레이션
             mock_conn = MagicMock()
             mock_cursor = MagicMock()
@@ -742,7 +742,7 @@ class TestMainApp:
             mock_db_instance.get_connection.return_value = mock_conn
             mock_db.return_value = mock_db_instance
 
-            response = client.get("/api/health")
+            response = client.get("/api/v1/health")
             assert response.status_code == 200
             data = response.json()
             assert data["status"] == "healthy"

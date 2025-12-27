@@ -16,7 +16,7 @@ class TestHealthAPI:
         """헬스 체크 엔드포인트 테스트"""
         client = TestClient(app)
 
-        with patch('backend.main.get_database') as mock_db:
+        with patch('backend.presentation.controllers.health.get_database') as mock_db:
             # 데이터베이스 연결 성공 시뮬레이션
             mock_conn = MagicMock()
             mock_cursor = MagicMock()
@@ -28,7 +28,7 @@ class TestHealthAPI:
             mock_db_instance.get_connection.return_value = mock_conn
             mock_db.return_value = mock_db_instance
 
-            response = client.get("/api/health")
+            response = client.get("/api/v1/health")
             assert response.status_code == 200
             data = response.json()
             assert data["status"] == "healthy"
@@ -39,7 +39,7 @@ class TestHealthAPI:
         """헬스 체크 응답 구조 검증"""
         client = TestClient(app)
 
-        with patch('backend.main.get_database') as mock_db:
+        with patch('backend.presentation.controllers.health.get_database') as mock_db:
             # 데이터베이스 연결 성공 시뮬레이션
             mock_conn = MagicMock()
             mock_cursor = MagicMock()
@@ -51,7 +51,7 @@ class TestHealthAPI:
             mock_db_instance.get_connection.return_value = mock_conn
             mock_db.return_value = mock_db_instance
 
-            response = client.get("/api/health")
+            response = client.get("/api/v1/health")
             assert response.status_code == 200
             data = response.json()
             assert data["status"] == "healthy"
