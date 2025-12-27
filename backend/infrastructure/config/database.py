@@ -103,19 +103,19 @@ class Database:
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     test_id INTEGER NOT NULL,
                     user_id INTEGER NOT NULL,
-                    attempt_id INTEGER NOT NULL,
+                    attempt_id INTEGER DEFAULT 0,
                     score REAL NOT NULL,
                     assessed_level TEXT NOT NULL,
                     recommended_level TEXT NOT NULL,
                     correct_answers_count INTEGER NOT NULL,
                     total_questions_count INTEGER NOT NULL,
                     time_taken_minutes INTEGER NOT NULL,
-                    performance_level TEXT NOT NULL,
-                    feedback TEXT NOT NULL,
+                    performance_level TEXT,
+                    feedback TEXT,
+                    question_type_analysis TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (test_id) REFERENCES tests(id),
-                    FOREIGN KEY (user_id) REFERENCES users(id),
-                    FOREIGN KEY (attempt_id) REFERENCES test_attempts(id)
+                    FOREIGN KEY (user_id) REFERENCES users(id)
                 )
             """)
 
