@@ -472,6 +472,90 @@ class TestTestsController:
             assert response.status_code == 404
             assert "시험을 찾을 수 없습니다" in response.json()["detail"]
 
+    def test_create_n5_diagnostic_test(self, temp_db):
+        """N5 진단 테스트 생성 전용 엔드포인트 테스트"""
+        from backend.presentation.controllers.tests import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # N5 문제들을 먼저 생성 (다양한 유형 포함)
+            question_repo = SqliteQuestionRepository(db=db)
+            for i in range(30):  # 충분한 문제 생성
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY if i % 3 == 0 else (QuestionType.GRAMMAR if i % 3 == 1 else QuestionType.READING),
+                    question_text=f"N5 Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # N5 진단 테스트 생성
+            response = client.post("/diagnostic/n5")
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["id"] > 0
+            assert data["title"] == "N5 진단 테스트"
+            assert data["level"] == "N5"
+            assert len(data["questions"]) == 20  # 기본 20문제
+            assert data["time_limit_minutes"] == 30  # 기본 30분
+
+    def test_create_n5_diagnostic_test_insufficient_questions(self, temp_db):
+        """N5 진단 테스트 생성 실패 테스트 - 문제 부족"""
+        from backend.presentation.controllers.tests import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 문제를 10개만 생성 (20개 필요)
+            question_repo = SqliteQuestionRepository(db=db)
+            for i in range(10):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"N5 Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # N5 진단 테스트 생성 시도
+            response = client.post("/diagnostic/n5")
+
+            assert response.status_code == 400
+            data = response.json()
+            assert "충분한 문제가 없습니다" in data["detail"]
+
     def test_create_test_success(self, temp_db):
         """시험 생성 성공 테스트"""
         from backend.presentation.controllers.tests import router
