@@ -1,164 +1,194 @@
 """
 도메인 엔티티 테스트
-TDD 방식으로 User, Post 엔티티 구현
+TDD 방식으로 JLPT 학습자(User) 엔티티 구현
 """
 
 import pytest
 from datetime import datetime
 from backend.domain.entities.user import User
-from backend.domain.entities.post import Post
+from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 
 
 class TestUser:
-    """User 엔티티 테스트"""
+    """JLPT 학습자(User) 엔티티 테스트"""
 
     def test_user_creation_with_valid_data(self):
-        """유효한 데이터로 User 생성 테스트"""
+        """유효한 데이터로 JLPT 학습자 생성 테스트"""
         # Given
         user_id = 1
         email = "test@example.com"
         username = "testuser"
+        target_level = JLPTLevel.N4
 
         # When
-        user = User(id=user_id, email=email, username=username)
+        user = User(id=user_id, email=email, username=username, target_level=target_level)
 
         # Then
         assert user.id == user_id
         assert user.email == email
         assert user.username == username
+        assert user.target_level == target_level
+        assert user.current_level is None  # 기본값
+        assert user.total_tests_taken == 0
+        assert user.study_streak == 0
+        assert user.preferred_question_types == []
         assert isinstance(user.created_at, datetime)
         assert isinstance(user.updated_at, datetime)
 
-    def test_user_creation_without_id(self):
-        """ID 없이 User 생성 시 실패 테스트"""
-        # Given & When & Then
-        with pytest.raises(TypeError):
-            User(email="test@example.com", username="testuser")
+    def test_user_creation_with_all_params(self):
+        """모든 파라미터로 JLPT 학습자 생성 테스트"""
+        # Given
+        user_id = 1
+        email = "test@example.com"
+        username = "testuser"
+        target_level = JLPTLevel.N3
+        current_level = JLPTLevel.N4
+        total_tests_taken = 5
+        study_streak = 3
+        preferred_types = [QuestionType.VOCABULARY, QuestionType.GRAMMAR]
 
-    def test_user_creation_with_invalid_email(self):
-        """잘못된 이메일 형식으로 User 생성 시 실패 테스트"""
-        # Given & When & Then
-        with pytest.raises(ValueError):
+        # When
+        user = User(
+            id=user_id,
+            email=email,
+            username=username,
+            target_level=target_level,
+            current_level=current_level,
+            total_tests_taken=total_tests_taken,
+            study_streak=study_streak,
+            preferred_question_types=preferred_types
+        )
+
+        # Then
+        assert user.id == user_id
+        assert user.target_level == target_level
+        assert user.current_level == current_level
+        assert user.total_tests_taken == total_tests_taken
+        assert user.study_streak == study_streak
+        assert user.preferred_question_types == preferred_types
+
+    def test_user_creation_validation(self):
+        """JLPT 학습자 생성 시 유효성 검증 테스트"""
+
+        # 잘못된 이메일
+        with pytest.raises(ValueError, match="올바른 이메일 형식이 아닙니다"):
             User(id=1, email="invalid-email", username="testuser")
 
-    def test_user_creation_with_empty_username(self):
-        """빈 사용자명으로 User 생성 시 실패 테스트"""
-        # Given & When & Then
-        with pytest.raises(ValueError):
+        # 빈 사용자명
+        with pytest.raises(ValueError, match="사용자명은 비어있을 수 없습니다"):
             User(id=1, email="test@example.com", username="")
 
-    def test_user_update_timestamp(self):
-        """User 정보 수정 시 updated_at 갱신 테스트"""
+        # 잘못된 목표 레벨
+        with pytest.raises(ValueError, match="목표 레벨은 유효한 JLPTLevel이어야 합니다"):
+            User(id=1, email="test@example.com", username="testuser", target_level="invalid")
+
+        # 음수 시험 수
+        with pytest.raises(ValueError, match="총 시험 응시 수는 0 이상의 정수여야 합니다"):
+            User(id=1, email="test@example.com", username="testuser", total_tests_taken=-1)
+
+        # 음수 연속 학습 일수
+        with pytest.raises(ValueError, match="연속 학습 일수는 0 이상의 정수여야 합니다"):
+            User(id=1, email="test@example.com", username="testuser", study_streak=-1)
+
+    def test_update_profile(self):
+        """학습자 프로필 업데이트 테스트"""
+        # Given
+        user = User(id=1, email="old@example.com", username="olduser", target_level=JLPTLevel.N5)
+        original_updated_at = user.updated_at
+
+        # When
+        user.update_profile(
+            email="new@example.com",
+            username="newuser",
+            target_level=JLPTLevel.N3,
+            preferred_question_types=[QuestionType.READING]
+        )
+
+        # Then
+        assert user.email == "new@example.com"
+        assert user.username == "newuser"
+        assert user.target_level == JLPTLevel.N3
+        assert user.preferred_question_types == [QuestionType.READING]
+        assert user.updated_at > original_updated_at
+
+    def test_update_learning_progress(self):
+        """학습 진행 상황 업데이트 테스트"""
         # Given
         user = User(id=1, email="test@example.com", username="testuser")
         original_updated_at = user.updated_at
 
-        # When - 1초 대기 후 업데이트 (실제로는 update 메서드 호출)
-        import time
-        time.sleep(0.001)  # 아주 짧은 대기
+        # When
+        user.update_learning_progress(JLPTLevel.N4, tests_taken=2)
 
-        # Then - 실제 구현 시 updated_at이 갱신되는지 확인
-        # TODO: update 메서드 구현 후 테스트 추가
-        assert user.updated_at >= original_updated_at
+        # Then
+        assert user.current_level == JLPTLevel.N4
+        assert user.total_tests_taken == 2
+        assert user.updated_at > original_updated_at
+
+    def test_study_streak_operations(self):
+        """연속 학습 일수 조작 테스트"""
+        # Given
+        user = User(id=1, email="test@example.com", username="testuser", study_streak=5)
+
+        # When - 증가
+        user.increment_study_streak()
+
+        # Then
+        assert user.study_streak == 6
+
+        # When - 초기화
+        user.reset_study_streak()
+
+        # Then
+        assert user.study_streak == 0
+
+    def test_can_take_test(self):
+        """시험 응시 가능 여부 테스트"""
+        # Given
+        user = User(id=1, email="test@example.com", username="testuser", target_level=JLPTLevel.N3)
+
+        # Then
+        assert user.can_take_test(JLPTLevel.N5) is False  # 목표 레벨보다 낮은 레벨
+        assert user.can_take_test(JLPTLevel.N4) is False  # 목표 레벨보다 낮은 레벨
+        assert user.can_take_test(JLPTLevel.N3) is True   # 목표 레벨
+        assert user.can_take_test(JLPTLevel.N2) is True   # 목표 레벨보다 높은 레벨
+
+    def test_get_recommended_level(self):
+        """추천 학습 레벨 반환 테스트"""
+        # Given
+        user_without_current = User(id=1, email="test@example.com", username="testuser", target_level=JLPTLevel.N4)
+        user_with_current = User(
+            id=2,
+            email="test@example.com",
+            username="testuser",
+            target_level=JLPTLevel.N4,
+            current_level=JLPTLevel.N3
+        )
+
+        # Then
+        assert user_without_current.get_recommended_level() == JLPTLevel.N4  # 목표 레벨
+        assert user_with_current.get_recommended_level() == JLPTLevel.N3     # 현재 레벨
+
+    def test_is_level_up_candidate(self):
+        """레벨 업 후보 여부 테스트"""
+        # Given
+        user_new = User(id=1, email="test@example.com", username="testuser")  # 처음 평가
+        user_current_n5 = User(id=2, email="test@example.com", username="testuser", current_level=JLPTLevel.N5)
+
+        # Then
+        assert user_new.is_level_up_candidate(JLPTLevel.N5) is True      # 처음 평가
+        assert user_current_n5.is_level_up_candidate(JLPTLevel.N5) is False  # 같은 레벨
+        assert user_current_n5.is_level_up_candidate(JLPTLevel.N4) is True   # N5에서 N4로 레벨 업 (난이도 상승)
+        assert user_current_n5.is_level_up_candidate(JLPTLevel.N1) is True   # N5에서 N1로 레벨 업 (난이도 상승)
 
     def test_user_equality_by_id(self):
-        """ID로 User 동등성 비교 테스트"""
+        """ID로 학습자 동등성 비교 테스트"""
         # Given
         user1 = User(id=1, email="test@example.com", username="testuser")
-        user2 = User(id=1, email="different@example.com", username="different")
+        user2 = User(id=1, email="different@example.com", username="different", target_level=JLPTLevel.N3)
         user3 = User(id=2, email="test@example.com", username="testuser")
 
         # Then
         assert user1 == user2  # 같은 ID
         assert user1 != user3  # 다른 ID
 
-
-class TestPost:
-    """Post 엔티티 테스트"""
-
-    def test_post_creation_with_valid_data(self):
-        """유효한 데이터로 Post 생성 테스트"""
-        # Given
-        post_id = 1
-        title = "테스트 게시글"
-        content = "이것은 테스트 게시글의 내용입니다."
-        author_id = 1
-
-        # When
-        post = Post(id=post_id, title=title, content=content, author_id=author_id)
-
-        # Then
-        assert post.id == post_id
-        assert post.title == title
-        assert post.content == content
-        assert post.author_id == author_id
-        assert post.published == False  # 기본값
-        assert isinstance(post.created_at, datetime)
-        assert isinstance(post.updated_at, datetime)
-
-    def test_post_creation_without_required_fields(self):
-        """필수 필드 없이 Post 생성 시 실패 테스트"""
-        # Given & When & Then
-        with pytest.raises(TypeError):
-            Post(id=1, title="제목")  # content와 author_id 누락
-
-    def test_post_creation_with_empty_title(self):
-        """빈 제목으로 Post 생성 시 실패 테스트"""
-        # Given & When & Then
-        with pytest.raises(ValueError):
-            Post(id=1, title="", content="내용", author_id=1)
-
-    def test_post_creation_with_empty_content(self):
-        """빈 내용으로 Post 생성 시 실패 테스트"""
-        # Given & When & Then
-        with pytest.raises(ValueError):
-            Post(id=1, title="제목", content="", author_id=1)
-
-    def test_post_publish(self):
-        """게시글 게시 테스트"""
-        # Given
-        post = Post(id=1, title="제목", content="내용", author_id=1)
-        assert post.published == False
-
-        # When
-        post.publish()
-
-        # Then
-        assert post.published == True
-        assert post.updated_at >= post.created_at
-
-    def test_post_unpublish(self):
-        """게시글 게시 취소 테스트"""
-        # Given
-        post = Post(id=1, title="제목", content="내용", author_id=1, published=True)
-
-        # When
-        post.unpublish()
-
-        # Then
-        assert post.published == False
-
-    def test_post_update_content(self):
-        """게시글 내용 수정 테스트"""
-        # Given
-        post = Post(id=1, title="원래 제목", content="원래 내용", author_id=1)
-        original_updated_at = post.updated_at
-
-        # When
-        post.update_content(title="수정된 제목", content="수정된 내용")
-
-        # Then
-        assert post.title == "수정된 제목"
-        assert post.content == "수정된 내용"
-        assert post.updated_at > original_updated_at
-
-    def test_post_equality_by_id(self):
-        """ID로 Post 동등성 비교 테스트"""
-        # Given
-        post1 = Post(id=1, title="제목1", content="내용1", author_id=1)
-        post2 = Post(id=1, title="제목2", content="내용2", author_id=2)
-        post3 = Post(id=2, title="제목1", content="내용1", author_id=1)
-
-        # Then
-        assert post1 == post2  # 같은 ID
-        assert post1 != post3  # 다른 ID

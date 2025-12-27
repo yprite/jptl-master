@@ -160,7 +160,7 @@ class TestQuestion:
             difficulty=1
         )
 
-        expected_repr = "Question(id=1, level=JLPTLevel.N5, type=QuestionType.VOCABULARY, difficulty=1)"
+        expected_repr = "Question(id=1, level=N5, type=vocabulary, difficulty=1)"
         assert repr(question) == expected_repr
 
 
