@@ -3,6 +3,16 @@
 이 파일은 Cursor AI 어시스턴트가 프로젝트 개발 시 반드시 준수해야 하는 규칙들을 정의합니다.
 DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든 코드 작성 및 리뷰 시 이 규칙을 우선적으로 적용합니다.
 
+## 관련 문서 참조
+
+더 자세한 내용은 다음 문서들을 참고하세요:
+- **[DEVELOPMENT_GUIDELINES.md](../DEVELOPMENT_GUIDELINES.md)**: 전체 개발 가이드라인 및 프로세스
+- **[docs/README.md](docs/README.md)**: 문서 구조 및 개요
+- **[docs/requirements.md](docs/requirements.md)**: 프로젝트 요구사항
+- **[docs/development/setup.md](docs/development/setup.md)**: 개발 환경 설정
+- **[docs/architecture/overview.md](docs/architecture/overview.md)**: 아키텍처 개요
+- **[docs/task-management/README.md](docs/task-management/README.md)**: 태스크 관리 가이드
+
 ## 핵심 개발 원칙
 
 ### 1. 오버엔지니어링 방지
@@ -14,6 +24,7 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 - Red-Green-Refactor 사이클 준수
 - 기능 구현 전에 반드시 테스트를 먼저 작성합니다
 - 모든 테스트가 통과하지 않으면 다음 단계로 진행하지 않습니다
+- 📖 자세한 내용: [DEVELOPMENT_GUIDELINES.md](../DEVELOPMENT_GUIDELINES.md#04-개발-프로세스-문서--테스트--개발--커밋--pr--태스크-업데이트)
 
 ### 3. 커밋 관리
 - 하나의 커밋은 최대 100라인으로 유지
@@ -22,6 +33,7 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 - **모든 작업 즉시 커밋**: 코드 변경, 문서 업데이트, 설정 변경 등 모든 작업을 즉시 커밋합니다
 - **작업 단위별 커밋**: 논의, 계획, 구현, 테스트 등 각 단계별로 커밋합니다
 - **모든 커밋 즉시 푸시**: 모든 커밋 후 즉시 원격 저장소에 푸시합니다
+- 📖 자세한 내용: [DEVELOPMENT_GUIDELINES.md](../DEVELOPMENT_GUIDELINES.md#03-git-관리-커밋--푸시)
 
 ### 3-1. Git 브랜치 및 푸시 자동화 (필수)
 - **브랜치 자동 생성**: 모든 작업 시작 전에 반드시 새로운 브랜치를 생성합니다
@@ -66,6 +78,7 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 - **Application Layer**: Application Service, Command/Query 객체
 - **Infrastructure Layer**: Repository 구현, 외부 서비스 어댑터
 - **Presentation Layer**: Controller, DTO, API 문서화
+- 📖 자세한 내용: [docs/architecture/overview.md](docs/architecture/overview.md), [docs/architecture/repositories.md](docs/architecture/repositories.md)
 
 ### 7. DDD 구현 원칙
 - 의존성 역전 원칙 준수
@@ -80,6 +93,7 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 - 프론트엔드: 최소 70% 코드 커버리지 필수 + 주요 사용자 플로우 100% 커버리지 (미달 시 테스트 실패)
 - 새로운 기능 추가 시 반드시 해당 영역의 테스트 코드를 작성합니다
 - 커버리지 미달 시 모든 작업 중단 및 테스트 작성 우선 진행
+- 📖 자세한 내용: [DEVELOPMENT_GUIDELINES.md](../DEVELOPMENT_GUIDELINES.md#31-백엔드-테스트-종류)
 
 ### 9. 테스트 안티패턴 금지
 - 데이터베이스 직접 테스트 금지 (목 사용)
@@ -101,6 +115,7 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 - **모든 작업은 새 브랜치에서 진행**: develop이나 main 브랜치에서 직접 작업하지 않습니다
 - **브랜치 필수 생성**: 모든 작업은 새로운 브랜치를 생성하여 진행합니다
 - **작업 단위별 브랜치**: 하나의 논리적 작업 단위마다 별도 브랜치를 생성합니다
+- 📖 자세한 내용: [DEVELOPMENT_GUIDELINES.md](../DEVELOPMENT_GUIDELINES.md#21-브랜치-전략), [docs/development/setup.md](docs/development/setup.md#git-저장소-설정)
 
 ### 11. 커밋 메시지 형식
 ```
@@ -180,6 +195,7 @@ footer
 - 아키텍처 변경 시 docs/architecture/ 문서 업데이트
 - 문서 리팩토링 필요시 즉시 수행
 - CHANGELOG.md에 모든 변경사항 기록
+- 📖 자세한 내용: [docs/README.md](docs/README.md), [docs/CHANGELOG.md](docs/CHANGELOG.md)
 
 ### 18. 프론트엔드 특화 규칙
 - Atomic Design 패턴으로 컴포넌트 구조화
@@ -194,6 +210,7 @@ footer
 - 우선순위 기반(P0-P3) 태스크 처리
 - 모든 태스크는 수용 기준과 템플릿 준수
 - 스프린트 문서와 백로그 실시간 업데이트
+- 📖 자세한 내용: [docs/task-management/README.md](docs/task-management/README.md), [docs/task-management/backlog.md](docs/task-management/backlog.md), [docs/task-management/current-sprint.md](docs/task-management/current-sprint.md)
 
 ### 20. 테스트 실행 및 커버리지 검증 (필수)
 - 모든 테스트 실행 시 커버리지 체크 필수 포함
