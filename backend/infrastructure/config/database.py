@@ -1,50 +1,131 @@
 """
-데이터베이스 설정 및 연결 관리
+SQLite 데이터베이스 설정 및 연결 관리
+경량화를 위해 SQLAlchemy 대신 순수 SQLite3 사용
 """
 
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
+import sqlite3
+import os
+from contextlib import contextmanager
+from typing import Generator
 
-# SQLite를 사용한 인메모리 데이터베이스 (개발용)
-# 실제 운영에서는 PostgreSQL 등으로 변경
-DATABASE_URL = "sqlite+aiosqlite:///./blog.db"
 
-# 비동기 엔진 생성
-engine = create_async_engine(
-    DATABASE_URL,
-    connect_args={
-        "check_same_thread": False,
-    },
-    poolclass=StaticPool,
-    echo=True,  # SQL 쿼리 로깅 (개발용)
-)
+class Database:
+    """SQLite 데이터베이스 연결 관리"""
 
-# 세션 팩토리 생성
-async_session = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False,
-)
+    def __init__(self, db_path: str = "data/jlpt.db"):
+        self.db_path = db_path
+        self._ensure_directory_exists()
+        self._create_tables()
 
-async def get_db() -> AsyncSession:
-    """데이터베이스 세션 의존성 주입을 위한 제너레이터"""
-    async with async_session() as session:
+    def _ensure_directory_exists(self):
+        """데이터베이스 디렉토리 생성"""
+        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+
+    @contextmanager
+    def get_connection(self) -> Generator[sqlite3.Connection, None, None]:
+        """데이터베이스 연결 컨텍스트 매니저"""
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row  # 컬럼명으로 접근 가능
         try:
-            yield session
-            await session.commit()
-        except Exception:
-            await session.rollback()
-            raise
+            yield conn
         finally:
-            await session.close()
+            conn.close()
 
-async def create_tables():
-    """데이터베이스 테이블 생성"""
-    # TODO: SQLAlchemy 메타데이터에서 테이블 생성
-    pass
+    def _create_tables(self):
+        """테이블 생성"""
+        with self.get_connection() as conn:
+            # 사용자 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT UNIQUE NOT NULL,
+                    username TEXT UNIQUE NOT NULL,
+                    target_level TEXT NOT NULL,
+                    current_level TEXT,
+                    total_tests_taken INTEGER DEFAULT 0,
+                    study_streak INTEGER DEFAULT 0,
+                    preferred_question_types TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
 
-async def drop_tables():
-    """데이터베이스 테이블 삭제 (테스트용)"""
-    # TODO: SQLAlchemy 메타데이터에서 테이블 삭제
-    pass
+            # 문제 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS questions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    level TEXT NOT NULL,
+                    question_type TEXT NOT NULL,
+                    question_text TEXT NOT NULL,
+                    choices TEXT NOT NULL,
+                    correct_answer TEXT NOT NULL,
+                    explanation TEXT NOT NULL,
+                    difficulty INTEGER NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
+            # 테스트 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS tests (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    level TEXT NOT NULL,
+                    question_ids TEXT NOT NULL,
+                    time_limit_minutes INTEGER NOT NULL,
+                    status TEXT DEFAULT 'created',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    started_at TIMESTAMP,
+                    completed_at TIMESTAMP
+                )
+            """)
+
+            # 테스트 응시 기록 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS test_attempts (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    test_id INTEGER NOT NULL,
+                    user_id INTEGER NOT NULL,
+                    user_answers TEXT,
+                    score REAL,
+                    time_taken_minutes INTEGER,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (test_id) REFERENCES tests(id),
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            """)
+
+            # 결과 분석 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS results (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    test_id INTEGER NOT NULL,
+                    user_id INTEGER NOT NULL,
+                    attempt_id INTEGER NOT NULL,
+                    score REAL NOT NULL,
+                    assessed_level TEXT NOT NULL,
+                    recommended_level TEXT NOT NULL,
+                    correct_answers_count INTEGER NOT NULL,
+                    total_questions_count INTEGER NOT NULL,
+                    time_taken_minutes INTEGER NOT NULL,
+                    performance_level TEXT NOT NULL,
+                    feedback TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (test_id) REFERENCES tests(id),
+                    FOREIGN KEY (user_id) REFERENCES users(id),
+                    FOREIGN KEY (attempt_id) REFERENCES test_attempts(id)
+                )
+            """)
+
+            conn.commit()
+
+
+# 전역 데이터베이스 인스턴스
+_db_instance = None
+
+def get_database() -> Database:
+    """데이터베이스 인스턴스 싱글톤"""
+    global _db_instance
+    if _db_instance is None:
+        _db_instance = Database()
+    return _db_instance

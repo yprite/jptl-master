@@ -19,7 +19,7 @@ class User:
 
     def __init__(
         self,
-        id: int,
+        id: Optional[int],
         email: str,
         username: str,
         target_level: JLPTLevel = JLPTLevel.N5,
@@ -55,6 +55,7 @@ class User:
         self._validate_study_streak(study_streak)
 
         self.id = id
+        self._validate_id(id)
         self.email = email
         self.username = username
         self.target_level = target_level
@@ -77,10 +78,11 @@ class User:
 
     def _validate_username(self, username: str) -> None:
         """사용자명 검증"""
-        if not username or not isinstance(username, str):
-            raise ValueError("사용자명은 필수 항목입니다")
+        if not isinstance(username, str):
+            raise ValueError("사용자명은 문자열이어야 합니다")
 
-        if len(username.strip()) == 0:
+        username_stripped = username.strip()
+        if not username_stripped:
             raise ValueError("사용자명은 비어있을 수 없습니다")
 
         if len(username) > 50:
@@ -100,6 +102,11 @@ class User:
         """연속 학습 일수 검증"""
         if not isinstance(study_streak, int) or study_streak < 0:
             raise ValueError("연속 학습 일수는 0 이상의 정수여야 합니다")
+
+    def _validate_id(self, id: Optional[int]) -> None:
+        """ID 검증"""
+        if id is not None and (not isinstance(id, int) or id <= 0):
+            raise ValueError("ID는 양의 정수여야 합니다")
 
     def update_profile(
         self,
@@ -199,6 +206,9 @@ class User:
         """ID 기반 동등성 비교"""
         if not isinstance(other, User):
             return False
+        # 둘 다 None이거나 같은 값인 경우
+        if self.id is None and other.id is None:
+            return self.email == other.email  # 이메일로 비교
         return self.id == other.id
 
     def __hash__(self) -> int:
