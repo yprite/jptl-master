@@ -119,6 +119,60 @@ async def get_test(test_id: int):
         completed_at=test.completed_at
     )
 
+@router.post("/diagnostic/n5", response_model=TestResponse)
+async def create_n5_diagnostic_test():
+    """N5 진단 테스트 생성 (전용 엔드포인트)
+    
+    기본 설정으로 N5 진단 테스트를 자동 생성합니다:
+    - 레벨: N5
+    - 문제 수: 20개
+    - 시간 제한: 30분
+    - 모든 문제 유형 포함
+    """
+    question_repo = get_question_repository()
+    test_repo = get_test_repository()
+
+    # N5 레벨의 모든 유형 문제 조회
+    questions = question_repo.find_random_by_level(JLPTLevel.N5, limit=20)
+
+    if len(questions) < 20:
+        raise HTTPException(
+            status_code=400,
+            detail=f"N5 진단 테스트를 생성하기에 충분한 문제가 없습니다. (사용 가능: {len(questions)}개, 필요: 20개)"
+        )
+
+    # N5 진단 테스트 생성
+    test = Test(
+        id=0,
+        title="N5 진단 테스트",
+        level=JLPTLevel.N5,
+        questions=questions,
+        time_limit_minutes=30
+    )
+
+    saved_test = test_repo.save(test)
+
+    return TestResponse(
+        id=saved_test.id,
+        title=saved_test.title,
+        level=saved_test.level.value,
+        status=saved_test.status.value,
+        time_limit_minutes=saved_test.time_limit_minutes,
+        questions=[
+            QuestionResponse(
+                id=q.id,
+                level=q.level.value,
+                question_type=q.question_type.value,
+                question_text=q.question_text,
+                choices=q.choices,
+                difficulty=q.difficulty
+            )
+            for q in saved_test.questions
+        ],
+        started_at=saved_test.started_at,
+        completed_at=saved_test.completed_at
+    )
+
 @router.post("/", response_model=TestResponse)
 async def create_test(request: TestCreateRequest):
     """새 시험 생성"""
