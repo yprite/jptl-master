@@ -77,6 +77,21 @@ npm start
 
 프론트엔드는 `http://localhost:3000`에서 실행됩니다.
 
+#### 샘플 데이터 준비
+
+N5 레벨 샘플 문제를 데이터베이스에 추가하려면:
+
+```bash
+# 가상 환경 활성화 후
+python scripts/seed_n5_questions.py
+```
+
+또는 Python 모듈로 직접 실행:
+
+```bash
+python -m scripts.seed_n5_questions
+```
+
 #### Docker를 사용한 실행 (권장)
 
 ```bash
