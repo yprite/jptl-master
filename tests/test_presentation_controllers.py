@@ -265,57 +265,222 @@ class TestResultsController:
 class TestTestsController:
     """Tests 컨트롤러 테스트"""
 
-    def test_get_tests_not_implemented(self):
-        """시험 목록 조회 미구현 테스트"""
+    @pytest.fixture
+    def temp_db(self):
+        """임시 데이터베이스 파일 생성"""
+        with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as f:
+            db_path = f.name
+        yield db_path
+        if os.path.exists(db_path):
+            os.unlink(db_path)
+
+    def test_get_tests_empty(self, temp_db):
+        """시험 목록 조회 (빈 목록) 테스트"""
         from backend.presentation.controllers.tests import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.get("/")
-        assert response.status_code == 404
-        assert "시험 관리 API가 아직 구현되지 않았습니다" in response.json()["detail"]
 
-    def test_get_test_not_implemented(self):
-        """특정 시험 정보 조회 미구현 테스트"""
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/")
+            assert response.status_code == 200
+            data = response.json()
+            assert isinstance(data, list)
+            assert len(data) == 0
+
+    def test_get_test_not_found(self, temp_db):
+        """존재하지 않는 시험 조회 테스트"""
         from backend.presentation.controllers.tests import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.get("/1")
-        assert response.status_code == 404
-        assert "시험 관리 API가 아직 구현되지 않았습니다" in response.json()["detail"]
 
-    def test_start_test_not_implemented(self):
-        """시험 시작 미구현 테스트"""
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/999")
+            assert response.status_code == 404
+            assert "시험을 찾을 수 없습니다" in response.json()["detail"]
+
+    def test_create_test_success(self, temp_db):
+        """시험 생성 성공 테스트"""
         from backend.presentation.controllers.tests import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.post("/1/start")
-        assert response.status_code == 404
-        assert "시험 관리 API가 아직 구현되지 않았습니다" in response.json()["detail"]
 
-    def test_submit_test_not_implemented(self):
-        """시험 제출 미구현 테스트"""
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 문제들을 먼저 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            for i in range(20):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            response = client.post(
+                "/",
+                json={
+                    "title": "N5 진단 테스트",
+                    "level": "N5",
+                    "question_count": 20,
+                    "time_limit_minutes": 60
+                }
+            )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["id"] > 0
+            assert data["title"] == "N5 진단 테스트"
+            assert data["level"] == "N5"
+            assert len(data["questions"]) == 20
+
+    def test_start_test_success(self, temp_db):
+        """시험 시작 성공 테스트"""
         from backend.presentation.controllers.tests import router
         from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.test_repository import SqliteTestRepository
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.test import Test
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 
         app = FastAPI()
         app.include_router(router)
 
         client = TestClient(app)
-        response = client.post("/1/submit")
-        assert response.status_code == 404
-        assert "시험 관리 API가 아직 구현되지 않았습니다" in response.json()["detail"]
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 문제와 테스트 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            questions = []
+            for i in range(5):
+                q = Question(
+                    id=0, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                    question_text=f"Q{i+1}", choices=["A", "B"], correct_answer="A",
+                    explanation=f"E{i+1}", difficulty=1
+                )
+                saved_q = question_repo.save(q)
+                questions.append(saved_q)
+
+            test_repo = SqliteTestRepository(db=db)
+            test = Test(
+                id=0, title="Test", level=JLPTLevel.N5,
+                questions=questions, time_limit_minutes=60
+            )
+            saved_test = test_repo.save(test)
+
+            response = client.post(
+                f"/{saved_test.id}/start",
+                json={"user_id": 1}
+            )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["status"] == "in_progress"
+            assert data["started_at"] is not None
+
+    def test_submit_test_success(self, temp_db):
+        """시험 제출 성공 테스트"""
+        from backend.presentation.controllers.tests import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.test_repository import SqliteTestRepository
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.domain.entities.test import Test
+        from backend.domain.entities.question import Question
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+
+            # 문제와 테스트 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            questions = []
+            for i in range(5):
+                q = Question(
+                    id=0, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                    question_text=f"Q{i+1}", choices=["A", "B"], correct_answer="A",
+                    explanation=f"E{i+1}", difficulty=1
+                )
+                saved_q = question_repo.save(q)
+                questions.append(saved_q)
+
+            test_repo = SqliteTestRepository(db=db)
+            test = Test(
+                id=0, title="Test", level=JLPTLevel.N5,
+                questions=questions, time_limit_minutes=60
+            )
+            test.start_test()
+            saved_test = test_repo.save(test)
+
+            # 답안 준비
+            answers = {q.id: "A" for q in questions}
+
+            response = client.post(
+                f"/{saved_test.id}/submit",
+                json={
+                    "user_id": saved_user.id,
+                    "answers": answers
+                }
+            )
+
+            if response.status_code != 200:
+                print(f"Response status: {response.status_code}")
+                print(f"Response body: {response.json()}")
+            
+            assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.json()}"
+            data = response.json()
+            assert data["success"] is True
+            assert data["data"]["score"] == 100.0
+            assert data["data"]["correct_answers"] == 5
+            assert data["data"]["total_questions"] == 5
 
 
 class TestMainApp:
