@@ -37,6 +37,7 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 
 ### 3-1. Git 브랜치 및 푸시 자동화 (필수)
 - **브랜치 자동 생성**: 모든 작업 시작 전에 반드시 새로운 브랜치를 생성합니다
+  - **모든 브랜치는 develop 브랜치에서 분기**: 작업 시작 전 develop 브랜치로 체크아웃하고 최신 상태로 업데이트한 후 새 브랜치 생성
   - 기능 개발: `feature/작업-설명` 형식 (예: `feature/user-authentication`)
   - 버그 수정: `bugfix/작업-설명` 형식 (예: `bugfix/login-error`)
   - 문서 작업: `docs/작업-설명` 형식 (예: `docs/api-documentation`)
@@ -113,6 +114,7 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 - bugfix/*: 버그 수정
 - hotfix/*: 긴급 수정
 - **모든 작업은 새 브랜치에서 진행**: develop이나 main 브랜치에서 직접 작업하지 않습니다
+- **모든 브랜치는 develop에서 분기**: 모든 작업 브랜치(feature, bugfix, docs, refactor, test)는 반드시 develop 브랜치에서 분기합니다
 - **브랜치 필수 생성**: 모든 작업은 새로운 브랜치를 생성하여 진행합니다
 - **작업 단위별 브랜치**: 하나의 논리적 작업 단위마다 별도 브랜치를 생성합니다
 - 📖 자세한 내용: [DEVELOPMENT_GUIDELINES.md](../DEVELOPMENT_GUIDELINES.md#21-브랜치-전략), [docs/development/setup.md](docs/development/setup.md#git-저장소-설정)
@@ -155,6 +157,8 @@ footer
 ### 14-1. Git 작업 자동화 프로세스 (필수)
 1. **작업 시작 시**:
    - 현재 브랜치 확인 (`git branch` 또는 `git status`)
+   - **develop 브랜치로 체크아웃**: `git checkout develop`
+   - **develop 브랜치 최신화**: `git pull origin develop` (또는 `git fetch origin && git merge origin/develop`)
    - 작업 유형에 맞는 새 브랜치 생성 (`git checkout -b feature/작업명` 등)
    - 새 브랜치로 체크아웃 확인
 
