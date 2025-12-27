@@ -180,3 +180,4 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+coverage.json
