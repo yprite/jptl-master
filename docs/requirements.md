@@ -40,25 +40,30 @@
 - **시간 제한**: 실제 시험 시간 준수
 - **결과 분석**: 점수, 순위, 영역별 성취도
 
-## 기술 스택
+## 기술 스택 (경량화 버전)
 
 ### 백엔드
-- **프레임워크**: FastAPI (Python)
-- **데이터베이스**: PostgreSQL
-- **ORM**: SQLAlchemy
-- **인증**: JWT 토큰
-- **API 문서화**: OpenAPI/Swagger
+- **프레임워크**: FastAPI (Python) - 간단한 API 서버용
+- **데이터베이스**: SQLite - 파일 기반, 별도 설치 불필요
+- **ORM**: SQLAlchemy Core - 복잡한 기능 제거, 간단한 쿼리만
+- **인증**: 세션 기반 쿠키 인증 - JWT 복잡성 제거
+- **API 문서화**: OpenAPI/Swagger (FastAPI 내장)
 
 ### 프론트엔드
-- **프레임워크**: React + TypeScript
-- **상태 관리**: Zustand 또는 Redux Toolkit
-- **스타일링**: Tailwind CSS
-- **테스트**: Jest + React Testing Library
+- **프레임워크**: 순수 HTML/CSS/JavaScript - 외부 의존성 최소화
+- **UI 라이브러리**: Bootstrap CSS - 간단한 스타일링
+- **JavaScript**: Vanilla JS + Fetch API - 프레임워크 불필요
+- **테스트**: 간단한 수동 테스트 - 자동화 테스트 생략
 
-### 인프라
-- **배포**: Docker + Docker Compose
-- **CI/CD**: GitHub Actions
-- **모니터링**: Prometheus + Grafana
+### 인프라 (최소화)
+- **배포**: 로컬 파일 서버 또는 간단한 Python 서버
+- **CI/CD**: 없음 - 수동 배포
+- **모니터링**: 없음 - 간단한 로깅만
+
+### 설계 원칙
+- **KISS 원칙**: "Keep It Simple, Stupid" - 불필요한 복잡성 제거
+- **YAGNI 원칙**: "You Aren't Gonna Need It" - 실제 필요한 기능만
+- **사용자 규모 고려**: 일별 100명 미만 사용자를 위한 최적화
 
 ## 프로젝트 범위 (MVP)
 
