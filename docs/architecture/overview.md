@@ -123,6 +123,53 @@ class Result:
     correct_answers_count: int
     total_questions_count: int
     time_taken_minutes: int
+    question_type_analysis: Dict[str, Dict[str, int]]  # 유형별 분석
+```
+
+#### AnswerDetail (문제별 상세 답안 이력)
+```python
+class AnswerDetail:
+    id: int
+    result_id: int
+    question_id: int
+    user_answer: str
+    correct_answer: str
+    is_correct: bool
+    time_spent_seconds: int  # 문제별 소요 시간
+    difficulty: int
+    question_type: QuestionType
+    created_at: datetime
+```
+
+#### LearningHistory (학습 이력)
+```python
+class LearningHistory:
+    id: int
+    user_id: int
+    test_id: int
+    result_id: int
+    study_date: date  # 학습 날짜
+    study_hour: int  # 학습 시간대 (0-23)
+    total_questions: int
+    correct_count: int
+    time_spent_minutes: int
+    created_at: datetime
+```
+
+#### UserPerformance (사용자 성능 분석 데이터)
+```python
+class UserPerformance:
+    id: int
+    user_id: int
+    analysis_period_start: date
+    analysis_period_end: date
+    type_performance: Dict[QuestionType, Dict[str, float]]  # 유형별 성취도
+    difficulty_performance: Dict[int, Dict[str, float]]  # 난이도별 성취도
+    level_progression: Dict[JLPTLevel, Dict[str, Any]]  # 레벨별 추이
+    repeated_mistakes: List[int]  # 반복 오답 문제 ID 리스트
+    weaknesses: Dict[str, Any]  # ChatGPT 분석용 원시 데이터
+    created_at: datetime
+    updated_at: datetime
 ```
 
 ### 값 객체 (Value Objects)
@@ -215,10 +262,60 @@ CREATE TABLE results (
     time_taken_minutes INTEGER NOT NULL,
     performance_level TEXT NOT NULL,
     feedback TEXT NOT NULL,
+    question_type_analysis TEXT, -- JSON 문자열
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (test_id) REFERENCES tests(id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (attempt_id) REFERENCES test_attempts(id)
+);
+
+-- 문제별 상세 답안 이력
+CREATE TABLE answer_details (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    result_id INTEGER NOT NULL,
+    question_id INTEGER NOT NULL,
+    user_answer TEXT NOT NULL,
+    correct_answer TEXT NOT NULL,
+    is_correct BOOLEAN NOT NULL,
+    time_spent_seconds INTEGER NOT NULL,
+    difficulty INTEGER NOT NULL,
+    question_type TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (result_id) REFERENCES results(id),
+    FOREIGN KEY (question_id) REFERENCES questions(id)
+);
+
+-- 학습 이력
+CREATE TABLE learning_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    test_id INTEGER NOT NULL,
+    result_id INTEGER NOT NULL,
+    study_date DATE NOT NULL,
+    study_hour INTEGER NOT NULL,
+    total_questions INTEGER NOT NULL,
+    correct_count INTEGER NOT NULL,
+    time_spent_minutes INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (test_id) REFERENCES tests(id),
+    FOREIGN KEY (result_id) REFERENCES results(id)
+);
+
+-- 사용자 성능 분석
+CREATE TABLE user_performance (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    analysis_period_start DATE NOT NULL,
+    analysis_period_end DATE NOT NULL,
+    type_performance TEXT, -- JSON
+    difficulty_performance TEXT, -- JSON
+    level_progression TEXT, -- JSON
+    repeated_mistakes TEXT, -- JSON 배열
+    weaknesses TEXT, -- JSON (ChatGPT 분석용)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 ```
 
@@ -238,13 +335,16 @@ PUT    /api/users/profile    # 사용자 프로필 업데이트
 GET    /api/questions        # 문제 목록 조회 (페이지네이션)
 GET    /api/questions/{id}   # 특정 문제 조회
 
-POST   /api/tests             # 새 시험 생성
+POST   /api/tests             # 새 시험 생성 (question_types 파라미터로 유형 선택)
 GET    /api/tests/{id}        # 시험 정보 조회
 POST   /api/tests/{id}/start  # 시험 시작
-POST   /api/tests/{id}/submit # 시험 제출
+POST   /api/tests/{id}/submit # 시험 제출 (상세 답안 이력 자동 저장)
 
 GET    /api/results           # 결과 목록 조회
 GET    /api/results/{id}      # 결과 상세 조회
+GET    /api/results/{id}/details # 결과별 상세 답안 이력 조회
+GET    /api/users/{id}/performance # 사용자 성능 분석 데이터 조회
+GET    /api/users/{id}/history # 사용자 학습 이력 조회
 ```
 
 ### 응답 형식 표준화
@@ -297,6 +397,20 @@ GET    /api/results/{id}      # 결과 상세 조회
 - 사용자 비밀번호 해싱 (필요 시)
 - 개인정보 최소 수집
 - 데이터 백업 및 복구 계획
+
+## 학습 분석 시스템
+
+### 개인 데이터 수집
+- **AnswerDetail**: 문제별 상세 답안 이력 (답안, 소요 시간, 정답 여부)
+- **LearningHistory**: 날짜별, 시간대별 학습 패턴 추적
+- **UserPerformance**: 유형별, 난이도별, 레벨별 성취도 집계
+
+### 분석 서비스
+- **AnalysisService**: 사용자 성능 데이터 집계 및 약점 식별
+- **ChatGPTAnalysisAdapter**: ChatGPT API 연동 (향후 구현)
+- **BatchAnalysisJob**: 주기적 배치 분석 작업
+
+자세한 내용은 [학습 분석 시스템 문서](learning-analytics.md) 참고
 
 ## 개발 프로세스
 
