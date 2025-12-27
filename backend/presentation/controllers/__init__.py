@@ -8,7 +8,6 @@ from .health import router as health_router
 from .users import router as users_router
 from .tests import router as tests_router
 from .results import router as results_router
-from .posts import router as posts_router
 
 # 메인 API 라우터
 router = APIRouter()
@@ -18,4 +17,3 @@ router.include_router(health_router, tags=["health"])
 router.include_router(users_router, prefix="/users", tags=["users"])
 router.include_router(tests_router, prefix="/tests", tags=["tests"])
 router.include_router(results_router, prefix="/results", tags=["results"])
-router.include_router(posts_router, prefix="/posts", tags=["posts"])
