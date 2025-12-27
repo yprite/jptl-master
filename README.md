@@ -77,6 +77,24 @@ npm start
 
 프론트엔드는 `http://localhost:3000`에서 실행됩니다.
 
+#### Docker를 사용한 실행 (권장)
+
+```bash
+# 프로덕션 환경 실행
+docker-compose up -d
+
+# 개발 환경 실행 (핫 리로드 지원)
+docker-compose -f docker-compose.dev.yml up -d
+
+# 로그 확인
+docker-compose logs -f
+
+# 컨테이너 중지
+docker-compose down
+```
+
+Docker를 사용하면 백엔드와 프론트엔드가 자동으로 설정되고 실행됩니다.
+
 ## 🧪 테스트
 
 ### 백엔드 테스트
