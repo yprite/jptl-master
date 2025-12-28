@@ -208,7 +208,7 @@
 ### 시험 생성 요청
 
 ```bash
-curl -X POST "http://localhost:8000/api/tests/" \
+curl -X POST "http://localhost:8000/api/v1/tests/" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "N5 모의고사",
@@ -221,7 +221,7 @@ curl -X POST "http://localhost:8000/api/tests/" \
 ### 답안 제출 요청
 
 ```bash
-curl -X POST "http://localhost:8000/api/tests/1/submit" \
+curl -X POST "http://localhost:8000/api/v1/tests/1/submit" \
   -H "Content-Type: application/json" \
   -H "Cookie: session=..." \
   -d '{

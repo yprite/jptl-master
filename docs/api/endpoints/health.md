@@ -7,14 +7,16 @@
 ## Base URL
 
 ```
-/api/health
+/api/v1/health
 ```
+
+**참고**: 모든 API 엔드포인트는 `/api/v1` prefix를 사용합니다.
 
 ## 엔드포인트 목록
 
 ### 1. 헬스 체크
 
-**GET** `/api/health/health`
+**GET** `/api/v1/health/health`
 
 애플리케이션의 기본 헬스 상태를 확인합니다.
 
@@ -25,6 +27,8 @@
 ```json
 {
   "status": "healthy",
+  "database": "healthy",
+  "version": "1.0.0",
   "timestamp": "2025-01-04T10:00:00"
 }
 ```
@@ -36,7 +40,7 @@
 
 ### 2. 준비 상태 확인
 
-**GET** `/api/health/ready`
+**GET** `/api/v1/health/ready`
 
 애플리케이션의 준비 상태를 확인합니다. 데이터베이스 연결 등 외부 의존성을 포함하여 확인합니다.
 
@@ -46,9 +50,7 @@
 **응답:**
 ```json
 {
-  "status": "ready",
-  "database": "connected",
-  "timestamp": "2025-01-04T10:00:00"
+  "status": "ready"
 }
 ```
 
@@ -59,9 +61,7 @@
 **에러 응답:**
 ```json
 {
-  "status": "not_ready",
-  "database": "disconnected",
-  "timestamp": "2025-01-04T10:00:00"
+  "status": "ready"
 }
 ```
 
@@ -73,7 +73,7 @@
 ```yaml
 livenessProbe:
   httpGet:
-    path: /api/health/health
+    path: /api/v1/health/health
     port: 8000
   initialDelaySeconds: 30
   periodSeconds: 10
@@ -83,7 +83,7 @@ livenessProbe:
 ```yaml
 readinessProbe:
   httpGet:
-    path: /api/health/ready
+    path: /api/v1/health/ready
     port: 8000
   initialDelaySeconds: 5
   periodSeconds: 5

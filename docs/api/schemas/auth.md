@@ -101,7 +101,7 @@
 ### 로그인 요청
 
 ```bash
-curl -X POST "http://localhost:8000/api/auth/login" \
+curl -X POST "http://localhost:8000/api/v1/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com"
@@ -112,7 +112,7 @@ curl -X POST "http://localhost:8000/api/auth/login" \
 ### 로그아웃 요청
 
 ```bash
-curl -X POST "http://localhost:8000/api/auth/logout" \
+curl -X POST "http://localhost:8000/api/v1/auth/logout" \
   -H "Cookie: session=..." \
   -b cookies.txt
 ```

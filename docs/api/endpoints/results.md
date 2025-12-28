@@ -7,14 +7,16 @@ JLPT 테스트 결과 조회 API 엔드포인트입니다. 결과 목록 조회,
 ## Base URL
 
 ```
-/api/results
+/api/v1/results
 ```
+
+**참고**: 모든 API 엔드포인트는 `/api/v1` prefix를 사용합니다.
 
 ## 엔드포인트 목록
 
 ### 1. 결과 목록 조회
 
-**GET** `/api/results/`
+**GET** `/api/v1/results/`
 
 결과 목록을 조회합니다.
 
@@ -25,8 +27,8 @@ JLPT 테스트 결과 조회 API 엔드포인트입니다. 결과 목록 조회,
 
 **요청 예시:**
 ```
-GET /api/results/?user_id=1
-GET /api/results/?test_id=1
+GET /api/v1/results/?user_id=1
+GET /api/v1/results/?test_id=1
 ```
 
 **응답:**
@@ -53,7 +55,7 @@ GET /api/results/?test_id=1
 
 ### 2. 상세 결과 조회
 
-**GET** `/api/results/{result_id}`
+**GET** `/api/v1/results/{result_id}`
 
 특정 결과의 상세 정보를 조회합니다.
 
@@ -101,7 +103,7 @@ GET /api/results/?test_id=1
 
 ### 3. 사용자별 최근 결과 조회
 
-**GET** `/api/results/users/{user_id}/recent`
+**GET** `/api/v1/results/users/{user_id}/recent`
 
 특정 사용자의 최근 결과를 조회합니다.
 
@@ -114,7 +116,7 @@ GET /api/results/?test_id=1
 
 **요청 예시:**
 ```
-GET /api/results/users/1/recent?limit=5
+GET /api/v1/results/users/1/recent?limit=5
 ```
 
 **응답:**
@@ -142,7 +144,7 @@ GET /api/results/users/1/recent?limit=5
 
 ### 4. 사용자 평균 점수 조회
 
-**GET** `/api/results/users/{user_id}/average-score`
+**GET** `/api/v1/results/users/{user_id}/average-score`
 
 특정 사용자의 평균 점수를 조회합니다.
 
@@ -166,7 +168,7 @@ GET /api/results/users/1/recent?limit=5
 
 ### 5. 결과 분석 리포트 생성
 
-**GET** `/api/results/{result_id}/report`
+**GET** `/api/v1/results/{result_id}/report`
 
 테스트 결과를 기반으로 상세한 분석 리포트를 생성합니다.
 
@@ -249,7 +251,7 @@ GET /api/results/users/1/recent?limit=5
 
 ### 6. 상세 답안 이력 조회
 
-**GET** `/api/results/{result_id}/details`
+**GET** `/api/v1/results/{result_id}/details`
 
 특정 결과에 대한 모든 문제별 상세 답안 이력을 조회합니다. 각 답안의 정답 여부, 소요 시간, 난이도, 문제 유형 등의 정보를 포함합니다.
 

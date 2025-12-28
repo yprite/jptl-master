@@ -7,50 +7,52 @@
 ## Base URL
 
 ```
-/api/auth
+/api/v1/auth
 ```
+
+**참고**: 모든 API 엔드포인트는 `/api/v1` prefix를 사용합니다.
 
 ## 엔드포인트 목록
 
 ### 1. 로그인
 
-**POST** `/api/auth/login`
+**POST** `/api/v1/auth/login`
 
 사용자 로그인을 수행합니다.
 
 **요청 본문:**
 ```json
 {
-  "email": "user@example.com",
-  "password": "password123"
+  "email": "user@example.com"
 }
 ```
 
 **요청 스키마:**
 - `email` (string, required): 이메일 주소
-- `password` (string, required): 비밀번호
+
+**참고**: 현재 구현은 이메일만 사용하며, 비밀번호 인증은 구현되지 않았습니다.
 
 **응답:**
 ```json
 {
   "success": true,
-  "message": "로그인 성공",
-  "user": {
-    "id": 1,
+  "data": {
+    "user_id": 1,
     "email": "user@example.com",
     "username": "학습자1"
-  }
+  },
+  "message": "로그인 성공"
 }
 ```
 
 **상태 코드:**
 - `200 OK`: 성공
-- `401 Unauthorized`: 이메일 또는 비밀번호가 잘못됨
+- `404 Not Found`: 사용자를 찾을 수 없음
 
 **에러 응답:**
 ```json
 {
-  "detail": "이메일 또는 비밀번호가 잘못되었습니다"
+  "detail": "사용자를 찾을 수 없습니다"
 }
 ```
 
@@ -61,7 +63,7 @@
 
 ### 2. 로그아웃
 
-**POST** `/api/auth/logout`
+**POST** `/api/v1/auth/logout`
 
 사용자 로그아웃을 수행합니다.
 

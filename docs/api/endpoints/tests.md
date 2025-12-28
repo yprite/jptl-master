@@ -7,14 +7,16 @@ JLPT 시험 관리 API 엔드포인트입니다. 시험 목록 조회, 시험 �
 ## Base URL
 
 ```
-/api/tests
+/api/v1/tests
 ```
+
+**참고**: 모든 API 엔드포인트는 `/api/v1` prefix를 사용합니다.
 
 ## 엔드포인트 목록
 
 ### 1. 시험 목록 조회
 
-**GET** `/api/tests/`
+**GET** `/api/v1/tests/`
 
 시험 목록을 조회합니다.
 
@@ -24,7 +26,7 @@ JLPT 시험 관리 API 엔드포인트입니다. 시험 목록 조회, 시험 �
 
 **요청 예시:**
 ```
-GET /api/tests/?level=N5
+GET /api/v1/tests/?level=N5
 ```
 
 **응답:**
@@ -48,7 +50,7 @@ GET /api/tests/?level=N5
 
 ### 2. 특정 시험 정보 조회
 
-**GET** `/api/tests/{test_id}`
+**GET** `/api/v1/tests/{test_id}`
 
 특정 시험의 상세 정보를 조회합니다.
 
@@ -86,23 +88,18 @@ GET /api/tests/?level=N5
 
 ### 3. N5 진단 테스트 생성
 
-**POST** `/api/tests/diagnostic/n5`
+**POST** `/api/v1/tests/diagnostic/n5`
 
-N5 진단 테스트를 생성합니다.
+N5 진단 테스트를 생성합니다. 기본 설정으로 자동 생성됩니다.
 
 **요청 본문:**
-```json
-{
-  "question_count": 20,
-  "time_limit_minutes": 60,
-  "question_types": ["VOCABULARY", "GRAMMAR"]
-}
-```
+없음 (빈 요청 본문 또는 요청 본문 없음)
 
-**요청 스키마:**
-- `question_count` (int, optional): 문제 개수 (기본값: 20)
-- `time_limit_minutes` (int, optional): 시간 제한 (분, 기본값: 60)
-- `question_types` (List[QuestionType], optional): 문제 유형 필터 (None이면 모든 유형)
+**기본 설정:**
+- 레벨: N5
+- 문제 수: 20개
+- 시간 제한: 30분
+- 문제 유형: 모든 유형 포함
 
 **응답:**
 ```json
@@ -126,7 +123,7 @@ N5 진단 테스트를 생성합니다.
 
 ### 4. 시험 생성
 
-**POST** `/api/tests/`
+**POST** `/api/v1/tests/`
 
 새로운 시험을 생성합니다.
 
@@ -170,7 +167,7 @@ N5 진단 테스트를 생성합니다.
 
 ### 5. 시험 시작
 
-**POST** `/api/tests/{test_id}/start`
+**POST** `/api/v1/tests/{test_id}/start`
 
 시험을 시작합니다.
 
@@ -212,7 +209,7 @@ N5 진단 테스트를 생성합니다.
 
 ### 6. 답안 제출
 
-**POST** `/api/tests/{test_id}/submit`
+**POST** `/api/v1/tests/{test_id}/submit`
 
 시험 답안을 제출합니다.
 
@@ -237,8 +234,29 @@ N5 진단 테스트를 생성합니다.
 ```json
 {
   "success": true,
-  "message": "답안이 성공적으로 제출되었습니다",
-  "result_id": 1
+  "data": {
+    "test_id": 1,
+    "result_id": 1,
+    "score": 75.0,
+    "correct_answers": 15,
+    "total_questions": 20,
+    "time_taken_minutes": 45,
+    "assessed_level": "N5",
+    "recommended_level": "N5",
+    "question_type_analysis": {
+      "VOCABULARY": {"correct": 4, "total": 5},
+      "GRAMMAR": {"correct": 3, "total": 5}
+    },
+    "performance_level": "good",
+    "is_passed": true,
+    "feedback": {
+      "overall": "전체적으로 좋은 성과를 보였습니다.",
+      "strength": "VOCABULARY 영역에서 우수한 성과를 보였습니다.",
+      "weakness": "GRAMMAR 영역에서 개선이 필요합니다.",
+      "recommendation": "GRAMMAR 문제를 더 많이 연습하세요."
+    }
+  },
+  "message": "시험이 성공적으로 제출되었습니다"
 }
 ```
 
@@ -258,9 +276,9 @@ N5 진단 테스트를 생성합니다.
 
 ## 인증
 
-일부 엔드포인트는 세션 기반 인증이 필요할 수 있습니다:
-- `/api/tests/{test_id}/start` (POST)
-- `/api/tests/{test_id}/submit` (POST)
+일부 엔드포인트는 세션 기반 인증이 필요합니다:
+- `/api/v1/tests/{test_id}/start` (POST) - 인증 필요
+- `/api/v1/tests/{test_id}/submit` (POST) - 인증 필요
 
 ## 시험 상태
 

@@ -7,14 +7,16 @@
 ## Base URL
 
 ```
-/api/users
+/api/v1/users
 ```
+
+**참고**: 모든 API 엔드포인트는 `/api/v1` prefix를 사용합니다.
 
 ## 엔드포인트 목록
 
 ### 1. 사용자 목록 조회
 
-**GET** `/api/users/`
+**GET** `/api/v1/users/`
 
 사용자 목록을 조회합니다.
 
@@ -35,7 +37,7 @@
 
 ### 2. 사용자 등록
 
-**POST** `/api/users/`
+**POST** `/api/v1/users/`
 
 새로운 사용자를 등록합니다.
 
@@ -85,7 +87,7 @@
 
 ### 3. 현재 사용자 정보 조회
 
-**GET** `/api/users/me`
+**GET** `/api/v1/users/me`
 
 현재 로그인된 사용자의 정보를 조회합니다.
 
@@ -117,7 +119,7 @@
 
 ### 4. 현재 사용자 정보 수정
 
-**PUT** `/api/users/me`
+**PUT** `/api/v1/users/me`
 
 현재 로그인된 사용자의 정보를 수정합니다.
 
@@ -166,7 +168,7 @@
 
 ### 5. 특정 사용자 조회
 
-**GET** `/api/users/{user_id}`
+**GET** `/api/v1/users/{user_id}`
 
 특정 사용자의 정보를 조회합니다.
 
@@ -193,7 +195,7 @@ GET /api/users/1
 
 ### 6. 사용자 정보 수정
 
-**PUT** `/api/users/{user_id}`
+**PUT** `/api/v1/users/{user_id}`
 
 특정 사용자의 정보를 수정합니다.
 
@@ -220,7 +222,7 @@ PUT /api/users/1
 
 ### 7. 사용자 삭제
 
-**DELETE** `/api/users/{user_id}`
+**DELETE** `/api/v1/users/{user_id}`
 
 특정 사용자를 삭제합니다.
 
@@ -247,7 +249,7 @@ DELETE /api/users/1
 
 ### 8. 사용자 성능 분석 조회
 
-**GET** `/api/users/{user_id}/performance`
+**GET** `/api/v1/users/{user_id}/performance`
 
 특정 사용자의 성능 분석 데이터를 조회합니다. 유형별 성취도, 난이도별 성취도, 반복 오답 문제, 약점 분석 등의 정보를 포함합니다.
 
@@ -312,7 +314,7 @@ DELETE /api/users/1
 
 ### 9. 사용자 학습 이력 조회
 
-**GET** `/api/users/{user_id}/history`
+**GET** `/api/v1/users/{user_id}/history`
 
 특정 사용자의 학습 이력을 조회합니다. 날짜별, 시간대별 학습 패턴 및 성취도를 포함합니다.
 
@@ -373,7 +375,7 @@ DELETE /api/users/1
 ## 인증
 
 일부 엔드포인트는 세션 기반 인증이 필요합니다:
-- `/api/users/me` (GET, PUT)
+- `/api/v1/users/me` (GET, PUT)
 
 인증이 필요한 엔드포인트는 세션 쿠키를 통해 인증됩니다.
 
