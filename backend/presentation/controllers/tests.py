@@ -297,7 +297,11 @@ async def submit_test(
         # 결과 분석 및 저장
         score = saved_test.score
         assessed_level = test.level  # 간단히 테스트 레벨을 평가 레벨로 사용
-        recommended_level = test.level  # TODO: 점수 기반 레벨 추천 로직 구현
+        
+        # 점수 기반 레벨 추천
+        from backend.domain.services.level_recommendation_service import LevelRecommendationService
+        recommendation_service = LevelRecommendationService()
+        recommended_level = recommendation_service.recommend_level(test.level, score)
 
         # 문제 유형별 분석
         question_type_analysis = {}
