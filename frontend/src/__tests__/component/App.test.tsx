@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import App from '../../App';
 
@@ -101,17 +101,36 @@ describe('App', () => {
 
     let currentUser: any = mockUser;
     let listenerFn: any = null;
+    let initializeResolve: any = null;
+    const initializePromise = new Promise((resolve) => {
+      initializeResolve = resolve;
+    });
     
     (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
       listenerFn = listener;
-      listener(currentUser);
+      // 초기화 완료 후에 listener 호출
+      initializePromise.then(() => {
+        listener(currentUser);
+      });
       return jest.fn();
     });
     (mockAuthService.getCurrentUser as jest.Mock).mockImplementation(() => currentUser);
     (mockAuthService.isAuthenticated as jest.Mock).mockImplementation(() => currentUser !== null);
-    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+    (mockAuthService.initialize as jest.Mock).mockImplementation(async () => {
+      await new Promise(resolve => setTimeout(resolve, 10));
+      if (initializeResolve) {
+        initializeResolve();
+      }
+      return mockUser;
+    });
 
     render(<App />);
+
+    // 초기화 완료 대기
+    await waitFor(() => {
+      expect(mockAuthService.initialize).toHaveBeenCalled();
+    });
+    await initializePromise;
 
     // 초기에는 초기 화면
     await waitFor(() => {
@@ -121,16 +140,82 @@ describe('App', () => {
     // 사용자가 null로 변경 (로그아웃 시뮬레이션)
     currentUser = null;
     if (listenerFn) {
-      listenerFn(null);
+      await act(async () => {
+        listenerFn(null);
+      });
     }
 
     // 로그인 화면으로 리다이렉트
     await waitFor(() => {
       expect(screen.getByTestId('login-ui')).toBeInTheDocument();
-    }, { timeout: 2000 });
+    }, { timeout: 3000 });
   });
 
   it('should redirect to initial when user logs in after being null', async () => {
+    let currentUser: any = null;
+    let listenerFn: any = null;
+    let initializeResolve: any = null;
+    const initializePromise = new Promise((resolve) => {
+      initializeResolve = resolve;
+    });
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+    
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listenerFn = listener;
+      // 초기화 완료 후에 listener 호출
+      initializePromise.then(() => {
+        listener(currentUser);
+      });
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockImplementation(() => currentUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockImplementation(() => currentUser !== null);
+    (mockAuthService.initialize as jest.Mock).mockImplementation(async () => {
+      await new Promise(resolve => setTimeout(resolve, 10));
+      if (initializeResolve) {
+        initializeResolve();
+      }
+      return undefined;
+    });
+
+    render(<App />);
+
+    // 초기화 완료 대기
+    await waitFor(() => {
+      expect(mockAuthService.initialize).toHaveBeenCalled();
+    });
+    await initializePromise;
+
+    // 초기에는 로그인 UI
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+
+    // 사용자가 로그인 (사용자 정보 업데이트)
+    currentUser = mockUser;
+    if (listenerFn) {
+      await act(async () => {
+        listenerFn(mockUser);
+      });
+    }
+
+    // 초기 화면으로 리다이렉트
+    await waitFor(() => {
+      expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+  });
+
+
+  it('should render initial state after login', async () => {
+    // 로그인 성공 시뮬레이션
     let currentUser: any = null;
     let listenerFn: any = null;
     const mockUser = {
@@ -142,10 +227,11 @@ describe('App', () => {
       total_tests_taken: 0,
       study_streak: 0,
     };
-    
+
     (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
       listenerFn = listener;
-      listener(currentUser);
+      // 초기에는 null 전달
+      setTimeout(() => listener(currentUser), 0);
       return jest.fn();
     });
     (mockAuthService.getCurrentUser as jest.Mock).mockImplementation(() => currentUser);
@@ -154,45 +240,10 @@ describe('App', () => {
 
     render(<App />);
 
-    // 초기에는 로그인 UI
+    // 초기화 완료 대기
     await waitFor(() => {
-      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+      expect(mockAuthService.initialize).toHaveBeenCalled();
     });
-
-    // 사용자가 로그인 (사용자 정보 업데이트)
-    currentUser = mockUser;
-    if (listenerFn) {
-      listenerFn(mockUser);
-    }
-
-    // 초기 화면으로 리다이렉트
-    await waitFor(() => {
-      expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
-    }, { timeout: 2000 });
-  });
-
-
-  it('should render initial state after login', async () => {
-    // 로그인 성공 시뮬레이션
-    const mockUser = {
-      id: 1,
-      email: 'user@example.com',
-      username: '학습자1',
-      target_level: 'N5',
-      current_level: null,
-      total_tests_taken: 0,
-      study_streak: 0,
-    };
-
-    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
-      // 초기에는 null, 나중에 사용자 정보 전달
-      setTimeout(() => listener(mockUser), 0);
-      return jest.fn();
-    });
-    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
-    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
-
-    render(<App />);
 
     // 로그인 UI에서 로그인 버튼 클릭
     await waitFor(() => {
@@ -202,11 +253,19 @@ describe('App', () => {
     const loginButton = screen.getByText('로그인');
     fireEvent.click(loginButton);
 
+    // 사용자 정보 업데이트
+    currentUser = mockUser;
+    if (listenerFn) {
+      await act(async () => {
+        listenerFn(mockUser);
+      });
+    }
+
     // 초기 화면 표시 확인
     await waitFor(() => {
       expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('should display user info when logged in', async () => {

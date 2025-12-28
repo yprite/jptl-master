@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import TestUI from './components/organisms/TestUI';
 import ResultUI from './components/organisms/ResultUI';
@@ -16,6 +16,19 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
+  
+  // 최신 상태를 참조하기 위한 ref
+  const stateRef = useRef(state);
+  const isInitializingRef = useRef(isInitializing);
+  
+  // ref 업데이트
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+  
+  useEffect(() => {
+    isInitializingRef.current = isInitializing;
+  }, [isInitializing]);
 
   // 인증 상태 구독
   useEffect(() => {
@@ -26,11 +39,11 @@ function App() {
       
       setUser(currentUser);
       // 초기화 중이 아니고 사용자가 없으면 로그인 화면으로
-      if (!isInitializing && !currentUser && state !== 'login') {
+      if (!isInitializingRef.current && !currentUser && stateRef.current !== 'login') {
         setState('login');
       }
       // 사용자가 있으면 초기 화면으로
-      if (!isInitializing && currentUser && state === 'login') {
+      if (!isInitializingRef.current && currentUser && stateRef.current === 'login') {
         setState('initial');
       }
     });

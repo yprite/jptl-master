@@ -34,7 +34,7 @@ describe('LoginUI', () => {
   it('로그인 폼을 렌더링한다', () => {
     render(<LoginUI />);
 
-    expect(screen.getByText('로그인')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '로그인' })).toBeInTheDocument();
     expect(screen.getByLabelText('이메일')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '로그인' })).toBeInTheDocument();
   });
@@ -45,7 +45,7 @@ describe('LoginUI', () => {
     const switchButton = screen.getByText(/계정이 없으신가요/);
     fireEvent.click(switchButton);
 
-    expect(screen.getByText('회원가입')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '회원가입' })).toBeInTheDocument();
     expect(screen.getByLabelText('사용자명')).toBeInTheDocument();
     expect(screen.getByLabelText('목표 레벨')).toBeInTheDocument();
   });
