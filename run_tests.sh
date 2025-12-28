@@ -259,21 +259,44 @@ export NODE_PATH="$(pwd)/node_modules:${NODE_PATH:-}"
 # CI 환경 변수 설정 (헤드리스 모드 및 기존 서버 재사용 방지)
 export CI=true
 
-# Playwright 브라우저 설치 (최초 실행/업데이트 후 필요)
+# Playwright 브라우저 설치 확인 및 설치 (최초 실행/업데이트 후 필요)
 echo ""
 echo "⬇️  Playwright 브라우저 설치 확인/설치 중..."
-echo "ℹ️  최초 설치/업데이트 직후에는 몇 분 걸릴 수 있습니다. (진행 로그 출력 중)"
+echo "ℹ️  이미 설치되어 있으면 빠르게 완료되고, 설치가 필요하면 다운로드 진행 상황이 표시됩니다."
 
 # 설치 로그를 실시간으로 출력하면서 파일로도 저장
 PLAYWRIGHT_INSTALL_LOG="../.playwright-install.log"
 rm -f "$PLAYWRIGHT_INSTALL_LOG"
 
-npx playwright install chromium 2>&1 | tee "$PLAYWRIGHT_INSTALL_LOG"
+# 설치 시작 시간 기록
+INSTALL_START_TIME=$(date +%s)
+echo "⏳ 시작 시간: $(date '+%H:%M:%S')"
+echo ""
+
+# 설치 실행 (진행 상황을 실시간으로 표시)
+# --with-deps 옵션으로 의존성도 함께 설치하고 더 자세한 출력
+# stdbuf를 사용하여 출력 버퍼링 비활성화 (실시간 출력 보장)
+if command -v stdbuf > /dev/null 2>&1; then
+    stdbuf -oL -eL npx playwright install --with-deps chromium 2>&1 | tee "$PLAYWRIGHT_INSTALL_LOG"
+else
+    # stdbuf가 없으면 일반 tee 사용
+    npx playwright install --with-deps chromium 2>&1 | tee "$PLAYWRIGHT_INSTALL_LOG"
+fi
 PLAYWRIGHT_INSTALL_EXIT_CODE=${PIPESTATUS[0]}
 
-if [ $PLAYWRIGHT_INSTALL_EXIT_CODE -ne 0 ]; then
-    echo ""
-    echo "❌ Playwright 브라우저 설치가 실패했습니다. (exit code: $PLAYWRIGHT_INSTALL_EXIT_CODE)"
+# 설치 종료 시간 기록
+INSTALL_END_TIME=$(date +%s)
+INSTALL_DURATION=$((INSTALL_END_TIME - INSTALL_START_TIME))
+
+echo ""
+if [ $PLAYWRIGHT_INSTALL_EXIT_CODE -eq 0 ]; then
+    if [ $INSTALL_DURATION -lt 5 ]; then
+        echo "✅ Playwright 브라우저가 이미 설치되어 있었습니다. (확인 시간: ${INSTALL_DURATION}초)"
+    else
+        echo "✅ Playwright 브라우저 설치 완료 (소요 시간: ${INSTALL_DURATION}초)"
+    fi
+else
+    echo "❌ Playwright 브라우저 설치가 실패했습니다. (exit code: $PLAYWRIGHT_INSTALL_EXIT_CODE, 소요 시간: ${INSTALL_DURATION}초)"
     echo "📄 설치 로그: $PLAYWRIGHT_INSTALL_LOG"
     cd ..
     exit $PLAYWRIGHT_INSTALL_EXIT_CODE
