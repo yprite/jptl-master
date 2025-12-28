@@ -3,6 +3,7 @@ SQLite 기반 AnswerDetail Repository 구현
 """
 
 from typing import List, Optional
+from datetime import date
 from backend.domain.entities.answer_detail import AnswerDetail
 from backend.infrastructure.config.database import get_database, Database
 from backend.infrastructure.repositories.answer_detail_mapper import AnswerDetailMapper
@@ -124,6 +125,33 @@ class SqliteAnswerDetailRepository:
                 "SELECT * FROM answer_details WHERE question_id = ? ORDER BY created_at DESC",
                 (question_id,)
             )
+            rows = cursor.fetchall()
+
+            return [AnswerDetailMapper.to_entity(row) for row in rows]
+
+    def find_by_user_id_and_period(self, user_id: int, period_start: date, period_end: date) -> List[AnswerDetail]:
+        """
+        사용자 ID와 기간으로 AnswerDetail 조회
+        
+        result 테이블과 조인하여 해당 기간의 사용자 답안을 조회합니다.
+        
+        Args:
+            user_id: 사용자 ID
+            period_start: 기간 시작일
+            period_end: 기간 종료일
+            
+        Returns:
+            List[AnswerDetail]: 해당 기간의 답안 상세 정보 리스트
+        """
+        with self.db.get_connection() as conn:
+            cursor = conn.execute("""
+                SELECT ad.* FROM answer_details ad
+                INNER JOIN results r ON ad.result_id = r.id
+                WHERE r.user_id = ? 
+                AND DATE(ad.created_at) >= ? 
+                AND DATE(ad.created_at) <= ?
+                ORDER BY ad.created_at DESC
+            """, (user_id, period_start.isoformat(), period_end.isoformat()))
             rows = cursor.fetchall()
 
             return [AnswerDetailMapper.to_entity(row) for row in rows]

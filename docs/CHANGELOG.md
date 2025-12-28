@@ -8,6 +8,16 @@
 ## Unreleased
 
 ### Added
+사용자_성능_분석_서비스: 사용자 성능 분석 서비스 구현 (2025-01-04)
+- UserPerformanceAnalysisService Domain Service 구현
+- 유형별 성취도 집계 기능 (analyze_type_performance)
+- 난이도별 성취도 집계 기능 (analyze_difficulty_performance)
+- 반복 오답 문제 식별 기능 (identify_repeated_mistakes)
+- 약점 영역 분석 기능 (identify_weaknesses)
+- AnswerDetailRepository에 find_by_user_id_and_period 메서드 추가
+- submit_test 컨트롤러에 UserPerformanceAnalysisService 통합
+- 기간 내의 모든 AnswerDetail을 기반으로 정확한 성능 분석 수행
+
 문제_유형별_필터링_개선: 문제 유형별 필터링 개선 기능 추가 (2025-01-04)
 - TestCreateRequest에 question_type_counts 필드 추가
 - 유형별 문제 수 조정 기능 구현 (예: vocabulary 10개, grammar 5개, reading 5개)
