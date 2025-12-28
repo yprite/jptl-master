@@ -133,6 +133,61 @@ class Database:
                 )
             """)
 
+            # 문제별 상세 답안 이력 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS answer_details (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    result_id INTEGER NOT NULL,
+                    question_id INTEGER NOT NULL,
+                    user_answer TEXT NOT NULL,
+                    correct_answer TEXT NOT NULL,
+                    is_correct BOOLEAN NOT NULL,
+                    time_spent_seconds INTEGER NOT NULL,
+                    difficulty INTEGER NOT NULL,
+                    question_type TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (result_id) REFERENCES results(id),
+                    FOREIGN KEY (question_id) REFERENCES questions(id)
+                )
+            """)
+
+            # 학습 이력 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS learning_history (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    test_id INTEGER NOT NULL,
+                    result_id INTEGER NOT NULL,
+                    study_date DATE NOT NULL,
+                    study_hour INTEGER NOT NULL,
+                    total_questions INTEGER NOT NULL,
+                    correct_count INTEGER NOT NULL,
+                    time_spent_minutes INTEGER NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id),
+                    FOREIGN KEY (test_id) REFERENCES tests(id),
+                    FOREIGN KEY (result_id) REFERENCES results(id)
+                )
+            """)
+
+            # 사용자 성능 분석 테이블
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS user_performance (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    analysis_period_start DATE NOT NULL,
+                    analysis_period_end DATE NOT NULL,
+                    type_performance TEXT,
+                    difficulty_performance TEXT,
+                    level_progression TEXT,
+                    repeated_mistakes TEXT,
+                    weaknesses TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            """)
+
             conn.commit()
 
 

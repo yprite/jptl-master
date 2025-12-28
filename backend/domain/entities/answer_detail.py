@@ -18,7 +18,7 @@ class AnswerDetail:
 
     def __init__(
         self,
-        id: int,
+        id: Optional[int],
         result_id: int,
         question_id: int,
         user_answer: str,
@@ -67,9 +67,9 @@ class AnswerDetail:
         self.question_type = question_type
         self.created_at = created_at or datetime.now()
 
-    def _validate_id(self, id: int) -> None:
+    def _validate_id(self, id: Optional[int]) -> None:
         """ID 검증"""
-        if not isinstance(id, int) or id <= 0:
+        if id is not None and (not isinstance(id, int) or id <= 0):
             raise ValueError("id는 양의 정수여야 합니다")
 
     def _validate_result_id(self, result_id: int) -> None:
