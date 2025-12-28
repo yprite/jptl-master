@@ -88,6 +88,84 @@ describe('App', () => {
     });
   });
 
+  it('should handle user state change from null to user', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    let currentUser: any = null;
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      // 초기에는 null
+      listener(currentUser);
+      // 나중에 사용자 정보 전달
+      setTimeout(() => {
+        currentUser = mockUser;
+        listener(mockUser);
+      }, 100);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockImplementation(() => currentUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockImplementation(() => currentUser !== null);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(undefined);
+
+    render(<App />);
+
+    // 초기에는 로그인 UI
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+
+    // 사용자 정보가 업데이트되면 초기 화면으로 전환
+    await waitFor(() => {
+      expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
+    }, { timeout: 2000 });
+  });
+
+  it('should handle user state change from user to null', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    let currentUser: any = mockUser;
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      // 초기에는 사용자 정보
+      listener(currentUser);
+      // 나중에 null로 변경
+      setTimeout(() => {
+        currentUser = null;
+        listener(null);
+      }, 100);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockImplementation(() => currentUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockImplementation(() => currentUser !== null);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    render(<App />);
+
+    // 초기에는 초기 화면
+    await waitFor(() => {
+      expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
+    });
+
+    // 사용자 정보가 null로 변경되면 로그인 화면으로 전환
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    }, { timeout: 2000 });
+  });
+
   it('should render initial state after login', async () => {
     // 로그인 성공 시뮬레이션
     const mockUser = {
