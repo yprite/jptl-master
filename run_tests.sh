@@ -302,8 +302,38 @@ else
     exit $PLAYWRIGHT_INSTALL_EXIT_CODE
 fi
 
-E2E_TEST_OUTPUT=$(npm run test:e2e 2>&1)
-E2E_TEST_EXIT_CODE=$?
+# E2E 테스트 실행 (진행 상황을 실시간으로 표시)
+echo ""
+echo "🧪 E2E 테스트 실행 중..."
+echo "ℹ️  테스트 진행 상황이 실시간으로 표시됩니다."
+echo "⏳ 테스트 시작: $(date '+%H:%M:%S')"
+echo ""
+
+# E2E 테스트 로그 파일
+E2E_TEST_LOG="../.e2e-test.log"
+rm -f "$E2E_TEST_LOG"
+
+# 테스트 시작 시간 기록
+E2E_START_TIME=$(date +%s)
+
+# 테스트 실행 (진행 상황을 실시간으로 표시하면서 파일로도 저장)
+# stdbuf를 사용하여 출력 버퍼링 비활성화 (실시간 출력 보장)
+if command -v stdbuf > /dev/null 2>&1; then
+    stdbuf -oL -eL npm run test:e2e 2>&1 | tee "$E2E_TEST_LOG"
+else
+    # stdbuf가 없으면 일반 tee 사용
+    npm run test:e2e 2>&1 | tee "$E2E_TEST_LOG"
+fi
+E2E_TEST_EXIT_CODE=${PIPESTATUS[0]}
+
+# 테스트 종료 시간 기록
+E2E_END_TIME=$(date +%s)
+E2E_DURATION=$((E2E_END_TIME - E2E_START_TIME))
+E2E_MINUTES=$((E2E_DURATION / 60))
+E2E_SECONDS=$((E2E_DURATION % 60))
+
+echo ""
+echo "⏰ 테스트 종료: $(date '+%H:%M:%S') (소요 시간: ${E2E_MINUTES}분 ${E2E_SECONDS}초)"
 
 # 백엔드 서버 종료
 cd ..
@@ -319,15 +349,19 @@ if [ -f "$BACKEND_PID_FILE" ]; then
     rm -f .backend.e2e.log
 fi
 
-# E2E 테스트 실패 시 종료
+# E2E 테스트 결과 확인
 if [ $E2E_TEST_EXIT_CODE -ne 0 ]; then
-    echo "$E2E_TEST_OUTPUT"
     echo ""
-    echo "❌ 프론트엔드 E2E 테스트가 실패했습니다."
+    echo "❌ 프론트엔드 E2E 테스트가 실패했습니다. (exit code: $E2E_TEST_EXIT_CODE)"
+    echo "📄 테스트 로그: $E2E_TEST_LOG"
+    echo ""
+    echo "💡 실패한 테스트를 확인하려면:"
+    echo "   - 로그 파일 확인: cat $E2E_TEST_LOG"
+    echo "   - Playwright 리포트 확인: cd frontend && npx playwright show-report"
     exit $E2E_TEST_EXIT_CODE
 fi
 
-echo "$E2E_TEST_OUTPUT"
+echo ""
 echo "✅ 프론트엔드 E2E 테스트 통과!"
 
 echo ""
