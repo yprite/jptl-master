@@ -262,12 +262,19 @@ export CI=true
 # Playwright 브라우저 설치 (최초 실행/업데이트 후 필요)
 echo ""
 echo "⬇️  Playwright 브라우저 설치 확인/설치 중..."
-PLAYWRIGHT_INSTALL_OUTPUT=$(npx playwright install chromium 2>&1)
-PLAYWRIGHT_INSTALL_EXIT_CODE=$?
+echo "ℹ️  최초 설치/업데이트 직후에는 몇 분 걸릴 수 있습니다. (진행 로그 출력 중)"
+
+# 설치 로그를 실시간으로 출력하면서 파일로도 저장
+PLAYWRIGHT_INSTALL_LOG="../.playwright-install.log"
+rm -f "$PLAYWRIGHT_INSTALL_LOG"
+
+npx playwright install chromium 2>&1 | tee "$PLAYWRIGHT_INSTALL_LOG"
+PLAYWRIGHT_INSTALL_EXIT_CODE=${PIPESTATUS[0]}
+
 if [ $PLAYWRIGHT_INSTALL_EXIT_CODE -ne 0 ]; then
-    echo "$PLAYWRIGHT_INSTALL_OUTPUT"
     echo ""
-    echo "❌ Playwright 브라우저 설치가 실패했습니다."
+    echo "❌ Playwright 브라우저 설치가 실패했습니다. (exit code: $PLAYWRIGHT_INSTALL_EXIT_CODE)"
+    echo "📄 설치 로그: $PLAYWRIGHT_INSTALL_LOG"
     cd ..
     exit $PLAYWRIGHT_INSTALL_EXIT_CODE
 fi
