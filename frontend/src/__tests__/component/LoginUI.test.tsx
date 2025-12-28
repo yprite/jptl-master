@@ -134,13 +134,8 @@ describe('LoginUI', () => {
     fireEvent.change(emailInput, { target: { value: 'existing@example.com' } });
     fireEvent.change(usernameInput, { target: { value: '학습자1' } });
     
-    // form submit 이벤트 발생
-    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-    form.dispatchEvent(submitEvent);
-    
-    // 또는 직접 handleSubmit 호출을 시뮬레이션
-    const submitButton = screen.getByRole('button', { name: '회원가입' });
-    fireEvent.click(submitButton);
+    // form submit
+    fireEvent.submit(form);
 
     await waitFor(() => {
       expect(screen.getByText('이미 등록된 이메일입니다')).toBeInTheDocument();
