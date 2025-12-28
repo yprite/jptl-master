@@ -201,6 +201,26 @@ else
     echo "⚠️  프론트엔드 커버리지 파일을 찾을 수 없습니다. 커버리지 검증을 건너뜁니다."
 fi
 
+# 7. 프론트엔드 E2E 테스트 실행
+echo ""
+echo "🌐 프론트엔드 E2E 테스트 실행 중..."
+
+# E2E 테스트 실행
+E2E_TEST_OUTPUT=$(npm run test:e2e 2>&1)
+E2E_TEST_EXIT_CODE=$?
+
+# E2E 테스트 실패 시 종료
+if [ $E2E_TEST_EXIT_CODE -ne 0 ]; then
+    echo "$E2E_TEST_OUTPUT"
+    echo ""
+    echo "❌ 프론트엔드 E2E 테스트가 실패했습니다."
+    cd ..
+    exit $E2E_TEST_EXIT_CODE
+fi
+
+echo "$E2E_TEST_OUTPUT"
+echo "✅ 프론트엔드 E2E 테스트 통과!"
+
 cd ..
 
 echo ""
