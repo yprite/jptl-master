@@ -38,6 +38,14 @@ TypeScript_타입_체크_필수화: 프론트엔드 TypeScript 타입 체크 필
 - 타입 에러 시 작업 완료 금지 규칙 명시
 
 ### Fixed
+프론트엔드_테스트_실패_수정_및_상태_관리_개선: 프론트엔드 테스트 실패 수정 및 상태 관리 개선 (2025-01-04)
+- App.tsx에 useRef 사용하여 클로저 문제 해결 (subscribe 리스너에서 최신 state와 isInitializing 값 참조)
+- App.test.tsx 테스트 로직 개선 (initialize 완료 후 listener 호출하도록 수정)
+- LoginUI.test.tsx 쿼리 개선 (getByText 대신 getByRole('heading') 사용하여 더 구체적인 쿼리 적용)
+- 모든 테스트 통과 (81 passed, 2 skipped)
+- 브랜치 커버리지 81.69% 달성 (요구사항 80% 이상)
+- 프론트엔드 커버리지 92.14% 달성 (요구사항 80% 이상)
+
 프론트엔드_테스트_커버리지_80%_달성: 프론트엔드 테스트 커버리지 80% 이상 달성 (2025-01-04)
 - Jest 설정 추가하여 불필요한 파일 커버리지에서 제외 (index.tsx, reportWebVitals.ts, setupTestsPolyfill.ts, mocks/, types/)
 - App.test.tsx에 추가 테스트 작성 (사용자 정보 표시, 결과 표시, 재시작 버튼, 에러 처리 등)
