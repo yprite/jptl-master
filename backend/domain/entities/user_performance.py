@@ -17,7 +17,7 @@ class UserPerformance:
 
     def __init__(
         self,
-        id: int,
+        id: Optional[int],
         user_id: int,
         analysis_period_start: date,
         analysis_period_end: date,
@@ -64,9 +64,9 @@ class UserPerformance:
         self.created_at = created_at or datetime.now()
         self.updated_at = updated_at or datetime.now()
 
-    def _validate_id(self, id: int) -> None:
+    def _validate_id(self, id: Optional[int]) -> None:
         """ID 검증"""
-        if not isinstance(id, int) or id <= 0:
+        if id is not None and (not isinstance(id, int) or id <= 0):
             raise ValueError("id는 양의 정수여야 합니다")
 
     def _validate_user_id(self, user_id: int) -> None:

@@ -17,7 +17,7 @@ class LearningHistory:
 
     def __init__(
         self,
-        id: int,
+        id: Optional[int],
         user_id: int,
         test_id: int,
         result_id: int,
@@ -66,9 +66,9 @@ class LearningHistory:
         self.time_spent_minutes = time_spent_minutes
         self.created_at = created_at or datetime.now()
 
-    def _validate_id(self, id: int) -> None:
+    def _validate_id(self, id: Optional[int]) -> None:
         """ID 검증"""
-        if not isinstance(id, int) or id <= 0:
+        if id is not None and (not isinstance(id, int) or id <= 0):
             raise ValueError("id는 양의 정수여야 합니다")
 
     def _validate_user_id(self, user_id: int) -> None:

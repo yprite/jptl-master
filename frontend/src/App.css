@@ -30,3 +30,80 @@
   margin-bottom: 20px;
   color: #333;
 }
+
+.user-info {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.initial-section,
+.loading-section,
+.error-section {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.initial-section h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.initial-section p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.start-button,
+.restart-button,
+.retry-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.start-button:hover,
+.restart-button:hover,
+.retry-button:hover {
+  background-color: #0056b3;
+}
+
+.start-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  font-size: 18px;
+  color: #666;
+  padding: 40px;
+}
+
+.error-message {
+  padding: 40px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  color: #721c24;
+}
+
+.error-message h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.error-message p {
+  margin-bottom: 20px;
+}
+
+.result-actions {
+  margin-top: 30px;
+  text-align: center;
+}
