@@ -1315,7 +1315,7 @@ describe('App', () => {
       expect(screen.getByText(/Test 1/i)).toBeInTheDocument();
     });
 
-    // 테스트 제출 실패
+    // 테스트 제출 실패 (submitTest 호출)
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 500,
@@ -1326,9 +1326,15 @@ describe('App', () => {
     const submitButton = screen.getByRole('button', { name: /제출/i });
     fireEvent.click(submitButton);
 
+    // submitting 상태 대기
     await waitFor(() => {
-      expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
-    });
+      expect(screen.queryByText(/결과를 처리하는 중/i)).not.toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    // 에러 메시지 확인
+    await waitFor(() => {
+      expect(screen.getByText(/Submission failed/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
   });
 
   it('should handle test submission non-ApiError', async () => {
@@ -1400,9 +1406,15 @@ describe('App', () => {
     const submitButton = screen.getByRole('button', { name: /제출/i });
     fireEvent.click(submitButton);
 
+    // submitting 상태 대기
+    await waitFor(() => {
+      expect(screen.queryByText(/테스트를 준비하는 중/i)).not.toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    // 에러 메시지 확인
     await waitFor(() => {
       expect(screen.getByText(/테스트 제출 중 오류가 발생했습니다/i)).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('should handle view history when not authenticated', async () => {
