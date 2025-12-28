@@ -291,6 +291,10 @@ function App() {
       id: updatedProfile.id,
       email: updatedProfile.email,
       username: updatedProfile.username,
+      target_level: updatedProfile.target_level,
+      current_level: updatedProfile.current_level,
+      total_tests_taken: updatedProfile.total_tests_taken,
+      study_streak: updatedProfile.study_streak,
     });
   };
 

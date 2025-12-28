@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent } from '@testing-library/react';
 import UserProfileUI from '../../components/organisms/UserProfileUI';
 import { UserProfile } from '../../types/api';
 
@@ -56,11 +56,10 @@ describe('UserProfileUI', () => {
   });
 
   it('should switch to edit mode when edit button is clicked', async () => {
-    const user = userEvent.setup();
     render(<UserProfileUI profile={mockProfile} onUpdate={mockOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
     expect(screen.getByLabelText(/사용자명 입력/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/목표 레벨 선택/i)).toBeInTheDocument();
@@ -69,45 +68,40 @@ describe('UserProfileUI', () => {
   });
 
   it('should allow editing username', async () => {
-    const user = userEvent.setup();
     render(<UserProfileUI profile={mockProfile} onUpdate={mockOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
-    const usernameInput = screen.getByLabelText(/사용자명 입력/i);
-    await user.clear(usernameInput);
-    await user.type(usernameInput, 'newusername');
+    const usernameInput = screen.getByLabelText(/사용자명 입력/i) as HTMLInputElement;
+    fireEvent.change(usernameInput, { target: { value: 'newusername' } });
 
-    expect(usernameInput).toHaveValue('newusername');
+    expect(usernameInput.value).toBe('newusername');
   });
 
   it('should allow editing target level', async () => {
-    const user = userEvent.setup();
     render(<UserProfileUI profile={mockProfile} onUpdate={mockOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
-    const targetLevelSelect = screen.getByLabelText(/목표 레벨 선택/i);
-    await user.selectOptions(targetLevelSelect, 'N4');
+    const targetLevelSelect = screen.getByLabelText(/목표 레벨 선택/i) as HTMLSelectElement;
+    fireEvent.change(targetLevelSelect, { target: { value: 'N4' } });
 
-    expect(targetLevelSelect).toHaveValue('N4');
+    expect(targetLevelSelect.value).toBe('N4');
   });
 
   it('should call onUpdate when save button is clicked', async () => {
-    const user = userEvent.setup();
     render(<UserProfileUI profile={mockProfile} onUpdate={mockOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
-    const usernameInput = screen.getByLabelText(/사용자명 입력/i);
-    await user.clear(usernameInput);
-    await user.type(usernameInput, 'newusername');
+    const usernameInput = screen.getByLabelText(/사용자명 입력/i) as HTMLInputElement;
+    fireEvent.change(usernameInput, { target: { value: 'newusername' } });
 
     const saveButton = screen.getByRole('button', { name: /저장/i });
-    await user.click(saveButton);
+    fireEvent.click(saveButton);
 
     await waitFor(() => {
       expect(mockOnUpdate).toHaveBeenCalledWith({ username: 'newusername' });
@@ -115,14 +109,13 @@ describe('UserProfileUI', () => {
   });
 
   it('should not call onUpdate when no changes are made', async () => {
-    const user = userEvent.setup();
     render(<UserProfileUI profile={mockProfile} onUpdate={mockOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
     const saveButton = screen.getByRole('button', { name: /저장/i });
-    await user.click(saveButton);
+    fireEvent.click(saveButton);
 
     await waitFor(() => {
       expect(mockOnUpdate).not.toHaveBeenCalled();
@@ -130,37 +123,33 @@ describe('UserProfileUI', () => {
   });
 
   it('should cancel editing when cancel button is clicked', async () => {
-    const user = userEvent.setup();
     render(<UserProfileUI profile={mockProfile} onUpdate={mockOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
-    const usernameInput = screen.getByLabelText(/사용자명 입력/i);
-    await user.clear(usernameInput);
-    await user.type(usernameInput, 'newusername');
+    const usernameInput = screen.getByLabelText(/사용자명 입력/i) as HTMLInputElement;
+    fireEvent.change(usernameInput, { target: { value: 'newusername' } });
 
     const cancelButton = screen.getByRole('button', { name: /취소/i });
-    await user.click(cancelButton);
+    fireEvent.click(cancelButton);
 
     expect(screen.getByText('testuser')).toBeInTheDocument();
     expect(mockOnUpdate).not.toHaveBeenCalled();
   });
 
   it('should display error message when update fails', async () => {
-    const user = userEvent.setup();
     const errorOnUpdate = jest.fn().mockRejectedValue(new Error('Update failed'));
     render(<UserProfileUI profile={mockProfile} onUpdate={errorOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
-    const usernameInput = screen.getByLabelText(/사용자명 입력/i);
-    await user.clear(usernameInput);
-    await user.type(usernameInput, 'newusername');
+    const usernameInput = screen.getByLabelText(/사용자명 입력/i) as HTMLInputElement;
+    fireEvent.change(usernameInput, { target: { value: 'newusername' } });
 
     const saveButton = screen.getByRole('button', { name: /저장/i });
-    await user.click(saveButton);
+    fireEvent.click(saveButton);
 
     await waitFor(() => {
       expect(screen.getByText(/Update failed/i)).toBeInTheDocument();
@@ -168,18 +157,16 @@ describe('UserProfileUI', () => {
   });
 
   it('should display success message when update succeeds', async () => {
-    const user = userEvent.setup();
     render(<UserProfileUI profile={mockProfile} onUpdate={mockOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
-    const usernameInput = screen.getByLabelText(/사용자명 입력/i);
-    await user.clear(usernameInput);
-    await user.type(usernameInput, 'newusername');
+    const usernameInput = screen.getByLabelText(/사용자명 입력/i) as HTMLInputElement;
+    fireEvent.change(usernameInput, { target: { value: 'newusername' } });
 
     const saveButton = screen.getByRole('button', { name: /저장/i });
-    await user.click(saveButton);
+    fireEvent.click(saveButton);
 
     await waitFor(() => {
       expect(screen.getByText(/프로필이 성공적으로 업데이트되었습니다/i)).toBeInTheDocument();
@@ -196,7 +183,6 @@ describe('UserProfileUI', () => {
   });
 
   it('should disable save button while saving', async () => {
-    const user = userEvent.setup();
     let resolveUpdate: () => void;
     const pendingUpdate = new Promise<void>((resolve) => {
       resolveUpdate = resolve;
@@ -206,14 +192,13 @@ describe('UserProfileUI', () => {
     render(<UserProfileUI profile={mockProfile} onUpdate={pendingOnUpdate} />);
     
     const editButton = screen.getByRole('button', { name: /수정/i });
-    await user.click(editButton);
+    fireEvent.click(editButton);
 
-    const usernameInput = screen.getByLabelText(/사용자명 입력/i);
-    await user.clear(usernameInput);
-    await user.type(usernameInput, 'newusername');
+    const usernameInput = screen.getByLabelText(/사용자명 입력/i) as HTMLInputElement;
+    fireEvent.change(usernameInput, { target: { value: 'newusername' } });
 
     const saveButton = screen.getByRole('button', { name: /저장/i });
-    await user.click(saveButton);
+    fireEvent.click(saveButton);
 
     expect(saveButton).toBeDisabled();
     expect(saveButton).toHaveTextContent('저장 중...');
