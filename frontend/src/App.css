@@ -35,6 +35,29 @@
   margin-top: 10px;
   font-size: 14px;
   opacity: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.logout-button {
+  padding: 6px 12px;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.login-section {
+  padding: 20px;
 }
 
 .initial-section,
