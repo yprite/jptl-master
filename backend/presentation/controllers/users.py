@@ -267,17 +267,21 @@ async def get_user_performance(user_id: int):
     latest_performance = performances[0]
     
     return {
-        "id": latest_performance.id,
-        "user_id": latest_performance.user_id,
-        "analysis_period_start": latest_performance.analysis_period_start.isoformat(),
-        "analysis_period_end": latest_performance.analysis_period_end.isoformat(),
-        "type_performance": latest_performance.type_performance,
-        "difficulty_performance": latest_performance.difficulty_performance,
-        "level_progression": latest_performance.level_progression,
-        "repeated_mistakes": latest_performance.repeated_mistakes,
-        "weaknesses": latest_performance.weaknesses,
-        "created_at": latest_performance.created_at,
-        "updated_at": latest_performance.updated_at
+        "success": True,
+        "data": {
+            "id": latest_performance.id,
+            "user_id": latest_performance.user_id,
+            "analysis_period_start": latest_performance.analysis_period_start.isoformat(),
+            "analysis_period_end": latest_performance.analysis_period_end.isoformat(),
+            "type_performance": latest_performance.type_performance,
+            "difficulty_performance": latest_performance.difficulty_performance,
+            "level_progression": latest_performance.level_progression,
+            "repeated_mistakes": latest_performance.repeated_mistakes,
+            "weaknesses": latest_performance.weaknesses,
+            "created_at": latest_performance.created_at,
+            "updated_at": latest_performance.updated_at
+        },
+        "message": "성능 분석 데이터 조회 성공"
     }
 
 @router.get("/{user_id}/history")

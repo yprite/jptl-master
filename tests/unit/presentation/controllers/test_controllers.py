@@ -221,7 +221,9 @@ class TestUsersController:
             # 사용자 성능 분석 조회
             response = client.get(f"/{saved_user.id}/performance")
             assert response.status_code == 200
-            data = response.json()
+            response_data = response.json()
+            assert response_data["success"] is True
+            data = response_data["data"]
             assert data["user_id"] == saved_user.id
             assert "type_performance" in data
             assert "difficulty_performance" in data

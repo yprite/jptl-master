@@ -568,6 +568,79 @@ describe('userApi', () => {
       expect(result).toEqual(mockUser);
     });
   });
+
+  describe('getUserPerformance', () => {
+    it('should fetch user performance data', async () => {
+      const mockPerformance = {
+        id: 1,
+        user_id: 1,
+        analysis_period_start: '2025-01-01',
+        analysis_period_end: '2025-01-31',
+        type_performance: {
+          vocabulary: { accuracy: 85.0 },
+          grammar: { accuracy: 70.0 },
+        },
+        difficulty_performance: {
+          '1': { accuracy: 90.0 },
+          '2': { accuracy: 75.0 },
+        },
+        level_progression: {
+          N5: { average_score: 80.0 },
+        },
+        repeated_mistakes: [1, 2, 3],
+        weaknesses: {
+          grammar: '기본 문법 이해 부족',
+        },
+        created_at: '2025-01-04T10:30:00',
+        updated_at: '2025-01-04T10:30:00',
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockPerformance,
+        }),
+      });
+
+      const result = await userApi.getUserPerformance(1);
+      expect(result).toEqual(mockPerformance);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/users/1/performance'),
+        expect.objectContaining({
+          credentials: 'include',
+        })
+      );
+    });
+
+    it('should handle API error when fetching user performance', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: false,
+          message: '성능 분석 데이터를 찾을 수 없습니다',
+        }),
+      });
+
+      try {
+        await userApi.getUserPerformance(999);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(404);
+          expect(error.message).toContain('성능 분석 데이터를 찾을 수 없습니다');
+        }
+      }
+    });
+  });
 });
 
 describe('authApi', () => {

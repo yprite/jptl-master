@@ -63,3 +63,17 @@ export interface ResultList {
   created_at: string;
 }
 
+export interface UserPerformance {
+  id: number;
+  user_id: number;
+  analysis_period_start: string;
+  analysis_period_end: string;
+  type_performance: Record<string, { accuracy: number }>;
+  difficulty_performance: Record<string, { accuracy: number }>;
+  level_progression: Record<string, { average_score: number }>;
+  repeated_mistakes: number[];
+  weaknesses: Record<string, string>;
+  created_at: string;
+  updated_at: string;
+}
+
