@@ -50,16 +50,21 @@ if [ -d "tests/acceptance" ] && [ "$(ls -A tests/acceptance 2>/dev/null)" ]; the
     ACCEPTANCE_TEST_OUTPUT=$(python -m pytest tests/acceptance/ -v --tb=short 2>&1)
     ACCEPTANCE_TEST_EXIT_CODE=$?
 
-    # Acceptance 테스트 실패 시 종료
-    if [ $ACCEPTANCE_TEST_EXIT_CODE -ne 0 ]; then
+    # Acceptance 테스트 실패 시 종료 (exit code 5는 테스트 없음을 의미하므로 제외)
+    if [ $ACCEPTANCE_TEST_EXIT_CODE -ne 0 ] && [ $ACCEPTANCE_TEST_EXIT_CODE -ne 5 ]; then
         echo "$ACCEPTANCE_TEST_OUTPUT"
         echo ""
         echo "❌ Acceptance 테스트가 실패했습니다."
         exit $ACCEPTANCE_TEST_EXIT_CODE
     fi
 
-    echo "$ACCEPTANCE_TEST_OUTPUT"
-    echo "✅ Acceptance 테스트 통과!"
+    if [ $ACCEPTANCE_TEST_EXIT_CODE -eq 5 ]; then
+        echo ""
+        echo "ℹ️  Acceptance 테스트가 없습니다. 건너뜁니다."
+    else
+        echo "$ACCEPTANCE_TEST_OUTPUT"
+        echo "✅ Acceptance 테스트 통과!"
+    fi
 else
     echo ""
     echo "ℹ️  Acceptance 테스트가 없습니다. 건너뜁니다."
