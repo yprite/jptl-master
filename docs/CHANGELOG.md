@@ -8,6 +8,10 @@
 ## Unreleased
 
 ### Added
+설계_문서_작성: Domain 엔티티 및 API 문서 작성 완료 (2025-01-04)
+- Domain 엔티티 문서 7개 작성 (User, Question, Test, Result, AnswerDetail, LearningHistory, UserPerformance)
+- API 엔드포인트 문서 5개 작성 (Users, Auth, Tests, Results, Health)
+- API 스키마 문서 4개 작성 (User, Auth, Test, Result)
 백로그_업데이트: 부족한 부분 분석 및 우선순위별 태스크 추가 (2025-01-04)
 - P0: 학습 데이터 수집 엔티티 구현 (AnswerDetail, LearningHistory, UserPerformance)
 - P0: 프론트엔드-백엔드 API 통합
