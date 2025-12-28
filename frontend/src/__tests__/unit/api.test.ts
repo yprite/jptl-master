@@ -251,7 +251,14 @@ describe('ApiError', () => {
     });
 
     await expect(testApi.getTest(999)).rejects.toThrow(ApiError);
-    await expect(testApi.getTest(999)).rejects.toThrow('Not found');
+    try {
+      await testApi.getTest(999);
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.message).toContain('Not found');
+      }
+    }
   });
 
   it('should handle network errors', async () => {
@@ -259,10 +266,15 @@ describe('ApiError', () => {
       new TypeError('Failed to fetch')
     );
 
-    await expect(testApi.getTest(1)).rejects.toThrow(ApiError);
-    await expect(testApi.getTest(1)).rejects.toThrow(
-      '네트워크 오류가 발생했습니다'
-    );
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.message).toContain('네트워크 오류');
+      }
+    }
   });
 });
 

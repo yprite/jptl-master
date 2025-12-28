@@ -3,6 +3,14 @@
  * API 목킹을 위한 핸들러 정의
  */
 
+// TextEncoder/TextDecoder polyfill for Node.js (MSW가 필요로 함)
+// 반드시 MSW import보다 먼저 실행되어야 함
+import { TextEncoder, TextDecoder } from 'util';
+if (typeof global.TextEncoder === 'undefined') {
+  (global as any).TextEncoder = TextEncoder;
+  (global as any).TextDecoder = TextDecoder;
+}
+
 import { http, HttpResponse } from 'msw';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';

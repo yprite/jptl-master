@@ -4,15 +4,13 @@
 
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent } from '@testing-library/react';
 import App from '../../App';
-import { server } from '../../mocks/setup';
-import { http, HttpResponse } from 'msw';
 
-// MSW 서버 설정
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+// fetch 모킹
+beforeEach(() => {
+  (global.fetch as jest.Mock).mockClear();
+});
 
 describe('App', () => {
   it('should render JLPT app title', () => {
@@ -30,11 +28,53 @@ describe('App', () => {
   });
 
   it('should start test when start button is clicked', async () => {
-    const user = userEvent.setup();
+    
+    // API 모킹
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: {
+            id: 1,
+            title: 'N5 진단 테스트',
+            level: 'N5',
+            status: 'created',
+            time_limit_minutes: 30,
+            questions: [],
+          },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: {
+            id: 1,
+            title: 'N5 진단 테스트',
+            level: 'N5',
+            status: 'in_progress',
+            time_limit_minutes: 30,
+            questions: [
+              {
+                id: 1,
+                level: 'N5',
+                question_type: 'vocabulary',
+                question_text: '「こんにちは」の意味は何ですか？',
+                choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+                difficulty: 1,
+              },
+            ],
+          },
+        }),
+      });
+
     render(<App />);
 
     const startButton = screen.getByRole('button', { name: /테스트 시작/i });
-    await user.click(startButton);
+    fireEvent.click(startButton);
 
     // 로딩 상태 확인
     await waitFor(() => {
@@ -53,28 +93,22 @@ describe('App', () => {
   });
 
   it('should display error message on API failure', async () => {
-    const user = userEvent.setup();
     
     // API 실패 시뮬레이션
-    server.use(
-      http.post(
-        'http://localhost:8000/api/v1/tests/diagnostic/n5',
-        () => {
-          return HttpResponse.json(
-            {
-              success: false,
-              message: 'Server Error',
-            },
-            { status: 500 }
-          );
-        }
-      )
-    );
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        success: false,
+        message: 'Server Error',
+      }),
+    });
 
     render(<App />);
 
     const startButton = screen.getByRole('button', { name: /테스트 시작/i });
-    await user.click(startButton);
+    fireEvent.click(startButton);
 
     await waitFor(() => {
       expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();

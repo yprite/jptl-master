@@ -6,25 +6,29 @@ import { authService, User } from '../../services/auth';
 import { authApi, userApi, ApiError } from '../../services/api';
 
 // API 모킹
-jest.mock('../../services/api', () => ({
-  authApi: {
-    login: jest.fn(),
-    logout: jest.fn(),
-  },
-  userApi: {
-    getCurrentUser: jest.fn(),
-  },
-  ApiError: class extends Error {
-    constructor(
-      public status: number,
-      public message: string,
-      public errors?: string[]
-    ) {
+jest.mock('../../services/api', () => {
+  const mockApiError = class MockApiError extends Error {
+    status: number;
+    errors?: string[];
+    constructor(status: number, message: string, errors?: string[]) {
       super(message);
       this.name = 'ApiError';
+      this.status = status;
+      this.errors = errors;
     }
-  },
-}));
+  };
+  
+  return {
+    authApi: {
+      login: jest.fn(),
+      logout: jest.fn(),
+    },
+    userApi: {
+      getCurrentUser: jest.fn(),
+    },
+    ApiError: mockApiError,
+  };
+});
 
 describe('AuthService', () => {
   beforeEach(() => {
