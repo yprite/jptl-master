@@ -52,18 +52,24 @@ beforeEach(() => {
 });
 
 describe('App', () => {
-  it('should render JLPT app title', () => {
+  it('should render JLPT app title', async () => {
     render(<App />);
     const titleElement = screen.getByText(/JLPT 자격 검증 프로그램/i);
     expect(titleElement).toBeInTheDocument();
+    
+    // 초기화 대기
+    await waitFor(() => {
+      expect(mockInitialize).toHaveBeenCalled();
+    });
   });
 
-  it('should render initial state with start button', () => {
+  it('should render login UI when user is not authenticated', async () => {
     render(<App />);
-    expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /테스트 시작/i })
-    ).toBeInTheDocument();
+    
+    // 초기화 대기 후 로그인 UI 확인
+    await waitFor(() => {
+      expect(screen.getByText(/로그인|회원가입/i)).toBeInTheDocument();
+    });
   });
 
   it('should start test when start button is clicked', async () => {
