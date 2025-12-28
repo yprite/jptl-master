@@ -871,11 +871,15 @@ describe('App', () => {
     const historyButton = screen.getByRole('button', { name: /학습 이력 보기/i });
     fireEvent.click(historyButton);
 
+    // 로딩 상태 대기
     await waitFor(() => {
-      expect(screen.getByText(/학습 이력/i)).toBeInTheDocument();
-    });
+      expect(screen.queryByText(/테스트를 준비하는 중/i)).not.toBeInTheDocument();
+    }, { timeout: 3000 });
 
-    expect(screen.getByTestId('user-history-ui')).toBeInTheDocument();
+    // 학습 이력 UI 확인
+    await waitFor(() => {
+      expect(screen.getByTestId('user-history-ui')).toBeInTheDocument();
+    }, { timeout: 3000 });
   });
 
   it('should display profile UI when clicking profile button', async () => {
