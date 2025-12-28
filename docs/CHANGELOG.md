@@ -8,6 +8,25 @@
 ## Unreleased
 
 ### Added
+프론트엔드_사용자_학습_이력_UI: 프론트엔드 사용자 학습 이력 UI 구현 (2025-01-04)
+- UserHistory 타입 정의 추가 (types/api.ts)
+- userApi.getUserHistory 메서드 추가 및 테스트 작성
+- UserHistoryUI 컴포넌트 생성 (전체 통계, 시간대별 학습 패턴, 날짜별 학습 이력 표시)
+- App.tsx에 학습 이력 화면 추가 (학습 이력 보기 버튼, 학습 이력 화면 표시)
+- UserHistoryUI 컴포넌트 테스트 작성 (9개 테스트)
+- App.tsx 학습 이력 관련 테스트 추가 (1개 테스트)
+- 모든 테스트 통과 및 커버리지 84.84% 달성
+
+프론트엔드_사용자_프로필_관리_UI: 프론트엔드 사용자 프로필 관리 UI 구현 (2025-01-04)
+- UserProfile 타입 정의 추가 (types/api.ts)
+- UserProfileUI 컴포넌트 생성 (프로필 조회 및 수정 기능)
+- 프로필 수정 기능 (username, target_level 수정 지원)
+- 프로필 정보 표시 (이메일, 사용자명, 목표 레벨, 현재 레벨, 테스트 횟수, 연속 학습일)
+- App.tsx에 프로필 관리 화면 추가 (프로필 관리 버튼, 프로필 관리 화면 표시)
+- UserProfileUI 컴포넌트 테스트 작성 (11개 테스트)
+- App.tsx 프로필 관리 관련 테스트 추가 (1개 테스트)
+- 모든 테스트 통과 및 커버리지 84.84% 달성
+
 프론트엔드_사용자_성능_분석_UI: 프론트엔드 사용자 성능 분석 UI 구현 (2025-01-04)
 - UserPerformance 타입 정의 추가 (types/api.ts)
 - userApi.getUserPerformance 메서드 추가 및 테스트 작성
