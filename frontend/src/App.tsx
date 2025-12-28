@@ -103,7 +103,6 @@ function App() {
             <button
               onClick={handleStartTest}
               className="start-button"
-              disabled={state === 'loading'}
             >
               테스트 시작
             </button>
