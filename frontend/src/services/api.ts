@@ -77,7 +77,19 @@ async function fetchApi<T>(
       );
     }
 
-    const data: ApiResponse<T> = await response.json();
+    let data: ApiResponse<T>;
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      // JSON 파싱 실패 시
+      if (!response.ok) {
+        throw new ApiError(
+          response.status,
+          `HTTP ${response.status} ${response.statusText}`
+        );
+      }
+      throw new ApiError(500, '응답 파싱 중 오류가 발생했습니다.');
+    }
 
     if (!response.ok) {
       throw new ApiError(

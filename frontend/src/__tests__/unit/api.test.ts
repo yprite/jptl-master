@@ -250,13 +250,14 @@ describe('ApiError', () => {
       }),
     });
 
-    await expect(testApi.getTest(999)).rejects.toThrow(ApiError);
     try {
       await testApi.getTest(999);
+      fail('Should have thrown an error');
     } catch (error) {
       expect(error).toBeInstanceOf(ApiError);
       if (error instanceof ApiError) {
         expect(error.message).toContain('Not found');
+        expect(error.status).toBe(404);
       }
     }
   });
@@ -275,6 +276,325 @@ describe('ApiError', () => {
         expect(error.message).toContain('네트워크 오류');
       }
     }
+  });
+
+  it('should handle non-JSON response', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      headers: {
+        get: () => 'text/plain',
+      },
+      json: async () => {
+        throw new Error('Not JSON');
+      },
+    });
+
+    const result = await testApi.getTest(1);
+    expect(result).toEqual({});
+  });
+
+  it('should handle non-JSON error response', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      headers: {
+        get: () => 'text/plain',
+      },
+      json: async () => {
+        throw new Error('Not JSON');
+      },
+    });
+
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.status).toBe(500);
+      }
+    }
+  });
+
+  it('should handle JSON parsing error on success response', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      headers: {
+        get: () => 'application/json',
+      },
+      json: async () => {
+        throw new Error('JSON parse error');
+      },
+    });
+
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.message).toContain('응답 파싱 중 오류');
+      }
+    }
+  });
+
+  it('should handle JSON parsing error on error response', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 404,
+      statusText: 'Not Found',
+      headers: {
+        get: () => 'application/json',
+      },
+      json: async () => {
+        throw new Error('JSON parse error');
+      },
+    });
+
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.status).toBe(404);
+        expect(error.message).toContain('HTTP 404');
+      }
+    }
+  });
+
+  describe('createTest', () => {
+    it('should create test with custom parameters', async () => {
+      const mockTest = {
+        id: 1,
+        title: 'Custom Test',
+        level: 'N4',
+        status: 'created',
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockTest,
+        }),
+      });
+
+      const result = await testApi.createTest({
+        title: 'Custom Test',
+        level: 'N4',
+        question_count: 10,
+        time_limit_minutes: 20,
+        question_types: ['vocabulary'],
+      });
+      expect(result).toEqual(mockTest);
+    });
+  });
+});
+
+describe('resultApi', () => {
+  beforeEach(() => {
+    (fetch as jest.Mock).mockClear();
+  });
+
+  describe('getResults', () => {
+    it('should fetch results with userId filter', async () => {
+      const mockResults = [{ id: 1, test_id: 1, user_id: 1, score: 85.5 }];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockResults,
+        }),
+      });
+
+      const result = await resultApi.getResults(1);
+      expect(result).toEqual(mockResults);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/results?user_id=1'),
+        expect.any(Object)
+      );
+    });
+
+    it('should fetch results with testId filter', async () => {
+      const mockResults = [{ id: 1, test_id: 1, user_id: 1, score: 85.5 }];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockResults,
+        }),
+      });
+
+      const result = await resultApi.getResults(undefined, 1);
+      expect(result).toEqual(mockResults);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/results?test_id=1'),
+        expect.any(Object)
+      );
+    });
+
+    it('should fetch results with both filters', async () => {
+      const mockResults = [{ id: 1, test_id: 1, user_id: 1, score: 85.5 }];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockResults,
+        }),
+      });
+
+      const result = await resultApi.getResults(1, 1);
+      expect(result).toEqual(mockResults);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/results?user_id=1&test_id=1'),
+        expect.any(Object)
+      );
+    });
+  });
+
+  describe('getRecentResultsByUser', () => {
+    it('should fetch recent results by user', async () => {
+      const mockResults = [{ id: 1, test_id: 1, user_id: 1, score: 85.5 }];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockResults,
+        }),
+      });
+
+      const result = await resultApi.getRecentResultsByUser(1, 5);
+      expect(result).toEqual(mockResults);
+    });
+  });
+
+  describe('getUserAverageScore', () => {
+    it('should fetch user average score', async () => {
+      const mockData = {
+        user_id: 1,
+        average_score: 85.5,
+        total_results: 10,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockData,
+        }),
+      });
+
+      const result = await resultApi.getUserAverageScore(1);
+      expect(result).toEqual(mockData);
+    });
+  });
+
+  describe('getResultReport', () => {
+    it('should fetch result report', async () => {
+      const mockReport = { report: 'test report' };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockReport,
+        }),
+      });
+
+      const result = await resultApi.getResultReport(1);
+      expect(result).toEqual(mockReport);
+    });
+  });
+});
+
+describe('userApi', () => {
+  beforeEach(() => {
+    (fetch as jest.Mock).mockClear();
+  });
+
+  describe('updateCurrentUser', () => {
+    it('should update current user', async () => {
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        username: 'updateduser',
+        target_level: 'N4',
+        current_level: null,
+        total_tests_taken: 0,
+        study_streak: 0,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockUser,
+        }),
+      });
+
+      const result = await userApi.updateCurrentUser({
+        username: 'updateduser',
+        target_level: 'N4',
+      });
+      expect(result).toEqual(mockUser);
+    });
+  });
+});
+
+describe('authApi', () => {
+  beforeEach(() => {
+    (fetch as jest.Mock).mockClear();
+  });
+
+  describe('logout', () => {
+    it('should logout successfully', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+        }),
+      });
+
+      await authApi.logout();
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/auth/logout'),
+        expect.objectContaining({
+          method: 'POST',
+        })
+      );
+    });
   });
 });
 
