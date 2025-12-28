@@ -444,32 +444,26 @@ async def submit_test(
                 weaknesses={}
             )
 
-        # 성능 데이터 업데이트 (간단한 집계)
-        # 유형별 성능 업데이트
-        if current_performance.type_performance is None:
-            current_performance.type_performance = {}
-        
-        for q_type, analysis in question_type_analysis.items():
-            if q_type not in current_performance.type_performance:
-                current_performance.type_performance[q_type] = {"correct": 0, "total": 0}
-            current_performance.type_performance[q_type]["correct"] += analysis["correct"]
-            current_performance.type_performance[q_type]["total"] += analysis["total"]
+        # 기간 내의 모든 AnswerDetail 조회 (정확한 분석을 위해)
+        period_answer_details = answer_detail_repo.find_by_user_id_and_period(
+            current_user.id, period_start, period_end
+        )
 
-        # 난이도별 성능 업데이트
-        if current_performance.difficulty_performance is None:
-            current_performance.difficulty_performance = {}
-        
-        for question in test.questions:
-            diff = str(question.difficulty)
-            if diff not in current_performance.difficulty_performance:
-                current_performance.difficulty_performance[diff] = {"correct": 0, "total": 0}
-            
-            user_answer = request.answers.get(question.id, "")
-            is_correct = question.is_correct_answer(user_answer) if user_answer else False
-            
-            current_performance.difficulty_performance[diff]["total"] += 1
-            if is_correct:
-                current_performance.difficulty_performance[diff]["correct"] += 1
+        # UserPerformanceAnalysisService를 사용하여 성능 분석
+        from backend.domain.services.user_performance_analysis_service import UserPerformanceAnalysisService
+        analysis_service = UserPerformanceAnalysisService()
+
+        # 유형별 성취도 집계
+        type_performance = analysis_service.analyze_type_performance(period_answer_details)
+
+        # 난이도별 성취도 집계
+        difficulty_performance = analysis_service.analyze_difficulty_performance(period_answer_details)
+
+        # 반복 오답 문제 식별
+        repeated_mistakes = analysis_service.identify_repeated_mistakes(period_answer_details, threshold=2)
+
+        # 약점 영역 분석
+        weaknesses_data = analysis_service.identify_weaknesses(period_answer_details, accuracy_threshold=60.0)
 
         # 레벨별 성취도 추이 업데이트
         if current_performance.level_progression is None:
@@ -483,22 +477,13 @@ async def submit_test(
             "score": score
         })
 
-        # 반복 오답 문제 식별 (간단히 오답인 문제 ID 추가)
-        if current_performance.repeated_mistakes is None:
-            current_performance.repeated_mistakes = []
-        
-        for question in test.questions:
-            user_answer = request.answers.get(question.id, "")
-            is_correct = question.is_correct_answer(user_answer) if user_answer else False
-            if not is_correct and question.id not in current_performance.repeated_mistakes:
-                current_performance.repeated_mistakes.append(question.id)
-
         # UserPerformance 저장
         current_performance.update_performance_data(
-            type_performance=current_performance.type_performance,
-            difficulty_performance=current_performance.difficulty_performance,
+            type_performance=type_performance,
+            difficulty_performance=difficulty_performance,
             level_progression=current_performance.level_progression,
-            repeated_mistakes=current_performance.repeated_mistakes
+            repeated_mistakes=repeated_mistakes,
+            weaknesses=weaknesses_data
         )
         user_performance_repo.save(current_performance)
 
