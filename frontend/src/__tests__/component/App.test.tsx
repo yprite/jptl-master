@@ -706,4 +706,116 @@ describe('App', () => {
       expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
     });
   });
+
+  it('should display performance analysis when clicking performance button', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    const mockPerformance = {
+      id: 1,
+      user_id: 1,
+      analysis_period_start: '2025-01-01',
+      analysis_period_end: '2025-01-31',
+      type_performance: {
+        vocabulary: { accuracy: 85.0 },
+        grammar: { accuracy: 70.0 },
+      },
+      difficulty_performance: {
+        '1': { accuracy: 90.0 },
+        '2': { accuracy: 75.0 },
+      },
+      level_progression: {
+        N5: { average_score: 80.0 },
+      },
+      repeated_mistakes: [1, 2, 3],
+      weaknesses: {
+        grammar: '기본 문법 이해 부족',
+      },
+      created_at: '2025-01-04T10:30:00',
+      updated_at: '2025-01-04T10:30:00',
+    };
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        success: true,
+        data: mockPerformance,
+      }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /성능 분석 보기/i })).toBeInTheDocument();
+    });
+
+    const performanceButton = screen.getByRole('button', { name: /성능 분석 보기/i });
+    fireEvent.click(performanceButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/성능 분석/i)).toBeInTheDocument();
+    });
+
+    expect(screen.getByText(/유형별 성취도/i)).toBeInTheDocument();
+    expect(screen.getByText(/난이도별 성취도/i)).toBeInTheDocument();
+  });
+
+  it('should handle performance analysis error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 404,
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        success: false,
+        message: '성능 분석 데이터를 찾을 수 없습니다',
+      }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /성능 분석 보기/i })).toBeInTheDocument();
+    });
+
+    const performanceButton = screen.getByRole('button', { name: /성능 분석 보기/i });
+    fireEvent.click(performanceButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/성능 분석 데이터를 찾을 수 없습니다/i)).toBeInTheDocument();
+    });
+  });
 });

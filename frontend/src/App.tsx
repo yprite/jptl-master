@@ -3,16 +3,18 @@ import './App.css';
 import TestUI from './components/organisms/TestUI';
 import ResultUI from './components/organisms/ResultUI';
 import LoginUI from './components/organisms/LoginUI';
-import { Test, Result } from './types/api';
-import { testApi, resultApi, ApiError } from './services/api';
+import UserPerformanceUI from './components/organisms/UserPerformanceUI';
+import { Test, Result, UserPerformance } from './types/api';
+import { testApi, resultApi, userApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'loading' | 'test' | 'submitting' | 'result' | 'error';
+type AppState = 'login' | 'initial' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
   const [currentTest, setCurrentTest] = useState<Test | null>(null);
   const [currentResult, setCurrentResult] = useState<Result | null>(null);
+  const [currentPerformance, setCurrentPerformance] = useState<UserPerformance | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
@@ -156,8 +158,43 @@ function App() {
   const handleRestart = () => {
     setCurrentTest(null);
     setCurrentResult(null);
+    setCurrentPerformance(null);
     setError(null);
     setState('initial');
+  };
+
+  // 성능 분석 조회
+  const handleViewPerformance = async () => {
+    // 인증 확인
+    if (!authService.isAuthenticated() || !user) {
+      setState('login');
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const performance = await userApi.getUserPerformance(user.id);
+      setCurrentPerformance(performance);
+      setState('performance');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else if (err.status === 404) {
+          setError('성능 분석 데이터를 찾을 수 없습니다.');
+          setState('error');
+        } else {
+          setError(err.message);
+          setState('error');
+        }
+      } else {
+        setError('성능 분석 데이터를 불러오는 중 오류가 발생했습니다.');
+        setState('error');
+      }
+    }
   };
 
   // 초기화 중이면 로딩 표시
@@ -204,12 +241,20 @@ function App() {
           <section className="initial-section">
             <h2>N5 진단 테스트</h2>
             <p>JLPT N5 레벨 진단 테스트를 시작하세요.</p>
-            <button
-              onClick={handleStartTest}
-              className="start-button"
-            >
-              테스트 시작
-            </button>
+            <div className="initial-actions">
+              <button
+                onClick={handleStartTest}
+                className="start-button"
+              >
+                테스트 시작
+              </button>
+              <button
+                onClick={handleViewPerformance}
+                className="performance-button"
+              >
+                성능 분석 보기
+              </button>
+            </div>
           </section>
         )}
 
@@ -237,6 +282,17 @@ function App() {
             <div className="result-actions">
               <button onClick={handleRestart} className="restart-button">
                 다시 시작
+              </button>
+            </div>
+          </section>
+        )}
+
+        {state === 'performance' && currentPerformance && (
+          <section className="performance-section">
+            <UserPerformanceUI performance={currentPerformance} />
+            <div className="performance-actions">
+              <button onClick={handleRestart} className="back-button">
+                돌아가기
               </button>
             </div>
           </section>

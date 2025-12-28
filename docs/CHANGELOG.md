@@ -8,6 +8,16 @@
 ## Unreleased
 
 ### Added
+프론트엔드_사용자_성능_분석_UI: 프론트엔드 사용자 성능 분석 UI 구현 (2025-01-04)
+- UserPerformance 타입 정의 추가 (types/api.ts)
+- userApi.getUserPerformance 메서드 추가 및 테스트 작성
+- UserPerformanceUI 컴포넌트 생성 (유형별 성취도, 난이도별 성취도, 레벨별 성취도 추이, 반복 오답 문제, 약점 분석 표시)
+- App.tsx에 성능 분석 화면 추가 (성능 분석 보기 버튼, 성능 분석 화면 표시)
+- 백엔드 API 응답 형식 표준화 (get_user_performance 엔드포인트)
+- UserPerformanceUI 컴포넌트 테스트 작성 (11개 테스트)
+- App.tsx 성능 분석 관련 테스트 추가 (2개 테스트)
+- 모든 테스트 통과 및 커버리지 80.89% 달성 (요구사항 80% 충족)
+
 백엔드_Users_API_엔드포인트_완성: 백엔드 Users API 엔드포인트 완성 (2025-01-04)
 - GET /api/v1/users/ - 사용자 목록 조회 엔드포인트 구현
 - GET /api/v1/users/{user_id} - 특정 사용자 조회 엔드포인트 구현

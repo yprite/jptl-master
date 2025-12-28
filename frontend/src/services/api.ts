@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하는 중앙화된 서비스
  */
 
-import { Test, TestList, Result, ResultList, Question } from '../types/api';
+import { Test, TestList, Result, ResultList, Question, UserPerformance } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1';
@@ -311,6 +311,13 @@ export const userApi = {
       method: 'PUT',
       body: JSON.stringify(request),
     });
+  },
+
+  /**
+   * 사용자 성능 분석 조회
+   */
+  async getUserPerformance(userId: number): Promise<UserPerformance> {
+    return fetchApi<UserPerformance>(`/users/${userId}/performance`);
   },
 };
 
