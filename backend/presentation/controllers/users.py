@@ -54,7 +54,25 @@ def get_learning_history_repository() -> SqliteLearningHistoryRepository:
 @router.get("/")
 async def get_users():
     """사용자 목록 조회"""
-    return {"message": "사용자 목록 조회"}
+    repo = get_user_repository()
+    users = repo.find_all()
+    
+    return {
+        "success": True,
+        "data": [
+            UserResponse(
+                id=user.id,
+                email=user.email,
+                username=user.username,
+                target_level=user.target_level,
+                current_level=user.current_level,
+                total_tests_taken=user.total_tests_taken,
+                study_streak=user.study_streak
+            )
+            for user in users
+        ],
+        "message": "사용자 목록 조회 성공"
+    }
 
 @router.post("/")
 async def create_user(request: Optional[UserCreateRequest] = None):
@@ -152,17 +170,78 @@ async def update_current_user_info(
 @router.get("/{user_id}")
 async def get_user(user_id: int):
     """특정 사용자 조회"""
-    return {"message": f"사용자 {user_id} 조회"}
+    repo = get_user_repository()
+    user = repo.find_by_id(user_id)
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다")
+    
+    return {
+        "success": True,
+        "data": UserResponse(
+            id=user.id,
+            email=user.email,
+            username=user.username,
+            target_level=user.target_level,
+            current_level=user.current_level,
+            total_tests_taken=user.total_tests_taken,
+            study_streak=user.study_streak
+        ),
+        "message": "사용자 정보 조회 성공"
+    }
 
 @router.put("/{user_id}")
-async def update_user(user_id: int):
+async def update_user(user_id: int, request: UserUpdateRequest):
     """사용자 정보 수정"""
-    return {"message": f"사용자 {user_id} 수정"}
+    repo = get_user_repository()
+    user = repo.find_by_id(user_id)
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다")
+    
+    # 업데이트할 필드 적용
+    if request.username is not None:
+        # 사용자명 중복 확인 (자신 제외)
+        if repo.exists_by_username(request.username) and user.username != request.username:
+            raise HTTPException(status_code=400, detail="이미 사용중인 사용자명입니다")
+        user.username = request.username
+    
+    if request.target_level is not None:
+        user.target_level = request.target_level
+    
+    # 저장
+    updated_user = repo.save(user)
+    
+    return {
+        "success": True,
+        "data": UserResponse(
+            id=updated_user.id,
+            email=updated_user.email,
+            username=updated_user.username,
+            target_level=updated_user.target_level,
+            current_level=updated_user.current_level,
+            total_tests_taken=updated_user.total_tests_taken,
+            study_streak=updated_user.study_streak
+        ),
+        "message": "사용자 정보가 성공적으로 업데이트되었습니다"
+    }
 
 @router.delete("/{user_id}")
 async def delete_user(user_id: int):
     """사용자 삭제"""
-    return {"message": f"사용자 {user_id} 삭제"}
+    repo = get_user_repository()
+    user = repo.find_by_id(user_id)
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다")
+    
+    # 사용자 삭제
+    repo.delete(user)
+    
+    return {
+        "success": True,
+        "message": "사용자가 성공적으로 삭제되었습니다"
+    }
 
 @router.get("/{user_id}/performance")
 async def get_user_performance(user_id: int):

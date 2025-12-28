@@ -26,9 +26,35 @@
 **응답:**
 ```json
 {
-  "message": "사용자 목록 조회"
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "email": "user1@example.com",
+      "username": "학습자1",
+      "target_level": "N5",
+      "current_level": "N5",
+      "total_tests_taken": 5,
+      "study_streak": 3
+    },
+    {
+      "id": 2,
+      "email": "user2@example.com",
+      "username": "학습자2",
+      "target_level": "N4",
+      "current_level": null,
+      "total_tests_taken": 0,
+      "study_streak": 0
+    }
+  ],
+  "message": "사용자 목록 조회 성공"
 }
 ```
+
+**응답 스키마:**
+- `success` (boolean): 요청 성공 여부
+- `data` (array): 사용자 목록 (UserResponse 배열)
+- `message` (string): 응답 메시지
 
 **상태 코드:**
 - `200 OK`: 성공
@@ -177,19 +203,41 @@
 
 **요청:**
 ```
-GET /api/users/1
+GET /api/v1/users/1
 ```
 
 **응답:**
 ```json
 {
-  "message": "사용자 1 조회"
+  "success": true,
+  "data": {
+    "id": 1,
+    "email": "user@example.com",
+    "username": "학습자1",
+    "target_level": "N5",
+    "current_level": "N5",
+    "total_tests_taken": 5,
+    "study_streak": 3
+  },
+  "message": "사용자 정보 조회 성공"
 }
 ```
+
+**응답 스키마:**
+- `success` (boolean): 요청 성공 여부
+- `data` (UserResponse): 사용자 정보
+- `message` (string): 응답 메시지
 
 **상태 코드:**
 - `200 OK`: 성공
 - `404 Not Found`: 사용자를 찾을 수 없음
+
+**에러 응답:**
+```json
+{
+  "detail": "사용자를 찾을 수 없습니다"
+}
+```
 
 ---
 
@@ -202,21 +250,64 @@ GET /api/users/1
 **경로 파라미터:**
 - `user_id` (int, required): 사용자 ID
 
+**요청 본문:**
+```json
+{
+  "username": "새로운이름",
+  "target_level": "N4"
+}
+```
+
+**요청 스키마:**
+- `username` (string, optional): 새로운 사용자명
+- `target_level` (JLPTLevel, optional): 새로운 목표 레벨
+
 **요청:**
 ```
-PUT /api/users/1
+PUT /api/v1/users/1
 ```
 
 **응답:**
 ```json
 {
-  "message": "사용자 1 수정"
+  "success": true,
+  "data": {
+    "id": 1,
+    "email": "user@example.com",
+    "username": "새로운이름",
+    "target_level": "N4",
+    "current_level": "N5",
+    "total_tests_taken": 5,
+    "study_streak": 3
+  },
+  "message": "사용자 정보가 성공적으로 업데이트되었습니다"
 }
 ```
 
+**응답 스키마:**
+- `success` (boolean): 요청 성공 여부
+- `data` (UserResponse): 업데이트된 사용자 정보
+- `message` (string): 응답 메시지
+
 **상태 코드:**
 - `200 OK`: 성공
+- `400 Bad Request`: 사용자명 중복
 - `404 Not Found`: 사용자를 찾을 수 없음
+
+**에러 응답:**
+```json
+{
+  "detail": "이미 사용중인 사용자명입니다"
+}
+```
+
+또는
+
+```json
+{
+  "detail": "사용자를 찾을 수 없습니다"
+}
+```
 
 ---
 
@@ -231,19 +322,31 @@ PUT /api/users/1
 
 **요청:**
 ```
-DELETE /api/users/1
+DELETE /api/v1/users/1
 ```
 
 **응답:**
 ```json
 {
-  "message": "사용자 1 삭제"
+  "success": true,
+  "message": "사용자가 성공적으로 삭제되었습니다"
 }
 ```
+
+**응답 스키마:**
+- `success` (boolean): 요청 성공 여부
+- `message` (string): 응답 메시지
 
 **상태 코드:**
 - `200 OK`: 성공
 - `404 Not Found`: 사용자를 찾을 수 없음
+
+**에러 응답:**
+```json
+{
+  "detail": "사용자를 찾을 수 없습니다"
+}
+```
 
 ---
 
