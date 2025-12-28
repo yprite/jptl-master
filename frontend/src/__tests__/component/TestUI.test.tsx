@@ -4,8 +4,8 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import TestUI from '../../../frontend/src/components/organisms/TestUI';
-import { Test } from '../../../frontend/src/types/api';
+import TestUI from '../../components/organisms/TestUI';
+import { Test } from '../../types/api';
 
 const mockTest: Test = {
   id: 1,

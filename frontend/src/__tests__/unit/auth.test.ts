@@ -2,11 +2,11 @@
  * Auth 서비스 유닛 테스트
  */
 
-import { authService, User } from '../../../frontend/src/services/auth';
-import { authApi, userApi, ApiError } from '../../../frontend/src/services/api';
+import { authService, User } from '../../services/auth';
+import { authApi, userApi, ApiError } from '../../services/api';
 
 // API 모킹
-jest.mock('../../../frontend/src/services/api', () => ({
+jest.mock('../../services/api', () => ({
   authApi: {
     login: jest.fn(),
     logout: jest.fn(),

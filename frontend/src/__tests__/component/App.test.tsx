@@ -5,8 +5,8 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import App from '../../../frontend/src/App';
-import { server } from '../../../frontend/src/mocks/setup';
+import App from '../../App';
+import { server } from '../../mocks/setup';
 import { http, HttpResponse } from 'msw';
 
 // MSW 서버 설정
