@@ -912,58 +912,112 @@ class TestTestsController:
         app = FastAPI()
         app.include_router(router)
 
+        db = Database(db_path=temp_db)
         client = TestClient(app)
-
-        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
-            db = Database(db_path=temp_db)
+        
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db, \
+             patch('backend.infrastructure.config.database.get_database') as mock_get_db_config:
             mock_get_db.return_value = db
+            mock_get_db_config.return_value = db
 
             # 사용자 생성
             user_repo = SqliteUserRepository(db=db)
             user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
             saved_user = user_repo.save(user)
-
-            # 문제와 테스트 생성
-            question_repo = SqliteQuestionRepository(db=db)
-            questions = []
-            for i in range(5):
-                q = Question(
-                    id=0, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
-                    question_text=f"Q{i+1}", choices=["A", "B"], correct_answer="A",
-                    explanation=f"E{i+1}", difficulty=1
-                )
-                saved_q = question_repo.save(q)
-                questions.append(saved_q)
-
-            test_repo = SqliteTestRepository(db=db)
-            test = Test(
-                id=0, title="Test", level=JLPTLevel.N5,
-                questions=questions, time_limit_minutes=60
-            )
-            test.start_test()
-            saved_test = test_repo.save(test)
-
-            # 답안 준비
-            answers = {q.id: "A" for q in questions}
-
-            response = client.post(
-                f"/{saved_test.id}/submit",
-                json={
-                    "user_id": saved_user.id,
-                    "answers": answers
-                }
-            )
-
-            if response.status_code != 200:
-                print(f"Response status: {response.status_code}")
-                print(f"Response body: {response.json()}")
             
-            assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.json()}"
-            data = response.json()
-            assert data["success"] is True
-            assert data["data"]["score"] == 100.0
-            assert data["data"]["correct_answers"] == 5
-            assert data["data"]["total_questions"] == 5
+            # get_current_user dependency override
+            from backend.presentation.controllers.auth import get_current_user
+            def override_get_current_user():
+                return saved_user
+            app.dependency_overrides[get_current_user] = override_get_current_user
+            
+            # get_test_repository dependency override
+            from backend.presentation.controllers.tests import get_test_repository
+            from backend.infrastructure.repositories.test_repository import SqliteTestRepository
+            test_repo_instance = SqliteTestRepository(db=db)
+            def override_get_test_repository():
+                return test_repo_instance
+            app.dependency_overrides[get_test_repository] = override_get_test_repository
+
+            try:
+                # 문제와 테스트 생성
+                question_repo = SqliteQuestionRepository(db=db)
+                questions = []
+                for i in range(5):
+                    q = Question(
+                        id=0, level=JLPTLevel.N5, question_type=QuestionType.VOCABULARY,
+                        question_text=f"Q{i+1}", choices=["A", "B"], correct_answer="A",
+                        explanation=f"E{i+1}", difficulty=1
+                    )
+                    saved_q = question_repo.save(q)
+                    questions.append(saved_q)
+
+                # test_repo는 이미 override에서 생성됨
+                test = Test(
+                    id=0, title="Test", level=JLPTLevel.N5,
+                    questions=questions, time_limit_minutes=60
+                )
+                test.start_test()
+                saved_test = test_repo_instance.save(test)
+
+                # 답안 준비
+                answers = {q.id: "A" for q in questions}
+
+                response = client.post(
+                    f"/{saved_test.id}/submit",
+                    json={
+                        "user_id": saved_user.id,
+                        "answers": answers
+                    }
+                )
+
+                if response.status_code != 200:
+                    print(f"Response status: {response.status_code}")
+                    print(f"Response body: {response.json()}")
+                
+                assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.json()}"
+                data = response.json()
+                assert data["success"] is True
+                assert data["data"]["score"] == 100.0
+                assert data["data"]["correct_answers"] == 5
+                assert data["data"]["total_questions"] == 5
+
+                # 학습 데이터 자동 수집 검증
+                result_id = data["data"]["result_id"]
+                
+                # AnswerDetail 자동 생성 검증
+                from backend.infrastructure.repositories.answer_detail_repository import SqliteAnswerDetailRepository
+                answer_detail_repo = SqliteAnswerDetailRepository(db=db)
+                answer_details = answer_detail_repo.find_by_result_id(result_id)
+                assert len(answer_details) == 5, f"Expected 5 AnswerDetails, got {len(answer_details)}"
+                for answer_detail in answer_details:
+                    assert answer_detail.result_id == result_id
+                    assert answer_detail.is_correct is True
+                    assert answer_detail.user_answer == "A"
+                    assert answer_detail.correct_answer == "A"
+                
+                # LearningHistory 자동 기록 검증
+                from backend.infrastructure.repositories.learning_history_repository import SqliteLearningHistoryRepository
+                learning_history_repo = SqliteLearningHistoryRepository(db=db)
+                learning_histories = learning_history_repo.find_by_user_id(saved_user.id)
+                assert len(learning_histories) >= 1, "At least one LearningHistory should be created"
+                latest_history = learning_histories[0]
+                assert latest_history.user_id == saved_user.id
+                assert latest_history.test_id == saved_test.id
+                assert latest_history.result_id == result_id
+                assert latest_history.total_questions == 5
+                assert latest_history.correct_count == 5
+                
+                # UserPerformance 업데이트 검증 (최소한 하나의 UserPerformance가 존재해야 함)
+                from backend.infrastructure.repositories.user_performance_repository import SqliteUserPerformanceRepository
+                user_performance_repo = SqliteUserPerformanceRepository(db=db)
+                user_performances = user_performance_repo.find_by_user_id(saved_user.id)
+                # UserPerformance는 주기적으로 업데이트되므로, 최소한 하나가 존재하거나 생성되어야 함
+                # (실제 구현에서는 기간별로 생성/업데이트될 수 있음)
+                assert len(user_performances) >= 1, "At least one UserPerformance should be created or updated"
+            finally:
+                # dependency override 정리
+                app.dependency_overrides.clear()
 
 
 class TestMainApp:

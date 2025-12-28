@@ -334,6 +334,143 @@ async def submit_test(
 
         saved_result = result_repo.save(result)
 
+        # 학습 데이터 자동 수집
+        from backend.infrastructure.repositories.answer_detail_repository import SqliteAnswerDetailRepository
+        from backend.infrastructure.repositories.learning_history_repository import SqliteLearningHistoryRepository
+        from backend.infrastructure.repositories.user_performance_repository import SqliteUserPerformanceRepository
+        from backend.domain.entities.answer_detail import AnswerDetail
+        from backend.domain.entities.learning_history import LearningHistory
+        from backend.domain.entities.user_performance import UserPerformance
+        from datetime import date, timedelta
+
+        answer_detail_repo = SqliteAnswerDetailRepository(db=db)
+        learning_history_repo = SqliteLearningHistoryRepository(db=db)
+        user_performance_repo = SqliteUserPerformanceRepository(db=db)
+
+        # 1. AnswerDetail 자동 생성 (각 문제별로)
+        total_questions = len(test.questions)
+        time_taken_seconds_total = time_taken * 60  # 분을 초로 변환
+        avg_time_per_question = max(1, int(time_taken_seconds_total / total_questions)) if total_questions > 0 else 1
+
+        for question in test.questions:
+            user_answer = request.answers.get(question.id, "")
+            is_correct = question.is_correct_answer(user_answer) if user_answer else False
+
+            answer_detail = AnswerDetail(
+                id=None,
+                result_id=saved_result.id,
+                question_id=question.id,
+                user_answer=user_answer,
+                correct_answer=question.correct_answer,
+                is_correct=is_correct,
+                time_spent_seconds=avg_time_per_question,
+                difficulty=question.difficulty,
+                question_type=question.question_type
+            )
+            answer_detail_repo.save(answer_detail)
+
+        # 2. LearningHistory 자동 기록
+        study_date = date.today()
+        study_hour = datetime.now().hour
+        correct_count = saved_test.get_correct_answers_count()
+
+        learning_history = LearningHistory(
+            id=None,
+            user_id=current_user.id,
+            test_id=test.id,
+            result_id=saved_result.id,
+            study_date=study_date,
+            study_hour=study_hour,
+            total_questions=total_questions,
+            correct_count=correct_count,
+            time_spent_minutes=time_taken
+        )
+        learning_history_repo.save(learning_history)
+
+        # 3. UserPerformance 업데이트 (현재 날짜 기준 최근 30일 기간)
+        period_end = date.today()
+        period_start = period_end - timedelta(days=30)
+
+        # 기존 UserPerformance 조회 (해당 기간에 포함되는 것)
+        existing_performances = user_performance_repo.find_by_user_id(current_user.id)
+        current_performance = None
+        for perf in existing_performances:
+            if perf.analysis_period_start <= period_end and perf.analysis_period_end >= period_start:
+                current_performance = perf
+                break
+
+        if current_performance is None:
+            # 새 UserPerformance 생성
+            current_performance = UserPerformance(
+                id=None,
+                user_id=current_user.id,
+                analysis_period_start=period_start,
+                analysis_period_end=period_end,
+                type_performance={},
+                difficulty_performance={},
+                level_progression={},
+                repeated_mistakes=[],
+                weaknesses={}
+            )
+
+        # 성능 데이터 업데이트 (간단한 집계)
+        # 유형별 성능 업데이트
+        if current_performance.type_performance is None:
+            current_performance.type_performance = {}
+        
+        for q_type, analysis in question_type_analysis.items():
+            if q_type not in current_performance.type_performance:
+                current_performance.type_performance[q_type] = {"correct": 0, "total": 0}
+            current_performance.type_performance[q_type]["correct"] += analysis["correct"]
+            current_performance.type_performance[q_type]["total"] += analysis["total"]
+
+        # 난이도별 성능 업데이트
+        if current_performance.difficulty_performance is None:
+            current_performance.difficulty_performance = {}
+        
+        for question in test.questions:
+            diff = str(question.difficulty)
+            if diff not in current_performance.difficulty_performance:
+                current_performance.difficulty_performance[diff] = {"correct": 0, "total": 0}
+            
+            user_answer = request.answers.get(question.id, "")
+            is_correct = question.is_correct_answer(user_answer) if user_answer else False
+            
+            current_performance.difficulty_performance[diff]["total"] += 1
+            if is_correct:
+                current_performance.difficulty_performance[diff]["correct"] += 1
+
+        # 레벨별 성취도 추이 업데이트
+        if current_performance.level_progression is None:
+            current_performance.level_progression = {}
+        
+        level_key = test.level.value
+        if level_key not in current_performance.level_progression:
+            current_performance.level_progression[level_key] = []
+        current_performance.level_progression[level_key].append({
+            "date": study_date.isoformat(),
+            "score": score
+        })
+
+        # 반복 오답 문제 식별 (간단히 오답인 문제 ID 추가)
+        if current_performance.repeated_mistakes is None:
+            current_performance.repeated_mistakes = []
+        
+        for question in test.questions:
+            user_answer = request.answers.get(question.id, "")
+            is_correct = question.is_correct_answer(user_answer) if user_answer else False
+            if not is_correct and question.id not in current_performance.repeated_mistakes:
+                current_performance.repeated_mistakes.append(question.id)
+
+        # UserPerformance 저장
+        current_performance.update_performance_data(
+            type_performance=current_performance.type_performance,
+            difficulty_performance=current_performance.difficulty_performance,
+            level_progression=current_performance.level_progression,
+            repeated_mistakes=current_performance.repeated_mistakes
+        )
+        user_performance_repo.save(current_performance)
+
         # 사용자 통계 업데이트
         user.total_tests_taken += 1
         user_repo.save(user)
