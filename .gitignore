@@ -187,3 +187,4 @@ logs/
 *.tmp
 *.temp
 coverage.json
+coverage/*

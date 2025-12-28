@@ -8,6 +8,11 @@
 ## Unreleased
 
 ### Fixed
+프론트엔드_테스트_커버리지_80%_달성: 프론트엔드 테스트 커버리지 80% 이상 달성 (2025-01-04)
+- Jest 설정 추가하여 불필요한 파일 커버리지에서 제외 (index.tsx, reportWebVitals.ts, setupTestsPolyfill.ts, mocks/, types/)
+- App.test.tsx에 추가 테스트 작성 (사용자 정보 표시, 결과 표시, 재시작 버튼, 에러 처리 등)
+- run_tests.sh에서 coverage-final.json을 사용하여 프론트엔드 커버리지 계산
+- 프론트엔드 커버리지 96.77% 달성 (요구사항: 80% 이상)
 프론트엔드_테스트_실패_수정: 프론트엔드 테스트 실패 수정 및 커버리지 70% 달성 (2025-01-04)
 - auth.test.ts: 로그인 실패 시 currentUser null 설정 추가
 - api.test.ts: 404 에러 메시지 처리 개선 및 중복 호출 제거

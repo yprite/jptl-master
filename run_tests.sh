@@ -114,8 +114,55 @@ echo "$FRONTEND_TEST_OUTPUT"
 echo "✅ 프론트엔드 테스트 통과!"
 
 # 프론트엔드 커버리지 확인
-if [ -f "../coverage/frontend/coverage-summary.json" ]; then
-    FRONTEND_COVERAGE=$(node -e "const data = require('../coverage/frontend/coverage-summary.json'); const total = data.total; const coverage = (total.lines.pct + total.statements.pct + total.functions.pct + total.branches.pct) / 4; console.log(coverage.toFixed(2));")
+# Jest는 coverage-final.json만 생성하므로, 이를 파싱하여 커버리지 계산
+if [ -f "../coverage/frontend/coverage-final.json" ]; then
+    FRONTEND_COVERAGE=$(node -e "
+      const fs = require('fs');
+      const data = JSON.parse(fs.readFileSync('../coverage/frontend/coverage-final.json', 'utf8'));
+      const files = Object.values(data);
+      let totalStatements = 0, totalFunctions = 0, totalBranches = 0, totalLines = 0;
+      let coveredStatements = 0, coveredFunctions = 0, coveredBranches = 0, coveredLines = 0;
+      
+      files.forEach(file => {
+        if (file.s) {
+          const statements = Object.keys(file.s);
+          totalStatements += statements.length;
+          coveredStatements += statements.filter(stmt => file.s[stmt] > 0).length;
+        }
+        if (file.f) {
+          const functions = Object.keys(file.f);
+          totalFunctions += functions.length;
+          coveredFunctions += functions.filter(fn => file.f[fn] > 0).length;
+        }
+        if (file.b) {
+          const branches = Object.keys(file.b);
+          totalBranches += branches.length;
+          coveredBranches += branches.filter(br => {
+            const branchData = file.b[br];
+            return Array.isArray(branchData) && branchData.some(c => c > 0);
+          }).length;
+        }
+        if (file.statementMap && file.s) {
+          Object.keys(file.s).forEach(stmt => {
+            const stmtData = file.statementMap[stmt];
+            if (stmtData && stmtData.start && stmtData.end) {
+              const lines = stmtData.end.line - stmtData.start.line + 1;
+              totalLines += lines;
+              if (file.s[stmt] > 0) {
+                coveredLines += lines;
+              }
+            }
+          });
+        }
+      });
+      
+      const statementsPct = totalStatements > 0 ? (coveredStatements / totalStatements) * 100 : 0;
+      const functionsPct = totalFunctions > 0 ? (coveredFunctions / totalFunctions) * 100 : 0;
+      const branchesPct = totalBranches > 0 ? (coveredBranches / totalBranches) * 100 : 0;
+      const linesPct = totalLines > 0 ? (coveredLines / totalLines) * 100 : 0;
+      const coverage = (statementsPct + functionsPct + branchesPct + linesPct) / 4;
+      console.log(coverage.toFixed(2));
+    ")
     
     if (( $(echo "$FRONTEND_COVERAGE < $FRONTEND_COVERAGE_THRESHOLD" | bc -l) )); then
         echo ""
