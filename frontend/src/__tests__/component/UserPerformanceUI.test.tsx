@@ -79,6 +79,32 @@ describe('UserPerformanceUI', () => {
     expect(screen.getByText('평균 점수: 80.0')).toBeInTheDocument();
   });
 
+  it('should support backend level_progression as score history array', () => {
+    const performanceWithHistory: UserPerformance = {
+      ...mockPerformance,
+      level_progression: {
+        N5: [
+          { date: '2025-01-01', score: 50 },
+          { date: '2025-01-02', score: 70 },
+        ],
+      },
+    };
+    render(<UserPerformanceUI performance={performanceWithHistory} />);
+    expect(screen.getByText('N5')).toBeInTheDocument();
+    expect(screen.getByText('평균 점수: 60.0')).toBeInTheDocument();
+  });
+
+  it('should render "-" when level progression average cannot be computed', () => {
+    const performanceWithInvalidHistory: UserPerformance = {
+      ...mockPerformance,
+      level_progression: {
+        N5: [{ date: '2025-01-01', score: undefined as any }],
+      },
+    };
+    render(<UserPerformanceUI performance={performanceWithInvalidHistory} />);
+    expect(screen.getByText('평균 점수: -')).toBeInTheDocument();
+  });
+
   it('should render repeated mistakes section when present', () => {
     render(<UserPerformanceUI performance={mockPerformance} />);
     expect(screen.getByText('반복 오답 문제')).toBeInTheDocument();
