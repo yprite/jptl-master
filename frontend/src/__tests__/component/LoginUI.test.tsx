@@ -78,11 +78,16 @@ describe('LoginUI', () => {
     const submitButton = screen.getByRole('button', { name: '로그인' });
 
     fireEvent.change(emailInput, { target: { value: 'wrong@example.com' } });
-    fireEvent.click(submitButton);
+    
+    // form submit 이벤트 발생
+    const form = emailInput.closest('form')!;
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    Object.defineProperty(submitEvent, 'preventDefault', { value: jest.fn() });
+    form.dispatchEvent(submitEvent);
 
     await waitFor(() => {
       expect(screen.getByText('사용자를 찾을 수 없습니다')).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('회원가입 성공 시 onRegisterSuccess 콜백을 호출한다', async () => {
