@@ -820,4 +820,485 @@ describe('App', () => {
 
     expect(screen.getByTestId('user-performance-ui')).toBeInTheDocument();
   });
+
+  it('should display history UI when clicking history button', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    const mockHistory = [
+      {
+        id: 1,
+        user_id: 1,
+        test_id: 1,
+        result_id: 1,
+        study_date: '2025-01-04',
+        study_hour: 10,
+        total_questions: 20,
+        correct_count: 15,
+        time_spent_minutes: 30,
+        accuracy_percentage: 75.0,
+        created_at: '2025-01-04T10:30:00',
+      },
+    ];
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      headers: { get: () => 'application/json' },
+      json: async () => mockHistory,
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /학습 이력 보기/i })).toBeInTheDocument();
+    });
+
+    const historyButton = screen.getByRole('button', { name: /학습 이력 보기/i });
+    fireEvent.click(historyButton);
+
+    // 로딩 상태 대기
+    await waitFor(() => {
+      expect(screen.queryByText(/테스트를 준비하는 중/i)).not.toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    // 학습 이력 UI 확인
+    await waitFor(() => {
+      expect(screen.getByTestId('user-history-ui')).toBeInTheDocument();
+    }, { timeout: 3000 });
+  });
+
+  it('should display profile UI when clicking profile button', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    const mockProfile = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        success: true,
+        data: mockProfile,
+      }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /프로필 관리/i })).toBeInTheDocument();
+    });
+
+    const profileButton = screen.getByRole('button', { name: /프로필 관리/i });
+    fireEvent.click(profileButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/프로필 관리/i)).toBeInTheDocument();
+    });
+
+    expect(screen.getByTestId('user-profile-ui')).toBeInTheDocument();
+  });
+
+  it('should handle history fetch error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ detail: 'Internal Server Error' }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /학습 이력 보기/i })).toBeInTheDocument();
+    });
+
+    const historyButton = screen.getByRole('button', { name: /학습 이력 보기/i });
+    fireEvent.click(historyButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle history fetch 401 error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ detail: 'Unauthorized' }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /학습 이력 보기/i })).toBeInTheDocument();
+    });
+
+    const historyButton = screen.getByRole('button', { name: /학습 이력 보기/i });
+    fireEvent.click(historyButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
+
+  it('should handle profile fetch error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ detail: 'Internal Server Error' }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /프로필 관리/i })).toBeInTheDocument();
+    });
+
+    const profileButton = screen.getByRole('button', { name: /프로필 관리/i });
+    fireEvent.click(profileButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle profile fetch 401 error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ detail: 'Unauthorized' }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /프로필 관리/i })).toBeInTheDocument();
+    });
+
+    const profileButton = screen.getByRole('button', { name: /프로필 관리/i });
+    fireEvent.click(profileButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
+
+  it('should handle profile update error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    const mockProfile = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    // 프로필 조회 성공
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        success: true,
+        data: mockProfile,
+      }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /프로필 관리/i })).toBeInTheDocument();
+    });
+
+    const profileButton = screen.getByRole('button', { name: /프로필 관리/i });
+    fireEvent.click(profileButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('user-profile-ui')).toBeInTheDocument();
+    });
+
+    // 프로필 수정 버튼 클릭
+    const editButton = screen.getByRole('button', { name: /수정/i });
+    fireEvent.click(editButton);
+
+    // 프로필 업데이트 실패
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ detail: 'Update failed' }),
+    });
+
+    const usernameInput = screen.getByLabelText(/사용자명 입력/i) as HTMLInputElement;
+    fireEvent.change(usernameInput, { target: { value: 'newusername' } });
+
+    const saveButton = screen.getByRole('button', { name: /저장/i });
+    fireEvent.click(saveButton);
+
+    // 에러 메시지 표시 확인
+    await waitFor(() => {
+      expect(screen.getByText(/Update failed/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle performance fetch non-401 non-404 error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ detail: 'Internal Server Error' }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /성능 분석 보기/i })).toBeInTheDocument();
+    });
+
+    const performanceButton = screen.getByRole('button', { name: /성능 분석 보기/i });
+    fireEvent.click(performanceButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle performance fetch 401 error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ detail: 'Unauthorized' }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /성능 분석 보기/i })).toBeInTheDocument();
+    });
+
+    const performanceButton = screen.getByRole('button', { name: /성능 분석 보기/i });
+    fireEvent.click(performanceButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
+
+
+
+  it('should handle view history when not authenticated', async () => {
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(null);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(null);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(false);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(undefined);
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
+
+  it('should handle view profile when not authenticated', async () => {
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(null);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(null);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(false);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(undefined);
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
+
+  it('should handle view performance when not authenticated', async () => {
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(null);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(null);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(false);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(undefined);
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
 });

@@ -83,3 +83,27 @@ export interface UserPerformance {
   updated_at: string;
 }
 
+export interface UserHistory {
+  id: number;
+  user_id: number;
+  test_id: number;
+  result_id: number;
+  study_date: string;
+  study_hour: number;
+  total_questions: number;
+  correct_count: number;
+  time_spent_minutes: number;
+  accuracy_percentage: number;
+  created_at: string;
+}
+
+export interface UserProfile {
+  id: number;
+  email: string;
+  username: string;
+  target_level: string;
+  current_level: string | null;
+  total_tests_taken: number;
+  study_streak: number;
+}
+
