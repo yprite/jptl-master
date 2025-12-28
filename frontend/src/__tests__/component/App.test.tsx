@@ -1326,15 +1326,13 @@ describe('App', () => {
     const submitButton = screen.getByRole('button', { name: /제출/i });
     fireEvent.click(submitButton);
 
-    // submitting 상태 대기
+    // 에러 화면으로 전환 확인
     await waitFor(() => {
-      expect(screen.queryByText(/결과를 처리하는 중/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
     }, { timeout: 3000 });
 
-    // 에러 메시지 확인
-    await waitFor(() => {
-      expect(screen.getByText(/Submission failed/i)).toBeInTheDocument();
-    }, { timeout: 3000 });
+    // 에러 메시지 확인 (detail 필드의 값이 표시됨)
+    expect(screen.getByText(/Submission failed/i)).toBeInTheDocument();
   });
 
 
