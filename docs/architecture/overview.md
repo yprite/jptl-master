@@ -190,6 +190,27 @@ class UserPerformance:
 - COMPLETED (완료됨)
 - EXPIRED (만료됨)
 
+### 도메인 서비스 (Domain Services)
+
+#### LevelRecommendationService
+점수 기반 JLPT 레벨 추천 서비스
+
+```python
+class LevelRecommendationService:
+    def recommend_level(test_level: JLPTLevel, score: float) -> JLPTLevel
+```
+
+**추천 규칙**:
+- 90점 이상: 다음 레벨로 상향 추천 (N1은 예외로 N1 유지)
+- 70-89점: 현재 레벨 유지
+- 70점 미만: 이전 레벨로 하향 추천 (N5는 예외로 N5 유지)
+
+**사용 예시**:
+- N5 테스트에서 95점 → N4 추천
+- N5 테스트에서 80점 → N5 유지
+- N5 테스트에서 60점 → N5 유지 (기초 강화)
+- N4 테스트에서 65점 → N5로 하향 추천
+
 ## 데이터베이스 설계
 
 ### SQLite 스키마 (경량화)
