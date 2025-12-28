@@ -8,6 +8,10 @@
 ## Unreleased
 
 ### Added
+브랜치_최신화_규칙: 모든 작업 시작 전 브랜치 최신화 필수 규칙 추가 (2025-01-04)
+- 규칙 10-1 추가: 브랜치 최신화 필수 규칙 (강제)
+- 규칙 14-1 업데이트: Git 작업 자동화 프로세스에 브랜치 최신화 단계 명시
+- 규칙 3-1 업데이트: 브랜치 자동 생성 규칙에 규칙 10-1 참조 추가
 설계_문서_작성: Domain 엔티티 및 API 문서 작성 완료 (2025-01-04)
 - Domain 엔티티 문서 7개 작성 (User, Question, Test, Result, AnswerDetail, LearningHistory, UserPerformance)
 - API 엔드포인트 문서 5개 작성 (Users, Auth, Tests, Results, Health)
