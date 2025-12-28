@@ -41,7 +41,9 @@ describe('UserProfileUI', () => {
     expect(screen.getByText('사용자명')).toBeInTheDocument();
     expect(screen.getByText('testuser')).toBeInTheDocument();
     expect(screen.getByText('목표 레벨')).toBeInTheDocument();
-    expect(screen.getByText('N5')).toBeInTheDocument();
+    // N5는 목표 레벨과 현재 레벨 모두에 나타나므로 getAllByText 사용
+    const n5Elements = screen.getAllByText('N5');
+    expect(n5Elements.length).toBeGreaterThan(0);
     expect(screen.getByText('현재 레벨')).toBeInTheDocument();
     expect(screen.getByText('테스트 횟수')).toBeInTheDocument();
     expect(screen.getByText('10회')).toBeInTheDocument();
