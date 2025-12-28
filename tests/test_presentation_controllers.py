@@ -140,27 +140,43 @@ class TestUsersController:
         """현재 사용자 조회 미구현 테스트"""
         from backend.presentation.controllers.users import router
         from fastapi import FastAPI
+        from starlette.middleware.sessions import SessionMiddleware
+        import secrets
 
         app = FastAPI()
+        app.add_middleware(
+            SessionMiddleware,
+            secret_key=secrets.token_urlsafe(32),
+            max_age=86400,
+            same_site="lax"
+        )
         app.include_router(router)
 
         client = TestClient(app)
         response = client.get("/me")
-        assert response.status_code == 404
-        assert "사용자 인증 시스템이 아직 구현되지 않았습니다" in response.json()["detail"]
+        assert response.status_code == 401
+        assert "로그인이 필요합니다" in response.json()["detail"]
 
     def test_update_current_user_not_implemented(self):
         """현재 사용자 업데이트 미구현 테스트"""
         from backend.presentation.controllers.users import router
         from fastapi import FastAPI
+        from starlette.middleware.sessions import SessionMiddleware
+        import secrets
 
         app = FastAPI()
+        app.add_middleware(
+            SessionMiddleware,
+            secret_key=secrets.token_urlsafe(32),
+            max_age=86400,
+            same_site="lax"
+        )
         app.include_router(router)
 
         client = TestClient(app)
         response = client.put("/me", json={"username": "newuser"})
-        assert response.status_code == 404
-        assert "사용자 인증 시스템이 아직 구현되지 않았습니다" in response.json()["detail"]
+        assert response.status_code == 401
+        assert "로그인이 필요합니다" in response.json()["detail"]
 
 
 class TestResultsController:
@@ -850,22 +866,53 @@ class TestTestsController:
     def test_start_test_success(self, temp_db):
         """시험 시작 성공 테스트"""
         from backend.presentation.controllers.tests import router
+        from backend.presentation.controllers.auth import router as auth_router
         from fastapi import FastAPI
+        from starlette.middleware.sessions import SessionMiddleware
+        import secrets
         from backend.infrastructure.config.database import Database
         from backend.infrastructure.repositories.test_repository import SqliteTestRepository
         from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
         from backend.domain.entities.test import Test
         from backend.domain.entities.question import Question
+        from backend.domain.entities.user import User
         from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 
         app = FastAPI()
+        app.add_middleware(
+            SessionMiddleware,
+            secret_key=secrets.token_urlsafe(32),
+            max_age=86400,
+            same_site="lax"
+        )
+        app.include_router(auth_router, prefix="/auth")
         app.include_router(router)
 
         client = TestClient(app)
 
-        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db_tests, \
+             patch('backend.presentation.controllers.auth.get_database') as mock_get_db_auth:
             db = Database(db_path=temp_db)
-            mock_get_db.return_value = db
+            mock_get_db_tests.return_value = db
+            mock_get_db_auth.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(
+                id=None,
+                email="test@example.com",
+                username="testuser",
+                target_level=JLPTLevel.N5
+            )
+            saved_user = user_repo.save(user)
+
+            # 로그인하여 세션 설정
+            login_response = client.post(
+                "/auth/login",
+                json={"email": "test@example.com"}
+            )
+            assert login_response.status_code == 200
 
             # 문제와 테스트 생성
             question_repo = SqliteQuestionRepository(db=db)
@@ -888,7 +935,7 @@ class TestTestsController:
 
             response = client.post(
                 f"/{saved_test.id}/start",
-                json={"user_id": 1}
+                json={}
             )
 
             assert response.status_code == 200

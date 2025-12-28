@@ -169,7 +169,8 @@ class TestTestTakingScenarios:
         # 모든 컨트롤러의 get_database를 패치
         with patch('backend.presentation.controllers.users.get_database', return_value=db), \
              patch('backend.presentation.controllers.tests.get_database', return_value=db), \
-             patch('backend.presentation.controllers.results.get_database', return_value=db):
+             patch('backend.presentation.controllers.results.get_database', return_value=db), \
+             patch('backend.presentation.controllers.auth.get_database', return_value=db):
             client = TestClient(app)
             yield client
 
@@ -215,7 +216,14 @@ class TestTestTakingScenarios:
         user_id = user_data["data"]["id"]
         assert user_id > 0
 
-        # 2. 시험 생성
+        # 2. 로그인하여 세션 설정
+        login_response = app_client.post(
+            "/api/v1/auth/login",
+            json={"email": "test@example.com"}
+        )
+        assert login_response.status_code == 200
+
+        # 3. 시험 생성
         test_response = app_client.post(
             "/api/v1/tests/",
             json={
@@ -231,24 +239,24 @@ class TestTestTakingScenarios:
         assert test_id > 0
         assert len(test_data["questions"]) == 20
 
-        # 3. 시험 시작
+        # 4. 시험 시작
         start_response = app_client.post(
             f"/api/v1/tests/{test_id}/start",
-            json={"user_id": user_id}
+            json={}
         )
         assert start_response.status_code == 200
         start_data = start_response.json()
         assert start_data["status"] == "in_progress"
         assert start_data["started_at"] is not None
 
-        # 4. 문제 조회 (시험 정보 조회로 확인)
+        # 5. 문제 조회 (시험 정보 조회로 확인)
         get_test_response = app_client.get(f"/api/v1/tests/{test_id}")
         assert get_test_response.status_code == 200
         test_info = get_test_response.json()
         assert len(test_info["questions"]) == 20
         assert test_info["status"] == "in_progress"
 
-        # 5. 답안 제출 (일부 정답, 일부 오답)
+        # 6. 답안 제출 (일부 정답, 일부 오답)
         answers = {}
         for i, question in enumerate(test_info["questions"]):
             # 절반은 정답, 절반은 오답
@@ -260,7 +268,6 @@ class TestTestTakingScenarios:
         submit_response = app_client.post(
             f"/api/v1/tests/{test_id}/submit",
             json={
-                "user_id": user_id,
                 "answers": answers
             }
         )
@@ -312,7 +319,8 @@ class TestResultTrackingScenarios:
         # 모든 컨트롤러의 get_database를 패치
         with patch('backend.presentation.controllers.users.get_database', return_value=db), \
              patch('backend.presentation.controllers.tests.get_database', return_value=db), \
-             patch('backend.presentation.controllers.results.get_database', return_value=db):
+             patch('backend.presentation.controllers.results.get_database', return_value=db), \
+             patch('backend.presentation.controllers.auth.get_database', return_value=db):
             client = TestClient(app)
             yield client
 
@@ -354,7 +362,14 @@ class TestResultTrackingScenarios:
         user_data = user_response.json()
         user_id = user_data["data"]["id"]
 
-        # 2. 첫 번째 시험 응시 및 결과 조회
+        # 2. 로그인하여 세션 설정
+        login_response = app_client.post(
+            "/api/v1/auth/login",
+            json={"email": "tracking@example.com"}
+        )
+        assert login_response.status_code == 200
+
+        # 3. 첫 번째 시험 응시 및 결과 조회
         # 시험 생성
         test1_response = app_client.post(
             "/api/v1/tests/",
@@ -369,10 +384,11 @@ class TestResultTrackingScenarios:
         test1_id = test1_response.json()["id"]
 
         # 시험 시작
-        app_client.post(
+        start1_response = app_client.post(
             f"/api/v1/tests/{test1_id}/start",
-            json={"user_id": user_id}
+            json={}
         )
+        assert start1_response.status_code == 200
 
         # 답안 제출 (10개 정답)
         test1_info = app_client.get(f"/api/v1/tests/{test1_id}").json()
@@ -382,7 +398,7 @@ class TestResultTrackingScenarios:
 
         submit1_response = app_client.post(
             f"/api/v1/tests/{test1_id}/submit",
-            json={"user_id": user_id, "answers": answers1}
+            json={"answers": answers1}
         )
         assert submit1_response.status_code == 200
         result1_id = submit1_response.json()["data"]["result_id"]
@@ -391,7 +407,7 @@ class TestResultTrackingScenarios:
         result1_detail = app_client.get(f"/api/v1/results/{result1_id}").json()
         assert result1_detail["score"] == 50.0
 
-        # 3. 두 번째 시험 응시 및 결과 조회
+        # 4. 두 번째 시험 응시 및 결과 조회
         # 시험 생성
         test2_response = app_client.post(
             "/api/v1/tests/",
@@ -406,10 +422,11 @@ class TestResultTrackingScenarios:
         test2_id = test2_response.json()["id"]
 
         # 시험 시작
-        app_client.post(
+        start2_response = app_client.post(
             f"/api/v1/tests/{test2_id}/start",
-            json={"user_id": user_id}
+            json={}
         )
+        assert start2_response.status_code == 200
 
         # 답안 제출 (15개 정답 - 더 좋은 성적)
         test2_info = app_client.get(f"/api/v1/tests/{test2_id}").json()
@@ -419,7 +436,7 @@ class TestResultTrackingScenarios:
 
         submit2_response = app_client.post(
             f"/api/v1/tests/{test2_id}/submit",
-            json={"user_id": user_id, "answers": answers2}
+            json={"answers": answers2}
         )
         assert submit2_response.status_code == 200
         result2_id = submit2_response.json()["data"]["result_id"]
