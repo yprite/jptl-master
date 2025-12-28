@@ -201,7 +201,168 @@ else
     echo "⚠️  프론트엔드 커버리지 파일을 찾을 수 없습니다. 커버리지 검증을 건너뜁니다."
 fi
 
+# 7. 프론트엔드 E2E 테스트 실행
+echo ""
+echo "🌐 프론트엔드 E2E 테스트 실행 중..."
+
+# 백엔드 서버 시작 (E2E 테스트에 필요)
+echo ""
+echo "🔧 백엔드 서버 시작 중 (E2E 테스트용)..."
 cd ..
+
+# 기존 백엔드 서버 프로세스 확인 및 종료
+BACKEND_PID_FILE=".backend.pid"
+if [ -f "$BACKEND_PID_FILE" ]; then
+    OLD_PID=$(cat "$BACKEND_PID_FILE")
+    if ps -p "$OLD_PID" > /dev/null 2>&1; then
+        echo "⚠️  기존 Backend 서버 발견 (PID: $OLD_PID). 종료합니다..."
+        kill "$OLD_PID" 2>/dev/null || true
+        sleep 1
+    fi
+    rm -f "$BACKEND_PID_FILE"
+fi
+
+# 백엔드 서버 백그라운드 실행
+python run.py > .backend.e2e.log 2>&1 &
+BACKEND_PID=$!
+echo "$BACKEND_PID" > "$BACKEND_PID_FILE"
+
+# 서버가 준비될 때까지 대기 (최대 30초)
+echo "⏳ 백엔드 서버 준비 대기 중..."
+MAX_WAIT=30
+WAIT_COUNT=0
+while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
+    if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+        echo "✅ 백엔드 서버가 준비되었습니다 (PID: $BACKEND_PID)"
+        break
+    fi
+    sleep 1
+    WAIT_COUNT=$((WAIT_COUNT + 1))
+    echo -n "."
+done
+echo ""
+
+# 서버가 시작되지 않았으면 종료
+if [ $WAIT_COUNT -ge $MAX_WAIT ]; then
+    echo "❌ 백엔드 서버가 30초 내에 시작되지 않았습니다."
+    if ps -p "$BACKEND_PID" > /dev/null 2>&1; then
+        kill "$BACKEND_PID" 2>/dev/null || true
+    fi
+    rm -f "$BACKEND_PID_FILE"
+    exit 1
+fi
+
+# E2E 테스트 실행
+cd frontend
+# NODE_PATH를 설정하여 frontend/node_modules를 모듈 해석 경로에 추가
+export NODE_PATH="$(pwd)/node_modules:${NODE_PATH:-}"
+# CI 환경 변수 설정 (헤드리스 모드 및 기존 서버 재사용 방지)
+export CI=true
+
+# Playwright 브라우저 설치 확인 및 설치 (최초 실행/업데이트 후 필요)
+echo ""
+echo "⬇️  Playwright 브라우저 설치 확인/설치 중..."
+echo "ℹ️  이미 설치되어 있으면 빠르게 완료되고, 설치가 필요하면 다운로드 진행 상황이 표시됩니다."
+
+# 설치 로그를 실시간으로 출력하면서 파일로도 저장
+PLAYWRIGHT_INSTALL_LOG="../.playwright-install.log"
+rm -f "$PLAYWRIGHT_INSTALL_LOG"
+
+# 설치 시작 시간 기록
+INSTALL_START_TIME=$(date +%s)
+echo "⏳ 시작 시간: $(date '+%H:%M:%S')"
+echo ""
+
+# 설치 실행 (진행 상황을 실시간으로 표시)
+# --with-deps 옵션으로 의존성도 함께 설치하고 더 자세한 출력
+# stdbuf를 사용하여 출력 버퍼링 비활성화 (실시간 출력 보장)
+if command -v stdbuf > /dev/null 2>&1; then
+    stdbuf -oL -eL npx playwright install --with-deps chromium 2>&1 | tee "$PLAYWRIGHT_INSTALL_LOG"
+else
+    # stdbuf가 없으면 일반 tee 사용
+    npx playwright install --with-deps chromium 2>&1 | tee "$PLAYWRIGHT_INSTALL_LOG"
+fi
+PLAYWRIGHT_INSTALL_EXIT_CODE=${PIPESTATUS[0]}
+
+# 설치 종료 시간 기록
+INSTALL_END_TIME=$(date +%s)
+INSTALL_DURATION=$((INSTALL_END_TIME - INSTALL_START_TIME))
+
+echo ""
+if [ $PLAYWRIGHT_INSTALL_EXIT_CODE -eq 0 ]; then
+    if [ $INSTALL_DURATION -lt 5 ]; then
+        echo "✅ Playwright 브라우저가 이미 설치되어 있었습니다. (확인 시간: ${INSTALL_DURATION}초)"
+    else
+        echo "✅ Playwright 브라우저 설치 완료 (소요 시간: ${INSTALL_DURATION}초)"
+    fi
+else
+    echo "❌ Playwright 브라우저 설치가 실패했습니다. (exit code: $PLAYWRIGHT_INSTALL_EXIT_CODE, 소요 시간: ${INSTALL_DURATION}초)"
+    echo "📄 설치 로그: $PLAYWRIGHT_INSTALL_LOG"
+    cd ..
+    exit $PLAYWRIGHT_INSTALL_EXIT_CODE
+fi
+
+# E2E 테스트 실행 (진행 상황을 실시간으로 표시)
+echo ""
+echo "🧪 E2E 테스트 실행 중..."
+echo "ℹ️  테스트 진행 상황이 실시간으로 표시됩니다."
+echo "⏳ 테스트 시작: $(date '+%H:%M:%S')"
+echo ""
+
+# E2E 테스트 로그 파일
+E2E_TEST_LOG="../.e2e-test.log"
+rm -f "$E2E_TEST_LOG"
+
+# 테스트 시작 시간 기록
+E2E_START_TIME=$(date +%s)
+
+# 테스트 실행 (진행 상황을 실시간으로 표시하면서 파일로도 저장)
+# stdbuf를 사용하여 출력 버퍼링 비활성화 (실시간 출력 보장)
+if command -v stdbuf > /dev/null 2>&1; then
+    stdbuf -oL -eL npm run test:e2e 2>&1 | tee "$E2E_TEST_LOG"
+else
+    # stdbuf가 없으면 일반 tee 사용
+    npm run test:e2e 2>&1 | tee "$E2E_TEST_LOG"
+fi
+E2E_TEST_EXIT_CODE=${PIPESTATUS[0]}
+
+# 테스트 종료 시간 기록
+E2E_END_TIME=$(date +%s)
+E2E_DURATION=$((E2E_END_TIME - E2E_START_TIME))
+E2E_MINUTES=$((E2E_DURATION / 60))
+E2E_SECONDS=$((E2E_DURATION % 60))
+
+echo ""
+echo "⏰ 테스트 종료: $(date '+%H:%M:%S') (소요 시간: ${E2E_MINUTES}분 ${E2E_SECONDS}초)"
+
+# 백엔드 서버 종료
+cd ..
+if [ -f "$BACKEND_PID_FILE" ]; then
+    BACKEND_PID=$(cat "$BACKEND_PID_FILE")
+    if ps -p "$BACKEND_PID" > /dev/null 2>&1; then
+        echo ""
+        echo "🛑 백엔드 서버 종료 중 (PID: $BACKEND_PID)..."
+        kill "$BACKEND_PID" 2>/dev/null || true
+        sleep 1
+    fi
+    rm -f "$BACKEND_PID_FILE"
+    rm -f .backend.e2e.log
+fi
+
+# E2E 테스트 결과 확인
+if [ $E2E_TEST_EXIT_CODE -ne 0 ]; then
+    echo ""
+    echo "❌ 프론트엔드 E2E 테스트가 실패했습니다. (exit code: $E2E_TEST_EXIT_CODE)"
+    echo "📄 테스트 로그: $E2E_TEST_LOG"
+    echo ""
+    echo "💡 실패한 테스트를 확인하려면:"
+    echo "   - 로그 파일 확인: cat $E2E_TEST_LOG"
+    echo "   - Playwright 리포트 확인: cd frontend && npx playwright show-report"
+    exit $E2E_TEST_EXIT_CODE
+fi
+
+echo ""
+echo "✅ 프론트엔드 E2E 테스트 통과!"
 
 echo ""
 echo "✅ 모든 테스트 완료!"
