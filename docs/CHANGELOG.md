@@ -8,6 +8,12 @@
 ## Unreleased
 
 ### Added
+학습_분석_API_엔드포인트: 학습 분석 API 엔드포인트 구현 (2025-01-04)
+- GET /api/results/{id}/details: 상세 답안 이력 조회 엔드포인트 추가
+- GET /api/users/{id}/performance: 사용자 성능 분석 조회 엔드포인트 추가
+- GET /api/users/{id}/history: 학습 이력 조회 엔드포인트 추가
+- 모든 엔드포인트에 대한 단위 테스트 작성 및 통과
+- API 엔드포인트 문서 업데이트 (results.md, users.md)
 레벨_추천_로직: 점수 기반 JLPT 레벨 추천 Domain Service 구현 (2025-01-04)
 - LevelRecommendationService 도메인 서비스 구현
 - 테스트 점수와 테스트 레벨을 기반으로 다음 학습 레벨 추천

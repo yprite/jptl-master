@@ -247,6 +247,63 @@ GET /api/results/users/1/recent?limit=5
 
 ---
 
+### 6. 상세 답안 이력 조회
+
+**GET** `/api/results/{result_id}/details`
+
+특정 결과에 대한 모든 문제별 상세 답안 이력을 조회합니다. 각 답안의 정답 여부, 소요 시간, 난이도, 문제 유형 등의 정보를 포함합니다.
+
+**경로 파라미터:**
+- `result_id` (int, required): 결과 ID
+
+**응답:**
+```json
+[
+  {
+    "id": 1,
+    "result_id": 1,
+    "question_id": 1,
+    "user_answer": "A",
+    "correct_answer": "A",
+    "is_correct": true,
+    "time_spent_seconds": 30,
+    "difficulty": 1,
+    "question_type": "vocabulary",
+    "created_at": "2025-01-04T10:30:00"
+  },
+  {
+    "id": 2,
+    "result_id": 1,
+    "question_id": 2,
+    "user_answer": "B",
+    "correct_answer": "C",
+    "is_correct": false,
+    "time_spent_seconds": 45,
+    "difficulty": 2,
+    "question_type": "grammar",
+    "created_at": "2025-01-04T10:30:00"
+  }
+]
+```
+
+**응답 스키마:**
+- `id` (int): 답안 상세 ID
+- `result_id` (int): 결과 ID
+- `question_id` (int): 문제 ID
+- `user_answer` (string): 사용자가 선택한 답안
+- `correct_answer` (string): 정답
+- `is_correct` (boolean): 정답 여부
+- `time_spent_seconds` (int): 문제별 소요 시간 (초)
+- `difficulty` (int): 문제 난이도 (1-5)
+- `question_type` (string): 문제 유형 (vocabulary, grammar, reading, listening)
+- `created_at` (datetime): 생성 일시
+
+**상태 코드:**
+- `200 OK`: 성공
+- `404 Not Found`: 결과를 찾을 수 없음
+
+---
+
 ## 성능 수준
 
 - `excellent`: 85점 이상

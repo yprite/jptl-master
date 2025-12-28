@@ -245,6 +245,131 @@ DELETE /api/users/1
 
 ---
 
+### 8. 사용자 성능 분석 조회
+
+**GET** `/api/users/{user_id}/performance`
+
+특정 사용자의 성능 분석 데이터를 조회합니다. 유형별 성취도, 난이도별 성취도, 반복 오답 문제, 약점 분석 등의 정보를 포함합니다.
+
+**경로 파라미터:**
+- `user_id` (int, required): 사용자 ID
+
+**응답:**
+```json
+{
+  "id": 1,
+  "user_id": 1,
+  "analysis_period_start": "2025-01-01",
+  "analysis_period_end": "2025-01-31",
+  "type_performance": {
+    "vocabulary": {
+      "accuracy": 85.0
+    },
+    "grammar": {
+      "accuracy": 70.0
+    }
+  },
+  "difficulty_performance": {
+    "1": {
+      "accuracy": 90.0
+    },
+    "2": {
+      "accuracy": 75.0
+    }
+  },
+  "level_progression": {
+    "N5": {
+      "average_score": 80.0
+    }
+  },
+  "repeated_mistakes": [1, 2, 3],
+  "weaknesses": {
+    "grammar": "기본 문법 이해 부족"
+  },
+  "created_at": "2025-01-04T10:30:00",
+  "updated_at": "2025-01-04T10:30:00"
+}
+```
+
+**응답 스키마:**
+- `id` (int): 성능 분석 ID
+- `user_id` (int): 사용자 ID
+- `analysis_period_start` (date): 분석 기간 시작일
+- `analysis_period_end` (date): 분석 기간 종료일
+- `type_performance` (object): 유형별 성취도 (JSON 딕셔너리)
+- `difficulty_performance` (object): 난이도별 성취도 (JSON 딕셔너리)
+- `level_progression` (object): 레벨별 성취도 추이 (JSON 딕셔너리)
+- `repeated_mistakes` (array): 반복 오답 문제 ID 리스트
+- `weaknesses` (object): 약점 분석 데이터 (JSON 딕셔너리)
+- `created_at` (datetime): 생성 일시
+- `updated_at` (datetime): 수정 일시
+
+**상태 코드:**
+- `200 OK`: 성공
+- `404 Not Found`: 사용자 또는 성능 분석 데이터를 찾을 수 없음
+
+---
+
+### 9. 사용자 학습 이력 조회
+
+**GET** `/api/users/{user_id}/history`
+
+특정 사용자의 학습 이력을 조회합니다. 날짜별, 시간대별 학습 패턴 및 성취도를 포함합니다.
+
+**경로 파라미터:**
+- `user_id` (int, required): 사용자 ID
+
+**응답:**
+```json
+[
+  {
+    "id": 1,
+    "user_id": 1,
+    "test_id": 1,
+    "result_id": 1,
+    "study_date": "2025-01-04",
+    "study_hour": 10,
+    "total_questions": 20,
+    "correct_count": 15,
+    "time_spent_minutes": 30,
+    "accuracy_percentage": 75.0,
+    "created_at": "2025-01-04T10:30:00"
+  },
+  {
+    "id": 2,
+    "user_id": 1,
+    "test_id": 2,
+    "result_id": 2,
+    "study_date": "2025-01-04",
+    "study_hour": 14,
+    "total_questions": 20,
+    "correct_count": 18,
+    "time_spent_minutes": 25,
+    "accuracy_percentage": 90.0,
+    "created_at": "2025-01-04T14:30:00"
+  }
+]
+```
+
+**응답 스키마:**
+- `id` (int): 학습 이력 ID
+- `user_id` (int): 사용자 ID
+- `test_id` (int): 테스트 ID
+- `result_id` (int): 결과 ID
+- `study_date` (date): 학습 날짜
+- `study_hour` (int): 학습 시간대 (0-23)
+- `total_questions` (int): 총 문제 수
+- `correct_count` (int): 정답 개수
+- `time_spent_minutes` (int): 소요 시간 (분)
+- `accuracy_percentage` (float): 정확도 백분율
+- `created_at` (datetime): 생성 일시
+
+**상태 코드:**
+- `200 OK`: 성공
+- `404 Not Found`: 사용자를 찾을 수 없음
+
+---
+
 ## 인증
 
 일부 엔드포인트는 세션 기반 인증이 필요합니다:
