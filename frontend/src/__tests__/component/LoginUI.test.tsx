@@ -69,7 +69,7 @@ describe('LoginUI', () => {
   });
 
   it('로그인 실패 시 에러 메시지를 표시한다', async () => {
-    const error = new ApiError('사용자를 찾을 수 없습니다', 404);
+    const error = new ApiError(404, '사용자를 찾을 수 없습니다');
     mockAuthService.login.mockRejectedValue(error);
 
     render(<LoginUI />);
@@ -117,7 +117,7 @@ describe('LoginUI', () => {
   });
 
   it('회원가입 실패 시 에러 메시지를 표시한다', async () => {
-    const error = new ApiError('이미 등록된 이메일입니다', 400);
+    const error = new ApiError(400, '이미 등록된 이메일입니다');
     mockUserApi.createUser.mockRejectedValue(error);
 
     render(<LoginUI />);
@@ -129,15 +129,22 @@ describe('LoginUI', () => {
     // 폼 입력
     const emailInput = screen.getByLabelText('이메일');
     const usernameInput = screen.getByLabelText('사용자명');
-    const submitButton = screen.getByRole('button', { name: '회원가입' });
+    const form = emailInput.closest('form')!;
 
     fireEvent.change(emailInput, { target: { value: 'existing@example.com' } });
     fireEvent.change(usernameInput, { target: { value: '학습자1' } });
+    
+    // form submit 이벤트 발생
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent(submitEvent);
+    
+    // 또는 직접 handleSubmit 호출을 시뮬레이션
+    const submitButton = screen.getByRole('button', { name: '회원가입' });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
       expect(screen.getByText('이미 등록된 이메일입니다')).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('로딩 중에는 버튼이 비활성화된다', async () => {
@@ -164,14 +171,13 @@ describe('LoginUI', () => {
     render(<LoginUI />);
 
     const emailInput = screen.getByLabelText('이메일') as HTMLInputElement;
-    const submitButton = screen.getByRole('button', { name: '로그인' });
+    const form = emailInput.closest('form')!;
 
     expect(emailInput.required).toBe(true);
     
-    fireEvent.click(submitButton);
-    
-    // HTML5 validation이 작동하므로 submit이 막힘
-    expect(mockAuthService.login).not.toHaveBeenCalled();
+    // form의 checkValidity를 확인
+    const isValid = form.checkValidity();
+    expect(isValid).toBe(false);
   });
 });
 

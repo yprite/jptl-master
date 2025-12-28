@@ -14,6 +14,8 @@ const mockSubscribe = jest.fn((listener) => {
   return jest.fn(); // unsubscribe 함수
 });
 const mockInitialize = jest.fn().mockResolvedValue(undefined);
+const mockGetCurrentUser = jest.fn().mockReturnValue(null);
+const mockIsAuthenticated = jest.fn().mockReturnValue(false);
 
 jest.mock('../../services/auth', () => {
   return {
@@ -24,6 +26,8 @@ jest.mock('../../services/auth', () => {
       get initialize() {
         return mockInitialize;
       },
+      getCurrentUser: mockGetCurrentUser,
+      isAuthenticated: mockIsAuthenticated,
     },
   };
 });
@@ -37,6 +41,8 @@ beforeEach(() => {
     return jest.fn();
   });
   mockInitialize.mockResolvedValue(undefined);
+  mockGetCurrentUser.mockReturnValue(null);
+  mockIsAuthenticated.mockReturnValue(false);
 });
 
 describe('App', () => {

@@ -19,7 +19,11 @@ function App() {
 
   // 인증 상태 구독
   useEffect(() => {
+    let isMounted = true;
+
     const unsubscribe = authService.subscribe((currentUser) => {
+      if (!isMounted) return;
+      
       setUser(currentUser);
       // 초기화 중이 아니고 사용자가 없으면 로그인 화면으로
       if (!isInitializing && !currentUser && state !== 'login') {
@@ -33,6 +37,8 @@ function App() {
 
     // 초기화 시 사용자 정보 확인
     authService.initialize().finally(() => {
+      if (!isMounted) return;
+      
       setIsInitializing(false);
       // 초기화 후 사용자 상태에 따라 화면 설정
       const currentUser = authService.getCurrentUser();
@@ -43,7 +49,10 @@ function App() {
       }
     });
 
-    return unsubscribe;
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, []);
 
   // 로그인 성공 핸들러
