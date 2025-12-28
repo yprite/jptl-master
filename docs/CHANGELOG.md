@@ -8,6 +8,13 @@
 ## Unreleased
 
 ### Added
+문제_유형별_필터링_개선: 문제 유형별 필터링 개선 기능 추가 (2025-01-04)
+- TestCreateRequest에 question_type_counts 필드 추가
+- 유형별 문제 수 조정 기능 구현 (예: vocabulary 10개, grammar 5개, reading 5개)
+- QuestionRepository에 find_random_by_level_and_type_counts 메서드 추가
+- 유형별 문제 수 부족 시 에러 처리
+- API 문서에 question_type_counts 필드 설명 추가
+
 프론트엔드_사용자_인증_플로우: 프론트엔드 사용자 인증 플로우 구현 (2025-01-04)
 - LoginUI 컴포넌트 생성 (로그인/회원가입 UI)
 - App.tsx에 인증 플로우 통합
