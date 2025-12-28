@@ -229,21 +229,21 @@
 ### 결과 조회 요청
 
 ```bash
-curl -X GET "http://localhost:8000/api/results/1" \
+curl -X GET "http://localhost:8000/api/v1/results/1" \
   -H "Accept: application/json"
 ```
 
 ### 사용자별 최근 결과 조회 요청
 
 ```bash
-curl -X GET "http://localhost:8000/api/results/users/1/recent?limit=5" \
+curl -X GET "http://localhost:8000/api/v1/results/users/1/recent?limit=5" \
   -H "Accept: application/json"
 ```
 
 ### 결과 분석 리포트 요청
 
 ```bash
-curl -X GET "http://localhost:8000/api/results/1/report" \
+curl -X GET "http://localhost:8000/api/v1/results/1/report" \
   -H "Accept: application/json"
 ```
 

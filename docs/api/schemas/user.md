@@ -124,7 +124,7 @@ JLPT 레벨을 나타내는 열거형입니다.
 ### 사용자 등록 요청
 
 ```bash
-curl -X POST "http://localhost:8000/api/users/" \
+curl -X POST "http://localhost:8000/api/v1/users/" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -136,7 +136,7 @@ curl -X POST "http://localhost:8000/api/users/" \
 ### 사용자 정보 수정 요청
 
 ```bash
-curl -X PUT "http://localhost:8000/api/users/me" \
+curl -X PUT "http://localhost:8000/api/v1/users/me" \
   -H "Content-Type: application/json" \
   -H "Cookie: session=..." \
   -d '{

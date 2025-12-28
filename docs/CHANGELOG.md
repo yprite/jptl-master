@@ -8,6 +8,18 @@
 ## Unreleased
 
 ### Added
+API_문서화_완성: API 문서화 완성 및 OpenAPI 스펙 동기화 (2025-01-04)
+- 모든 엔드포인트 문서의 Base URL을 /api/v1로 수정
+- 실제 구현과 일치하도록 응답 형식 업데이트
+- auth 엔드포인트 문서 수정 (이메일만 사용, 비밀번호 제거)
+- tests 엔드포인트 문서 수정 (N5 진단 테스트 요청 본문 없음)
+- submit_test 응답 형식 상세화
+- health 엔드포인트 응답 형식 수정
+- API 엔드포인트 README 추가 (docs/api/endpoints/README.md)
+- API 스키마 README 추가 (docs/api/schemas/README.md)
+- 모든 스키마 문서의 예제 URL을 /api/v1로 수정
+
+### Added
 TypeScript_타입_체크_필수화: 프론트엔드 TypeScript 타입 체크 필수화 (2025-01-04)
 - package.json에 `typecheck` 스크립트 추가 (`tsc --noEmit`)
 - `test:ci` 스크립트에 타입 체크 자동 포함
