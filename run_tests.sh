@@ -205,23 +205,82 @@ fi
 echo ""
 echo "🌐 프론트엔드 E2E 테스트 실행 중..."
 
+# 백엔드 서버 시작 (E2E 테스트에 필요)
+echo ""
+echo "🔧 백엔드 서버 시작 중 (E2E 테스트용)..."
+cd ..
+
+# 기존 백엔드 서버 프로세스 확인 및 종료
+BACKEND_PID_FILE=".backend.pid"
+if [ -f "$BACKEND_PID_FILE" ]; then
+    OLD_PID=$(cat "$BACKEND_PID_FILE")
+    if ps -p "$OLD_PID" > /dev/null 2>&1; then
+        echo "⚠️  기존 Backend 서버 발견 (PID: $OLD_PID). 종료합니다..."
+        kill "$OLD_PID" 2>/dev/null || true
+        sleep 1
+    fi
+    rm -f "$BACKEND_PID_FILE"
+fi
+
+# 백엔드 서버 백그라운드 실행
+python run.py > .backend.e2e.log 2>&1 &
+BACKEND_PID=$!
+echo "$BACKEND_PID" > "$BACKEND_PID_FILE"
+
+# 서버가 준비될 때까지 대기 (최대 30초)
+echo "⏳ 백엔드 서버 준비 대기 중..."
+MAX_WAIT=30
+WAIT_COUNT=0
+while [ $WAIT_COUNT -lt $MAX_WAIT ]; do
+    if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+        echo "✅ 백엔드 서버가 준비되었습니다 (PID: $BACKEND_PID)"
+        break
+    fi
+    sleep 1
+    WAIT_COUNT=$((WAIT_COUNT + 1))
+    echo -n "."
+done
+echo ""
+
+# 서버가 시작되지 않았으면 종료
+if [ $WAIT_COUNT -ge $MAX_WAIT ]; then
+    echo "❌ 백엔드 서버가 30초 내에 시작되지 않았습니다."
+    if ps -p "$BACKEND_PID" > /dev/null 2>&1; then
+        kill "$BACKEND_PID" 2>/dev/null || true
+    fi
+    rm -f "$BACKEND_PID_FILE"
+    exit 1
+fi
+
 # E2E 테스트 실행
+cd frontend
 E2E_TEST_OUTPUT=$(npm run test:e2e 2>&1)
 E2E_TEST_EXIT_CODE=$?
+
+# 백엔드 서버 종료
+cd ..
+if [ -f "$BACKEND_PID_FILE" ]; then
+    BACKEND_PID=$(cat "$BACKEND_PID_FILE")
+    if ps -p "$BACKEND_PID" > /dev/null 2>&1; then
+        echo ""
+        echo "🛑 백엔드 서버 종료 중 (PID: $BACKEND_PID)..."
+        kill "$BACKEND_PID" 2>/dev/null || true
+        sleep 1
+    fi
+    rm -f "$BACKEND_PID_FILE"
+    rm -f .backend.e2e.log
+fi
 
 # E2E 테스트 실패 시 종료
 if [ $E2E_TEST_EXIT_CODE -ne 0 ]; then
     echo "$E2E_TEST_OUTPUT"
     echo ""
     echo "❌ 프론트엔드 E2E 테스트가 실패했습니다."
-    cd ..
     exit $E2E_TEST_EXIT_CODE
 fi
 
 echo "$E2E_TEST_OUTPUT"
 echo "✅ 프론트엔드 E2E 테스트 통과!"
-
-cd ..
 
 echo ""
 echo "✅ 모든 테스트 완료!"
