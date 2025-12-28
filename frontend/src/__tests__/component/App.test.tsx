@@ -18,24 +18,20 @@ const mockGetCurrentUser = jest.fn().mockReturnValue(null);
 const mockIsAuthenticated = jest.fn().mockReturnValue(false);
 const mockLogout = jest.fn().mockResolvedValue(undefined);
 
+const mockSubscribeFn = jest.fn((listener) => {
+  listener(null);
+  return jest.fn();
+});
+const mockInitializeFn = jest.fn().mockResolvedValue(undefined);
+const mockGetCurrentUserFn = jest.fn().mockReturnValue(null);
+const mockIsAuthenticatedFn = jest.fn().mockReturnValue(false);
+const mockLogoutFn = jest.fn().mockResolvedValue(undefined);
+
 jest.mock('../../services/auth', () => {
-  const mockSubscribeFn = jest.fn((listener) => {
-    listener(null);
-    return jest.fn();
-  });
-  const mockInitializeFn = jest.fn().mockResolvedValue(undefined);
-  const mockGetCurrentUserFn = jest.fn().mockReturnValue(null);
-  const mockIsAuthenticatedFn = jest.fn().mockReturnValue(false);
-  const mockLogoutFn = jest.fn().mockResolvedValue(undefined);
-  
   return {
     authService: {
-      get subscribe() {
-        return mockSubscribeFn;
-      },
-      get initialize() {
-        return mockInitializeFn;
-      },
+      subscribe: mockSubscribeFn,
+      initialize: mockInitializeFn,
       getCurrentUser: mockGetCurrentUserFn,
       isAuthenticated: mockIsAuthenticatedFn,
       logout: mockLogoutFn,
@@ -66,14 +62,15 @@ jest.mock('../../components/organisms/LoginUI', () => {
 beforeEach(() => {
   (global.fetch as jest.Mock).mockClear();
   // authService 모킹 초기화
-  mockSubscribe.mockImplementation((listener) => {
+  jest.clearAllMocks();
+  mockSubscribeFn.mockImplementation((listener) => {
     listener(null);
     return jest.fn();
   });
-  mockInitialize.mockResolvedValue(undefined);
-  mockGetCurrentUser.mockReturnValue(null);
-  mockIsAuthenticated.mockReturnValue(false);
-  mockLogout.mockResolvedValue(undefined);
+  mockInitializeFn.mockResolvedValue(undefined);
+  mockGetCurrentUserFn.mockReturnValue(null);
+  mockIsAuthenticatedFn.mockReturnValue(false);
+  mockLogoutFn.mockResolvedValue(undefined);
 });
 
 describe('App', () => {
@@ -84,7 +81,7 @@ describe('App', () => {
     
     // 초기화 대기
     await waitFor(() => {
-      expect(mockInitialize).toHaveBeenCalled();
+      expect(mockInitializeFn).toHaveBeenCalled();
     });
   });
 
@@ -109,13 +106,13 @@ describe('App', () => {
       study_streak: 0,
     };
 
-    mockSubscribe.mockImplementation((listener) => {
+    mockSubscribeFn.mockImplementation((listener) => {
       // 초기에는 null, 나중에 사용자 정보 전달
       setTimeout(() => listener(mockUser), 0);
       return jest.fn();
     });
-    mockGetCurrentUser.mockReturnValue(mockUser);
-    mockIsAuthenticated.mockReturnValue(true);
+    mockGetCurrentUserFn.mockReturnValue(mockUser);
+    mockIsAuthenticatedFn.mockReturnValue(true);
 
     render(<App />);
 
@@ -145,13 +142,13 @@ describe('App', () => {
       study_streak: 0,
     };
 
-    mockSubscribe.mockImplementation((listener) => {
+    mockSubscribeFn.mockImplementation((listener) => {
       listener(mockUser);
       return jest.fn();
     });
-    mockGetCurrentUser.mockReturnValue(mockUser);
-    mockIsAuthenticated.mockReturnValue(true);
-    mockInitialize.mockResolvedValue(mockUser);
+    mockGetCurrentUserFn.mockReturnValue(mockUser);
+    mockIsAuthenticatedFn.mockReturnValue(true);
+    mockInitializeFn.mockResolvedValue(mockUser);
 
     render(<App />);
 
@@ -172,17 +169,17 @@ describe('App', () => {
     };
 
     let currentUser: any = mockUser;
-    mockSubscribe.mockImplementation((listener) => {
+    mockSubscribeFn.mockImplementation((listener) => {
       listener(currentUser);
       return jest.fn();
     });
-    mockGetCurrentUser.mockImplementation(() => currentUser);
-    mockIsAuthenticated.mockImplementation(() => currentUser !== null);
-    mockInitialize.mockResolvedValue(mockUser);
-    mockLogout.mockImplementation(async () => {
+    mockGetCurrentUserFn.mockImplementation(() => currentUser);
+    mockIsAuthenticatedFn.mockImplementation(() => currentUser !== null);
+    mockInitializeFn.mockResolvedValue(mockUser);
+    mockLogoutFn.mockImplementation(async () => {
       currentUser = null;
       // 구독자들에게 알림
-      mockSubscribe.mock.calls.forEach(([listener]) => {
+      mockSubscribeFn.mock.calls.forEach(([listener]) => {
         listener(null);
       });
     });
@@ -197,7 +194,7 @@ describe('App', () => {
     fireEvent.click(logoutButton);
 
     await waitFor(() => {
-      expect(mockLogout).toHaveBeenCalled();
+      expect(mockLogoutFn).toHaveBeenCalled();
       expect(screen.getByTestId('login-ui')).toBeInTheDocument();
     });
   });
@@ -213,13 +210,13 @@ describe('App', () => {
       study_streak: 0,
     };
 
-    mockSubscribe.mockImplementation((listener) => {
+    mockSubscribeFn.mockImplementation((listener) => {
       listener(mockUser);
       return jest.fn();
     });
-    mockGetCurrentUser.mockReturnValue(mockUser);
-    mockIsAuthenticated.mockReturnValue(true);
-    mockInitialize.mockResolvedValue(mockUser);
+    mockGetCurrentUserFn.mockReturnValue(mockUser);
+    mockIsAuthenticatedFn.mockReturnValue(true);
+    mockInitializeFn.mockResolvedValue(mockUser);
 
     // 401 에러 시뮬레이션
     (global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -255,13 +252,13 @@ describe('App', () => {
       study_streak: 0,
     };
 
-    mockSubscribe.mockImplementation((listener) => {
+    mockSubscribeFn.mockImplementation((listener) => {
       listener(mockUser);
       return jest.fn();
     });
-    mockGetCurrentUser.mockReturnValue(mockUser);
-    mockIsAuthenticated.mockReturnValue(true);
-    mockInitialize.mockResolvedValue(mockUser);
+    mockGetCurrentUserFn.mockReturnValue(mockUser);
+    mockIsAuthenticatedFn.mockReturnValue(true);
+    mockInitializeFn.mockResolvedValue(mockUser);
 
     render(<App />);
 
