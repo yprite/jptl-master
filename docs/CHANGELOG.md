@@ -75,6 +75,11 @@ TypeScript_타입_체크_필수화: 프론트엔드 TypeScript 타입 체크 필
 - 타입 에러 시 작업 완료 금지 규칙 명시
 
 ### Fixed
+프론트엔드_E2E_안정화: run_tests.sh의 프론트엔드 E2E 테스트 안정화 및 통과 보장 (2025-12-28)
+- run_tests.sh에서 E2E 실행 전 N5 문제 시딩을 비대화형으로 수행 (최소 20개 보장)
+- 프론트엔드 API 클라이언트가 비래핑(raw) 응답과 FastAPI 기본 에러(detail)를 모두 처리
+- 성능 분석 UI가 백엔드 데이터 구조(level_progression/weaknesses) 차이를 안전하게 처리
+- Playwright E2E에서 중복 사용자명/strict locator 이슈를 해결하여 flake 제거
 프론트엔드_테스트_커버리지_80%_달성: 프론트엔드 테스트 커버리지 80% 이상 달성 (2025-01-04)
 - Jest 설정 추가하여 불필요한 파일 커버리지에서 제외 (index.tsx, reportWebVitals.ts, setupTestsPolyfill.ts, mocks/, types/)
 - App.test.tsx에 추가 테스트 작성 (사용자 정보 표시, 결과 표시, 재시작 버튼, 에러 처리 등)
