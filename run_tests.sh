@@ -9,6 +9,7 @@ source backend/venv/bin/activate
 
 # 커버리지 임계값 설정
 BACKEND_COVERAGE_THRESHOLD=80
+FRONTEND_COVERAGE_THRESHOLD=70
 
 # 1. Unit 테스트 실행 (커버리지 포함)
 echo ""
@@ -90,6 +91,49 @@ else
     echo ""
     echo "⚠️  커버리지 파일을 찾을 수 없습니다. 커버리지 검증을 건너뜁니다."
 fi
+
+# 5. 프론트엔드 테스트 실행
+echo ""
+echo "🎨 프론트엔드 테스트 실행 중..."
+cd frontend
+
+# 프론트엔드 테스트 실행
+FRONTEND_TEST_OUTPUT=$(npm run test:ci 2>&1)
+FRONTEND_TEST_EXIT_CODE=$?
+
+# 프론트엔드 테스트 실패 시 종료
+if [ $FRONTEND_TEST_EXIT_CODE -ne 0 ]; then
+    echo "$FRONTEND_TEST_OUTPUT"
+    echo ""
+    echo "❌ 프론트엔드 테스트가 실패했습니다."
+    cd ..
+    exit $FRONTEND_TEST_EXIT_CODE
+fi
+
+echo "$FRONTEND_TEST_OUTPUT"
+echo "✅ 프론트엔드 테스트 통과!"
+
+# 프론트엔드 커버리지 확인
+if [ -f "../coverage/frontend/coverage-summary.json" ]; then
+    FRONTEND_COVERAGE=$(node -e "const data = require('../coverage/frontend/coverage-summary.json'); const total = data.total; const coverage = (total.lines.pct + total.statements.pct + total.functions.pct + total.branches.pct) / 4; console.log(coverage.toFixed(2));")
+    
+    if (( $(echo "$FRONTEND_COVERAGE < $FRONTEND_COVERAGE_THRESHOLD" | bc -l) )); then
+        echo ""
+        echo "❌ 프론트엔드 커버리지 ${FRONTEND_COVERAGE}%가 최소 요구사항 ${FRONTEND_COVERAGE_THRESHOLD}% 미만입니다!"
+        echo "⚠️  테스트 커버리지를 ${FRONTEND_COVERAGE_THRESHOLD}% 이상 달성해야 합니다."
+        echo "📝 누락된 테스트를 작성하고 다시 실행해주세요."
+        cd ..
+        exit 1
+    else
+        echo ""
+        echo "✅ 프론트엔드 커버리지 ${FRONTEND_COVERAGE}% (요구사항: ${FRONTEND_COVERAGE_THRESHOLD}% 이상)"
+    fi
+else
+    echo ""
+    echo "⚠️  프론트엔드 커버리지 파일을 찾을 수 없습니다. 커버리지 검증을 건너뜁니다."
+fi
+
+cd ..
 
 echo ""
 echo "✅ 모든 테스트 완료!"
