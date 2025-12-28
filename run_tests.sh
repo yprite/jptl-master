@@ -258,6 +258,20 @@ cd frontend
 export NODE_PATH="$(pwd)/node_modules:${NODE_PATH:-}"
 # CI 환경 변수 설정 (헤드리스 모드 및 기존 서버 재사용 방지)
 export CI=true
+
+# Playwright 브라우저 설치 (최초 실행/업데이트 후 필요)
+echo ""
+echo "⬇️  Playwright 브라우저 설치 확인/설치 중..."
+PLAYWRIGHT_INSTALL_OUTPUT=$(npx playwright install chromium 2>&1)
+PLAYWRIGHT_INSTALL_EXIT_CODE=$?
+if [ $PLAYWRIGHT_INSTALL_EXIT_CODE -ne 0 ]; then
+    echo "$PLAYWRIGHT_INSTALL_OUTPUT"
+    echo ""
+    echo "❌ Playwright 브라우저 설치가 실패했습니다."
+    cd ..
+    exit $PLAYWRIGHT_INSTALL_EXIT_CODE
+fi
+
 E2E_TEST_OUTPUT=$(npm run test:e2e 2>&1)
 E2E_TEST_EXIT_CODE=$?
 
