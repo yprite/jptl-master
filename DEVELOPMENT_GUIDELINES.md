@@ -176,6 +176,35 @@ Closes #123
 
 ## 3. 테스트 전략
 
+### 3.0 테스트 디렉토리 구조
+
+프로젝트의 테스트는 백엔드와 프론트엔드로 명확히 분리되어 있습니다.
+
+#### 디렉토리 구조
+```
+tests/
+├── backend/              # 백엔드 테스트
+│   ├── unit/            # 단위 테스트
+│   │   ├── domain/      # 도메인 레이어 테스트
+│   │   ├── infrastructure/  # 인프라 레이어 테스트
+│   │   └── presentation/    # 프레젠테이션 레이어 테스트
+│   ├── scenario/        # 시나리오 테스트 (API 엔드포인트 간 상호작용)
+│   └── acceptance/     # Acceptance 테스트 (전체 시스템 검증)
+└── frontend/            # 프론트엔드 테스트
+    ├── unit/           # 유닛 테스트 (유틸리티, 비즈니스 로직)
+    ├── component/      # 컴포넌트 테스트 (React 컴포넌트)
+    └── e2e/            # E2E 테스트 (Playwright)
+```
+
+#### 파일 네이밍 규칙
+- **백엔드**: `test_*.py` 형식 (예: `test_user.py`, `test_auth.py`)
+- **프론트엔드**: `*.test.ts`, `*.test.tsx` 형식 (예: `User.test.tsx`, `utils.test.ts`)
+
+#### 테스트 작성 원칙
+- 새로운 테스트 작성 시 반드시 해당 디렉토리 구조에 맞춰 작성합니다
+- 백엔드 테스트는 `tests/backend/` 하위에, 프론트엔드 테스트는 `tests/frontend/` 하위에 작성합니다
+- 각 테스트는 명확한 목적과 범위를 가져야 합니다
+
 ### 3.1 백엔드 테스트 종류
 - **단위 테스트**: 각 함수/메서드의 동작 검증
 - **시나리오 테스트**: API 엔드포인트 간 상호작용 및 데이터 흐름 검증
@@ -191,6 +220,31 @@ Closes #123
 - **접근성 테스트**: WCAG 준수 및 사용자 접근성 검증
 - **성능 테스트**: 로딩 속도, 메모리 사용량, 렌더링 성능 측정
 
+#### 프론트엔드 테스트 전략 (4가지 핵심 기준)
+
+1. **로직은 유닛, UI 상호작용은 컴포넌트, 전체 흐름은 E2E**
+   - 유닛 테스트: 순수 함수, 유틸리티, 비즈니스 로직 (예: `calculateScore()`, `formatDate()`)
+   - 컴포넌트 테스트: React 컴포넌트의 렌더링 및 상호작용 (예: 버튼 클릭, 폼 제출)
+   - E2E 테스트: 실제 브라우저에서의 전체 사용자 플로우 (예: 로그인 → 시험 시작 → 결과 확인)
+
+2. **테스트는 "사용자가 보는 것" 기준으로 작성**
+   - 화면에 보이는 텍스트, role, label로 검증
+   - 구현 세부사항 테스트 금지 (내부 상태, props 구조 직접 테스트 금지)
+   - 접근성 고려: ARIA role, label, name 속성 활용
+   - 예: `screen.getByRole('button', { name: '시험 시작' })` ✅
+   - 예: `component.state.isLoading` ❌
+
+3. **네트워크는 MSW로 성공/실패/지연 케이스를 쉽게 만들기**
+   - MSW를 사용하여 실제 네트워크 요청을 가로채서 목킹
+   - 성공, 실패, 지연, 타임아웃 등 다양한 시나리오 테스트
+   - 실제 API 스펙 반영: OpenAPI 스펙 기반으로 핸들러 작성
+
+4. **스냅샷 테스트는 남발 금지 (진짜 가치 있는 UI만)**
+   - 중요한 UI 컴포넌트, 복잡한 레이아웃, 디자인 시스템 컴포넌트에만 사용
+   - 단순한 컴포넌트, 자주 변경되는 컴포넌트, 동적 데이터 포함 컴포넌트에는 사용 금지
+
+📖 자세한 내용: [docs/development/frontend-testing.md](docs/development/frontend-testing.md)
+
 ### 3.3 테스트 커버리지
 - 백엔드: 최소 80%의 코드 커버리지 유지
 - 프론트엔드: 최소 70%의 코드 커버리지 + 주요 사용자 플로우 100% 커버리지
@@ -203,10 +257,11 @@ Closes #123
 - 데이터베이스 테스트: pytest fixtures
 
 #### 프론트엔드
-- 단위/시나리오 테스트: Jest + React Testing Library
-- E2E/Acceptance 테스트: Cypress, Playwright
-- 시각적 회귀 테스트: Chromatic, Percy
-- 접근성 테스트: axe-core, Lighthouse
+- **유닛/컴포넌트 테스트**: Vitest (또는 Jest) + React Testing Library
+- **E2E/Acceptance 테스트**: Playwright
+- **API 목킹**: MSW (Mock Service Worker)
+- **시각적 회귀 테스트**: Chromatic, Percy
+- **접근성 테스트**: axe-core, Lighthouse
 
 ### 3.5 테스트 안티패턴 및 주의사항
 
