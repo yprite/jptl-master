@@ -46,7 +46,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByRole('button', { name: '회원가입' }).click();
 
       // 로그인 성공 후 초기 페이지로 이동 확인
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await expect(page.getByText(/안녕하세요, 테스트 사용자님/)).toBeVisible();
     });
 
@@ -58,7 +58,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
 
       // 로그아웃
       await page.getByRole('button', { name: '로그아웃' }).click();
@@ -69,7 +69,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByRole('button', { name: '로그인' }).click();
 
       // 로그인 성공 확인
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await expect(page.getByText(/안녕하세요, 테스트 사용자님/)).toBeVisible();
     });
 
@@ -79,7 +79,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByRole('button', { name: '로그인' }).click();
 
       // 에러 메시지 확인
-      await expect(page.getByRole('alert'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByRole('alert')).toBeVisible({ timeout: 5000 });
     });
   });
 
@@ -92,7 +92,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
 
       // 초기 페이지 요소 확인
       await expect(page.getByText('JLPT 자격 검증 프로그램')).toBeVisible();
@@ -110,7 +110,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
 
       // 테스트 시작 버튼 클릭
       await page.getByRole('button', { name: '테스트 시작' }).click();
@@ -129,11 +129,11 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await page.getByRole('button', { name: '테스트 시작' }).click();
 
       // 테스트 UI 표시 확인
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
       await expect(page.getByTestId('progress-bar')).toBeVisible();
       await expect(page.getByText(/문제 \d+ \/ \d+/)).toBeVisible();
     });
@@ -146,9 +146,9 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await page.getByRole('button', { name: '테스트 시작' }).click();
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
 
       // 첫 번째 문제 답안 선택
       const firstChoice = page.locator('[data-testid^="choice-"]').first();
@@ -175,9 +175,9 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await page.getByRole('button', { name: '테스트 시작' }).click();
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
 
       // 모든 문제에 답안 선택
       const questionIndicators = page.locator('[data-testid^="question-indicator-"]');
@@ -206,9 +206,9 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await page.getByRole('button', { name: '테스트 시작' }).click();
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
 
       // 모든 문제에 답안 선택
       const questionIndicators = page.locator('[data-testid^="question-indicator-"]');
@@ -229,7 +229,7 @@ test.describe('JLPT App E2E', () => {
       await expect(page.getByText('결과를 처리하는 중')).toBeVisible();
 
       // 결과 페이지 확인
-      await expect(page.getByTestId('result-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('result-ui')).toBeVisible({ timeout: 10000 });
     });
   });
 
@@ -242,9 +242,9 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await page.getByRole('button', { name: '테스트 시작' }).click();
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
 
       // 모든 문제에 답안 선택 및 제출
       const questionIndicators = page.locator('[data-testid^="question-indicator-"]');
@@ -257,7 +257,7 @@ test.describe('JLPT App E2E', () => {
         }
       }
       await page.getByTestId('submit-button').click();
-      await expect(page.getByTestId('result-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('result-ui')).toBeVisible({ timeout: 10000 });
 
       // 결과 페이지 요소 확인
       await expect(page.getByText('테스트 결과')).toBeVisible();
@@ -276,9 +276,9 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await page.getByRole('button', { name: '테스트 시작' }).click();
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
 
       // 모든 문제에 답안 선택 및 제출
       const questionIndicators = page.locator('[data-testid^="question-indicator-"]');
@@ -291,7 +291,7 @@ test.describe('JLPT App E2E', () => {
         }
       }
       await page.getByTestId('submit-button').click();
-      await expect(page.getByTestId('result-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('result-ui')).toBeVisible({ timeout: 10000 });
 
       // 다시 시작 버튼 클릭
       await page.getByRole('button', { name: '다시 시작' }).click();
@@ -311,13 +311,13 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
 
       // 성능 분석 보기 버튼 클릭
       await page.getByRole('button', { name: '성능 분석 보기' }).click();
 
       // 성능 분석 페이지 표시 확인
-      await expect(page.getByTestId('user-performance-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('user-performance-ui')).toBeVisible({ timeout: 10000 });
       await expect(page.getByText('성능 분석')).toBeVisible();
     });
 
@@ -329,9 +329,9 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await page.getByRole('button', { name: '테스트 시작' }).click();
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
 
       // 테스트 완료
       const questionIndicators = page.locator('[data-testid^="question-indicator-"]');
@@ -344,7 +344,7 @@ test.describe('JLPT App E2E', () => {
         }
       }
       await page.getByTestId('submit-button').click();
-      await expect(page.getByTestId('result-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('result-ui')).toBeVisible({ timeout: 10000 });
 
       // 다시 시작하여 초기 페이지로
       await page.getByRole('button', { name: '다시 시작' }).click();
@@ -352,7 +352,7 @@ test.describe('JLPT App E2E', () => {
 
       // 성능 분석 보기
       await page.getByRole('button', { name: '성능 분석 보기' }).click();
-      await expect(page.getByTestId('user-performance-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('user-performance-ui')).toBeVisible({ timeout: 10000 });
 
       // 성능 분석 섹션 확인
       await expect(page.getByTestId('type-performance')).toBeVisible();
@@ -368,11 +368,11 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
 
       // 성능 분석 보기
       await page.getByRole('button', { name: '성능 분석 보기' }).click();
-      await expect(page.getByTestId('user-performance-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('user-performance-ui')).toBeVisible({ timeout: 10000 });
 
       // 돌아가기 버튼 클릭
       await page.getByRole('button', { name: '돌아가기' }).click();
@@ -391,7 +391,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
 
       // API 실패 시뮬레이션
       await page.route('**/api/v1/tests/diagnostic/n5', (route) => {
@@ -405,7 +405,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByRole('button', { name: '테스트 시작' }).click();
 
       // 에러 메시지 확인
-      await expect(page.getByText('오류가 발생했습니다'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('오류가 발생했습니다')).toBeVisible({ timeout: 5000 });
       await expect(page.getByRole('button', { name: /다시 시도/i })).toBeVisible();
     });
 
@@ -417,9 +417,9 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await page.getByRole('button', { name: '테스트 시작' }).click();
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
 
       // 모든 문제에 답안 선택
       const questionIndicators = page.locator('[data-testid^="question-indicator-"]');
@@ -444,7 +444,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByTestId('submit-button').click();
 
       // 에러 메시지 확인
-      await expect(page.getByText('오류가 발생했습니다'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByText('오류가 발생했습니다')).toBeVisible({ timeout: 10000 });
       await expect(page.getByRole('button', { name: /다시 시도/i })).toBeVisible();
     });
 
@@ -456,7 +456,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('테스트 사용자');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
 
       // 성능 분석 API 실패 시뮬레이션
       await page.route('**/api/v1/users/*/performance', (route) => {
@@ -470,7 +470,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByRole('button', { name: '성능 분석 보기' }).click();
 
       // 에러 메시지 확인
-      await expect(page.getByText('오류가 발생했습니다'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByText('오류가 발생했습니다')).toBeVisible({ timeout: 10000 });
     });
   });
 
@@ -483,13 +483,13 @@ test.describe('JLPT App E2E', () => {
       await page.getByLabel('사용자명').fill('전체 플로우 테스트');
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
-      await expect(page.getByText('N5 진단 테스트'), { timeout: 5000 }).toBeVisible();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
       await expect(page.getByText(/안녕하세요, 전체 플로우 테스트님/)).toBeVisible();
 
       // 2. 테스트 시작
       await page.getByRole('button', { name: '테스트 시작' }).click();
       await expect(page.getByText('테스트를 준비하는 중')).toBeVisible();
-      await expect(page.getByTestId('test-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('test-ui')).toBeVisible({ timeout: 10000 });
 
       // 3. 모든 문제 풀이
       const questionIndicators = page.locator('[data-testid^="question-indicator-"]');
@@ -505,7 +505,7 @@ test.describe('JLPT App E2E', () => {
       // 4. 테스트 제출
       await page.getByTestId('submit-button').click();
       await expect(page.getByText('결과를 처리하는 중')).toBeVisible();
-      await expect(page.getByTestId('result-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('result-ui')).toBeVisible({ timeout: 10000 });
 
       // 5. 결과 확인
       await expect(page.getByText('테스트 결과')).toBeVisible();
@@ -518,7 +518,7 @@ test.describe('JLPT App E2E', () => {
 
       // 7. 성능 분석 보기
       await page.getByRole('button', { name: '성능 분석 보기' }).click();
-      await expect(page.getByTestId('user-performance-ui'), { timeout: 10000 }).toBeVisible();
+      await expect(page.getByTestId('user-performance-ui')).toBeVisible({ timeout: 10000 });
       await expect(page.getByText('성능 분석')).toBeVisible();
 
       // 8. 돌아가기
