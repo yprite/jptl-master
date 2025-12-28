@@ -18,6 +18,7 @@ const mockGetCurrentUser = jest.fn().mockReturnValue(null);
 const mockIsAuthenticated = jest.fn().mockReturnValue(false);
 const mockLogout = jest.fn().mockResolvedValue(undefined);
 
+// authService 모킹을 모듈 외부에서 정의
 const mockSubscribeFn = jest.fn((listener) => {
   listener(null);
   return jest.fn();
@@ -27,17 +28,15 @@ const mockGetCurrentUserFn = jest.fn().mockReturnValue(null);
 const mockIsAuthenticatedFn = jest.fn().mockReturnValue(false);
 const mockLogoutFn = jest.fn().mockResolvedValue(undefined);
 
-jest.mock('../../services/auth', () => {
-  return {
-    authService: {
-      subscribe: mockSubscribeFn,
-      initialize: mockInitializeFn,
-      getCurrentUser: mockGetCurrentUserFn,
-      isAuthenticated: mockIsAuthenticatedFn,
-      logout: mockLogoutFn,
-    },
-  };
-});
+jest.mock('../../services/auth', () => ({
+  authService: {
+    subscribe: (...args: any[]) => mockSubscribeFn(...args),
+    initialize: (...args: any[]) => mockInitializeFn(...args),
+    getCurrentUser: (...args: any[]) => mockGetCurrentUserFn(...args),
+    isAuthenticated: (...args: any[]) => mockIsAuthenticatedFn(...args),
+    logout: (...args: any[]) => mockLogoutFn(...args),
+  },
+}));
 
 // LoginUI 모킹
 jest.mock('../../components/organisms/LoginUI', () => {
