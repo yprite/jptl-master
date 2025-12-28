@@ -82,15 +82,15 @@ P0-JLPT-025: 작업 완료 기준에 설계 문서 업데이트 필수 규칙 �
 
 P0-JLPT-027: 프론트엔드 테스트 구조 재구성 및 테스트 추가 (포인트: 8, 상태: 진행중)
 - tests/frontend/ 디렉토리 구조 생성 (unit, component, e2e) ✅
-- 기존 테스트 파일을 tests/frontend/component/로 이동 ✅
+- 기존 테스트 파일을 frontend/src/__tests__/로 이동 (react-scripts 호환성) ✅
 - MSW 및 Playwright 설치 및 설정 ✅
 - 유닛 테스트 작성 (api.test.ts, auth.test.ts) ✅
-- 컴포넌트 테스트 개선 (MSW 사용) ✅
+- 컴포넌트 테스트 개선 (fetch 모킹 사용) ✅
 - E2E 테스트 작성 (Playwright) ✅
 - run_tests.sh에 프론트엔드 테스트 추가 ✅
-- Jest 설정 파일 추가 ✅
+- Jest 설정 추가 (package.json) ✅
 - 커버리지 임계값 70% 설정 ✅
-- 테스트 실행 및 커버리지 확인 (진행중)
+- 테스트 실행 및 커버리지 확인 (진행중 - 현재 62.83%, 목표 70%)
 - 수용_기준: 모든 프론트엔드 테스트가 통과하고 커버리지 70% 이상 달성
 
 ### P1 (High Priority) - 높은 우선순위
