@@ -100,14 +100,12 @@ describe('App', () => {
     };
 
     let currentUser: any = null;
+    let listenerFn: any = null;
+    
     (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listenerFn = listener;
       // 초기에는 null
       listener(currentUser);
-      // 나중에 사용자 정보 전달
-      setTimeout(() => {
-        currentUser = mockUser;
-        listener(mockUser);
-      }, 100);
       return jest.fn();
     });
     (mockAuthService.getCurrentUser as jest.Mock).mockImplementation(() => currentUser);
@@ -120,6 +118,12 @@ describe('App', () => {
     await waitFor(() => {
       expect(screen.getByTestId('login-ui')).toBeInTheDocument();
     });
+
+    // 사용자 정보 업데이트 시뮬레이션
+    currentUser = mockUser;
+    if (listenerFn) {
+      listenerFn(mockUser);
+    }
 
     // 사용자 정보가 업데이트되면 초기 화면으로 전환
     await waitFor(() => {
@@ -139,14 +143,12 @@ describe('App', () => {
     };
 
     let currentUser: any = mockUser;
+    let listenerFn: any = null;
+    
     (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listenerFn = listener;
       // 초기에는 사용자 정보
       listener(currentUser);
-      // 나중에 null로 변경
-      setTimeout(() => {
-        currentUser = null;
-        listener(null);
-      }, 100);
       return jest.fn();
     });
     (mockAuthService.getCurrentUser as jest.Mock).mockImplementation(() => currentUser);
@@ -159,6 +161,12 @@ describe('App', () => {
     await waitFor(() => {
       expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
     });
+
+    // 사용자 정보를 null로 변경
+    currentUser = null;
+    if (listenerFn) {
+      listenerFn(null);
+    }
 
     // 사용자 정보가 null로 변경되면 로그인 화면으로 전환
     await waitFor(() => {
