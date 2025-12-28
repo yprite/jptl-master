@@ -5,6 +5,14 @@
 
 import { test, expect } from '@playwright/test';
 
+function makeUniqueUser(displayNamePrefix: string) {
+  const suffix = Date.now();
+  return {
+    email: `test-${suffix}@example.com`,
+    username: `${displayNamePrefix} ${suffix}`,
+  };
+}
+
 test.describe('JLPT App E2E', () => {
   test.beforeEach(async ({ page }) => {
     // 앱 시작 페이지로 이동
@@ -15,7 +23,7 @@ test.describe('JLPT App E2E', () => {
     test('should display login page initially', async ({ page }) => {
       // 로그인 페이지가 표시되는지 확인
       await expect(page.getByText('JLPT 자격 검증 프로그램')).toBeVisible();
-      await expect(page.getByText('로그인')).toBeVisible();
+      await expect(page.getByRole('heading', { name: '로그인' })).toBeVisible();
       await expect(page.getByLabel('이메일')).toBeVisible();
       await expect(page.getByRole('button', { name: '로그인' })).toBeVisible();
     });
@@ -25,7 +33,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
 
       // 회원가입 폼이 표시되는지 확인
-      await expect(page.getByText('회원가입')).toBeVisible();
+      await expect(page.getByRole('heading', { name: '회원가입' })).toBeVisible();
       await expect(page.getByLabel('이메일')).toBeVisible();
       await expect(page.getByLabel('사용자명')).toBeVisible();
       await expect(page.getByLabel('목표 레벨')).toBeVisible();
@@ -37,9 +45,9 @@ test.describe('JLPT App E2E', () => {
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
 
       // 회원가입 정보 입력
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
 
       // 회원가입 제출
@@ -47,22 +55,22 @@ test.describe('JLPT App E2E', () => {
 
       // 로그인 성공 후 초기 페이지로 이동 확인
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
-      await expect(page.getByText(/안녕하세요, 테스트 사용자님/)).toBeVisible();
+      await expect(page.getByText(new RegExp(`안녕하세요, ${username}님`))).toBeVisible();
     });
 
     test('should login with existing user', async ({ page }) => {
       // 먼저 사용자 등록
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
 
       // 로그아웃
       await page.getByRole('button', { name: '로그아웃' }).click();
-      await expect(page.getByText('로그인')).toBeVisible();
+      await expect(page.getByRole('heading', { name: '로그인' })).toBeVisible();
 
       // 다시 로그인
       await page.getByLabel('이메일').fill(email);
@@ -70,7 +78,7 @@ test.describe('JLPT App E2E', () => {
 
       // 로그인 성공 확인
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
-      await expect(page.getByText(/안녕하세요, 테스트 사용자님/)).toBeVisible();
+      await expect(page.getByText(new RegExp(`안녕하세요, ${username}님`))).toBeVisible();
     });
 
     test('should show error on invalid login', async ({ page }) => {
@@ -87,9 +95,9 @@ test.describe('JLPT App E2E', () => {
     test('should display initial page after login', async ({ page }) => {
       // 로그인 먼저 수행
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -105,9 +113,9 @@ test.describe('JLPT App E2E', () => {
     test('should navigate to test when start button clicked', async ({ page }) => {
       // 로그인
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -124,9 +132,9 @@ test.describe('JLPT App E2E', () => {
     test('should display test UI with questions', async ({ page }) => {
       // 로그인 및 테스트 시작
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -141,9 +149,9 @@ test.describe('JLPT App E2E', () => {
     test('should navigate between questions', async ({ page }) => {
       // 로그인 및 테스트 시작
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -170,9 +178,9 @@ test.describe('JLPT App E2E', () => {
     test('should select answers for all questions', async ({ page }) => {
       // 로그인 및 테스트 시작
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -201,9 +209,9 @@ test.describe('JLPT App E2E', () => {
     test('should submit test and show result', async ({ page }) => {
       // 로그인 및 테스트 시작
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -237,9 +245,9 @@ test.describe('JLPT App E2E', () => {
     test('should display test result with all details', async ({ page }) => {
       // 로그인 및 테스트 완료
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -271,9 +279,9 @@ test.describe('JLPT App E2E', () => {
     test('should navigate back to initial page', async ({ page }) => {
       // 로그인 및 테스트 완료
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -306,9 +314,9 @@ test.describe('JLPT App E2E', () => {
     test('should navigate to performance page', async ({ page }) => {
       // 로그인
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -324,9 +332,9 @@ test.describe('JLPT App E2E', () => {
     test('should display performance data sections', async ({ page }) => {
       // 로그인 및 테스트 완료 (성능 데이터 생성)
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -363,9 +371,9 @@ test.describe('JLPT App E2E', () => {
     test('should navigate back from performance page', async ({ page }) => {
       // 로그인
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -386,9 +394,9 @@ test.describe('JLPT App E2E', () => {
     test('should handle test creation error', async ({ page }) => {
       // 로그인
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -412,9 +420,9 @@ test.describe('JLPT App E2E', () => {
     test('should handle test submission error', async ({ page }) => {
       // 로그인 및 테스트 시작
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -451,9 +459,9 @@ test.describe('JLPT App E2E', () => {
     test('should handle performance fetch error', async ({ page }) => {
       // 로그인
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('테스트 사용자');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('테스트 사용자');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
@@ -478,13 +486,13 @@ test.describe('JLPT App E2E', () => {
     test('should complete full user flow: register → login → test → result → performance', async ({ page }) => {
       // 1. 회원가입
       await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
-      const email = `test-${Date.now()}@example.com`;
+      const { email, username } = makeUniqueUser('전체 플로우 테스트');
       await page.getByLabel('이메일').fill(email);
-      await page.getByLabel('사용자명').fill('전체 플로우 테스트');
+      await page.getByLabel('사용자명').fill(username);
       await page.getByLabel('목표 레벨').selectOption('N5');
       await page.getByRole('button', { name: '회원가입' }).click();
       await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
-      await expect(page.getByText(/안녕하세요, 전체 플로우 테스트님/)).toBeVisible();
+      await expect(page.getByText(new RegExp(`안녕하세요, ${username}님`))).toBeVisible();
 
       // 2. 테스트 시작
       await page.getByRole('button', { name: '테스트 시작' }).click();
@@ -527,7 +535,7 @@ test.describe('JLPT App E2E', () => {
 
       // 9. 로그아웃
       await page.getByRole('button', { name: '로그아웃' }).click();
-      await expect(page.getByText('로그인')).toBeVisible();
+      await expect(page.getByRole('heading', { name: '로그인' })).toBeVisible();
     });
   });
 });

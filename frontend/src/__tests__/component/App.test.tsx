@@ -776,7 +776,7 @@ describe('App', () => {
     expect(screen.getByText(/난이도별 성취도/i)).toBeInTheDocument();
   });
 
-  it('should handle performance analysis error', async () => {
+  it('should show empty performance UI when performance does not exist (404)', async () => {
     const mockUser = {
       id: 1,
       email: 'user@example.com',
@@ -815,7 +815,9 @@ describe('App', () => {
     fireEvent.click(performanceButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/성능 분석 데이터를 찾을 수 없습니다/i)).toBeInTheDocument();
+      expect(screen.getByText(/성능 분석/i)).toBeInTheDocument();
     });
+
+    expect(screen.getByTestId('user-performance-ui')).toBeInTheDocument();
   });
 });

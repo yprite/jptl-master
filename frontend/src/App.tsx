@@ -184,8 +184,21 @@ function App() {
         if (err.status === 401) {
           setState('login');
         } else if (err.status === 404) {
-          setError('성능 분석 데이터를 찾을 수 없습니다.');
-          setState('error');
+          const nowIso = new Date().toISOString();
+          setCurrentPerformance({
+            id: 0,
+            user_id: user.id,
+            analysis_period_start: nowIso,
+            analysis_period_end: nowIso,
+            type_performance: {},
+            difficulty_performance: {},
+            level_progression: {},
+            repeated_mistakes: [],
+            weaknesses: {},
+            created_at: nowIso,
+            updated_at: nowIso,
+          });
+          setState('performance');
         } else {
           setError(err.message);
           setState('error');

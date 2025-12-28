@@ -6,6 +6,7 @@ N5 문제 샘플 데이터 생성 스크립트
 
 import sys
 import os
+import argparse
 
 # 프로젝트 루트를 Python 경로에 추가
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -280,29 +281,40 @@ def create_n5_sample_questions():
     return questions
 
 
-def seed_database():
-    """데이터베이스에 샘플 문제 삽입"""
+def seed_database(ensure_minimum: int = 20, force: bool = False, interactive: bool = True):
+    """데이터베이스에 샘플 문제 삽입
+
+    Args:
+        ensure_minimum: 최소로 보장할 N5 문제 수 (미만이면 샘플을 추가)
+        force: 기존 N5 문제를 삭제하고 다시 추가
+        interactive: True이면 기존 데이터가 있을 때 사용자에게 삭제 여부를 묻습니다.
+                     False이면 절대 input()을 호출하지 않습니다.
+    """
     db = get_database()
     repo = SqliteQuestionRepository(db)
     
     # 기존 N5 문제 확인
     existing_questions = repo.find_by_level(JLPTLevel.N5)
-    if existing_questions:
+    if existing_questions and (force or interactive):
         print(f"이미 {len(existing_questions)}개의 N5 문제가 존재합니다.")
-        response = input("기존 문제를 삭제하고 새로 추가하시겠습니까? (y/n): ")
-        if response.lower() == 'y':
+        response = "y" if force else input("기존 문제를 삭제하고 새로 추가하시겠습니까? (y/n): ")
+        if response.lower() == 'y':  # pragma: no branch
             for q in existing_questions:
                 repo.delete(q)
             print("기존 문제를 삭제했습니다.")
         else:
             print("샘플 데이터 추가를 취소했습니다.")
             return
+
+    if not force and len(existing_questions) >= ensure_minimum:
+        print(f"✅ 기존 N5 문제가 충분합니다. (현재: {len(existing_questions)}개, 최소: {ensure_minimum}개)")
+        return
     
     # 샘플 문제 생성
     questions = create_n5_sample_questions()
     
     # 데이터베이스에 저장
-    print(f"{len(questions)}개의 N5 샘플 문제를 추가합니다...")
+    print(f"{len(questions)}개의 N5 샘플 문제를 추가합니다... (최소 보장: {ensure_minimum}개)")
     for i, question in enumerate(questions, 1):
         saved_question = repo.save(question)
         print(f"[{i}/{len(questions)}] 문제 추가 완료: {saved_question.question_text[:30]}...")
@@ -322,7 +334,30 @@ def seed_database():
 
 if __name__ == "__main__":
     try:
-        seed_database()
+        parser = argparse.ArgumentParser(description="N5 샘플 문제 데이터 시딩")
+        parser.add_argument(
+            "--ensure-minimum",
+            type=int,
+            default=20,
+            help="최소로 보장할 N5 문제 수 (기본: 20)",
+        )
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help="기존 N5 문제를 삭제하고 강제로 다시 시딩",
+        )
+        parser.add_argument(
+            "--non-interactive",
+            action="store_true",
+            help="대화형 프롬프트를 비활성화(input 호출 금지)",
+        )
+        args = parser.parse_args()
+
+        seed_database(
+            ensure_minimum=args.ensure_minimum,
+            force=args.force,
+            interactive=not args.non_interactive,
+        )
     except Exception as e:
         print(f"❌ 오류 발생: {e}")
         import traceback

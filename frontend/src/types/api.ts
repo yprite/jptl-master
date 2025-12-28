@@ -70,7 +70,13 @@ export interface UserPerformance {
   analysis_period_end: string;
   type_performance: Record<string, { accuracy: number }>;
   difficulty_performance: Record<string, { accuracy: number }>;
-  level_progression: Record<string, { average_score: number }>;
+  // 백엔드 구현에 따라 level_progression 형태가 다를 수 있어(평균 점수 vs 날짜별 점수 리스트)
+  // 프론트에서 둘 다 처리할 수 있도록 유니온으로 둡니다.
+  level_progression: Record<
+    string,
+    | { average_score: number }
+    | Array<{ date: string; score: number }>
+  >;
   repeated_mistakes: number[];
   weaknesses: Record<string, string>;
   created_at: string;

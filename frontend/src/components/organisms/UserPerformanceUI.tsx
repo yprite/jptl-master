@@ -21,6 +21,29 @@ const UserPerformanceUI: React.FC<UserPerformanceUIProps> = ({ performance }) =>
     return `${value.toFixed(1)}%`;
   };
 
+  const getAverageScore = (data: unknown): number | null => {
+    if (!data) return null;
+    if (Array.isArray(data)) {
+      const scores = data
+        .map((x: any) => x?.score)
+        .filter((v: any) => typeof v === 'number');
+      if (scores.length === 0) return null;
+      const sum = scores.reduce((acc: number, v: number) => acc + v, 0);
+      return sum / scores.length;
+    }
+    const avg = (data as any).average_score;
+    return typeof avg === 'number' ? avg : null;
+  };
+
+  const formatWeaknessDescription = (value: unknown): string => {
+    if (typeof value === 'string') return value;
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  };
+
   return (
     <div className="user-performance-ui" data-testid="user-performance-ui">
       <h2>성능 분석</h2>
@@ -61,12 +84,17 @@ const UserPerformanceUI: React.FC<UserPerformanceUIProps> = ({ performance }) =>
       <section className="level-progression-section" data-testid="level-progression">
         <h3>레벨별 성취도 추이</h3>
         <div className="level-progression-grid">
-          {Object.entries(performance.level_progression || {}).map(([level, data]) => (
-            <div key={level} className="level-progression-item">
-              <div className="level-name">{level}</div>
-              <div className="level-score">평균 점수: {data.average_score.toFixed(1)}</div>
-            </div>
-          ))}
+          {Object.entries(performance.level_progression || {}).map(([level, data]) => {
+            const averageScore = getAverageScore(data);
+            return (
+              <div key={level} className="level-progression-item">
+                <div className="level-name">{level}</div>
+                <div className="level-score">
+                  평균 점수: {averageScore !== null ? averageScore.toFixed(1) : '-'}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -86,7 +114,7 @@ const UserPerformanceUI: React.FC<UserPerformanceUIProps> = ({ performance }) =>
             {Object.entries(performance.weaknesses).map(([area, description]) => (
               <div key={area} className="weakness-item">
                 <div className="weakness-area">{area}</div>
-                <div className="weakness-description">{description}</div>
+                <div className="weakness-description">{formatWeaknessDescription(description)}</div>
               </div>
             ))}
           </div>

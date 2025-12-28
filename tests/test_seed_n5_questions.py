@@ -96,6 +96,22 @@ class TestSeedN5Questions:
         # N5 진단 테스트는 20개 문제가 필요
         assert len(questions) >= 20, "N5 진단 테스트를 위해 최소 20개의 문제가 필요합니다"
 
+    def test_seed_database_non_interactive_ensure_minimum(self, temp_db):
+        """non-interactive 모드에서 최소 문제 수를 보장하는 시드 테스트"""
+        from unittest.mock import patch
+
+        db = Database(db_path=temp_db)
+
+        # input()이 호출되면 실패해야 함 (non-interactive 보장)
+        with patch("builtins.input", side_effect=AssertionError("input() should not be called")):
+            with patch("scripts.seed_n5_questions.get_database") as mock_get_db:
+                mock_get_db.return_value = db
+                seed_database(ensure_minimum=20, force=False, interactive=False)
+
+        repo = SqliteQuestionRepository(db)
+        saved_questions = repo.find_by_level(JLPTLevel.N5)
+        assert len(saved_questions) >= 20
+
     def test_question_validation(self):
         """문제 유효성 검증 테스트"""
         questions = create_n5_sample_questions()

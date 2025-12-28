@@ -32,7 +32,13 @@ app.add_middleware(
 # CORS 미들웨어 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 실제 운영에서는 특정 도메인만 허용
+    # NOTE: 세션(쿠키) 기반 인증을 사용하므로 allow_credentials=True와 함께
+    # 브라우저(E2E 포함)에서 CORS가 정상 동작하려면 allow_origins에 와일드카드("*")를
+    # 쓰지 말고 명시적인 origin을 허용해야 합니다.
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
