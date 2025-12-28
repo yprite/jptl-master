@@ -89,6 +89,21 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 
 ## 테스트 전략
 
+### 7-1. 테스트 디렉토리 구조 (필수)
+- **테스트 디렉토리 분리**: 백엔드와 프론트엔드 테스트를 명확히 분리합니다
+- **백엔드 테스트 위치**: `tests/backend/` 디렉토리에 모든 백엔드 테스트를 작성합니다
+  - `tests/backend/unit/`: 단위 테스트 (도메인, 인프라, 프레젠테이션 레이어)
+  - `tests/backend/scenario/`: 시나리오 테스트 (API 엔드포인트 간 상호작용)
+  - `tests/backend/acceptance/`: Acceptance 테스트 (전체 시스템 검증)
+- **프론트엔드 테스트 위치**: `tests/frontend/` 디렉토리에 모든 프론트엔드 테스트를 작성합니다
+  - `tests/frontend/unit/`: 유닛 테스트 (유틸리티, 비즈니스 로직)
+  - `tests/frontend/component/`: 컴포넌트 테스트 (React 컴포넌트)
+  - `tests/frontend/e2e/`: E2E 테스트 (Playwright)
+- **테스트 파일 네이밍**: 
+  - 백엔드: `test_*.py` 형식 (예: `test_user.py`, `test_auth.py`)
+  - 프론트엔드: `*.test.ts`, `*.test.tsx` 형식 (예: `User.test.tsx`, `utils.test.ts`)
+- **새로운 테스트 작성 시**: 반드시 해당 디렉토리 구조에 맞춰 작성합니다
+
 ### 8. 테스트 커버리지 필수 요구사항 (강제)
 - 백엔드: 최소 80% 코드 커버리지 필수 (미달 시 테스트 실패)
 - 프론트엔드: 최소 70% 코드 커버리지 필수 + 주요 사용자 플로우 100% 커버리지 (미달 시 테스트 실패)
@@ -98,7 +113,8 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 
 ### 8-1. 시나리오 테스트 필수 요구사항 (강제)
 - **시나리오 테스트 필수 작성**: 모든 주요 사용자 플로우에 대한 시나리오 테스트를 반드시 작성합니다
-- **시나리오 테스트 파일 위치**: `tests/test_scenarios.py` 파일에 모든 시나리오 테스트를 작성합니다
+- **시나리오 테스트 파일 위치**: `tests/backend/scenario/` 디렉토리에 시나리오 테스트를 작성합니다
+  - 기능별로 파일을 분리하여 작성 (예: `test_user_scenarios.py`, `test_test_taking_scenarios.py`)
 - **시나리오 테스트 범위**: 
   - 여러 API 엔드포인트 간 상호작용 검증
   - 실제 사용자 플로우 전체 검증 (예: 사용자 생성 → 시험 시작 → 문제 조회 → 답안 제출 → 결과 조회)
