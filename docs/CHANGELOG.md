@@ -7,6 +7,16 @@
 
 ## Unreleased
 
+### Added
+TypeScript_타입_체크_필수화: 프론트엔드 TypeScript 타입 체크 필수화 (2025-01-04)
+- package.json에 `typecheck` 스크립트 추가 (`tsc --noEmit`)
+- `test:ci` 스크립트에 타입 체크 자동 포함
+- `run_tests.sh`에 프론트엔드 타입 체크 단계 추가 (테스트 실행 전 필수)
+- .cursorrules에 규칙 20-2 추가: TypeScript 타입 체크 필수 요구사항
+- DEVELOPMENT_GUIDELINES.md에 타입 체크 섹션 추가 (3.3-1)
+- frontend-testing.md에 타입 체크 가이드 추가
+- 타입 에러 시 작업 완료 금지 규칙 명시
+
 ### Fixed
 프론트엔드_테스트_커버리지_80%_달성: 프론트엔드 테스트 커버리지 80% 이상 달성 (2025-01-04)
 - Jest 설정 추가하여 불필요한 파일 커버리지에서 제외 (index.tsx, reportWebVitals.ts, setupTestsPolyfill.ts, mocks/, types/)
