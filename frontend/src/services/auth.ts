@@ -68,6 +68,10 @@ class AuthService {
       
       return user;
     } catch (error) {
+      // 로그인 실패 시 사용자 상태 초기화
+      this.currentUser = null;
+      this.notifyListeners();
+      
       if (error instanceof ApiError) {
         throw error;
       }

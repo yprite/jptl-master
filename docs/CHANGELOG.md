@@ -7,7 +7,18 @@
 
 ## Unreleased
 
+### Fixed
+프론트엔드_테스트_실패_수정: 프론트엔드 테스트 실패 수정 및 커버리지 70% 달성 (2025-01-04)
+- auth.test.ts: 로그인 실패 시 currentUser null 설정 추가
+- api.test.ts: 404 에러 메시지 처리 개선 및 중복 호출 제거
+- App.test.tsx: authService 모킹 추가 및 에러 메시지 처리 개선
+
 ### Added
+프론트엔드_테스트_커버리지_향상: 프론트엔드 테스트 커버리지 향상 (2025-01-04)
+- JSON 파싱 에러 처리 테스트 추가
+- content-type 체크 테스트 추가
+- resultApi, userApi, authApi 추가 메서드 테스트 추가
+- 커버리지 71.98% 달성 (목표 70%)
 학습_분석_API_엔드포인트: 학습 분석 API 엔드포인트 구현 (2025-01-04)
 - GET /api/results/{id}/details: 상세 답안 이력 조회 엔드포인트 추가
 - GET /api/users/{id}/performance: 사용자 성능 분석 조회 엔드포인트 추가
