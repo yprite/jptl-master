@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import TestUI from './TestUI';
+import TestUI from '../../components/organisms/TestUI';
 import { Test } from '../../types/api';
 
 const mockTest: Test = {

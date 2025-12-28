@@ -20,7 +20,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll=false",
+    "test:watch": "react-scripts test",
+    "test:ci": "react-scripts test --watchAll=false --coverage --coverageDirectory=../coverage/frontend --coverageThreshold='{\"global\":{\"branches\":70,\"functions\":70,\"lines\":70,\"statements\":70}}'",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -40,5 +44,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "identity-obj-proxy": "^3.0.0",
+    "msw": "^2.12.7"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

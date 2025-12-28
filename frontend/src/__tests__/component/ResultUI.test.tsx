@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ResultUI from './ResultUI';
+import ResultUI from '../../components/organisms/ResultUI';
 import { Result } from '../../types/api';
 
 const mockResult: Result = {

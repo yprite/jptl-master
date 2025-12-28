@@ -3,3 +3,6 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+
+// fetch 모킹 설정 (MSW 대신 사용)
+global.fetch = jest.fn();
