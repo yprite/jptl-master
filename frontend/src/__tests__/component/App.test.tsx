@@ -18,16 +18,24 @@ const mockGetCurrentUser = jest.fn().mockReturnValue(null);
 const mockIsAuthenticated = jest.fn().mockReturnValue(false);
 
 jest.mock('../../services/auth', () => {
+  const mockSubscribeFn = jest.fn((listener) => {
+    listener(null);
+    return jest.fn();
+  });
+  const mockInitializeFn = jest.fn().mockResolvedValue(undefined);
+  const mockGetCurrentUserFn = jest.fn().mockReturnValue(null);
+  const mockIsAuthenticatedFn = jest.fn().mockReturnValue(false);
+  
   return {
     authService: {
       get subscribe() {
-        return mockSubscribe;
+        return mockSubscribeFn;
       },
       get initialize() {
-        return mockInitialize;
+        return mockInitializeFn;
       },
-      getCurrentUser: mockGetCurrentUser,
-      isAuthenticated: mockIsAuthenticated,
+      getCurrentUser: mockGetCurrentUserFn,
+      isAuthenticated: mockIsAuthenticatedFn,
     },
   };
 });
@@ -41,8 +49,6 @@ beforeEach(() => {
     return jest.fn();
   });
   mockInitialize.mockResolvedValue(undefined);
-  mockGetCurrentUser.mockReturnValue(null);
-  mockIsAuthenticated.mockReturnValue(false);
 });
 
 describe('App', () => {
