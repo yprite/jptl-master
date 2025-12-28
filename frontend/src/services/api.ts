@@ -77,9 +77,9 @@ async function fetchApi<T>(
       );
     }
 
-    let data: ApiResponse<T>;
+    let payload: unknown;
     try {
-      data = await response.json();
+      payload = await response.json();
     } catch (jsonError) {
       // JSON 파싱 실패 시
       if (!response.ok) {
@@ -92,14 +92,30 @@ async function fetchApi<T>(
     }
 
     if (!response.ok) {
+      // 백엔드가 ApiResponse 형태가 아닌 FastAPI 기본 에러 형태({"detail": ...})를
+      // 반환하는 경우도 메시지를 최대한 살립니다.
+      if (payload && typeof payload === 'object') {
+        const anyPayload = payload as any;
+        const message =
+          anyPayload.message ||
+          anyPayload.detail ||
+          `HTTP ${response.status} ${response.statusText}`;
+        throw new ApiError(response.status, message, anyPayload.errors);
+      }
       throw new ApiError(
         response.status,
-        data.message || 'API 요청 실패',
-        data.errors
+        `HTTP ${response.status} ${response.statusText}`
       );
     }
 
-    return data.data;
+    // 성공 응답도 백엔드에 따라 래핑(ApiResponse) 여부가 다를 수 있어 유연하게 처리합니다.
+    if (payload && typeof payload === 'object') {
+      const anyPayload = payload as any;
+      if ('success' in anyPayload && 'data' in anyPayload) {
+        return anyPayload.data as T;
+      }
+    }
+    return payload as T;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

@@ -92,6 +92,49 @@ describe('testApi', () => {
         })
       );
     });
+
+    it('should support non-wrapped (raw) API responses', async () => {
+      const rawTest = {
+        id: 123,
+        title: 'N5 진단 테스트',
+        level: 'N5',
+        status: 'created',
+        time_limit_minutes: 30,
+        questions: [],
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => rawTest,
+      });
+
+      const result = await testApi.createN5DiagnosticTest();
+      expect(result).toEqual(rawTest);
+    });
+
+    it('should surface FastAPI-style error detail messages', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: 'N5 진단 테스트를 생성하기에 충분한 문제가 없습니다.',
+        }),
+      });
+
+      const promise = testApi.createN5DiagnosticTest();
+      await expect(promise).rejects.toBeInstanceOf(ApiError);
+      await expect(promise).rejects.toMatchObject({
+        status: 400,
+        message: 'N5 진단 테스트를 생성하기에 충분한 문제가 없습니다.',
+      });
+    });
   });
 
   describe('submitTest', () => {
