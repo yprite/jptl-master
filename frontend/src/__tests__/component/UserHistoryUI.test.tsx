@@ -119,9 +119,11 @@ describe('UserHistoryUI', () => {
   it('should handle single history item', () => {
     const singleHistory: UserHistory[] = [mockHistory[0]];
     render(<UserHistoryUI history={singleHistory} />);
-    expect(screen.getByText('1회')).toBeInTheDocument();
-    expect(screen.getByText('20문제')).toBeInTheDocument();
-    expect(screen.getByText('15문제')).toBeInTheDocument();
+    expect(screen.getByText('총 테스트 수')).toBeInTheDocument();
+    const overallStatsSection = screen.getByTestId('overall-stats');
+    expect(overallStatsSection).toHaveTextContent('1회');
+    expect(overallStatsSection).toHaveTextContent('20문제');
+    expect(overallStatsSection).toHaveTextContent('15문제');
   });
 });
 
