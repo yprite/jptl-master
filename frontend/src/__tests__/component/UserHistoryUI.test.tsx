@@ -111,9 +111,14 @@ describe('UserHistoryUI', () => {
     expect(screen.getByText(/15\/20 정답/)).toBeInTheDocument();
     expect(screen.getByText(/18\/20 정답/)).toBeInTheDocument();
     expect(screen.getByText(/16\/20 정답/)).toBeInTheDocument();
-    expect(screen.getByText(/정확도: 75\.0%/)).toBeInTheDocument();
-    expect(screen.getByText(/정확도: 90\.0%/)).toBeInTheDocument();
-    expect(screen.getByText(/정확도: 80\.0%/)).toBeInTheDocument();
+    // 정확도는 여러 곳에 나타나므로 getAllByText 사용
+    const accuracyElements = screen.getAllByText(/정확도:/);
+    expect(accuracyElements.length).toBeGreaterThanOrEqual(3);
+    // 각 정확도 값이 포함되어 있는지 확인
+    const dateHistorySection = screen.getByTestId('date-history');
+    expect(dateHistorySection).toHaveTextContent('75.0%');
+    expect(dateHistorySection).toHaveTextContent('90.0%');
+    expect(dateHistorySection).toHaveTextContent('80.0%');
   });
 
   it('should handle single history item', () => {
