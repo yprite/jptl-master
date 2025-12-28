@@ -265,6 +265,22 @@ export NODE_PATH="$(pwd)/node_modules:${NODE_PATH:-}"
 # CI 환경 변수 설정 (헤드리스 모드 및 기존 서버 재사용 방지)
 export CI=true
 
+# Playwright webServer는 CI 환경에서 reuseExistingServer=false 이므로
+# 3000 포트에 다른 프로세스가 떠 있으면 즉시 실패합니다. E2E 직전에 정리합니다.
+echo ""
+echo "🧹 프론트엔드 3000 포트 점유 프로세스 정리 중..."
+FRONTEND_PORT_PIDS=$(lsof -ti tcp:3000 -sTCP:LISTEN 2>/dev/null || true)
+if [ -n "${FRONTEND_PORT_PIDS}" ]; then
+    echo "⚠️  3000 포트 점유 프로세스 발견: ${FRONTEND_PORT_PIDS}"
+    # 여러 PID가 반환될 수 있으므로 공백/개행 기준으로 안전하게 kill
+    for pid in ${FRONTEND_PORT_PIDS}; do
+        kill "${pid}" 2>/dev/null || true
+    done
+    sleep 1
+else
+    echo "✅ 3000 포트가 비어 있습니다."
+fi
+
 # Playwright 브라우저 설치 확인 및 설치 (최초 실행/업데이트 후 필요)
 echo ""
 echo "⬇️  Playwright 브라우저 설치 확인/설치 중..."
