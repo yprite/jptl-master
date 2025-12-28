@@ -18,9 +18,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@playwright/test": ["./node_modules/@playwright/test"]
+    }
   },
   "include": [
-    "src"
+    "src",
+    "../tests/frontend/**/*"
   ]
 }

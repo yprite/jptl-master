@@ -254,6 +254,8 @@ fi
 
 # E2E 테스트 실행
 cd frontend
+# NODE_PATH를 설정하여 frontend/node_modules를 모듈 해석 경로에 추가
+export NODE_PATH="$(pwd)/node_modules:${NODE_PATH:-}"
 E2E_TEST_OUTPUT=$(npm run test:e2e 2>&1)
 E2E_TEST_EXIT_CODE=$?
 
