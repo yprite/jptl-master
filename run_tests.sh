@@ -10,39 +10,62 @@ source backend/venv/bin/activate
 # 커버리지 임계값 설정
 BACKEND_COVERAGE_THRESHOLD=80
 
-# 모든 테스트 실행 (커버리지 포함)
-echo "📊 테스트 실행 및 커버리지 측정 중..."
-TEST_OUTPUT=$(python -m pytest tests/ -v --tb=short --cov --cov-report=term-missing --cov-report=json 2>&1)
-TEST_EXIT_CODE=$?
-
-# 테스트 실패 시 종료
-if [ $TEST_EXIT_CODE -ne 0 ]; then
-    echo "$TEST_OUTPUT"
-    echo ""
-    echo "❌ 테스트가 실패했습니다. 커버리지 검증을 건너뜁니다."
-    exit $TEST_EXIT_CODE
-fi
-
-echo "$TEST_OUTPUT"
-
-# 시나리오 테스트 실행
+# 1. Unit 테스트 실행 (커버리지 포함)
 echo ""
-echo "🎭 시나리오 테스트 실행 중..."
-SCENARIO_OUTPUT=$(python -m pytest tests/test_scenarios.py -v --tb=short 2>&1)
-SCENARIO_EXIT_CODE=$?
+echo "📊 Unit 테스트 실행 및 커버리지 측정 중..."
+UNIT_TEST_OUTPUT=$(python -m pytest tests/unit/ -v --tb=short --cov=backend --cov-report=term-missing --cov-report=json 2>&1)
+UNIT_TEST_EXIT_CODE=$?
 
-# 시나리오 테스트 실패 시 종료
-if [ $SCENARIO_EXIT_CODE -ne 0 ]; then
-    echo "$SCENARIO_OUTPUT"
+# Unit 테스트 실패 시 종료
+if [ $UNIT_TEST_EXIT_CODE -ne 0 ]; then
+    echo "$UNIT_TEST_OUTPUT"
     echo ""
-    echo "❌ 시나리오 테스트가 실패했습니다."
-    exit $SCENARIO_EXIT_CODE
+    echo "❌ Unit 테스트가 실패했습니다. 커버리지 검증을 건너뜁니다."
+    exit $UNIT_TEST_EXIT_CODE
 fi
 
-echo "$SCENARIO_OUTPUT"
-echo "✅ 시나리오 테스트 통과!"
+echo "$UNIT_TEST_OUTPUT"
 
-# 커버리지 결과 파싱
+# 2. Scenario 테스트 실행
+echo ""
+echo "🎭 Scenario 테스트 실행 중..."
+SCENARIO_TEST_OUTPUT=$(python -m pytest tests/scenario/ -v --tb=short 2>&1)
+SCENARIO_TEST_EXIT_CODE=$?
+
+# Scenario 테스트 실패 시 종료
+if [ $SCENARIO_TEST_EXIT_CODE -ne 0 ]; then
+    echo "$SCENARIO_TEST_OUTPUT"
+    echo ""
+    echo "❌ Scenario 테스트가 실패했습니다."
+    exit $SCENARIO_TEST_EXIT_CODE
+fi
+
+echo "$SCENARIO_TEST_OUTPUT"
+echo "✅ Scenario 테스트 통과!"
+
+# 3. Acceptance 테스트 실행 (있는 경우)
+if [ -d "tests/acceptance" ] && [ "$(ls -A tests/acceptance 2>/dev/null)" ]; then
+    echo ""
+    echo "✅ Acceptance 테스트 실행 중..."
+    ACCEPTANCE_TEST_OUTPUT=$(python -m pytest tests/acceptance/ -v --tb=short 2>&1)
+    ACCEPTANCE_TEST_EXIT_CODE=$?
+
+    # Acceptance 테스트 실패 시 종료
+    if [ $ACCEPTANCE_TEST_EXIT_CODE -ne 0 ]; then
+        echo "$ACCEPTANCE_TEST_OUTPUT"
+        echo ""
+        echo "❌ Acceptance 테스트가 실패했습니다."
+        exit $ACCEPTANCE_TEST_EXIT_CODE
+    fi
+
+    echo "$ACCEPTANCE_TEST_OUTPUT"
+    echo "✅ Acceptance 테스트 통과!"
+else
+    echo ""
+    echo "ℹ️  Acceptance 테스트가 없습니다. 건너뜁니다."
+fi
+
+# 4. 커버리지 결과 파싱
 if [ -f "coverage.json" ]; then
     # coverage.json에서 전체 커버리지 추출
     COVERAGE=$(python -c "import json; data = json.load(open('coverage.json')); print(f\"{data['totals']['percent_covered']:.2f}\")")
@@ -63,4 +86,5 @@ else
     echo "⚠️  커버리지 파일을 찾을 수 없습니다. 커버리지 검증을 건너뜁니다."
 fi
 
-echo "✅ 테스트 완료!"
+echo ""
+echo "✅ 모든 테스트 완료!"
