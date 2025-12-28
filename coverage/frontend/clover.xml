@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1766902327911" clover="3.2.0">
-  <project timestamp="1766902327911" name="All files">
-    <metrics statements="212" coveredstatements="0" conditionals="113" coveredconditionals="0" methods="62" coveredmethods="0" elements="387" coveredelements="0" complexity="0" loc="212" ncloc="212" packages="5" files="11" classes="11"/>
+<coverage generated="1766902343442" clover="3.2.0">
+  <project timestamp="1766902343442" name="All files">
+    <metrics statements="215" coveredstatements="0" conditionals="115" coveredconditionals="0" methods="62" coveredmethods="0" elements="392" coveredelements="0" complexity="0" loc="215" ncloc="215" packages="5" files="11" classes="11"/>
     <package name="src">
       <metrics statements="52" coveredstatements="0" conditionals="28" coveredconditionals="0" methods="8" coveredmethods="0"/>
       <file name="App.tsx" path="/Users/yprite/IdeaProjects/Cursor_pro/AI_DRIVEN_DEVELOP/frontend/src/App.tsx">
@@ -126,7 +126,7 @@
       </file>
     </package>
     <package name="src.mocks">
-      <metrics statements="24" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="10" coveredmethods="0"/>
+      <metrics statements="27" coveredstatements="0" conditionals="6" coveredconditionals="0" methods="10" coveredmethods="0"/>
       <file name="browser.ts" path="/Users/yprite/IdeaProjects/Cursor_pro/AI_DRIVEN_DEVELOP/frontend/src/mocks/browser.ts">
         <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="8" count="0" type="stmt"/>
@@ -157,8 +157,11 @@
         <line num="172" count="0" type="stmt"/>
       </file>
       <file name="setup.ts" path="/Users/yprite/IdeaProjects/Cursor_pro/AI_DRIVEN_DEVELOP/frontend/src/mocks/setup.ts">
-        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <metrics statements="4" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="7" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
       </file>
     </package>
     <package name="src.services">

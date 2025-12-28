@@ -50,6 +50,9 @@
     "identity-obj-proxy": "^3.0.0",
     "msw": "^2.12.7"
   },
+  "jest": {
+    "setupFiles": ["<rootDir>/src/setupTestsPolyfill.ts"]
+  },
   "msw": {
     "workerDirectory": "public"
   }
