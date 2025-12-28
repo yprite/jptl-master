@@ -178,6 +178,152 @@ class TestUsersController:
         assert response.status_code == 401
         assert "로그인이 필요합니다" in response.json()["detail"]
 
+    def test_get_user_performance_success(self, temp_db):
+        """사용자 성능 분석 조회 성공 테스트"""
+        from backend.presentation.controllers.users import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.repositories.user_performance_repository import SqliteUserPerformanceRepository
+        from backend.domain.entities.user import User
+        from backend.domain.entities.user_performance import UserPerformance
+        from backend.domain.value_objects.jlpt import JLPTLevel
+        from datetime import date, timedelta
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+
+            # UserPerformance 생성
+            user_performance_repo = SqliteUserPerformanceRepository(db=db)
+            end_date = date.today()
+            start_date = end_date - timedelta(days=30)
+            user_performance = UserPerformance(
+                id=None, user_id=saved_user.id,
+                analysis_period_start=start_date, analysis_period_end=end_date,
+                type_performance={"vocabulary": {"accuracy": 85.0}, "grammar": {"accuracy": 70.0}},
+                difficulty_performance={"1": {"accuracy": 90.0}, "2": {"accuracy": 75.0}},
+                repeated_mistakes=[1, 2, 3],
+                weaknesses={"grammar": "기본 문법 이해 부족"}
+            )
+            saved_performance = user_performance_repo.save(user_performance)
+
+            # 사용자 성능 분석 조회
+            response = client.get(f"/{saved_user.id}/performance")
+            assert response.status_code == 200
+            data = response.json()
+            assert data["user_id"] == saved_user.id
+            assert "type_performance" in data
+            assert "difficulty_performance" in data
+            assert "repeated_mistakes" in data
+            assert "weaknesses" in data
+            assert "analysis_period_start" in data
+            assert "analysis_period_end" in data
+
+    def test_get_user_performance_not_found(self, temp_db):
+        """존재하지 않는 사용자의 성능 분석 조회 테스트"""
+        from backend.presentation.controllers.users import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/999/performance")
+            assert response.status_code == 404
+            assert "사용자를 찾을 수 없습니다" in response.json()["detail"]
+
+    def test_get_user_history_success(self, temp_db):
+        """사용자 학습 이력 조회 성공 테스트"""
+        from backend.presentation.controllers.users import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.repositories.learning_history_repository import SqliteLearningHistoryRepository
+        from backend.domain.entities.user import User
+        from backend.domain.entities.learning_history import LearningHistory
+        from backend.domain.value_objects.jlpt import JLPTLevel
+        from datetime import date
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+
+            # LearningHistory 생성
+            learning_history_repo = SqliteLearningHistoryRepository(db=db)
+            history1 = LearningHistory(
+                id=None, user_id=saved_user.id, test_id=1, result_id=1,
+                study_date=date.today(), study_hour=10, total_questions=20,
+                correct_count=15, time_spent_minutes=30
+            )
+            history2 = LearningHistory(
+                id=None, user_id=saved_user.id, test_id=2, result_id=2,
+                study_date=date.today(), study_hour=14, total_questions=20,
+                correct_count=18, time_spent_minutes=25
+            )
+            learning_history_repo.save(history1)
+            learning_history_repo.save(history2)
+
+            # 학습 이력 조회
+            response = client.get(f"/{saved_user.id}/history")
+            assert response.status_code == 200
+            data = response.json()
+            assert isinstance(data, list)
+            assert len(data) == 2
+            assert all(history["user_id"] == saved_user.id for history in data)
+            assert "test_id" in data[0]
+            assert "result_id" in data[0]
+            assert "study_date" in data[0]
+            assert "study_hour" in data[0]
+            assert "total_questions" in data[0]
+            assert "correct_count" in data[0]
+            assert "time_spent_minutes" in data[0]
+
+    def test_get_user_history_not_found(self, temp_db):
+        """존재하지 않는 사용자의 학습 이력 조회 테스트"""
+        from backend.presentation.controllers.users import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/999/history")
+            assert response.status_code == 404
+            assert "사용자를 찾을 수 없습니다" in response.json()["detail"]
+
 
 class TestResultsController:
     """Results 컨트롤러 테스트"""
@@ -517,6 +663,85 @@ class TestResultsController:
             assert len(data["strengths"]) > 0
             assert len(data["weaknesses"]) > 0
             assert "grammar" in [w["type"] for w in data["weaknesses"]]
+
+    def test_get_result_details_success(self, temp_db):
+        """결과 상세 답안 이력 조회 성공 테스트"""
+        from backend.presentation.controllers.results import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+        from backend.infrastructure.repositories.answer_detail_repository import SqliteAnswerDetailRepository
+        from backend.domain.entities.result import Result
+        from backend.domain.entities.answer_detail import AnswerDetail
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 결과 생성
+            result_repo = SqliteResultRepository(db=db)
+            result = Result(
+                id=0, test_id=1, user_id=1, score=85.0,
+                assessed_level=JLPTLevel.N5, recommended_level=JLPTLevel.N4,
+                correct_answers_count=17, total_questions_count=20,
+                time_taken_minutes=45
+            )
+            saved_result = result_repo.save(result)
+
+            # AnswerDetail 생성
+            answer_detail_repo = SqliteAnswerDetailRepository(db=db)
+            answer_detail1 = AnswerDetail(
+                id=None, result_id=saved_result.id, question_id=1,
+                user_answer="A", correct_answer="A", is_correct=True,
+                time_spent_seconds=30, difficulty=1, question_type=QuestionType.VOCABULARY
+            )
+            answer_detail2 = AnswerDetail(
+                id=None, result_id=saved_result.id, question_id=2,
+                user_answer="B", correct_answer="C", is_correct=False,
+                time_spent_seconds=45, difficulty=2, question_type=QuestionType.GRAMMAR
+            )
+            answer_detail_repo.save(answer_detail1)
+            answer_detail_repo.save(answer_detail2)
+
+            # 상세 답안 이력 조회
+            response = client.get(f"/{saved_result.id}/details")
+            assert response.status_code == 200
+            data = response.json()
+            assert isinstance(data, list)
+            assert len(data) == 2
+            assert all(detail["result_id"] == saved_result.id for detail in data)
+            assert data[0]["question_id"] in [1, 2]
+            assert "user_answer" in data[0]
+            assert "correct_answer" in data[0]
+            assert "is_correct" in data[0]
+            assert "time_spent_seconds" in data[0]
+            assert "difficulty" in data[0]
+            assert "question_type" in data[0]
+
+    def test_get_result_details_not_found(self, temp_db):
+        """존재하지 않는 결과의 상세 답안 이력 조회 테스트"""
+        from backend.presentation.controllers.results import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.results.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            response = client.get("/999/details")
+            assert response.status_code == 404
+            assert "결과를 찾을 수 없습니다" in response.json()["detail"]
 
 
 class TestTestsController:

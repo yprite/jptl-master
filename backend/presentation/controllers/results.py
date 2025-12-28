@@ -10,6 +10,7 @@ from datetime import datetime
 from backend.domain.entities.result import Result
 from backend.domain.value_objects.jlpt import JLPTLevel
 from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+from backend.infrastructure.repositories.answer_detail_repository import SqliteAnswerDetailRepository
 from backend.infrastructure.config.database import get_database
 
 router = APIRouter()
@@ -50,6 +51,11 @@ def get_result_repository() -> SqliteResultRepository:
     """결과 리포지토리 의존성 주입"""
     db = get_database()
     return SqliteResultRepository(db)
+
+def get_answer_detail_repository() -> SqliteAnswerDetailRepository:
+    """답안 상세 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteAnswerDetailRepository(db)
 
 @router.get("/", response_model=List[ResultListResponse])
 async def get_results(
@@ -262,3 +268,37 @@ def _generate_analysis_report(result: Result) -> Dict:
         "recommendations": recommendations,
         "feedback": feedback
     }
+
+@router.get("/{result_id}/details")
+async def get_result_details(result_id: int):
+    """상세 답안 이력 조회
+    
+    특정 결과에 대한 모든 문제별 상세 답안 이력을 조회합니다.
+    각 답안의 정답 여부, 소요 시간, 난이도, 문제 유형 등의 정보를 포함합니다.
+    """
+    result_repo = get_result_repository()
+    answer_detail_repo = get_answer_detail_repository()
+    
+    # 결과 존재 확인
+    result = result_repo.find_by_id(result_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="결과를 찾을 수 없습니다")
+    
+    # 답안 상세 이력 조회
+    answer_details = answer_detail_repo.find_by_result_id(result_id)
+    
+    return [
+        {
+            "id": detail.id,
+            "result_id": detail.result_id,
+            "question_id": detail.question_id,
+            "user_answer": detail.user_answer,
+            "correct_answer": detail.correct_answer,
+            "is_correct": detail.is_correct,
+            "time_spent_seconds": detail.time_spent_seconds,
+            "difficulty": detail.difficulty,
+            "question_type": detail.question_type.value,
+            "created_at": detail.created_at
+        }
+        for detail in answer_details
+    ]
