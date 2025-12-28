@@ -1088,6 +1088,169 @@ class TestTestsController:
             question_types = [q["question_type"] for q in data["questions"]]
             assert all(qt == "vocabulary" for qt in question_types)
 
+    def test_create_test_with_question_type_counts(self, temp_db):
+        """유형별 문제 수 조정을 사용한 시험 생성 테스트"""
+        from backend.presentation.controllers.tests import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 여러 유형의 문제 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            
+            # VOCABULARY 유형 15개
+            for i in range(15):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"Vocab Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # GRAMMAR 유형 10개
+            for i in range(10):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.GRAMMAR,
+                    question_text=f"Grammar Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # READING 유형 8개
+            for i in range(8):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.READING,
+                    question_text=f"Reading Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # 유형별 문제 수 지정하여 시험 생성
+            # VOCABULARY: 10개, GRAMMAR: 5개, READING: 5개
+            response = client.post(
+                "/",
+                json={
+                    "title": "N5 맞춤형 테스트",
+                    "level": "N5",
+                    "time_limit_minutes": 60,
+                    "question_type_counts": {
+                        "vocabulary": 10,
+                        "grammar": 5,
+                        "reading": 5
+                    }
+                }
+            )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["id"] > 0
+            assert data["title"] == "N5 맞춤형 테스트"
+            assert data["level"] == "N5"
+            assert len(data["questions"]) == 20  # 총 20개
+            
+            # 각 유형별 문제 수 확인
+            question_types = [q["question_type"] for q in data["questions"]]
+            vocab_count = question_types.count("vocabulary")
+            grammar_count = question_types.count("grammar")
+            reading_count = question_types.count("reading")
+            
+            assert vocab_count == 10
+            assert grammar_count == 5
+            assert reading_count == 5
+
+    def test_create_test_with_question_type_counts_insufficient_questions(self, temp_db):
+        """유형별 문제 수 조정 시 문제 수 부족 테스트"""
+        from backend.presentation.controllers.tests import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 여러 유형의 문제 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            
+            # VOCABULARY 유형 5개만 생성 (10개 요청)
+            for i in range(5):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"Vocab Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # GRAMMAR 유형 3개만 생성 (5개 요청)
+            for i in range(3):
+                q = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.GRAMMAR,
+                    question_text=f"Grammar Question {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation=f"Explanation {i+1}",
+                    difficulty=1
+                )
+                question_repo.save(q)
+
+            # 유형별 문제 수 지정하여 시험 생성 (요청 수가 부족)
+            response = client.post(
+                "/",
+                json={
+                    "title": "N5 맞춤형 테스트",
+                    "level": "N5",
+                    "time_limit_minutes": 60,
+                    "question_type_counts": {
+                        "vocabulary": 10,
+                        "grammar": 5
+                    }
+                }
+            )
+
+            assert response.status_code == 400
+            data = response.json()
+            assert "부족" in data["detail"] or "insufficient" in data["detail"].lower()
+
     def test_start_test_success(self, temp_db):
         """시험 시작 성공 테스트"""
         from backend.presentation.controllers.tests import router
