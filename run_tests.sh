@@ -210,6 +210,12 @@ echo ""
 echo "🔧 백엔드 서버 시작 중 (E2E 테스트용)..."
 cd ..
 
+# E2E에 필요한 최소 데이터(예: N5 문제)가 없으면 테스트 시작 단계에서 실패할 수 있으므로,
+# 대화형 프롬프트 없이 최소 문제 수를 보장하도록 시드합니다.
+echo ""
+echo "🌱 E2E 테스트용 N5 문제 시딩(최소 20개 보장) 중..."
+python scripts/seed_n5_questions.py --ensure-minimum 20 --non-interactive 2>&1 || true
+
 # 기존 백엔드 서버 프로세스 확인 및 종료
 BACKEND_PID_FILE=".backend.pid"
 if [ -f "$BACKEND_PID_FILE" ]; then
