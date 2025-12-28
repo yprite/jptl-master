@@ -37,7 +37,7 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 
 ### 3-1. Git 브랜치 및 푸시 자동화 (필수)
 - **브랜치 자동 생성**: 모든 작업 시작 전에 반드시 새로운 브랜치를 생성합니다
-  - **모든 브랜치는 develop 브랜치에서 분기**: 작업 시작 전 develop 브랜치로 체크아웃하고 최신 상태로 업데이트한 후 새 브랜치 생성
+  - **모든 브랜치는 develop 브랜치에서 분기**: 작업 시작 전 develop 브랜치로 체크아웃하고 최신 상태로 업데이트한 후 새 브랜치 생성 (규칙 10-1 참조)
   - 기능 개발: `feature/작업-설명` 형식 (예: `feature/user-authentication`)
   - 버그 수정: `bugfix/작업-설명` 형식 (예: `bugfix/login-error`)
   - 문서 작업: `docs/작업-설명` 형식 (예: `docs/api-documentation`)
@@ -135,6 +135,15 @@ DEVELOPMENT_GUIDELINES.md 파일의 핵심 내용을 기반으로 하며, 모든
 - **작업 단위별 브랜치**: 하나의 논리적 작업 단위마다 별도 브랜치를 생성합니다
 - 📖 자세한 내용: [DEVELOPMENT_GUIDELINES.md](../DEVELOPMENT_GUIDELINES.md#21-브랜치-전략), [docs/development/setup.md](docs/development/setup.md#git-저장소-설정)
 
+### 10-1. 브랜치 최신화 필수 규칙 (강제)
+- **모든 작업 시작 전 필수**: 모든 작업을 시작하기 전에 반드시 브랜치를 최신화합니다
+- **develop 브랜치 최신화**: 작업 시작 전 develop 브랜치로 체크아웃한 후 `git pull origin develop` (또는 `git fetch origin && git merge origin/develop`) 명령어로 최신 상태로 업데이트합니다
+- **최신화 확인**: `git status` 또는 `git log` 명령어로 최신 상태인지 확인합니다
+- **최신화 후 브랜치 생성**: develop 브랜치를 최신화한 후에만 새 작업 브랜치를 생성합니다
+- **기존 브랜치 작업 시**: 기존 브랜치에서 작업을 계속하는 경우에도 작업 시작 전 `git pull origin develop` 명령어로 develop 브랜치를 최신화하고, 필요시 `git merge origin/develop` 또는 `git rebase origin/develop` 명령어로 현재 브랜치를 최신화합니다
+- **최신화 실패 시**: 최신화 중 충돌이 발생하면 먼저 충돌을 해결한 후 작업을 진행합니다
+- **최신화 없이는 작업 시작 금지**: 브랜치를 최신화하지 않으면 절대 작업을 시작하지 않습니다
+
 ### 11. 커밋 메시지 형식
 ```
 type(scope): subject
@@ -175,7 +184,8 @@ footer
 1. **작업 시작 시**:
    - 현재 브랜치 확인 (`git branch` 또는 `git status`)
    - **develop 브랜치로 체크아웃**: `git checkout develop`
-   - **develop 브랜치 최신화**: `git pull origin develop` (또는 `git fetch origin && git merge origin/develop`)
+   - **브랜치 최신화 (필수)**: `git pull origin develop` (또는 `git fetch origin && git merge origin/develop`) - 규칙 10-1 참조
+   - 최신화 확인 (`git status` 또는 `git log`)
    - 작업 유형에 맞는 새 브랜치 생성 (`git checkout -b feature/작업명` 등)
    - 새 브랜치로 체크아웃 확인
 
