@@ -684,6 +684,93 @@ describe('userApi', () => {
       }
     });
   });
+
+  describe('getUserHistory', () => {
+    it('should fetch user history data', async () => {
+      const mockHistory = [
+        {
+          id: 1,
+          user_id: 1,
+          test_id: 1,
+          result_id: 1,
+          study_date: '2025-01-04',
+          study_hour: 10,
+          total_questions: 20,
+          correct_count: 15,
+          time_spent_minutes: 30,
+          accuracy_percentage: 75.0,
+          created_at: '2025-01-04T10:30:00',
+        },
+        {
+          id: 2,
+          user_id: 1,
+          test_id: 2,
+          result_id: 2,
+          study_date: '2025-01-04',
+          study_hour: 14,
+          total_questions: 20,
+          correct_count: 18,
+          time_spent_minutes: 25,
+          accuracy_percentage: 90.0,
+          created_at: '2025-01-04T14:30:00',
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => mockHistory,
+      });
+
+      const result = await userApi.getUserHistory(1);
+      expect(result).toEqual(mockHistory);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/users/1/history'),
+        expect.objectContaining({
+          credentials: 'include',
+        })
+      );
+    });
+
+    it('should handle empty history array', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => [],
+      });
+
+      const result = await userApi.getUserHistory(1);
+      expect(result).toEqual([]);
+    });
+
+    it('should handle API error when fetching user history', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '사용자를 찾을 수 없습니다',
+        }),
+      });
+
+      try {
+        await userApi.getUserHistory(999);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(404);
+          expect(error.message).toContain('사용자를 찾을 수 없습니다');
+        }
+      }
+    });
+  });
 });
 
 describe('authApi', () => {

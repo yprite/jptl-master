@@ -4,17 +4,21 @@ import TestUI from './components/organisms/TestUI';
 import ResultUI from './components/organisms/ResultUI';
 import LoginUI from './components/organisms/LoginUI';
 import UserPerformanceUI from './components/organisms/UserPerformanceUI';
-import { Test, Result, UserPerformance } from './types/api';
+import UserHistoryUI from './components/organisms/UserHistoryUI';
+import UserProfileUI from './components/organisms/UserProfileUI';
+import { Test, Result, UserPerformance, UserHistory, UserProfile } from './types/api';
 import { testApi, resultApi, userApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'error';
+type AppState = 'login' | 'initial' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
   const [currentTest, setCurrentTest] = useState<Test | null>(null);
   const [currentResult, setCurrentResult] = useState<Result | null>(null);
   const [currentPerformance, setCurrentPerformance] = useState<UserPerformance | null>(null);
+  const [currentHistory, setCurrentHistory] = useState<UserHistory[]>([]);
+  const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
@@ -159,6 +163,8 @@ function App() {
     setCurrentTest(null);
     setCurrentResult(null);
     setCurrentPerformance(null);
+    setCurrentHistory([]);
+    setCurrentProfile(null);
     setError(null);
     setState('initial');
   };
@@ -208,6 +214,84 @@ function App() {
         setState('error');
       }
     }
+  };
+
+  // 학습 이력 조회
+  const handleViewHistory = async () => {
+    // 인증 확인
+    if (!authService.isAuthenticated() || !user) {
+      setState('login');
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const history = await userApi.getUserHistory(user.id);
+      setCurrentHistory(history);
+      setState('history');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else {
+          setError(err.message);
+          setState('error');
+        }
+      } else {
+        setError('학습 이력을 불러오는 중 오류가 발생했습니다.');
+        setState('error');
+      }
+    }
+  };
+
+  // 프로필 조회
+  const handleViewProfile = async () => {
+    // 인증 확인
+    if (!authService.isAuthenticated() || !user) {
+      setState('login');
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const profile = await userApi.getCurrentUser();
+      setCurrentProfile(profile);
+      setState('profile');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else {
+          setError(err.message);
+          setState('error');
+        }
+      } else {
+        setError('프로필을 불러오는 중 오류가 발생했습니다.');
+        setState('error');
+      }
+    }
+  };
+
+  // 프로필 업데이트
+  const handleProfileUpdate = async (updates: { username?: string; target_level?: string }) => {
+    if (!user) {
+      throw new Error('사용자 정보가 없습니다.');
+    }
+
+    const updatedProfile = await userApi.updateCurrentUser(updates);
+    setCurrentProfile(updatedProfile);
+    // 사용자 정보도 업데이트
+    setUser({
+      id: updatedProfile.id,
+      email: updatedProfile.email,
+      username: updatedProfile.username,
+    });
   };
 
   // 초기화 중이면 로딩 표시
@@ -267,6 +351,18 @@ function App() {
               >
                 성능 분석 보기
               </button>
+              <button
+                onClick={handleViewHistory}
+                className="history-button"
+              >
+                학습 이력 보기
+              </button>
+              <button
+                onClick={handleViewProfile}
+                className="profile-button"
+              >
+                프로필 관리
+              </button>
             </div>
           </section>
         )}
@@ -304,6 +400,28 @@ function App() {
           <section className="performance-section">
             <UserPerformanceUI performance={currentPerformance} />
             <div className="performance-actions">
+              <button onClick={handleRestart} className="back-button">
+                돌아가기
+              </button>
+            </div>
+          </section>
+        )}
+
+        {state === 'history' && (
+          <section className="history-section">
+            <UserHistoryUI history={currentHistory} />
+            <div className="history-actions">
+              <button onClick={handleRestart} className="back-button">
+                돌아가기
+              </button>
+            </div>
+          </section>
+        )}
+
+        {state === 'profile' && currentProfile && (
+          <section className="profile-section">
+            <UserProfileUI profile={currentProfile} onUpdate={handleProfileUpdate} />
+            <div className="profile-actions">
               <button onClick={handleRestart} className="back-button">
                 돌아가기
               </button>
