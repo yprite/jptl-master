@@ -9,7 +9,7 @@ source backend/venv/bin/activate
 
 # 커버리지 임계값 설정
 BACKEND_COVERAGE_THRESHOLD=80
-FRONTEND_COVERAGE_THRESHOLD=70
+FRONTEND_COVERAGE_THRESHOLD=80
 
 # 1. Unit 테스트 실행 (커버리지 포함)
 echo ""

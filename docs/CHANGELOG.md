@@ -52,6 +52,12 @@
 스프린트_005_시작: JLPT-SPRINT-005 시작 - 학습 데이터 수집 시스템 구축 (2025-01-04)
 
 ### Changed
+프론트엔드_테스트_커버리지_목표_변경: 프론트엔드 테스트 커버리지 목표를 70%에서 80%로 상향 조정 (2025-01-04)
+- .cursorrules: 프론트엔드 커버리지 요구사항 70% → 80%로 변경
+- run_tests.sh: FRONTEND_COVERAGE_THRESHOLD 70 → 80으로 변경
+- frontend/package.json: coverageThreshold 70 → 80으로 변경
+- DEVELOPMENT_GUIDELINES.md: 프론트엔드 커버리지 목표 70% → 80%로 변경
+- 관련 문서 업데이트: frontend-testing.md, pr-workflow.md, README.md
 백로그_재구성: 부족한 부분을 우선순위별로 정리하여 백로그 업데이트 (2025-01-04)
 스프린트_계획: 새로운 스프린트 목표 및 태스크 할당 (2025-01-04)
 
