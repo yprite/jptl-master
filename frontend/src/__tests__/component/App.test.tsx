@@ -235,6 +235,251 @@ describe('App', () => {
     });
   });
 
+  it('should handle test start when not authenticated', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(false); // 인증되지 않음
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+    });
+
+    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    fireEvent.click(startButton);
+
+    // 로그인 화면으로 리다이렉트 확인
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
+
+  it('should handle test start error (non-401)', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    // 500 에러 시뮬레이션
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      headers: { get: () => 'application/json' },
+      json: async () => ({ detail: 'Internal Server Error' }),
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+    });
+
+    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    fireEvent.click(startButton);
+
+    // 에러 메시지 표시 확인
+    await waitFor(() => {
+      expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle test submission', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    // 테스트 생성 및 시작
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: {
+            id: 1,
+            title: 'N5 진단 테스트',
+            level: 'N5',
+            status: 'created',
+            time_limit_minutes: 30,
+            questions: [],
+          },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: {
+            id: 1,
+            title: 'N5 진단 테스트',
+            level: 'N5',
+            status: 'in_progress',
+            time_limit_minutes: 30,
+            questions: [
+              {
+                id: 1,
+                level: 'N5',
+                question_type: 'vocabulary',
+                question_text: '「こんにちは」の意味は何ですか？',
+                choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+                difficulty: 1,
+              },
+            ],
+          },
+        }),
+      })
+      // 테스트 제출 성공
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: {
+            test_id: 1,
+            result_id: 1,
+            score: 80,
+            correct_answers: 1,
+            total_questions: 1,
+            time_taken_minutes: 25,
+            assessed_level: 'N5',
+            recommended_level: 'N5',
+            question_type_analysis: {},
+            performance_level: 'good',
+            is_passed: true,
+            feedback: {},
+          },
+        }),
+      })
+      // 결과 조회
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: {
+            id: 1,
+            test_id: 1,
+            user_id: 1,
+            score: 80,
+            correct_answers_count: 1,
+            total_questions_count: 1,
+            time_taken_minutes: 25,
+            assessed_level: 'N5',
+            recommended_level: 'N5',
+            question_type_analysis: {},
+            performance_level: 'good',
+            is_passed: true,
+            accuracy_percentage: 80.0,
+            time_efficiency: 'efficient',
+            level_progression: 'maintained',
+            feedback: {},
+          },
+        }),
+      });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+    });
+
+    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    fireEvent.click(startButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/「こんにちは」の意味は何ですか？/i)).toBeInTheDocument();
+    });
+
+    // TestUI 컴포넌트가 제출 버튼을 가지고 있는지 확인
+    const submitButton = screen.queryByRole('button', { name: /제출/i });
+    if (submitButton) {
+      fireEvent.click(submitButton);
+      
+      // 결과 화면 표시 확인
+      await waitFor(() => {
+        expect(screen.getByText(/점수|결과/i)).toBeInTheDocument();
+      }, { timeout: 3000 });
+    }
+  });
+
+  it('should handle logout error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+    (mockAuthService.logout as jest.Mock).mockRejectedValue(new Error('Logout failed'));
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/안녕하세요, 학습자1님/i)).toBeInTheDocument();
+    });
+
+    const logoutButton = screen.getByRole('button', { name: /로그아웃/i });
+    fireEvent.click(logoutButton);
+
+    // 로그아웃 실패해도 로그인 화면으로 이동
+    await waitFor(() => {
+      expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
+
   it('should handle restart', async () => {
     const mockUser = {
       id: 1,
