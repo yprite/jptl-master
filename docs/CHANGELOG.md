@@ -8,6 +8,16 @@
 ## Unreleased
 
 ### Added
+백엔드_Users_API_엔드포인트_완성: 백엔드 Users API 엔드포인트 완성 (2025-01-04)
+- GET /api/v1/users/ - 사용자 목록 조회 엔드포인트 구현
+- GET /api/v1/users/{user_id} - 특정 사용자 조회 엔드포인트 구현
+- PUT /api/v1/users/{user_id} - 사용자 정보 수정 엔드포인트 구현
+- DELETE /api/v1/users/{user_id} - 사용자 삭제 엔드포인트 구현
+- 각 엔드포인트에 대한 단위 테스트 작성 (9개 테스트)
+- 시나리오 테스트 업데이트 (사용자 API 상호작용 플로우)
+- API 문서 업데이트 (실제 구현과 일치하도록 응답 형식 수정)
+- 모든 테스트 통과 및 커버리지 92% 유지
+
 사용자_성능_분석_서비스: 사용자 성능 분석 서비스 구현 (2025-01-04)
 - UserPerformanceAnalysisService Domain Service 구현
 - 유형별 성취도 집계 기능 (analyze_type_performance)
