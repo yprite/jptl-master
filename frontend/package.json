@@ -52,5 +52,16 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/index.tsx",
+      "!src/reportWebVitals.ts",
+      "!src/setupTestsPolyfill.ts",
+      "!src/mocks/**",
+      "!src/types/**",
+      "!src/**/*.d.ts"
+    ]
   }
 }
