@@ -202,6 +202,13 @@ footer
      - `docs/task-management/backlog.md` 업데이트 (태스크 상태 변경, 진행률 재계산)
      - 업데이트 내용 커밋 및 푸시
      - 규칙 23의 모든 요구사항 준수 확인
+   - [ ] **설계 문서 업데이트 (필수 - 이 단계가 없으면 작업 미완료)**
+     - 코드 변경 즉시 `docs/` 폴더의 관련 문서 업데이트
+     - Backend 변경 시: Entity/Domain Service → `docs/architecture/domain/`, Repository → `docs/architecture/repositories.md`, API → `docs/api/endpoints/`, DTO/스키마 → `docs/api/schemas/`
+     - Frontend 변경 시: 컴포넌트 구조 → 프론트엔드 아키텍처 문서, API 호출 → `docs/api/` 문서
+     - 아키텍처 변경 시 → `docs/architecture/overview.md` 업데이트
+     - `docs/CHANGELOG.md`에 모든 변경사항 기록
+     - 규칙 17의 모든 요구사항 준수 확인
    - [ ] **Pull Request 자동 생성 (필수 - 이 단계가 없으면 작업 미완료)**
      - GitHub CLI 사용: `gh pr create --title "type(scope): subject" --body "작업 설명 및 변경사항" --base develop`
      - 또는 스크립트 사용: `./scripts/create_pr.sh`
@@ -210,7 +217,7 @@ footer
      - PR 생성 후 PR URL을 사용자에게 반드시 알립니다
    - [ ] **PR 생성 실패 시**: 사용자에게 명시적으로 알리고 수동 생성 안내
 
-**중요**: `run_tests.sh` 실행 및 성공 확인, 태스크 관리 문서 업데이트, PR 생성 없이는 작업을 완료한 것으로 간주하지 않습니다. 작업 완료 선언 전 반드시 이 모든 항목을 확인합니다.
+**중요**: `run_tests.sh` 실행 및 성공 확인, 태스크 관리 문서 업데이트, 설계 문서 업데이트, PR 생성 없이는 작업을 완료한 것으로 간주하지 않습니다. 작업 완료 선언 전 반드시 이 모든 항목을 확인합니다.
 
 ### 15. 리뷰 및 피드백 시 준수사항
 - DEVELOPMENT_GUIDELINES.md 위반 사항 즉시 지적
@@ -294,10 +301,16 @@ footer
    - 규칙 20의 모든 요구사항 준수 확인
 3. ✅ 모든 변경사항 커밋 및 푸시
 4. ✅ **태스크 관리 문서 업데이트 완료** ← 이 단계가 없으면 작업 미완료 (규칙 23 참조)
-5. ✅ **Pull Request 생성 완료** ← 이 단계가 없으면 작업 미완료
-6. ✅ PR URL 사용자에게 전달
+5. ✅ **설계 문서 업데이트 완료** ← 이 단계가 없으면 작업 미완료 (규칙 17 참조)
+   - 코드 변경 즉시 `docs/` 폴더의 관련 문서 업데이트
+   - Backend 변경 시: Entity/Domain Service → `docs/architecture/domain/`, Repository → `docs/architecture/repositories.md`, API → `docs/api/endpoints/`, DTO/스키마 → `docs/api/schemas/`
+   - Frontend 변경 시: 컴포넌트 구조 → 프론트엔드 아키텍처 문서, API 호출 → `docs/api/` 문서
+   - 아키텍처 변경 시 → `docs/architecture/overview.md` 업데이트
+   - `docs/CHANGELOG.md`에 모든 변경사항 기록
+6. ✅ **Pull Request 생성 완료** ← 이 단계가 없으면 작업 미완료
+7. ✅ PR URL 사용자에게 전달
 
-**중요**: `run_tests.sh` 실행 및 성공 확인, PR 생성, 태스크 관리 문서 업데이트 없이는 작업을 완료한 것으로 간주하지 않습니다.
+**중요**: `run_tests.sh` 실행 및 성공 확인, PR 생성, 태스크 관리 문서 업데이트, 설계 문서 업데이트 없이는 작업을 완료한 것으로 간주하지 않습니다.
 
 ### 22. PR 생성 필수 규칙 (강제)
 - **모든 feature/bugfix/docs/refactor/test 브랜치는 작업 완료 시 반드시 PR 생성**
