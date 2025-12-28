@@ -138,12 +138,32 @@ N5 진단 테스트를 생성합니다. 기본 설정으로 자동 생성됩니�
 }
 ```
 
+**유형별 문제 수 지정 예시:**
+```json
+{
+  "title": "N5 맞춤형 테스트",
+  "level": "N5",
+  "time_limit_minutes": 60,
+  "question_type_counts": {
+    "vocabulary": 10,
+    "grammar": 5,
+    "reading": 5
+  }
+}
+```
+
 **요청 스키마:**
 - `title` (string, required): 시험 제목
 - `level` (JLPTLevel, required): JLPT 레벨
-- `question_count` (int, optional): 문제 개수 (기본값: 20)
+- `question_count` (int, optional): 문제 개수 (기본값: 20, `question_type_counts` 사용 시 무시됨)
 - `time_limit_minutes` (int, optional): 시간 제한 (분, 기본값: 60)
-- `question_types` (List[QuestionType], optional): 문제 유형 필터
+- `question_types` (List[QuestionType], optional): 문제 유형 필터 (`question_type_counts`와 함께 사용 불가)
+- `question_type_counts` (Dict[str, int], optional): 유형별 문제 수 지정 (예: `{"vocabulary": 10, "grammar": 5}`)
+
+**참고:**
+- `question_type_counts`가 지정되면 각 유형별로 지정된 수만큼 문제가 생성됩니다.
+- `question_type_counts`와 `question_types`는 동시에 사용할 수 없습니다.
+- `question_type_counts`를 사용하면 `question_count`는 무시됩니다.
 
 **응답:**
 ```json

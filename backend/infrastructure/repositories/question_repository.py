@@ -3,7 +3,7 @@ SQLite 기반 Question Repository 구현
 """
 
 import random
-from typing import List, Optional
+from typing import List, Optional, Dict
 from backend.domain.entities.question import Question
 from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 from backend.infrastructure.config.database import get_database, Database
@@ -163,4 +163,27 @@ class SqliteQuestionRepository:
 
             # limit만큼 반환
             return questions[:limit]
+
+    def find_random_by_level_and_type_counts(
+        self,
+        level: JLPTLevel,
+        question_type_counts: Dict[QuestionType, int]
+    ) -> List[Question]:
+        """레벨과 유형별 개수로 랜덤 문제 조회"""
+        all_questions = []
+        
+        for question_type, count in question_type_counts.items():
+            questions = self.find_random_by_level_and_types(
+                level, [question_type], limit=count
+            )
+            if len(questions) < count:
+                raise ValueError(
+                    f"레벨 {level.value}, 유형 {question_type.value}에 대해 "
+                    f"요청한 문제 수({count})보다 적은 문제({len(questions)})만 사용 가능합니다. (문제 수 부족)"
+                )
+            all_questions.extend(questions)
+        
+        # 전체 문제를 랜덤으로 섞어서 반환
+        random.shuffle(all_questions)
+        return all_questions
 
