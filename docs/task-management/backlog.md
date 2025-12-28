@@ -2,10 +2,10 @@
 
 ## 메타데이터
 프로젝트: JLPT 자격 검증 프로그램
-총_태스크_수: 72
+총_태스크_수: 73
 완료_포인트: 124
-남은_포인트: 26
-진행률: 83%
+남은_포인트: 29
+진행률: 81%
 MVP_예상: Sprint_5_완료시
 
 ## 에픽_상태
@@ -28,7 +28,7 @@ TECH-JLPT-004: Vanilla_JS_UI (P0, 준비, 포인트: 12)
 TECH-JLPT-005: N5_문제_데이터 (P0, 준비, 포인트: 4)
 
 ## 우선순위_분포
-P0_태스크: 7개 (총_포인트: 45)
+P0_태스크: 8개 (총_포인트: 48)
 P1_태스크: 5개 (총_포인트: 24)
 P2_태스크: 3개 (총_포인트: 14)
 P3_태스크: 3개 (총_포인트: 7)
@@ -55,6 +55,15 @@ P0-JLPT-016: 테스트 제출 시 학습 데이터 자동 수집 (포인트: 5, 
 - LearningHistory 자동 기록
 - UserPerformance 업데이트 로직
 - 수용_기준: 테스트 제출 시 모든 학습 데이터가 자동으로 수집됨
+
+P0-JLPT-023: SessionMiddleware 관련 테스트 실패 수정 (포인트: 3, 상태: 백로그)
+- test_get_current_user_not_implemented 테스트 실패 수정
+- test_update_current_user_not_implemented 테스트 실패 수정
+- test_start_test_success 테스트 실패 수정
+- test_scenario_user_takes_test_and_views_result 시나리오 테스트 실패 수정
+- test_scenario_user_tracks_progress_over_multiple_tests 시나리오 테스트 실패 수정
+- SessionMiddleware가 테스트 환경에서 제대로 설정되도록 수정
+- 수용_기준: 모든 테스트가 통과하고 run_tests.sh가 성공적으로 완료됨
 
 ### P1 (High Priority) - 높은 우선순위
 P1-JLPT-017: 레벨 추천 로직 구현 (포인트: 3, 상태: 백로그)
