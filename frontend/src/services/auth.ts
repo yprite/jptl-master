@@ -13,6 +13,7 @@ export interface User {
   current_level: string | null;
   total_tests_taken: number;
   study_streak: number;
+  is_admin?: boolean;
 }
 
 class AuthService {
