@@ -1333,6 +1333,73 @@ class TestTestsController:
             assert data["status"] == "in_progress"
             assert data["started_at"] is not None
 
+    def test_start_test_no_questions(self, temp_db):
+        """시험 시작 실패 테스트 - 문제가 없는 경우"""
+        from backend.presentation.controllers.tests import router
+        from backend.presentation.controllers.auth import router as auth_router
+        from fastapi import FastAPI
+        from starlette.middleware.sessions import SessionMiddleware
+        import secrets
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.test_repository import SqliteTestRepository
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.domain.entities.test import Test
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        app = FastAPI()
+        app.add_middleware(
+            SessionMiddleware,
+            secret_key=secrets.token_urlsafe(32),
+            max_age=86400,
+            same_site="lax"
+        )
+        app.include_router(auth_router, prefix="/auth")
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db_tests, \
+             patch('backend.presentation.controllers.auth.get_database') as mock_get_db_auth:
+            db = Database(db_path=temp_db)
+            mock_get_db_tests.return_value = db
+            mock_get_db_auth.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(
+                id=None,
+                email="test@example.com",
+                username="testuser",
+                target_level=JLPTLevel.N5
+            )
+            saved_user = user_repo.save(user)
+
+            # 로그인하여 세션 설정
+            login_response = client.post(
+                "/auth/login",
+                json={"email": "test@example.com"}
+            )
+            assert login_response.status_code == 200
+
+            # 문제가 없는 테스트 생성
+            test_repo = SqliteTestRepository(db=db)
+            test = Test(
+                id=0, title="Test", level=JLPTLevel.N5,
+                questions=[], time_limit_minutes=60  # 문제 없음
+            )
+            saved_test = test_repo.save(test)
+
+            # 시험 시작 시도
+            response = client.post(
+                f"/{saved_test.id}/start",
+                json={}
+            )
+
+            assert response.status_code == 400
+            data = response.json()
+            assert "등록된 문제가 없습니다" in data["detail"]
+
     def test_submit_test_success(self, temp_db):
         """시험 제출 성공 테스트"""
         from backend.presentation.controllers.tests import router
