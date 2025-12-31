@@ -8,11 +8,12 @@ import UserHistoryUI from './components/organisms/UserHistoryUI';
 import UserProfileUI from './components/organisms/UserProfileUI';
 import AdminUserManagementUI from './components/organisms/AdminUserManagementUI';
 import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
+import AdminDashboardUI from './components/organisms/AdminDashboardUI';
 import { Test, Result, UserPerformance, UserHistory, UserProfile } from './types/api';
 import { testApi, resultApi, userApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-users' | 'admin-questions' | 'error';
+type AppState = 'login' | 'initial' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -372,6 +373,12 @@ function App() {
               {user?.is_admin && (
                 <>
                   <button
+                    onClick={() => setState('admin-dashboard')}
+                    className="admin-button"
+                  >
+                    어드민 - 대시보드
+                  </button>
+                  <button
                     onClick={() => setState('admin-users')}
                     className="admin-button"
                   >
@@ -448,6 +455,12 @@ function App() {
                 돌아가기
               </button>
             </div>
+          </section>
+        )}
+
+        {state === 'admin-dashboard' && (
+          <section className="admin-section">
+            <AdminDashboardUI onBack={handleRestart} />
           </section>
         )}
 

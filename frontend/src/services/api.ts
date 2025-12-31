@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하는 중앙화된 서비스
  */
 
-import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion } from '../types/api';
+import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1';
@@ -476,5 +476,12 @@ export const adminApi = {
     await fetchApi(`/admin/questions/${questionId}`, {
       method: 'DELETE',
     });
+  },
+
+  /**
+   * 통계 조회
+   */
+  async getStatistics(): Promise<AdminStatistics> {
+    return fetchApi<AdminStatistics>('/admin/statistics');
   },
 };
