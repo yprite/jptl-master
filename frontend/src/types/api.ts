@@ -118,3 +118,14 @@ export interface AdminUser {
   is_admin: boolean;
 }
 
+export interface AdminQuestion {
+  id: number;
+  level: string;
+  question_type: string;
+  question_text: string;
+  choices: string[];
+  correct_answer: string;
+  explanation: string;
+  difficulty: number;
+}
+

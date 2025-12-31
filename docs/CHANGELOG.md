@@ -8,6 +8,19 @@
 ## Unreleased
 
 ### Added
+프론트엔드_어드민_문제_관리_UI: 어드민 문제 관리 UI 구현 (2025-01-04)
+- AdminQuestion 타입 정의 추가 (correct_answer, explanation 필드 포함)
+- adminApi 클라이언트에 문제 관리 메서드 추가 (getQuestions, getQuestion, createQuestion, updateQuestion, deleteQuestion)
+- AdminQuestionManagementUI 컴포넌트 생성
+  - 문제 목록 조회 (테이블 형태, 검색 및 필터링 포함)
+  - 문제 상세 조회
+  - 문제 생성 (유효성 검증 포함)
+  - 문제 수정
+  - 문제 삭제 (확인 다이얼로그 포함)
+- App.tsx에 어드민 문제 관리 라우팅 추가 (admin-questions 상태)
+- AdminQuestionManagementUI 테스트 작성 (26개 테스트)
+- 모든 테스트 통과 및 커버리지 92.84% 달성
+
 프론트엔드_어드민_사용자_관리_UI: 어드민 사용자 관리 UI 구현 (2025-01-04)
 - AdminUser 타입 정의 추가 (is_admin 필드 포함)
 - adminApi 클라이언트 추가 (getUsers, getUser, updateUser, deleteUser)

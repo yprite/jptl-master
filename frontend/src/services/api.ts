@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하는 중앙화된 서비스
  */
 
-import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser } from '../types/api';
+import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1';
@@ -412,6 +412,68 @@ export const adminApi = {
    */
   async deleteUser(userId: number): Promise<void> {
     await fetchApi(`/admin/users/${userId}`, {
+      method: 'DELETE',
+    });
+  },
+
+  /**
+   * 전체 문제 목록 조회
+   */
+  async getQuestions(): Promise<AdminQuestion[]> {
+    return fetchApi<AdminQuestion[]>('/admin/questions');
+  },
+
+  /**
+   * 특정 문제 조회
+   */
+  async getQuestion(questionId: number): Promise<AdminQuestion> {
+    return fetchApi<AdminQuestion>(`/admin/questions/${questionId}`);
+  },
+
+  /**
+   * 문제 생성
+   */
+  async createQuestion(request: {
+    level: string;
+    question_type: string;
+    question_text: string;
+    choices: string[];
+    correct_answer: string;
+    explanation: string;
+    difficulty: number;
+  }): Promise<AdminQuestion> {
+    return fetchApi<AdminQuestion>('/admin/questions', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  },
+
+  /**
+   * 문제 수정
+   */
+  async updateQuestion(
+    questionId: number,
+    request: {
+      level?: string;
+      question_type?: string;
+      question_text?: string;
+      choices?: string[];
+      correct_answer?: string;
+      explanation?: string;
+      difficulty?: number;
+    }
+  ): Promise<AdminQuestion> {
+    return fetchApi<AdminQuestion>(`/admin/questions/${questionId}`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    });
+  },
+
+  /**
+   * 문제 삭제
+   */
+  async deleteQuestion(questionId: number): Promise<void> {
+    await fetchApi(`/admin/questions/${questionId}`, {
       method: 'DELETE',
     });
   },
