@@ -114,3 +114,25 @@ http://localhost:8000/static/audio/tts/tts_{hash}.mp3
 - 느린 속도 옵션
 - 오디오 파일 삭제
 
+## 어드민 UI 통합
+
+### 오디오 재생 기능
+
+어드민 문제 관리 UI에서 리스닝 문제의 오디오를 재생할 수 있습니다:
+
+1. **문제 상세 보기**: 문제 목록에서 리스닝 문제를 클릭하면 상세 보기로 이동
+2. **자동 오디오 플레이어 표시**: 
+   - `question_type`이 `listening`이고
+   - `audio_url`이 있는 경우
+   - 오디오 플레이어가 자동으로 표시됩니다
+3. **오디오 재생**: HTML5 audio 요소를 사용하여 재생/일시정지/볼륨 조절 가능
+
+**구현 위치:**
+- `frontend/src/components/organisms/AdminQuestionManagementUI.tsx`
+- `frontend/src/components/organisms/AdminQuestionManagementUI.css`
+
+**사용자 경험:**
+- 어드민이 리스닝 문제를 생성하면 자동으로 TTS 오디오가 생성됨
+- 문제 상세 보기에서 오디오를 바로 재생하여 확인 가능
+- 문제 수정 시 텍스트가 변경되면 자동으로 오디오가 재생성됨
+

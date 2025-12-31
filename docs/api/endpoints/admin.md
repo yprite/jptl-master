@@ -264,17 +264,21 @@
   "data": {
     "id": 1,
     "level": "N5",
-    "question_type": "vocabulary",
+    "question_type": "listening",
     "question_text": "問題",
     "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
     "correct_answer": "選択肢1",
     "explanation": "説明",
     "difficulty": 1,
-    "audio_url": null
+    "audio_url": "/static/audio/tts/tts_abc123def456.mp3"
   },
   "message": "문제 정보 조회 성공"
 }
 ```
+
+**특별 기능:**
+- **오디오 재생**: 리스닝 문제(`question_type`이 `listening`)이고 `audio_url`이 있는 경우, 어드민 UI에서 오디오 플레이어가 자동으로 표시됩니다.
+- 오디오 파일은 `http://localhost:8000{audio_url}` 형식으로 접근 가능합니다.
 
 **에러 응답:**
 - `404 Not Found`: 문제를 찾을 수 없는 경우
@@ -413,10 +417,33 @@
 - `401 Unauthorized`: 인증되지 않은 경우
 - `403 Forbidden`: 어드민 권한이 없는 경우
 
+## 어드민 UI 기능
+
+### 리스닝 문제 오디오 재생
+
+어드민 문제 관리 UI에서 리스닝 문제의 오디오를 재생할 수 있습니다:
+
+1. **문제 목록에서 문제 클릭**: 문제 상세 보기로 이동
+2. **오디오 플레이어 자동 표시**: 
+   - `question_type`이 `listening`이고
+   - `audio_url`이 있는 경우
+   - 오디오 플레이어가 자동으로 표시됩니다
+3. **오디오 재생**: HTML5 audio 요소를 사용하여 재생/일시정지/볼륨 조절 가능
+
+**오디오 파일 접근:**
+- 오디오 파일은 `http://localhost:8000{audio_url}` 형식으로 접근 가능합니다
+- 예: `http://localhost:8000/static/audio/tts/tts_abc123def456.mp3`
+
+**자동 TTS 생성:**
+- 리스닝 문제 생성 시 자동으로 TTS 오디오가 생성됩니다
+- 문제 수정 시 텍스트가 변경되면 자동으로 TTS가 재생성됩니다
+- 자세한 내용은 [TTS 서비스 문서](../../architecture/domain/tts_service.md)를 참고하세요
+
 ## 관련 문서
 
 - [인증 API](./auth.md) - 로그인 및 권한 관리
 - [사용자 API](./users.md) - 일반 사용자 API
 - [테스트 API](./tests.md) - 테스트 관리 API
+- [TTS 서비스](../../architecture/domain/tts_service.md) - TTS 자동 생성 기능
 - [API 스키마](../schemas/README.md) - 요청/응답 스키마 정의
 

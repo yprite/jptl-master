@@ -422,6 +422,20 @@ const AdminQuestionManagementUI: React.FC<AdminQuestionManagementUIProps> = ({ o
               <label>유형:</label>
               <span>{selectedQuestion.question_type}</span>
             </div>
+            {selectedQuestion.question_type === 'listening' && selectedQuestion.audio_url && (
+              <div className="detail-row">
+                <label>오디오:</label>
+                <div className="audio-player-container" data-testid="admin-audio-player">
+                  <audio
+                    controls
+                    src={`http://localhost:8000${selectedQuestion.audio_url}`}
+                    data-testid="admin-audio-element"
+                  >
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
+              </div>
+            )}
             <div className="detail-row">
               <label>문제 내용:</label>
               <span>{selectedQuestion.question_text}</span>
