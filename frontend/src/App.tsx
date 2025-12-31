@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import TestUI from './components/organisms/TestUI';
+import StudyUI from './components/organisms/StudyUI';
 import ResultUI from './components/organisms/ResultUI';
 import LoginUI from './components/organisms/LoginUI';
 import UserPerformanceUI from './components/organisms/UserPerformanceUI';
@@ -10,15 +11,18 @@ import AdminUserManagementUI from './components/organisms/AdminUserManagementUI'
 import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
 import AdminDashboardUI from './components/organisms/AdminDashboardUI';
 import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
-import { Test, Result, UserPerformance, UserHistory, UserProfile } from './types/api';
-import { testApi, resultApi, userApi, ApiError } from './services/api';
+import { Test, Result, UserPerformance, UserHistory, UserProfile, Question } from './types/api';
+import { testApi, resultApi, userApi, studyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
+type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
   const [currentTest, setCurrentTest] = useState<Test | null>(null);
+  const [currentStudyQuestions, setCurrentStudyQuestions] = useState<Question[]>([]);
+  const [studyLevel, setStudyLevel] = useState<string>('N5');
+  const [studyQuestionTypes, setStudyQuestionTypes] = useState<string[]>([]);
   const [currentResult, setCurrentResult] = useState<Result | null>(null);
   const [currentPerformance, setCurrentPerformance] = useState<UserPerformance | null>(null);
   const [currentHistory, setCurrentHistory] = useState<UserHistory[]>([]);
@@ -162,9 +166,82 @@ function App() {
     }
   };
 
+  // 학습 모드 선택 화면으로 이동
+  const handleStartStudy = () => {
+    setState('study-select');
+  };
+
+  // 학습 모드 시작
+  const handleStartStudyMode = async (level: string, questionTypes: string[], questionCount: number = 20) => {
+    // 인증 확인
+    if (!authService.isAuthenticated()) {
+      setState('login');
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const questions = await studyApi.getStudyQuestions({
+        level,
+        question_types: questionTypes.length > 0 ? questionTypes : undefined,
+        question_count: questionCount,
+      });
+      
+      setCurrentStudyQuestions(questions);
+      setStudyLevel(level);
+      setStudyQuestionTypes(questionTypes);
+      setState('study');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else {
+          setError(err.message);
+          setState('error');
+        }
+      } else {
+        setError('학습 모드를 시작하는 중 오류가 발생했습니다.');
+        setState('error');
+      }
+    }
+  };
+
+  // 학습 모드 제출
+  const handleSubmitStudy = async (answers: Record<number, string>) => {
+    if (!currentStudyQuestions.length) return;
+
+    setState('submitting');
+    setError(null);
+
+    try {
+      const timeSpentMinutes = Math.max(1, Math.floor((Date.now() - Date.now()) / 60000) + 1);
+      await studyApi.submitStudySession({
+        answers,
+        level: studyLevel,
+        question_types: studyQuestionTypes.length > 0 ? studyQuestionTypes : undefined,
+        time_spent_minutes: timeSpentMinutes,
+      });
+      
+      // 학습 완료 후 초기 화면으로
+      setCurrentStudyQuestions([]);
+      setState('initial');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('학습 세션 제출 중 오류가 발생했습니다.');
+      }
+      setState('error');
+    }
+  };
+
   // 다시 시작
   const handleRestart = () => {
     setCurrentTest(null);
+    setCurrentStudyQuestions([]);
     setCurrentResult(null);
     setCurrentPerformance(null);
     setCurrentHistory([]);
@@ -355,14 +432,20 @@ function App() {
 
         {state === 'initial' && (
           <section className="initial-section">
-            <h2>N5 진단 테스트</h2>
-            <p>JLPT N5 레벨 진단 테스트를 시작하세요.</p>
+            <h2>JLPT 학습 플랫폼</h2>
+            <p>테스트 모드와 학습 모드 중 선택하세요.</p>
             <div className="initial-actions">
               <button
                 onClick={handleStartTest}
                 className="start-button"
               >
-                테스트 시작
+                테스트 모드
+              </button>
+              <button
+                onClick={handleStartStudy}
+                className="study-button"
+              >
+                학습 모드
               </button>
               <button
                 onClick={handleViewPerformance}
@@ -408,9 +491,77 @@ function App() {
           </section>
         )}
 
+        {state === 'study-select' && (
+          <section className="study-select-section">
+            <h2>학습 모드 설정</h2>
+            <div className="study-select-form">
+              <div className="form-group">
+                <label>레벨 선택:</label>
+                <select
+                  value={studyLevel}
+                  onChange={(e) => setStudyLevel(e.target.value)}
+                  className="form-select"
+                >
+                  <option value="N5">N5</option>
+                  <option value="N4">N4</option>
+                  <option value="N3">N3</option>
+                  <option value="N2">N2</option>
+                  <option value="N1">N1</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>문제 유형 선택 (복수 선택 가능):</label>
+                <div className="checkbox-group">
+                  {['VOCABULARY', 'GRAMMAR', 'READING', 'LISTENING'].map((type) => (
+                    <label key={type} className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={studyQuestionTypes.includes(type)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setStudyQuestionTypes([...studyQuestionTypes, type]);
+                          } else {
+                            setStudyQuestionTypes(studyQuestionTypes.filter(t => t !== type));
+                          }
+                        }}
+                      />
+                      {type === 'VOCABULARY' ? '어휘' : 
+                       type === 'GRAMMAR' ? '문법' : 
+                       type === 'READING' ? '독해' : '청해'}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div className="form-actions">
+                <button
+                  onClick={() => handleStartStudyMode(studyLevel, studyQuestionTypes, 20)}
+                  className="start-button"
+                >
+                  학습 시작
+                </button>
+                <button
+                  onClick={() => setState('initial')}
+                  className="back-button"
+                >
+                  돌아가기
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
         {state === 'loading' && (
           <section className="loading-section">
             <div className="loading-spinner">테스트를 준비하는 중...</div>
+          </section>
+        )}
+
+        {state === 'study' && currentStudyQuestions.length > 0 && (
+          <section className="study-section">
+            <StudyUI 
+              questions={currentStudyQuestions} 
+              onSubmit={handleSubmitStudy} 
+            />
           </section>
         )}
 

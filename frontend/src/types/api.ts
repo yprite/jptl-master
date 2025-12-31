@@ -10,6 +10,8 @@ export interface Question {
   choices: string[];
   difficulty: number;
   audio_url?: string | null;
+  correct_answer?: string;
+  explanation?: string;
 }
 
 export interface Test {
