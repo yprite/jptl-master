@@ -323,23 +323,29 @@ function App() {
     );
   }
 
+  // 어드민 페이지인지 확인
+  const isAdminPage = state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions';
+
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>JLPT 자격 검증 프로그램</h1>
-        {user && (
-          <div className="user-info">
-            <span>안녕하세요, {user.username}님</span>
-            <button
-              onClick={handleLogout}
-              className="logout-button"
-              aria-label="로그아웃"
-            >
-              로그아웃
-            </button>
-          </div>
-        )}
-      </header>
+      {/* 어드민 페이지가 아닐 때만 일반 헤더 표시 */}
+      {!isAdminPage && (
+        <header className="App-header">
+          <h1>JLPT 자격 검증 프로그램</h1>
+          {user && (
+            <div className="user-info">
+              <span>안녕하세요, {user.username}님</span>
+              <button
+                onClick={handleLogout}
+                className="logout-button"
+                aria-label="로그아웃"
+              >
+                로그아웃
+              </button>
+            </div>
+          )}
+        </header>
+      )}
       <main className="App-main">
         {state === 'login' && (
           <section className="login-section">
@@ -469,6 +475,7 @@ function App() {
             currentPage={state as AdminPage}
             onNavigate={handleAdminNavigate}
             onBack={handleRestart}
+            onLogout={handleLogout}
           >
             {state === 'admin-dashboard' && <AdminDashboardUI />}
             {state === 'admin-users' && <AdminUserManagementUI />}

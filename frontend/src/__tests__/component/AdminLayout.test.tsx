@@ -60,6 +60,8 @@ describe('AdminLayout', () => {
       </AdminLayout>
     );
 
+    expect(screen.getByText('JLPT 자격 검증 프로그램 - 어드민')).toBeInTheDocument();
+    expect(screen.getByText('어드민 관리')).toBeInTheDocument();
     expect(screen.getByText('대시보드')).toBeInTheDocument();
     expect(screen.getByText('사용자 관리')).toBeInTheDocument();
     expect(screen.getByText('문제 관리')).toBeInTheDocument();

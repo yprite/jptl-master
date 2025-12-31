@@ -13,6 +13,7 @@ interface AdminLayoutProps {
   currentPage: AdminPage;
   onNavigate: (page: AdminPage) => void;
   onBack?: () => void;
+  onLogout?: () => void;
   children: React.ReactNode;
 }
 
@@ -20,6 +21,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
   currentPage,
   onNavigate,
   onBack,
+  onLogout,
   children,
 }) => {
   const user = authService.getCurrentUser();
@@ -43,6 +45,32 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
 
   return (
     <div className="admin-layout">
+      <header className="admin-header">
+        <h1>JLPT 자격 검증 프로그램 - 어드민</h1>
+        {user && (
+          <div className="admin-user-info">
+            <span>어드민: {user.username}님</span>
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="admin-back-button"
+                aria-label="일반 페이지로 돌아가기"
+              >
+                일반 페이지로
+              </button>
+            )}
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="admin-logout-button"
+                aria-label="로그아웃"
+              >
+                로그아웃
+              </button>
+            )}
+          </div>
+        )}
+      </header>
       <AdminNavigation
         currentPage={currentPage}
         onNavigate={onNavigate}
