@@ -25,12 +25,12 @@ class SqliteQuestionRepository:
                 # 새 문제 생성
                 cursor = conn.execute("""
                     INSERT INTO questions (level, question_type, question_text,
-                                         choices, correct_answer, explanation, difficulty)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                                         choices, correct_answer, explanation, difficulty, audio_url)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     data['level'], data['question_type'], data['question_text'],
                     data['choices'], data['correct_answer'], data['explanation'],
-                    data['difficulty']
+                    data['difficulty'], data.get('audio_url')
                 ))
 
                 # 생성된 ID를 문제 객체에 설정
@@ -40,12 +40,12 @@ class SqliteQuestionRepository:
                 conn.execute("""
                     UPDATE questions
                     SET level = ?, question_type = ?, question_text = ?,
-                        choices = ?, correct_answer = ?, explanation = ?, difficulty = ?
+                        choices = ?, correct_answer = ?, explanation = ?, difficulty = ?, audio_url = ?
                     WHERE id = ?
                 """, (
                     data['level'], data['question_type'], data['question_text'],
                     data['choices'], data['correct_answer'], data['explanation'],
-                    data['difficulty'], question.id
+                    data['difficulty'], data.get('audio_url'), question.id
                 ))
 
             conn.commit()

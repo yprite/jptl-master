@@ -3,7 +3,7 @@ JLPT Question 도메인 엔티티
 JLPT 문제의 도메인 로직을 표현
 """
 
-from typing import List
+from typing import List, Optional
 from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 
 
@@ -24,7 +24,8 @@ class Question:
         choices: List[str],
         correct_answer: str,
         explanation: str,
-        difficulty: int
+        difficulty: int,
+        audio_url: Optional[str] = None
     ):
         """
         Question 엔티티 초기화
@@ -38,6 +39,7 @@ class Question:
             correct_answer: 정답
             explanation: 해설
             difficulty: 난이도 (1-5)
+            audio_url: 오디오 파일 URL (선택적, 리스닝 문제용)
 
         Raises:
             ValueError: 유효성 검증 실패 시
@@ -55,6 +57,7 @@ class Question:
         self.correct_answer = correct_answer
         self.explanation = explanation
         self.difficulty = difficulty
+        self.audio_url = audio_url
 
     def _validate_question_text(self, question_text: str) -> None:
         """문제 내용 검증"""
