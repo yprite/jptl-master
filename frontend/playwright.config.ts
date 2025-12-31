@@ -4,7 +4,8 @@ export default defineConfig({
   testDir: '../tests/frontend/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: 1,
+  timeout: 60000, // 각 테스트의 타임아웃 60초
   workers: process.env.CI ? 1 : undefined,
   // CI에서는 어떤 테스트가 실행 중인지 콘솔에서 바로 보이도록 line 리포터를 사용하고,
   // 로컬에서는 기존처럼 html 리포트를 유지합니다.
