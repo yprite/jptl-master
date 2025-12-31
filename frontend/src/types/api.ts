@@ -9,6 +9,7 @@ export interface Question {
   question_text: string;
   choices: string[];
   difficulty: number;
+  audio_url?: string | null;
 }
 
 export interface Test {
@@ -127,6 +128,7 @@ export interface AdminQuestion {
   correct_answer: string;
   explanation: string;
   difficulty: number;
+  audio_url?: string | null;
 }
 
 export interface AdminStatistics {

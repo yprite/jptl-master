@@ -24,6 +24,7 @@ const TestUI: React.FC<TestUIProps> = ({
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>(userAnswers);
+  const [audioPlaying, setAudioPlaying] = useState(false);
 
   const currentQuestion = test.questions[currentQuestionIndex];
   const totalQuestions = test.questions.length;
@@ -94,6 +95,20 @@ const TestUI: React.FC<TestUIProps> = ({
             난이도: {currentQuestion.difficulty}
           </span>
         </div>
+        {currentQuestion.audio_url && (
+          <div className="audio-player-container" data-testid="audio-player">
+            <audio
+              controls
+              src={`http://localhost:8000${currentQuestion.audio_url}`}
+              onPlay={() => setAudioPlaying(true)}
+              onPause={() => setAudioPlaying(false)}
+              onEnded={() => setAudioPlaying(false)}
+              data-testid="audio-element"
+            >
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        )}
         <div className="question-text">{currentQuestion.question_text}</div>
         <div className="question-choices">
           {currentQuestion.choices.map((choice, index) => (

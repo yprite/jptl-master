@@ -22,6 +22,20 @@ class QuestionMapper:
             except (json.JSONDecodeError, ValueError) as e:
                 raise ValueError(f"Invalid choices JSON: {e}")
 
+        # audio_url은 선택적 필드이므로 키가 없을 수 있음
+        audio_url = None
+        try:
+            # sqlite3.Row나 MockRow 모두 처리
+            if hasattr(row, 'keys') and 'audio_url' in row.keys():
+                audio_url = row['audio_url']
+            elif hasattr(row, '__getitem__'):
+                try:
+                    audio_url = row['audio_url']
+                except (KeyError, IndexError):
+                    pass
+        except Exception:
+            pass
+
         return Question(
             id=row['id'],
             level=JLPTLevel(row['level']),
@@ -30,7 +44,8 @@ class QuestionMapper:
             choices=choices,
             correct_answer=row['correct_answer'],
             explanation=row['explanation'],
-            difficulty=row['difficulty']
+            difficulty=row['difficulty'],
+            audio_url=audio_url
         )
 
     @staticmethod
@@ -43,7 +58,8 @@ class QuestionMapper:
             'choices': json.dumps(question.choices),
             'correct_answer': question.correct_answer,
             'explanation': question.explanation,
-            'difficulty': question.difficulty
+            'difficulty': question.difficulty,
+            'audio_url': question.audio_url
         }
         return data
 

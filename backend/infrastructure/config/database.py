@@ -85,9 +85,20 @@ class Database:
                     correct_answer TEXT NOT NULL,
                     explanation TEXT NOT NULL,
                     difficulty INTEGER NOT NULL,
+                    audio_url TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
+            
+            # 기존 테이블에 audio_url 컬럼이 없는 경우 마이그레이션
+            try:
+                cursor = conn.execute("PRAGMA table_info(questions)")
+                columns = [col[1] for col in cursor.fetchall()]
+                if 'audio_url' not in columns:
+                    conn.execute("ALTER TABLE questions ADD COLUMN audio_url TEXT")
+            except Exception:
+                # 테이블이 없거나 다른 오류가 발생한 경우 무시 (CREATE TABLE IF NOT EXISTS가 처리함)
+                pass
 
             # 테스트 테이블
             conn.execute("""

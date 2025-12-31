@@ -5,9 +5,11 @@ DDD(Domain-Driven Design) 기반으로 구현
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from datetime import datetime
 import secrets
+import os
 
 from backend.presentation.controllers import router as api_router
 from backend.infrastructure.config.database import get_database
@@ -46,6 +48,13 @@ app.add_middleware(
 
 # API 라우터 등록
 app.include_router(api_router, prefix="/api/v1")
+
+# 정적 파일 서빙 설정 (오디오 파일용)
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+audio_dir = os.path.join(static_dir, "audio")
+os.makedirs(audio_dir, exist_ok=True)  # 오디오 디렉토리 생성
+
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.on_event("startup")
 async def startup_event():

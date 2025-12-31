@@ -387,3 +387,34 @@ class TestQuestionType:
         # Then
         assert hash(question1) == hash(question2)  # 같은 ID
         assert hash(question1) != hash(question3)  # 다른 ID
+
+    def test_question_with_audio_url(self):
+        """audio_url 필드가 있는 Question 생성 테스트"""
+        question = Question(
+            id=1,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.LISTENING,
+            question_text="リスニング問題",
+            choices=["A", "B", "C", "D"],
+            correct_answer="A",
+            explanation="説明",
+            difficulty=1,
+            audio_url="/static/audio/question_1.mp3"
+        )
+
+        assert question.audio_url == "/static/audio/question_1.mp3"
+
+    def test_question_without_audio_url(self):
+        """audio_url 필드가 없는 Question 생성 테스트 (기본값 None)"""
+        question = Question(
+            id=1,
+            level=JLPTLevel.N5,
+            question_type=QuestionType.VOCABULARY,
+            question_text="問題",
+            choices=["A", "B"],
+            correct_answer="A",
+            explanation="説明",
+            difficulty=1
+        )
+
+        assert question.audio_url is None
