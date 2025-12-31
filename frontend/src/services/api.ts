@@ -380,6 +380,73 @@ export const authApi = {
 };
 
 /**
+ * 학습 모드 관련 API
+ */
+export const studyApi = {
+  /**
+   * 학습 모드용 문제 조회
+   */
+  async getStudyQuestions(request: {
+    level: string;
+    question_types?: string[];
+    question_count?: number;
+  }): Promise<Question[]> {
+    const params = new URLSearchParams();
+    params.append('level', request.level);
+    if (request.question_types && request.question_types.length > 0) {
+      request.question_types.forEach(type => params.append('question_types', type));
+    }
+    if (request.question_count) {
+      params.append('question_count', request.question_count.toString());
+    }
+    return fetchApi<Question[]>(`/study/questions?${params.toString()}`);
+  },
+
+  /**
+   * 학습 세션 제출
+   */
+  async submitStudySession(request: {
+    answers: Record<number, string>;
+    level?: string;
+    question_types?: string[];
+    time_spent_minutes: number;
+  }): Promise<{
+    success: boolean;
+    data: {
+      study_session_id: number;
+      total_questions: number;
+      correct_count: number;
+      accuracy: number;
+      time_spent_minutes: number;
+      level: string | null;
+      question_types: string[] | null;
+    };
+    message: string;
+  }> {
+    return fetchApi('/study/submit', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  },
+
+  /**
+   * 틀린 문제 목록 조회
+   */
+  async getWrongAnswerQuestions(): Promise<Question[]> {
+    return fetchApi<Question[]>('/study/wrong-answers');
+  },
+
+  /**
+   * 틀린 문제만으로 학습 시작
+   */
+  async getWrongAnswerQuestionsForStudy(questionCount: number = 20): Promise<Question[]> {
+    const params = new URLSearchParams();
+    params.append('question_count', questionCount.toString());
+    return fetchApi<Question[]>(`/study/wrong-answers/questions?${params.toString()}`);
+  },
+};
+
+/**
  * 어드민 관련 API
  */
 export const adminApi = {

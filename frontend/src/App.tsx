@@ -14,7 +14,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile } from './types
 import { testApi, resultApi, userApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
+type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'wrong-answers' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -382,6 +382,12 @@ function App() {
               >
                 프로필 관리
               </button>
+              <button
+                onClick={handleViewWrongAnswers}
+                className="wrong-answers-button"
+              >
+                오답 노트
+              </button>
               {user?.is_admin && (
                 <>
                   <button
@@ -467,6 +473,50 @@ function App() {
                 돌아가기
               </button>
             </div>
+          </section>
+        )}
+
+        {state === 'wrong-answers' && (
+          <section className="wrong-answers-section">
+            <h2>오답 노트</h2>
+            {currentStudyQuestions.length === 0 ? (
+              <div className="empty-state">
+                <p>틀린 문제가 없습니다. 먼저 테스트를 응시해주세요.</p>
+                <button onClick={handleRestart} className="back-button">
+                  돌아가기
+                </button>
+              </div>
+            ) : (
+              <div className="wrong-answers-content">
+                <p>총 {currentStudyQuestions.length}개의 틀린 문제가 있습니다.</p>
+                <div className="wrong-answers-actions">
+                  <button
+                    onClick={() => handleStartWrongAnswerStudy(20)}
+                    className="start-button"
+                  >
+                    틀린 문제 20개로 학습 시작
+                  </button>
+                  <button
+                    onClick={() => handleStartWrongAnswerStudy(Math.min(currentStudyQuestions.length, 50))}
+                    className="start-button"
+                  >
+                    틀린 문제 전체로 학습 시작
+                  </button>
+                  <button onClick={handleRestart} className="back-button">
+                    돌아가기
+                  </button>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {state === 'study' && currentStudyQuestions.length > 0 && (
+          <section className="study-section">
+            <StudyUI 
+              questions={currentStudyQuestions} 
+              onSubmit={handleSubmitStudy} 
+            />
           </section>
         )}
 
