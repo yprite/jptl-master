@@ -9,6 +9,7 @@ import UserProfileUI from './components/organisms/UserProfileUI';
 import AdminUserManagementUI from './components/organisms/AdminUserManagementUI';
 import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
 import AdminDashboardUI from './components/organisms/AdminDashboardUI';
+import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
 import { Test, Result, UserPerformance, UserHistory, UserProfile } from './types/api';
 import { testApi, resultApi, userApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
@@ -170,6 +171,11 @@ function App() {
     setCurrentProfile(null);
     setError(null);
     setState('initial');
+  };
+
+  // 어드민 페이지 네비게이션
+  const handleAdminNavigate = (page: AdminPage) => {
+    setState(page);
   };
 
   // 성능 분석 조회
@@ -458,22 +464,16 @@ function App() {
           </section>
         )}
 
-        {state === 'admin-dashboard' && (
-          <section className="admin-section">
-            <AdminDashboardUI onBack={handleRestart} />
-          </section>
-        )}
-
-        {state === 'admin-users' && (
-          <section className="admin-section">
-            <AdminUserManagementUI onBack={handleRestart} />
-          </section>
-        )}
-
-        {state === 'admin-questions' && (
-          <section className="admin-section">
-            <AdminQuestionManagementUI onBack={handleRestart} />
-          </section>
+        {(state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions') && (
+          <AdminLayout
+            currentPage={state as AdminPage}
+            onNavigate={handleAdminNavigate}
+            onBack={handleRestart}
+          >
+            {state === 'admin-dashboard' && <AdminDashboardUI />}
+            {state === 'admin-users' && <AdminUserManagementUI />}
+            {state === 'admin-questions' && <AdminQuestionManagementUI />}
+          </AdminLayout>
         )}
 
         {state === 'error' && (
