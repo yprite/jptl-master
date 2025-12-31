@@ -267,6 +267,13 @@ async def start_test(
     if not test:
         raise HTTPException(status_code=404, detail="시험을 찾을 수 없습니다")
 
+    # 문제가 없는 경우 에러 발생
+    if not test.questions or len(test.questions) == 0:
+        raise HTTPException(
+            status_code=400,
+            detail="시험에 등록된 문제가 없습니다. 테스트를 다시 생성해주세요."
+        )
+
     try:
         test.start_test()
         saved_test = repo.save(test)
