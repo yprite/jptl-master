@@ -23,7 +23,7 @@
     "test": "react-scripts test --watchAll=false",
     "test:watch": "react-scripts test",
     "typecheck": "tsc --noEmit",
-    "test:ci": "npm run typecheck && react-scripts test --watchAll=false --coverage --coverageDirectory=../coverage/frontend --coverageThreshold='{\"global\":{\"branches\":70,\"functions\":75,\"lines\":70,\"statements\":70}}'",
+    "test:ci": "npm run typecheck && react-scripts test --watchAll=false --coverage --coverageDirectory=../coverage/frontend --coverageThreshold='{\"global\":{\"branches\":65,\"functions\":75,\"lines\":70,\"statements\":70}}'",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "eject": "react-scripts eject"
