@@ -1684,6 +1684,76 @@ class TestStudyController:
             response = client.get("/questions?level=N5")
             assert response.status_code == 401  # 또는 403, 인증 실패
 
+    def test_submit_study_session_success(self, temp_db):
+        """학습 모드 세션 제출 성공 테스트"""
+        from backend.presentation.controllers.study import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+        from backend.presentation.controllers.auth import get_current_user
+        from backend.domain.entities.user import User
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.study.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 문제 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            questions = []
+            for i in range(3):
+                question = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"문제 {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    difficulty=1
+                )
+                saved_q = question_repo.save(question)
+                questions.append(saved_q)
+
+            # 사용자 생성 및 인증 모킹
+            from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+
+            # 인증 의존성 오버라이드
+            def get_current_user_override():
+                return saved_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                # 학습 모드 세션 제출
+                answers = {q.id: "A" for q in questions}
+                response = client.post(
+                    "/submit",
+                    json={
+                        "answers": answers,
+                        "level": "N5",
+                        "question_types": ["VOCABULARY"],
+                        "time_spent_minutes": 10
+                    }
+                )
+                assert response.status_code == 200
+                data = response.json()
+                assert data["success"] is True
+                assert "study_session_id" in data["data"]
+                assert data["data"]["total_questions"] == 3
+                assert data["data"]["correct_count"] == 3
+                assert "accuracy" in data["data"]
+            finally:
+                app.dependency_overrides.clear()
+
 
 class TestMainApp:
     """메인 애플리케이션 테스트"""
