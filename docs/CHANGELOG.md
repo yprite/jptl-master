@@ -8,6 +8,13 @@
 ## Unreleased
 
 ### Added
+프론트엔드_어드민_라우팅_및_네비게이션: 어드민 UI 라우팅 및 네비게이션 구현 (2025-01-04)
+- AdminLayout 컴포넌트 생성 (권한 체크 및 리다이렉트 기능 포함)
+- AdminNavigation 컴포넌트 생성 (대시보드, 사용자 관리, 문제 관리 네비게이션 메뉴)
+- App.tsx에 어드민 레이아웃 적용
+- 어드민 페이지 간 네비게이션 기능 추가
+- AdminLayout 및 AdminNavigation 테스트 작성 (9개 테스트)
+- 모든 테스트 통과 및 커버리지 92.58% 유지
 프론트엔드_어드민_문제_관리_UI: 어드민 문제 관리 UI 구현 (2025-01-04)
 - AdminQuestion 타입 정의 추가 (correct_answer, explanation 필드 포함)
 - adminApi 클라이언트에 문제 관리 메서드 추가 (getQuestions, getQuestion, createQuestion, updateQuestion, deleteQuestion)
