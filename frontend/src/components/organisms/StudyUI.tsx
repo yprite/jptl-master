@@ -1,73 +1,36 @@
 /**
  * Study UI 컴포넌트
- * 학습 모드에서 문제를 표시하고 즉시 피드백을 제공하는 컴포넌트
+ * 학습 모드에서 문제를 표시하고 관리하는 컴포넌트
+ * 테스트 모드와 달리 즉시 피드백과 해설을 제공
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Question } from '../../types/api';
 import './StudyUI.css';
 
 interface StudyUIProps {
   questions: Question[];
-  onAnswerSelect?: (questionId: number, answer: string) => void;
   onSubmit?: (answers: Record<number, string>) => void;
-  userAnswers?: Record<number, string>;
-  readonly?: boolean;
-}
-
-interface QuestionResult {
-  questionId: number;
-  isCorrect: boolean;
-  userAnswer: string;
-  correctAnswer: string;
 }
 
 const StudyUI: React.FC<StudyUIProps> = ({
   questions,
-  onAnswerSelect,
   onSubmit,
-  userAnswers = {},
-  readonly = false,
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string>>(userAnswers);
-  const [results, setResults] = useState<Record<number, QuestionResult>>({});
-  const [showExplanation, setShowExplanation] = useState<Record<number, boolean>>({});
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [showFeedback, setShowFeedback] = useState<Record<number, boolean>>({});
   const [audioPlaying, setAudioPlaying] = useState(false);
-  const [startTime] = useState(Date.now());
 
   const currentQuestion = questions[currentQuestionIndex];
   const totalQuestions = questions.length;
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
-  const answeredCount = Object.keys(answers).length;
-  const correctCount = Object.values(results).filter(r => r.isCorrect).length;
-  const accuracy = answeredCount > 0 ? (correctCount / answeredCount) * 100 : 0;
 
-  // 답안 선택 시 즉시 피드백
   const handleAnswerChange = (questionId: number, answer: string) => {
     const newAnswers = { ...answers, [questionId]: answer };
     setAnswers(newAnswers);
-
-    // 즉시 정답 확인
-    const question = questions.find(q => q.id === questionId);
-    if (question && question.correct_answer) {
-      const isCorrect = question.correct_answer === answer;
-      setResults(prev => ({
-        ...prev,
-        [questionId]: {
-          questionId,
-          isCorrect,
-          userAnswer: answer,
-          correctAnswer: question.correct_answer!,
-        },
-      }));
-      // 해설 자동 표시
-      setShowExplanation(prev => ({ ...prev, [questionId]: true }));
-    }
-
-    if (onAnswerSelect) {
-      onAnswerSelect(questionId, answer);
-    }
+    // 답안 선택 시 즉시 피드백 표시
+    setShowFeedback({ ...showFeedback, [questionId]: true });
   };
 
   const handleNext = () => {
@@ -84,21 +47,14 @@ const StudyUI: React.FC<StudyUIProps> = ({
 
   const handleSubmit = () => {
     if (onSubmit) {
-      const timeSpentMinutes = Math.max(1, Math.floor((Date.now() - startTime) / 60000));
       onSubmit(answers);
     }
   };
 
-  const toggleExplanation = (questionId: number) => {
-    setShowExplanation(prev => ({
-      ...prev,
-      [questionId]: !prev[questionId],
-    }));
-  };
-
-  const currentResult = results[currentQuestion.id];
-  const isAnswered = answers[currentQuestion.id] !== undefined;
-  const showCurrentExplanation = showExplanation[currentQuestion.id] || false;
+  const isAllAnswered = questions.every((q) => answers[q.id]);
+  const currentAnswer = answers[currentQuestion?.id] || '';
+  const isCorrect = currentQuestion && currentAnswer === currentQuestion.correct_answer;
+  const showCurrentFeedback = currentQuestion && showFeedback[currentQuestion.id];
 
   if (!currentQuestion) {
     return <div className="study-ui">학습할 문제가 없습니다.</div>;
@@ -106,115 +62,86 @@ const StudyUI: React.FC<StudyUIProps> = ({
 
   return (
     <div className="study-ui" data-testid="study-ui">
-      <div className="study-ui-header">
-        <h2 className="study-title">학습 모드</h2>
-        <div className="study-meta">
-          <span className="study-progress-info">
-            진행: {answeredCount} / {totalQuestions} 문제
-          </span>
-          <span className="study-accuracy">
-            정확도: {accuracy.toFixed(1)}%
+      <div className="study-header">
+        <h2>학습 모드</h2>
+        <div className="study-progress">
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+          </div>
+          <span className="progress-text">
+            {currentQuestionIndex + 1} / {totalQuestions}
           </span>
         </div>
       </div>
 
-      <div className="study-progress">
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{ width: `${progress}%` }}
-            data-testid="progress-bar"
-          />
-        </div>
-        <div className="progress-text">
-          문제 {currentQuestionIndex + 1} / {totalQuestions}
-        </div>
-      </div>
-
-      <div className="question-container">
+d      <div className="study-question">
         <div className="question-header">
           <span className="question-type">{currentQuestion.question_type}</span>
-          <span className="question-difficulty">
-            난이도: {currentQuestion.difficulty}
-          </span>
+          <span className="question-level">{currentQuestion.level}</span>
+          <span className="question-difficulty">난이도: {currentQuestion.difficulty}</span>
         </div>
+
+        <div className="question-text">{currentQuestion.question_text}</div>
+
         {currentQuestion.audio_url && (
-          <div className="audio-player-container" data-testid="audio-player">
+          <div className="audio-player">
             <audio
+              src={currentQuestion.audio_url}
               controls
-              src={`http://localhost:8000${currentQuestion.audio_url}`}
               onPlay={() => setAudioPlaying(true)}
               onPause={() => setAudioPlaying(false)}
               onEnded={() => setAudioPlaying(false)}
-              data-testid="audio-element"
-            >
-              Your browser does not support the audio element.
-            </audio>
+            />
           </div>
         )}
-        <div className="question-text">{currentQuestion.question_text}</div>
-        <div className="question-choices">
+
+        <div className="choices">
           {currentQuestion.choices.map((choice, index) => {
-            const isSelected = answers[currentQuestion.id] === choice;
-            const isCorrect = choice === currentQuestion.correct_answer;
-            const isWrong = isSelected && !isCorrect && isAnswered;
+            const choiceLabel = String.fromCharCode(65 + index); // A, B, C, D
+            const isSelected = currentAnswer === choiceLabel;
+            const isCorrectChoice = choiceLabel === currentQuestion.correct_answer;
+            let choiceClass = 'choice';
             
+            if (showCurrentFeedback) {
+              if (isCorrectChoice) {
+                choiceClass += ' correct';
+              } else if (isSelected && !isCorrectChoice) {
+                choiceClass += ' incorrect';
+              }
+            }
+
             return (
-              <label
-                key={index}
-                className={`choice-option ${
-                  isSelected ? 'selected' : ''
-                } ${isAnswered && isCorrect ? 'correct' : ''} ${
-                  isWrong ? 'wrong' : ''
-                }`}
-              >
+              <label key={index} className={choiceClass}>
                 <input
                   type="radio"
                   name={`question-${currentQuestion.id}`}
-                  value={choice}
+                  value={choiceLabel}
                   checked={isSelected}
-                  onChange={(e) =>
-                    handleAnswerChange(currentQuestion.id, e.target.value)
-                  }
-                  disabled={readonly || isAnswered}
-                  data-testid={`choice-${currentQuestion.id}-${index}`}
+                  onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                  disabled={showCurrentFeedback}
                 />
+                <span className="choice-label">{choiceLabel}.</span>
                 <span className="choice-text">{choice}</span>
-                {isAnswered && isCorrect && (
-                  <span className="feedback-icon correct-icon">✓</span>
-                )}
-                {isWrong && (
-                  <span className="feedback-icon wrong-icon">✗</span>
-                )}
               </label>
             );
           })}
         </div>
 
-        {isAnswered && currentResult && (
-          <div className={`feedback-container ${currentResult.isCorrect ? 'correct' : 'wrong'}`}>
-            <div className="feedback-message">
-              {currentResult.isCorrect ? (
-                <span className="correct-message">정답입니다! ✓</span>
+        {showCurrentFeedback && (
+          <div className={`feedback ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`}>
+            <div className="feedback-header">
+              {isCorrect ? (
+                <span className="feedback-icon">✓</span>
               ) : (
-                <span className="wrong-message">
-                  오답입니다. 정답은 "{currentResult.correctAnswer}"입니다.
-                </span>
+                <span className="feedback-icon">✗</span>
               )}
+              <span className="feedback-text">
+                {isCorrect ? '정답입니다!' : `오답입니다. 정답은 ${currentQuestion.correct_answer}입니다.`}
+              </span>
             </div>
             {currentQuestion.explanation && (
-              <div className="explanation-section">
-                <button
-                  className="explanation-toggle"
-                  onClick={() => toggleExplanation(currentQuestion.id)}
-                >
-                  {showCurrentExplanation ? '해설 숨기기' : '해설 보기'}
-                </button>
-                {showCurrentExplanation && (
-                  <div className="explanation-text">
-                    {currentQuestion.explanation}
-                  </div>
-                )}
+              <div className="explanation">
+                <strong>해설:</strong> {currentQuestion.explanation}
               </div>
             )}
           </div>
@@ -224,50 +151,25 @@ const StudyUI: React.FC<StudyUIProps> = ({
       <div className="study-navigation">
         <button
           onClick={handlePrevious}
-          disabled={currentQuestionIndex === 0 || readonly}
+          disabled={currentQuestionIndex === 0}
           className="nav-button prev-button"
-          data-testid="prev-button"
         >
           이전
         </button>
-        <div className="question-indicators">
-          {questions.map((q, index) => {
-            const isAnswered = answers[q.id] !== undefined;
-            const result = results[q.id];
-            return (
-              <button
-                key={q.id}
-                onClick={() => setCurrentQuestionIndex(index)}
-                disabled={readonly}
-                className={`question-indicator ${
-                  isAnswered ? 'answered' : ''
-                } ${result?.isCorrect ? 'correct' : ''} ${
-                  result && !result.isCorrect ? 'wrong' : ''
-                } ${index === currentQuestionIndex ? 'current' : ''}`}
-                data-testid={`question-indicator-${q.id}`}
-              >
-                {index + 1}
-              </button>
-            );
-          })}
-        </div>
         {currentQuestionIndex < totalQuestions - 1 ? (
           <button
             onClick={handleNext}
-            disabled={readonly}
             className="nav-button next-button"
-            data-testid="next-button"
           >
             다음
           </button>
         ) : (
           <button
             onClick={handleSubmit}
-            disabled={readonly}
+            disabled={!isAllAnswered}
             className="nav-button submit-button"
-            data-testid="submit-button"
           >
-            학습 완료
+            제출
           </button>
         )}
       </div>

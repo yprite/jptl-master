@@ -2,8 +2,8 @@
 StudySession 엔티티와 데이터베이스 행 간 변환 매퍼
 """
 
-import sqlite3
 import json
+import sqlite3
 from datetime import datetime, date
 from typing import Dict, Any, Optional, List
 from backend.domain.entities.study_session import StudySession
@@ -62,6 +62,7 @@ class StudySessionMapper:
             time_spent_minutes=row['time_spent_minutes'],
             level=level,
             question_types=question_types,
+            question_ids=question_ids,
             created_at=created_at
         )
 
@@ -71,6 +72,7 @@ class StudySessionMapper:
     def to_dict(study_session: StudySession) -> Dict[str, Any]:
         """StudySession 엔티티를 데이터베이스 행으로 변환"""
         data = {
+            'id': study_session.id,
             'user_id': study_session.user_id,
             'study_date': study_session.study_date.isoformat() if study_session.study_date else None,
             'study_hour': study_session.study_hour,
@@ -79,27 +81,30 @@ class StudySessionMapper:
             'time_spent_minutes': study_session.time_spent_minutes,
             'level': study_session.level.value if study_session.level else None,
             'question_types': json.dumps([qt.value for qt in study_session.question_types]) if study_session.question_types else None,
+            'question_ids': json.dumps(study_session.question_ids) if study_session.question_ids else None,
             'created_at': study_session.created_at.isoformat() if study_session.created_at else None
         }
         return data
 
     @staticmethod
-    def _parse_datetime(datetime_str: Optional[str]) -> Optional[datetime]:
-        """ISO 형식의 datetime 문자열을 datetime 객체로 변환"""
-        if not datetime_str:
-            return None
+    def _parse_datetime(datetime_str: str) -> datetime:
+        """문자열을 datetime으로 파싱"""
         try:
-            return datetime.fromisoformat(datetime_str)
-        except (ValueError, TypeError):
-            return None
+            return datetime.fromisoformat(datetime_str.replace('Z', '+00:00'))
+        except (ValueError, AttributeError):
+            try:
+                return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                return datetime.now()
 
     @staticmethod
-    def _parse_date(date_str: Optional[str]) -> Optional[date]:
-        """ISO 형식의 date 문자열을 date 객체로 변환"""
-        if not date_str:
-            return None
+    def _parse_date(date_str: str) -> date:
+        """문자열을 date로 파싱"""
         try:
             return date.fromisoformat(date_str)
-        except (ValueError, TypeError):
-            return None
+        except (ValueError, AttributeError):
+            try:
+                return datetime.strptime(date_str, '%Y-%m-%d').date()
+            except ValueError:
+                return date.today()
 

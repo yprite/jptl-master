@@ -7,10 +7,12 @@ from fastapi import APIRouter, HTTPException, Depends, Query
 from pydantic import BaseModel
 from typing import Optional, List, Dict
 from datetime import datetime, date
+import random
 from backend.domain.entities.user import User
 from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
 from backend.infrastructure.repositories.study_session_repository import SqliteStudySessionRepository
+from backend.infrastructure.repositories.answer_detail_repository import SqliteAnswerDetailRepository
 from backend.infrastructure.config.database import get_database
 from backend.presentation.controllers.auth import get_current_user
 from backend.domain.entities.study_session import StudySession
@@ -34,6 +36,7 @@ class StudySubmitRequest(BaseModel):
     level: Optional[JLPTLevel] = None
     question_types: Optional[List[QuestionType]] = None
     time_spent_minutes: int
+    question_ids: Optional[List[int]] = None  # 반복 학습을 위한 문제 ID 리스트
 
 # 의존성 주입 함수
 def get_question_repository() -> SqliteQuestionRepository:
@@ -45,6 +48,11 @@ def get_study_session_repository() -> SqliteStudySessionRepository:
     """학습 세션 리포지토리 의존성 주입"""
     db = get_database()
     return SqliteStudySessionRepository(db)
+
+def get_answer_detail_repository() -> SqliteAnswerDetailRepository:
+    """답안 상세 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteAnswerDetailRepository(db)
 
 @router.get("/questions", response_model=List[QuestionResponse])
 async def get_study_questions(
@@ -143,6 +151,9 @@ async def submit_study_session(
     study_date = date.today()
     study_hour = datetime.now().hour
     
+    # 문제 ID 리스트 추출 (반복 학습용)
+    question_ids = list(request.answers.keys())
+    
     study_session = StudySession(
         id=None,
         user_id=current_user.id,
@@ -152,7 +163,8 @@ async def submit_study_session(
         correct_count=correct_count,
         time_spent_minutes=request.time_spent_minutes,
         level=request.level,
-        question_types=request.question_types
+        question_types=request.question_types,
+        question_ids=question_ids
     )
     
     saved_session = study_session_repo.save(study_session)
@@ -168,8 +180,226 @@ async def submit_study_session(
             "accuracy": accuracy,
             "time_spent_minutes": request.time_spent_minutes,
             "level": request.level.value if request.level else None,
-            "question_types": [qt.value for qt in request.question_types] if request.question_types else None
+            "question_types": [qt.value for qt in request.question_types] if request.question_types else None,
+            "question_ids": question_ids  # 반복 학습을 위한 문제 ID 리스트
         },
         "message": "학습 세션이 성공적으로 저장되었습니다"
     }
 
+@router.get("/wrong-answers", response_model=List[QuestionResponse])
+async def get_wrong_answer_questions(
+    current_user: User = Depends(get_current_user)
+):
+    """오답 노트 - 틀린 문제만 조회
+    
+    사용자가 이전에 틀린 문제들만 조회하여 다시 학습할 수 있도록 합니다.
+    
+    Args:
+        current_user: 현재 로그인한 사용자 (인증 필수)
+    
+    Returns:
+        틀린 문제 목록 (QuestionResponse 리스트)
+    """
+    answer_detail_repo = get_answer_detail_repository()
+    question_repo = get_question_repository()
+    
+    # 사용자의 틀린 문제 조회
+    incorrect_details = answer_detail_repo.find_incorrect_by_user_id(current_user.id)
+    
+    if not incorrect_details:
+        return []
+    
+    # 중복 제거된 question_id 리스트
+    question_ids = list(set(detail.question_id for detail in incorrect_details))
+    
+    # 문제 조회
+    questions = []
+    for question_id in question_ids:
+        question = question_repo.find_by_id(question_id)
+        if question:
+            questions.append(question)
+    
+    return [
+        QuestionResponse(
+            id=q.id,
+            level=q.level.value,
+            question_type=q.question_type.value,
+            question_text=q.question_text,
+            choices=q.choices,
+            difficulty=q.difficulty,
+            audio_url=q.audio_url,
+            correct_answer=q.correct_answer,
+            explanation=q.explanation
+        )
+        for q in questions
+    ]
+
+@router.get("/wrong-answers/questions", response_model=List[QuestionResponse])
+async def get_wrong_answer_questions_for_study(
+    question_count: int = Query(20, ge=1, le=100, description="조회할 문제 수"),
+    current_user: User = Depends(get_current_user)
+):
+    """오답 노트 - 틀린 문제만으로 학습 시작
+    
+    사용자가 이전에 틀린 문제들 중에서 지정한 개수만큼 랜덤으로 선택하여 학습할 수 있도록 합니다.
+    
+    Args:
+        question_count: 조회할 문제 수 (기본값: 20, 최대: 100)
+        current_user: 현재 로그인한 사용자 (인증 필수)
+    
+    Returns:
+        틀린 문제 목록 (QuestionResponse 리스트, 최대 question_count개)
+    """
+    answer_detail_repo = get_answer_detail_repository()
+    question_repo = get_question_repository()
+    
+    # 사용자의 틀린 문제 조회
+    incorrect_details = answer_detail_repo.find_incorrect_by_user_id(current_user.id)
+    
+    if not incorrect_details:
+        raise HTTPException(
+            status_code=404,
+            detail="틀린 문제가 없습니다. 먼저 테스트를 응시해주세요."
+        )
+    
+    # 중복 제거된 question_id 리스트
+    question_ids = list(set(detail.question_id for detail in incorrect_details))
+    
+    # 랜덤으로 question_count개 선택
+    if len(question_ids) > question_count:
+        selected_question_ids = random.sample(question_ids, question_count)
+    else:
+        selected_question_ids = question_ids
+    
+    # 문제 조회
+    questions = []
+    for question_id in selected_question_ids:
+        question = question_repo.find_by_id(question_id)
+        if question:
+            questions.append(question)
+    
+    if not questions:
+        raise HTTPException(
+            status_code=404,
+            detail="틀린 문제를 찾을 수 없습니다."
+        )
+    
+    return [
+        QuestionResponse(
+            id=q.id,
+            level=q.level.value,
+            question_type=q.question_type.value,
+            question_text=q.question_text,
+            choices=q.choices,
+            difficulty=q.difficulty,
+            audio_url=q.audio_url,
+            correct_answer=q.correct_answer,
+            explanation=q.explanation
+        )
+        for q in questions
+    ]
+
+@router.get("/sessions/{session_id}/questions", response_model=List[QuestionResponse])
+async def get_study_session_questions(
+    session_id: int,
+    current_user: User = Depends(get_current_user)
+):
+    """반복 학습 - 저장된 학습 세션의 문제 조회
+    
+    이전에 학습한 세션의 문제들을 다시 학습할 수 있도록 합니다.
+    
+    Args:
+        session_id: 학습 세션 ID
+        current_user: 현재 로그인한 사용자 (인증 필수)
+    
+    Returns:
+        학습 세션의 문제 목록 (QuestionResponse 리스트)
+    """
+    study_session_repo = get_study_session_repository()
+    question_repo = get_question_repository()
+    
+    # 학습 세션 조회
+    study_session = study_session_repo.find_by_id(session_id)
+    if not study_session:
+        raise HTTPException(
+            status_code=404,
+            detail=f"학습 세션을 찾을 수 없습니다: {session_id}"
+        )
+    
+    # 사용자 확인
+    if study_session.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="다른 사용자의 학습 세션에 접근할 수 없습니다."
+        )
+    
+    # 문제 ID 리스트 확인
+    if not study_session.question_ids:
+        raise HTTPException(
+            status_code=404,
+            detail="이 학습 세션에는 저장된 문제가 없습니다."
+        )
+    
+    # 문제 조회
+    questions = []
+    for question_id in study_session.question_ids:
+        question = question_repo.find_by_id(question_id)
+        if question:
+            questions.append(question)
+    
+    if not questions:
+        raise HTTPException(
+            status_code=404,
+            detail="학습 세션의 문제를 찾을 수 없습니다."
+        )
+    
+    return [
+        QuestionResponse(
+            id=q.id,
+            level=q.level.value,
+            question_type=q.question_type.value,
+            question_text=q.question_text,
+            choices=q.choices,
+            difficulty=q.difficulty,
+            audio_url=q.audio_url,
+            correct_answer=q.correct_answer,
+            explanation=q.explanation
+        )
+        for q in questions
+    ]
+
+@router.get("/sessions", response_model=List[Dict])
+async def get_study_sessions(
+    current_user: User = Depends(get_current_user)
+):
+    """사용자의 학습 세션 목록 조회
+    
+    반복 학습을 위해 이전 학습 세션 목록을 조회합니다.
+    
+    Args:
+        current_user: 현재 로그인한 사용자 (인증 필수)
+    
+    Returns:
+        학습 세션 목록 (세션 ID, 날짜, 정확도 등)
+    """
+    study_session_repo = get_study_session_repository()
+    
+    # 사용자의 학습 세션 조회
+    sessions = study_session_repo.find_by_user_id(current_user.id)
+    
+    return [
+        {
+            "id": session.id,
+            "study_date": session.study_date.isoformat(),
+            "study_hour": session.study_hour,
+            "total_questions": session.total_questions,
+            "correct_count": session.correct_count,
+            "accuracy": session.get_accuracy_percentage(),
+            "time_spent_minutes": session.time_spent_minutes,
+            "level": session.level.value if session.level else None,
+            "question_types": [qt.value for qt in session.question_types] if session.question_types else None,
+            "question_count": len(session.question_ids) if session.question_ids else 0,
+            "created_at": session.created_at.isoformat()
+        }
+        for session in sessions
+    ]

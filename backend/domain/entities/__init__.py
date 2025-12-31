@@ -9,5 +9,6 @@ from .result import Result
 from .answer_detail import AnswerDetail
 from .learning_history import LearningHistory
 from .user_performance import UserPerformance
+from .study_session import StudySession
 
 __all__ = ["User", "Question", "Test", "Result", "AnswerDetail", "LearningHistory", "UserPerformance"]

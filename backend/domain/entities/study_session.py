@@ -27,6 +27,7 @@ class StudySession:
         time_spent_minutes: int,
         level: Optional[JLPTLevel] = None,
         question_types: Optional[List[QuestionType]] = None,
+        question_ids: Optional[List[int]] = None,
         created_at: Optional[datetime] = None
     ):
         """
@@ -42,6 +43,7 @@ class StudySession:
             time_spent_minutes: 소요 시간 (분)
             level: 학습한 JLPT 레벨 (선택적)
             question_types: 학습한 문제 유형들 (선택적)
+            question_ids: 학습한 문제 ID 리스트 (반복 학습용, 선택적)
             created_at: 생성 일시 (미제공 시 현재 시간)
 
         Raises:
@@ -63,6 +65,7 @@ class StudySession:
         self.time_spent_minutes = time_spent_minutes
         self.level = level
         self.question_types = question_types
+        self.question_ids = question_ids
         self.created_at = created_at or datetime.now()
 
     def _validate_id(self, id: Optional[int]) -> None:
