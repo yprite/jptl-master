@@ -304,6 +304,7 @@ export const userApi = {
     current_level: string | null;
     total_tests_taken: number;
     study_streak: number;
+    is_admin?: boolean;
   }> {
     return fetchApi('/users/me');
   },

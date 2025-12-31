@@ -34,6 +34,7 @@ class UserResponse(BaseModel):
     current_level: Optional[JLPTLevel]
     total_tests_taken: int
     study_streak: int
+    is_admin: bool = False
 
 # 의존성 주입 함수
 def get_user_repository() -> SqliteUserRepository:
@@ -67,7 +68,8 @@ async def get_users():
                 target_level=user.target_level,
                 current_level=user.current_level,
                 total_tests_taken=user.total_tests_taken,
-                study_streak=user.study_streak
+                study_streak=user.study_streak,
+                is_admin=user.is_admin
             )
             for user in users
         ],
@@ -110,7 +112,8 @@ async def create_user(request: Optional[UserCreateRequest] = None):
             target_level=saved_user.target_level,
             current_level=saved_user.current_level,
             total_tests_taken=saved_user.total_tests_taken,
-            study_streak=saved_user.study_streak
+            study_streak=saved_user.study_streak,
+            is_admin=saved_user.is_admin
         ),
         "message": "사용자가 성공적으로 등록되었습니다"
     }
@@ -127,7 +130,8 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
             target_level=current_user.target_level,
             current_level=current_user.current_level,
             total_tests_taken=current_user.total_tests_taken,
-            study_streak=current_user.study_streak
+            study_streak=current_user.study_streak,
+            is_admin=current_user.is_admin
         ),
         "message": "사용자 정보 조회 성공"
     }
@@ -162,7 +166,8 @@ async def update_current_user_info(
             target_level=updated_user.target_level,
             current_level=updated_user.current_level,
             total_tests_taken=updated_user.total_tests_taken,
-            study_streak=updated_user.study_streak
+            study_streak=updated_user.study_streak,
+            is_admin=updated_user.is_admin
         ),
         "message": "사용자 정보가 성공적으로 업데이트되었습니다"
     }
@@ -185,7 +190,8 @@ async def get_user(user_id: int):
             target_level=user.target_level,
             current_level=user.current_level,
             total_tests_taken=user.total_tests_taken,
-            study_streak=user.study_streak
+            study_streak=user.study_streak,
+            is_admin=user.is_admin
         ),
         "message": "사용자 정보 조회 성공"
     }
@@ -221,7 +227,8 @@ async def update_user(user_id: int, request: UserUpdateRequest):
             target_level=updated_user.target_level,
             current_level=updated_user.current_level,
             total_tests_taken=updated_user.total_tests_taken,
-            study_streak=updated_user.study_streak
+            study_streak=updated_user.study_streak,
+            is_admin=updated_user.is_admin
         ),
         "message": "사용자 정보가 성공적으로 업데이트되었습니다"
     }
