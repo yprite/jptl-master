@@ -388,9 +388,9 @@ class TestSqliteUserRepository:
             # 디렉토리가 생성되었는지 확인
             assert os.path.exists(os.path.dirname(db_path))
         finally:
-        # 정리
-        import shutil
-        shutil.rmtree(temp_dir, ignore_errors=True)
+            # 정리
+            import shutil
+            shutil.rmtree(temp_dir, ignore_errors=True)
 
     def test_user_repository_save_and_find_with_is_admin(self, temp_db):
         """UserRepository에 is_admin 필드 저장 및 조회 테스트"""
