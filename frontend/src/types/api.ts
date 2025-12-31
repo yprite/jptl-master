@@ -129,3 +129,21 @@ export interface AdminQuestion {
   difficulty: number;
 }
 
+export interface AdminStatistics {
+  users: {
+    total_users: number;
+    active_users: number;
+  };
+  tests: {
+    total_tests: number;
+    average_score: number;
+  };
+  questions: {
+    total_questions: number;
+    by_level: Record<string, number>;
+  };
+  learning_data: {
+    total_results: number;
+  };
+}
+

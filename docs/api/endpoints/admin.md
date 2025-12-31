@@ -348,6 +348,60 @@
 **에러 응답:**
 - `404 Not Found`: 문제를 찾을 수 없는 경우
 
+## 통계 API
+
+### 통계 조회
+
+**엔드포인트:** `GET /api/v1/admin/statistics`
+
+**설명:** 어드민이 전체 시스템 통계를 조회합니다.
+
+**인증:** 어드민 권한 필요
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "users": {
+      "total_users": 10,
+      "active_users": 7
+    },
+    "tests": {
+      "total_tests": 25,
+      "average_score": 75.5
+    },
+    "questions": {
+      "total_questions": 50,
+      "by_level": {
+        "N5": 20,
+        "N4": 15,
+        "N3": 10,
+        "N2": 5
+      }
+    },
+    "learning_data": {
+      "total_results": 25
+    }
+  },
+  "message": "통계 조회 성공"
+}
+```
+
+**응답 필드:**
+- `users.total_users` (int): 전체 사용자 수
+- `users.active_users` (int): 활성 사용자 수 (테스트를 한 번 이상 받은 사용자)
+- `tests.total_tests` (int): 전체 테스트 수
+- `tests.average_score` (float): 평균 점수
+- `questions.total_questions` (int): 전체 문제 수
+- `questions.by_level` (object): 레벨별 문제 수 (레벨을 키로 하는 객체)
+- `learning_data.total_results` (int): 전체 결과 수
+
+**에러 응답:**
+- `401 Unauthorized`: 인증되지 않은 경우
+- `403 Forbidden`: 어드민 권한이 없는 경우
+
 ## 관련 문서
 
 - [인증 API](./auth.md) - 로그인 및 권한 관리

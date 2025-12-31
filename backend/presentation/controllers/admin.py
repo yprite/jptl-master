@@ -12,6 +12,8 @@ from backend.domain.entities.question import Question
 from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 from backend.infrastructure.repositories.user_repository import SqliteUserRepository
 from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+from backend.infrastructure.repositories.test_repository import SqliteTestRepository
+from backend.infrastructure.repositories.result_repository import SqliteResultRepository
 from backend.infrastructure.config.database import get_database
 from backend.presentation.controllers.auth import get_admin_user
 
@@ -70,6 +72,16 @@ def get_question_repository() -> SqliteQuestionRepository:
     """문제 리포지토리 의존성 주입"""
     db = get_database()
     return SqliteQuestionRepository(db)
+
+def get_test_repository() -> SqliteTestRepository:
+    """테스트 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteTestRepository(db)
+
+def get_result_repository() -> SqliteResultRepository:
+    """결과 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteResultRepository(db)
 
 # ========== 어드민 사용자 관리 API ==========
 
@@ -371,5 +383,67 @@ async def delete_admin_question(
     return {
         "success": True,
         "message": "문제가 성공적으로 삭제되었습니다"
+    }
+
+# ========== 어드민 통계 API ==========
+
+@router.get("/statistics")
+async def get_admin_statistics(admin_user: User = Depends(get_admin_user)):
+    """어드민 통계 조회"""
+    user_repo = get_user_repository()
+    question_repo = get_question_repository()
+    test_repo = get_test_repository()
+    result_repo = get_result_repository()
+
+    # 사용자 통계
+    all_users = user_repo.find_all()
+    total_users = len(all_users)
+    active_users = len([u for u in all_users if u.total_tests_taken > 0])
+
+    # 테스트 통계
+    all_tests = test_repo.find_all()
+    total_tests = len(all_tests)
+
+    # 결과 통계 (평균 점수)
+    all_results = result_repo.find_all()
+    total_results = len(all_results)
+    if total_results > 0:
+        average_score = sum(r.score for r in all_results) / total_results
+    else:
+        average_score = 0.0
+
+    # 문제 통계
+    all_questions = question_repo.find_all()
+    total_questions = len(all_questions)
+    
+    # 레벨별 문제 수
+    questions_by_level = {}
+    for question in all_questions:
+        level = question.level.value
+        questions_by_level[level] = questions_by_level.get(level, 0) + 1
+
+    # 학습 데이터 통계
+    # AnswerDetail, LearningHistory, UserPerformance는 향후 추가 가능
+
+    return {
+        "success": True,
+        "data": {
+            "users": {
+                "total_users": total_users,
+                "active_users": active_users
+            },
+            "tests": {
+                "total_tests": total_tests,
+                "average_score": round(average_score, 2)
+            },
+            "questions": {
+                "total_questions": total_questions,
+                "by_level": questions_by_level
+            },
+            "learning_data": {
+                "total_results": total_results
+            }
+        },
+        "message": "통계 조회 성공"
     }
 
