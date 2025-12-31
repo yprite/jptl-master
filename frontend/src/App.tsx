@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import TestUI from './components/organisms/TestUI';
+import StudyUI from './components/organisms/StudyUI';
 import ResultUI from './components/organisms/ResultUI';
 import LoginUI from './components/organisms/LoginUI';
 import UserPerformanceUI from './components/organisms/UserPerformanceUI';

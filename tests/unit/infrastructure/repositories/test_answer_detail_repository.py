@@ -363,10 +363,9 @@ class TestSqliteAnswerDetailRepository:
 
         # Result 생성 (user_id=1)
         result1 = Result(
-            id=None,
+            id=0,
             test_id=1,
             user_id=1,
-            attempt_id=1,
             score=70.0,
             assessed_level=JLPTLevel.N5,
             recommended_level=JLPTLevel.N5,
@@ -378,10 +377,9 @@ class TestSqliteAnswerDetailRepository:
 
         # Result 생성 (user_id=2)
         result2 = Result(
-            id=None,
+            id=0,
             test_id=2,
             user_id=2,
-            attempt_id=2,
             score=80.0,
             assessed_level=JLPTLevel.N5,
             recommended_level=JLPTLevel.N5,
