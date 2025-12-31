@@ -107,3 +107,14 @@ export interface UserProfile {
   study_streak: number;
 }
 
+export interface AdminUser {
+  id: number;
+  email: string;
+  username: string;
+  target_level: string;
+  current_level: string | null;
+  total_tests_taken: number;
+  study_streak: number;
+  is_admin: boolean;
+}
+

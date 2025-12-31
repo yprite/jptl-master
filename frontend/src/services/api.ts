@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하는 중앙화된 서비스
  */
 
-import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile } from '../types/api';
+import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1';
@@ -369,6 +369,50 @@ export const authApi = {
   async logout(): Promise<void> {
     await fetchApi('/auth/logout', {
       method: 'POST',
+    });
+  },
+};
+
+/**
+ * 어드민 관련 API
+ */
+export const adminApi = {
+  /**
+   * 전체 사용자 목록 조회
+   */
+  async getUsers(): Promise<AdminUser[]> {
+    return fetchApi<AdminUser[]>('/admin/users');
+  },
+
+  /**
+   * 특정 사용자 조회
+   */
+  async getUser(userId: number): Promise<AdminUser> {
+    return fetchApi<AdminUser>(`/admin/users/${userId}`);
+  },
+
+  /**
+   * 사용자 정보 수정
+   */
+  async updateUser(
+    userId: number,
+    request: {
+      username?: string;
+      target_level?: string;
+    }
+  ): Promise<AdminUser> {
+    return fetchApi<AdminUser>(`/admin/users/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    });
+  },
+
+  /**
+   * 사용자 삭제
+   */
+  async deleteUser(userId: number): Promise<void> {
+    await fetchApi(`/admin/users/${userId}`, {
+      method: 'DELETE',
     });
   },
 };

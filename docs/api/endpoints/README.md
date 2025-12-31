@@ -29,6 +29,9 @@
 ### 헬스 체크 (Health)
 - [헬스 체크 API](./health.md) - 시스템 상태 확인
 
+### 어드민 관리 (Admin)
+- [어드민 API](./admin.md) - 어드민 사용자 관리, 문제 관리
+
 ## OpenAPI 스펙
 
 FastAPI는 자동으로 OpenAPI 스펙을 생성합니다. 다음 엔드포인트에서 확인할 수 있습니다:
