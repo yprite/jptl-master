@@ -64,17 +64,30 @@ class AuthService {
       
       // 사용자 정보 조회
       const user = await userApi.getCurrentUser();
-      this.currentUser = user;
+      
+      // is_admin 필드가 없을 경우 기본값 설정
+      const userWithAdmin: User = {
+        ...user,
+        is_admin: user.is_admin ?? false,
+      };
+      
+      this.currentUser = userWithAdmin;
       this.notifyListeners();
       
-      return user;
+      return userWithAdmin;
     } catch (error) {
       // 로그인 실패 시 사용자 상태 초기화
       this.currentUser = null;
       this.notifyListeners();
       
+      // 더 자세한 에러 정보 로깅
+      console.error('로그인 중 오류:', error);
+      
       if (error instanceof ApiError) {
         throw error;
+      }
+      if (error instanceof Error) {
+        throw new Error(`로그인 중 오류가 발생했습니다: ${error.message}`);
       }
       throw new Error('로그인 중 오류가 발생했습니다.');
     }
@@ -102,15 +115,23 @@ class AuthService {
   async refreshUser(): Promise<User | null> {
     try {
       const user = await userApi.getCurrentUser();
-      this.currentUser = user;
+      
+      // is_admin 필드가 없을 경우 기본값 설정
+      const userWithAdmin: User = {
+        ...user,
+        is_admin: user.is_admin ?? false,
+      };
+      
+      this.currentUser = userWithAdmin;
       this.notifyListeners();
-      return user;
+      return userWithAdmin;
     } catch (error) {
       // 인증 실패 시 로그아웃 처리
       if (error instanceof ApiError && error.status === 401) {
         this.currentUser = null;
         this.notifyListeners();
       }
+      console.error('사용자 정보 새로고침 중 오류:', error);
       return null;
     }
   }

@@ -538,5 +538,74 @@ test.describe('JLPT App E2E', () => {
       await expect(page.getByRole('heading', { name: '로그인' })).toBeVisible();
     });
   });
+
+  test.describe('어드민 플로우 검증', () => {
+    test('should display admin buttons when admin user logs in', async ({ page }) => {
+      // 어드민 계정으로 로그인
+      await page.getByLabel('이메일').fill('admin@example.com');
+      await page.getByRole('button', { name: '로그인' }).click();
+
+      // 초기 페이지에서 어드민 버튼들이 표시되는지 확인
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
+      await expect(page.getByRole('button', { name: '어드민 - 대시보드' })).toBeVisible();
+      await expect(page.getByRole('button', { name: '어드민 - 사용자 관리' })).toBeVisible();
+      await expect(page.getByRole('button', { name: '어드민 - 문제 관리' })).toBeVisible();
+    });
+
+    test('should navigate to admin dashboard', async ({ page }) => {
+      // 어드민 계정으로 로그인
+      await page.getByLabel('이메일').fill('admin@example.com');
+      await page.getByRole('button', { name: '로그인' }).click();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
+
+      // 어드민 대시보드로 이동
+      await page.getByRole('button', { name: '어드민 - 대시보드' }).click();
+
+      // 어드민 레이아웃과 네비게이션이 표시되는지 확인
+      await expect(page.getByText('어드민 관리')).toBeVisible();
+      await expect(page.getByRole('button', { name: '대시보드' })).toBeVisible();
+      await expect(page.getByRole('button', { name: '사용자 관리' })).toBeVisible();
+      await expect(page.getByRole('button', { name: '문제 관리' })).toBeVisible();
+    });
+
+    test('should navigate between admin pages', async ({ page }) => {
+      // 어드민 계정으로 로그인
+      await page.getByLabel('이메일').fill('admin@example.com');
+      await page.getByRole('button', { name: '로그인' }).click();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
+
+      // 어드민 대시보드로 이동
+      await page.getByRole('button', { name: '어드민 - 대시보드' }).click();
+      await expect(page.getByText('어드민 관리')).toBeVisible();
+
+      // 사용자 관리로 이동
+      await page.getByRole('button', { name: '사용자 관리' }).click();
+      await expect(page.getByText('사용자 관리')).toBeVisible({ timeout: 5000 });
+
+      // 문제 관리로 이동
+      await page.getByRole('button', { name: '문제 관리' }).click();
+      await expect(page.getByText('문제 관리')).toBeVisible({ timeout: 5000 });
+
+      // 다시 대시보드로 이동
+      await page.getByRole('button', { name: '대시보드' }).click();
+      await expect(page.getByText('어드민 대시보드')).toBeVisible({ timeout: 5000 });
+    });
+
+    test('should not display admin buttons for regular user', async ({ page }) => {
+      // 일반 사용자 회원가입 및 로그인
+      await page.getByRole('button', { name: /계정이 없으신가요\? 회원가입/ }).click();
+      const { email, username } = makeUniqueUser('일반 사용자');
+      await page.getByLabel('이메일').fill(email);
+      await page.getByLabel('사용자명').fill(username);
+      await page.getByLabel('목표 레벨').selectOption('N5');
+      await page.getByRole('button', { name: '회원가입' }).click();
+      await expect(page.getByText('N5 진단 테스트')).toBeVisible({ timeout: 5000 });
+
+      // 어드민 버튼들이 표시되지 않는지 확인
+      await expect(page.getByRole('button', { name: '어드민 - 대시보드' })).not.toBeVisible();
+      await expect(page.getByRole('button', { name: '어드민 - 사용자 관리' })).not.toBeVisible();
+      await expect(page.getByRole('button', { name: '어드민 - 문제 관리' })).not.toBeVisible();
+    });
+  });
 });
 

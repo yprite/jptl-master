@@ -9,6 +9,7 @@ import UserProfileUI from './components/organisms/UserProfileUI';
 import AdminUserManagementUI from './components/organisms/AdminUserManagementUI';
 import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
 import AdminDashboardUI from './components/organisms/AdminDashboardUI';
+import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
 import { Test, Result, UserPerformance, UserHistory, UserProfile } from './types/api';
 import { testApi, resultApi, userApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
@@ -172,6 +173,11 @@ function App() {
     setState('initial');
   };
 
+  // 어드민 페이지 네비게이션
+  const handleAdminNavigate = (page: AdminPage) => {
+    setState(page);
+  };
+
   // 성능 분석 조회
   const handleViewPerformance = async () => {
     // 인증 확인
@@ -317,23 +323,29 @@ function App() {
     );
   }
 
+  // 어드민 페이지인지 확인
+  const isAdminPage = state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions';
+
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>JLPT 자격 검증 프로그램</h1>
-        {user && (
-          <div className="user-info">
-            <span>안녕하세요, {user.username}님</span>
-            <button
-              onClick={handleLogout}
-              className="logout-button"
-              aria-label="로그아웃"
-            >
-              로그아웃
-            </button>
-          </div>
-        )}
-      </header>
+      {/* 어드민 페이지가 아닐 때만 일반 헤더 표시 */}
+      {!isAdminPage && (
+        <header className="App-header">
+          <h1>JLPT 자격 검증 프로그램</h1>
+          {user && (
+            <div className="user-info">
+              <span>안녕하세요, {user.username}님</span>
+              <button
+                onClick={handleLogout}
+                className="logout-button"
+                aria-label="로그아웃"
+              >
+                로그아웃
+              </button>
+            </div>
+          )}
+        </header>
+      )}
       <main className="App-main">
         {state === 'login' && (
           <section className="login-section">
@@ -458,22 +470,17 @@ function App() {
           </section>
         )}
 
-        {state === 'admin-dashboard' && (
-          <section className="admin-section">
-            <AdminDashboardUI onBack={handleRestart} />
-          </section>
-        )}
-
-        {state === 'admin-users' && (
-          <section className="admin-section">
-            <AdminUserManagementUI onBack={handleRestart} />
-          </section>
-        )}
-
-        {state === 'admin-questions' && (
-          <section className="admin-section">
-            <AdminQuestionManagementUI onBack={handleRestart} />
-          </section>
+        {(state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions') && (
+          <AdminLayout
+            currentPage={state as AdminPage}
+            onNavigate={handleAdminNavigate}
+            onBack={handleRestart}
+            onLogout={handleLogout}
+          >
+            {state === 'admin-dashboard' && <AdminDashboardUI />}
+            {state === 'admin-users' && <AdminUserManagementUI />}
+            {state === 'admin-questions' && <AdminQuestionManagementUI />}
+          </AdminLayout>
         )}
 
         {state === 'error' && (

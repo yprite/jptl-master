@@ -67,6 +67,7 @@ describe('AuthService', () => {
         current_level: null,
         total_tests_taken: 0,
         study_streak: 0,
+        is_admin: false,
       };
 
       (authApi.login as jest.Mock).mockResolvedValueOnce(mockLoginData);
@@ -101,6 +102,7 @@ describe('AuthService', () => {
         current_level: null,
         total_tests_taken: 0,
         study_streak: 0,
+        is_admin: false,
       };
 
       (authApi.login as jest.Mock).mockResolvedValueOnce({
@@ -129,6 +131,7 @@ describe('AuthService', () => {
         current_level: null,
         total_tests_taken: 0,
         study_streak: 0,
+        is_admin: false,
       };
 
       (authApi.login as jest.Mock).mockResolvedValueOnce({
@@ -160,6 +163,7 @@ describe('AuthService', () => {
         current_level: null,
         total_tests_taken: 0,
         study_streak: 0,
+        is_admin: false,
       };
 
       (userApi.getCurrentUser as jest.Mock).mockResolvedValueOnce(mockUser);
@@ -196,6 +200,7 @@ describe('AuthService', () => {
         current_level: null,
         total_tests_taken: 0,
         study_streak: 0,
+        is_admin: false,
       };
 
       (authApi.login as jest.Mock).mockResolvedValueOnce({
