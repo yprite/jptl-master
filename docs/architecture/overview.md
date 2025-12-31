@@ -70,12 +70,17 @@
 3. **결과 표시**: 점수 및 간단한 분석
 
 ### Phase 2: 확장 기능 (진행 중)
-1. **모든 JLPT 레벨 지원**: N1~N5 완전 지원
-2. **유형별 문제 풀이**: 단일/복수 유형 선택 기능
-3. **개인 데이터 수집**: 상세 답안 이력, 학습 이력, 성능 데이터 수집
+1. **모든 JLPT 레벨 지원**: N1~N5 완전 지원 ✅
+2. **유형별 문제 풀이**: 단일/복수 유형 선택 기능 ✅
+3. **개인 데이터 수집**: 상세 답안 이력, 학습 이력, 성능 데이터 수집 ✅
 4. **학습 추천 시스템**: AI 기반 맞춤 추천 (데이터 수집 단계)
 5. **모의 시험 기능**: 실전 감각 훈련
-6. **어드민 관리 기능**: 사용자 관리, 문제 관리, 통계 대시보드
+6. **어드민 관리 기능**: 사용자 관리, 문제 관리, 통계 대시보드 ✅
+   - 어드민 인증 및 권한 관리 ✅
+   - 사용자 관리 (조회, 수정, 삭제) ✅
+   - 문제 관리 (조회, 생성, 수정, 삭제) ✅
+   - 통계 대시보드 ✅
+   - 어드민 UI 분리 (일반 사용자 메뉴 숨김) ✅
 
 ### Phase 3: 고급 기능
 1. **ChatGPT 기반 분석**: 수집된 데이터를 ChatGPT API로 분석하여 개인별 학습 추천 및 보완점 분석
@@ -133,22 +138,34 @@
 ## 기술 스택 (경량화 버전)
 
 ### 백엔드
-- **언어**: Python 3.9+ (타입 힌팅 지원)
+- **언어**: Python 3.13+ (타입 힌팅 지원)
 - **프레임워크**: FastAPI - 비동기 지원, 자동 API 문서화
 - **데이터베이스**: SQLite - 파일 기반, 별도 설치/설정 불필요
 - **ORM**: SQLAlchemy Core - 복잡한 기능 제거, 간단한 쿼리 중심
 - **인증**: 세션 기반 쿠키 인증 - JWT 복잡성 제거
 - **테스트**: pytest - 간단하고 강력한 테스트 프레임워크
+- **테스트 커버리지**: pytest-cov (최소 80% 요구, 현재 92%+)
 
-### 프론트엔드 (MVP)
-- **기술**: 순수 HTML/CSS/JavaScript - 외부 의존성 최소화
-- **UI**: Bootstrap CSS - 반응형 디자인, 사전 스타일 제공
-- **JavaScript**: Vanilla JS + Fetch API - 모던 브라우저 네이티브 API 사용
-- **호환성**: ES6+ 지원 브라우저 대상
+### 프론트엔드
+- **프레임워크**: React 19 - 컴포넌트 기반 UI 라이브러리
+- **언어**: TypeScript 4.9+ - 타입 안정성 보장
+- **빌드 도구**: Create React App (react-scripts 5.0.1)
+- **스타일링**: CSS Modules - 컴포넌트별 스타일 격리
+- **테스트**: 
+  - React Testing Library - 컴포넌트 테스트
+  - Playwright - E2E 테스트
+  - MSW (Mock Service Worker) - API 목킹
+- **타입 체크**: TypeScript 컴파일러 (`tsc --noEmit`)
+- **호환성**: 모던 브라우저 (Chrome, Firefox, Safari 최신 버전)
 
 ### 개발 도구
 - **버전 관리**: Git + GitHub
-- **코드 품질**: Black (포맷팅), flake8 (린팅)
+- **코드 품질**: 
+  - 백엔드: Black (포맷팅), flake8 (린팅)
+  - 프론트엔드: ESLint (React App 기본 설정)
+- **테스트 커버리지**: 
+  - 백엔드: pytest-cov (최소 80% 요구)
+  - 프론트엔드: Jest Coverage (최소 80% 요구)
 - **문서화**: Markdown 기반 문서
 - **배포**: 로컬 파일 서버 또는 Python 내장 서버
 
@@ -167,6 +184,9 @@ class User:
     total_tests_taken: int  # 응시한 총 시험 수
     study_streak: int  # 연속 학습 일수
     preferred_question_types: List[QuestionType]
+    is_admin: bool  # 어드민 권한 여부
+    created_at: datetime
+    updated_at: datetime
 ```
 
 #### Question (문제)
@@ -310,6 +330,7 @@ CREATE TABLE users (
     total_tests_taken INTEGER DEFAULT 0,
     study_streak INTEGER DEFAULT 0,
     preferred_question_types TEXT, -- JSON 문자열
+    is_admin INTEGER DEFAULT 0, -- 어드민 권한 (0: 일반 사용자, 1: 어드민)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -428,28 +449,64 @@ CREATE TABLE user_performance (
 
 ### RESTful API 엔드포인트
 
+#### 공통 API
 ```
-GET    /api/health           # 헬스 체크
-POST   /api/auth/login       # 로그인
-POST   /api/auth/logout      # 로그아웃
-GET    /api/auth/me          # 현재 사용자 정보
+GET    /api/v1/health                    # 헬스 체크
+POST   /api/v1/auth/login                # 로그인
+POST   /api/v1/auth/logout               # 로그아웃
+GET    /api/v1/auth/me                   # 현재 사용자 정보
+```
 
-GET    /api/users/profile    # 사용자 프로필 조회
-PUT    /api/users/profile    # 사용자 프로필 업데이트
+#### 사용자 API
+```
+GET    /api/v1/users                     # 사용자 목록 조회
+POST   /api/v1/users                     # 사용자 생성 (회원가입)
+GET    /api/v1/users/me                  # 현재 사용자 정보 조회
+PUT    /api/v1/users/me                  # 현재 사용자 정보 업데이트
+GET    /api/v1/users/{id}                 # 특정 사용자 조회
+PUT    /api/v1/users/{id}                 # 특정 사용자 정보 업데이트
+GET    /api/v1/users/{id}/performance     # 사용자 성능 분석 데이터 조회
+GET    /api/v1/users/{id}/history         # 사용자 학습 이력 조회
+```
 
-GET    /api/questions        # 문제 목록 조회 (페이지네이션)
-GET    /api/questions/{id}   # 특정 문제 조회
+#### 문제 API
+```
+GET    /api/v1/questions                 # 문제 목록 조회 (페이지네이션)
+GET    /api/v1/questions/{id}            # 특정 문제 조회
+```
 
-POST   /api/tests             # 새 시험 생성 (question_types 파라미터로 유형 선택)
-GET    /api/tests/{id}        # 시험 정보 조회
-POST   /api/tests/{id}/start  # 시험 시작
-POST   /api/tests/{id}/submit # 시험 제출 (상세 답안 이력 자동 저장)
+#### 테스트 API
+```
+POST   /api/v1/tests                     # 새 시험 생성 (question_types 파라미터로 유형 선택)
+GET    /api/v1/tests/{id}                # 시험 정보 조회
+POST   /api/v1/tests/{id}/start          # 시험 시작
+POST   /api/v1/tests/{id}/submit         # 시험 제출 (상세 답안 이력 자동 저장)
+```
 
-GET    /api/results           # 결과 목록 조회
-GET    /api/results/{id}      # 결과 상세 조회
-GET    /api/results/{id}/details # 결과별 상세 답안 이력 조회
-GET    /api/users/{id}/performance # 사용자 성능 분석 데이터 조회
-GET    /api/users/{id}/history # 사용자 학습 이력 조회
+#### 결과 API
+```
+GET    /api/v1/results                   # 결과 목록 조회
+GET    /api/v1/results/{id}              # 결과 상세 조회
+GET    /api/v1/results/{id}/details      # 결과별 상세 답안 이력 조회
+```
+
+#### 어드민 API (어드민 권한 필요)
+```
+# 사용자 관리
+GET    /api/v1/admin/users               # 전체 사용자 목록 조회
+GET    /api/v1/admin/users/{user_id}     # 특정 사용자 상세 조회
+PUT    /api/v1/admin/users/{user_id}     # 사용자 정보 수정
+DELETE /api/v1/admin/users/{user_id}     # 사용자 삭제
+
+# 문제 관리
+GET    /api/v1/admin/questions           # 전체 문제 목록 조회
+GET    /api/v1/admin/questions/{id}      # 특정 문제 상세 조회
+POST   /api/v1/admin/questions           # 문제 생성
+PUT    /api/v1/admin/questions/{id}      # 문제 수정
+DELETE /api/v1/admin/questions/{id}      # 문제 삭제
+
+# 통계 대시보드
+GET    /api/v1/admin/statistics         # 통계 조회 (사용자, 테스트, 문제, 학습 데이터)
 ```
 
 ### 응답 형식 표준화
