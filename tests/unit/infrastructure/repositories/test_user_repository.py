@@ -100,7 +100,7 @@ class TestSqliteUserRepository:
             expected_columns = [
                 'id', 'email', 'username', 'target_level',
                 'current_level', 'total_tests_taken', 'study_streak',
-                'preferred_question_types', 'created_at', 'updated_at'
+                'preferred_question_types', 'created_at', 'updated_at', 'is_admin'
             ]
 
             for col in expected_columns:
@@ -388,6 +388,190 @@ class TestSqliteUserRepository:
             # 디렉토리가 생성되었는지 확인
             assert os.path.exists(os.path.dirname(db_path))
         finally:
-            # 정리
-            import shutil
-            shutil.rmtree(temp_dir, ignore_errors=True)
+        # 정리
+        import shutil
+        shutil.rmtree(temp_dir, ignore_errors=True)
+
+    def test_user_repository_save_and_find_with_is_admin(self, temp_db):
+        """UserRepository에 is_admin 필드 저장 및 조회 테스트"""
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db=db)
+
+        # 일반 사용자 생성 (is_admin=False, 기본값)
+        regular_user = User(
+            id=None,
+            email="user@example.com",
+            username="regularuser",
+            target_level=JLPTLevel.N5,
+            is_admin=False
+        )
+        saved_regular = repo.save(regular_user)
+        assert saved_regular.is_admin is False
+
+        # 조회하여 확인
+        found_regular = repo.find_by_id(saved_regular.id)
+        assert found_regular is not None
+        assert found_regular.is_admin is False
+
+        # 어드민 사용자 생성 (is_admin=True)
+        admin_user = User(
+            id=None,
+            email="admin@example.com",
+            username="adminuser",
+            target_level=JLPTLevel.N5,
+            is_admin=True
+        )
+        saved_admin = repo.save(admin_user)
+        assert saved_admin.is_admin is True
+
+        # 조회하여 확인
+        found_admin = repo.find_by_id(saved_admin.id)
+        assert found_admin is not None
+        assert found_admin.is_admin is True
+
+        # 이메일로 조회하여 확인
+        found_admin_by_email = repo.find_by_email("admin@example.com")
+        assert found_admin_by_email is not None
+        assert found_admin_by_email.is_admin is True
+
+    def test_user_mapper_to_entity_with_is_admin(self):
+        """UserMapper의 to_entity 메서드에서 is_admin 필드 처리 테스트"""
+        import sqlite3
+        from backend.infrastructure.repositories.user_mapper import UserMapper
+
+        # 모의 Row 객체 생성
+        class MockRow:
+            def __init__(self, data):
+                self.data = data
+
+            def __getitem__(self, key):
+                return self.data[key]
+
+        # is_admin이 1인 경우 (True)
+        row_admin = MockRow({
+            'id': 1,
+            'email': 'admin@example.com',
+            'username': 'admin',
+            'target_level': 'N5',
+            'current_level': None,
+            'total_tests_taken': 0,
+            'study_streak': 0,
+            'preferred_question_types': None,
+            'created_at': '2024-01-01T00:00:00',
+            'updated_at': '2024-01-02T00:00:00',
+            'is_admin': 1
+        })
+
+        user_admin = UserMapper.to_entity(row_admin)
+        assert user_admin.is_admin is True
+
+        # is_admin이 0인 경우 (False)
+        row_user = MockRow({
+            'id': 2,
+            'email': 'user@example.com',
+            'username': 'user',
+            'target_level': 'N5',
+            'current_level': None,
+            'total_tests_taken': 0,
+            'study_streak': 0,
+            'preferred_question_types': None,
+            'created_at': '2024-01-01T00:00:00',
+            'updated_at': '2024-01-02T00:00:00',
+            'is_admin': 0
+        })
+
+        user_regular = UserMapper.to_entity(row_user)
+        assert user_regular.is_admin is False
+
+        # is_admin이 None인 경우 (기본값 False)
+        row_none = MockRow({
+            'id': 3,
+            'email': 'user2@example.com',
+            'username': 'user2',
+            'target_level': 'N5',
+            'current_level': None,
+            'total_tests_taken': 0,
+            'study_streak': 0,
+            'preferred_question_types': None,
+            'created_at': '2024-01-01T00:00:00',
+            'updated_at': '2024-01-02T00:00:00',
+            'is_admin': None
+        })
+
+        user_none = UserMapper.to_entity(row_none)
+        assert user_none.is_admin is False
+
+    def test_user_mapper_to_dict_with_is_admin(self):
+        """UserMapper의 to_dict 메서드에서 is_admin 필드 처리 테스트"""
+        from backend.infrastructure.repositories.user_mapper import UserMapper
+        from datetime import datetime
+
+        # 어드민 사용자
+        admin_user = User(
+            id=1,
+            email='admin@example.com',
+            username='admin',
+            target_level=JLPTLevel.N5,
+            is_admin=True,
+            created_at=datetime(2024, 1, 1),
+            updated_at=datetime(2024, 1, 2)
+        )
+
+        admin_data = UserMapper.to_dict(admin_user)
+        assert admin_data['is_admin'] == 1
+
+        # 일반 사용자
+        regular_user = User(
+            id=2,
+            email='user@example.com',
+            username='user',
+            target_level=JLPTLevel.N5,
+            is_admin=False,
+            created_at=datetime(2024, 1, 1),
+            updated_at=datetime(2024, 1, 2)
+        )
+
+        regular_data = UserMapper.to_dict(regular_user)
+        assert regular_data['is_admin'] == 0
+
+    def test_user_repository_update_is_admin(self, temp_db):
+        """UserRepository에서 is_admin 필드 업데이트 테스트"""
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.config.database import Database
+
+        db = Database(db_path=temp_db)
+        repo = SqliteUserRepository(db=db)
+
+        # 일반 사용자 생성
+        user = User(
+            id=None,
+            email="user@example.com",
+            username="testuser",
+            target_level=JLPTLevel.N5,
+            is_admin=False
+        )
+        saved_user = repo.save(user)
+        assert saved_user.is_admin is False
+
+        # is_admin을 True로 변경 (실제로는 엔티티에 직접 설정할 수 없지만, 새 엔티티로 업데이트)
+        updated_user = User(
+            id=saved_user.id,
+            email=saved_user.email,
+            username=saved_user.username,
+            target_level=saved_user.target_level,
+            current_level=saved_user.current_level,
+            total_tests_taken=saved_user.total_tests_taken,
+            study_streak=saved_user.study_streak,
+            preferred_question_types=saved_user.preferred_question_types,
+            is_admin=True,
+            created_at=saved_user.created_at,
+            updated_at=saved_user.updated_at
+        )
+        updated_saved = repo.save(updated_user)
+
+        # 업데이트 확인
+        found_user = repo.find_by_id(updated_saved.id)
+        assert found_user.is_admin is True

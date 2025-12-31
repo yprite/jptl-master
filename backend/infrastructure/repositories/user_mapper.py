@@ -23,6 +23,13 @@ class UserMapper:
             except (json.JSONDecodeError, ValueError):
                 preferred_types = []
 
+        # is_admin 필드 처리 (없으면 False, 1이면 True, 0이면 False)
+        is_admin = False
+        if 'is_admin' in row.keys():
+            is_admin_value = row['is_admin']
+            if is_admin_value is not None:
+                is_admin = bool(is_admin_value)
+
         return User(
             id=row['id'],
             email=row['email'],
@@ -32,6 +39,7 @@ class UserMapper:
             total_tests_taken=row['total_tests_taken'] or 0,
             study_streak=row['study_streak'] or 0,
             preferred_question_types=preferred_types,
+            is_admin=is_admin,
             created_at=UserMapper._parse_datetime(row['created_at']),
             updated_at=UserMapper._parse_datetime(row['updated_at'])
         )
@@ -47,6 +55,7 @@ class UserMapper:
             'total_tests_taken': user.total_tests_taken,
             'study_streak': user.study_streak,
             'preferred_question_types': json.dumps([t.value for t in user.preferred_question_types]) if user.preferred_question_types else None,
+            'is_admin': 1 if user.is_admin else 0,
             'created_at': user.created_at.isoformat(),
             'updated_at': user.updated_at.isoformat()
         }

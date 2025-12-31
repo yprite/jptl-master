@@ -337,3 +337,27 @@ class TestUser:
         assert isinstance(hash(user4), int)
         assert isinstance(hash(user5), int)
 
+    def test_user_creation_with_is_admin_default(self):
+        """User 생성 시 is_admin 기본값이 False인지 테스트"""
+        # Given & When
+        user = User(id=1, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+
+        # Then
+        assert user.is_admin is False
+
+    def test_user_creation_with_is_admin_true(self):
+        """User 생성 시 is_admin을 True로 설정하는 테스트"""
+        # Given & When
+        user = User(id=1, email="admin@example.com", username="admin", target_level=JLPTLevel.N5, is_admin=True)
+
+        # Then
+        assert user.is_admin is True
+
+    def test_user_creation_with_is_admin_false(self):
+        """User 생성 시 is_admin을 False로 명시적으로 설정하는 테스트"""
+        # Given & When
+        user = User(id=1, email="user@example.com", username="user", target_level=JLPTLevel.N5, is_admin=False)
+
+        # Then
+        assert user.is_admin is False
+

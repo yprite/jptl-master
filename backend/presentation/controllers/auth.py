@@ -87,3 +87,19 @@ def get_current_user(req: Request) -> User:
     
     return user
 
+def get_admin_user(req: Request) -> User:
+    """어드민 권한이 있는 사용자 조회 (의존성 함수)
+    
+    세션에서 사용자 ID를 가져와 사용자 정보를 반환하고, 어드민 권한을 확인합니다.
+    
+    Raises:
+        HTTPException: 인증되지 않은 경우 401 에러
+        HTTPException: 어드민 권한이 없는 경우 403 에러
+    """
+    user = get_current_user(req)
+    
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="어드민 권한이 필요합니다")
+    
+    return user
+

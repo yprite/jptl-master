@@ -27,6 +27,7 @@ class User:
         total_tests_taken: int = 0,
         study_streak: int = 0,
         preferred_question_types: Optional[List[QuestionType]] = None,
+        is_admin: bool = False,
         created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None
     ):
@@ -42,6 +43,7 @@ class User:
             total_tests_taken: 응시한 총 시험 수
             study_streak: 연속 학습 일수
             preferred_question_types: 선호하는 문제 유형들
+            is_admin: 어드민 권한 여부 (기본값: False)
             created_at: 생성 일시 (미제공 시 현재 시간)
             updated_at: 수정 일시 (미제공 시 현재 시간)
 
@@ -63,6 +65,7 @@ class User:
         self.total_tests_taken = total_tests_taken
         self.study_streak = study_streak
         self.preferred_question_types = preferred_question_types or []
+        self.is_admin = is_admin
         self.created_at = created_at or datetime.now()
         self.updated_at = updated_at or datetime.now()
 

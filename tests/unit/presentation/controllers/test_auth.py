@@ -169,3 +169,125 @@ class TestSessionAuthentication:
         data = response.json()
         assert "인증" in data["detail"] or "로그인" in data["detail"]
 
+    def test_get_admin_user_success(self, app_client, temp_db):
+        """어드민 사용자가 어드민 권한 체크를 통과하는지 테스트"""
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel
+        from fastapi import Request
+        from backend.presentation.controllers.auth import get_admin_user
+
+        with patch('backend.presentation.controllers.auth.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 어드민 사용자 생성 및 로그인
+            user_repo = SqliteUserRepository(db=db)
+            admin_user = User(
+                id=None,
+                email="admin@example.com",
+                username="admin",
+                target_level=JLPTLevel.N5,
+                is_admin=True
+            )
+            saved_admin = user_repo.save(admin_user)
+
+            # 로그인
+            login_response = app_client.post(
+                "/api/v1/auth/login",
+                json={"email": "admin@example.com"}
+            )
+            assert login_response.status_code == 200
+
+            # 세션을 가진 Request 객체 생성
+            from starlette.requests import Request as StarletteRequest
+            from starlette.datastructures import MutableHeaders
+            
+            # 테스트용 Request 생성
+            scope = {
+                "type": "http",
+                "method": "GET",
+                "path": "/api/v1/admin/test",
+                "headers": [],
+            }
+            request = StarletteRequest(scope)
+            request.session = {"user_id": saved_admin.id}
+
+            # get_admin_user 호출 (정상적으로 통과해야 함)
+            result_user = get_admin_user(request)
+            assert result_user.id == saved_admin.id
+            assert result_user.is_admin is True
+
+    def test_get_admin_user_forbidden(self, app_client, temp_db):
+        """일반 사용자가 어드민 권한 체크에서 403 에러를 받는지 테스트"""
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel
+        from fastapi import HTTPException
+        from backend.presentation.controllers.auth import get_admin_user
+
+        with patch('backend.presentation.controllers.auth.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 일반 사용자 생성 및 로그인
+            user_repo = SqliteUserRepository(db=db)
+            regular_user = User(
+                id=None,
+                email="user@example.com",
+                username="user",
+                target_level=JLPTLevel.N5,
+                is_admin=False
+            )
+            saved_user = user_repo.save(regular_user)
+
+            # 로그인
+            login_response = app_client.post(
+                "/api/v1/auth/login",
+                json={"email": "user@example.com"}
+            )
+            assert login_response.status_code == 200
+
+            # 세션을 가진 Request 객체 생성
+            from starlette.requests import Request as StarletteRequest
+            
+            scope = {
+                "type": "http",
+                "method": "GET",
+                "path": "/api/v1/admin/test",
+                "headers": [],
+            }
+            request = StarletteRequest(scope)
+            request.session = {"user_id": saved_user.id}
+
+            # get_admin_user 호출 (403 에러 발생해야 함)
+            with pytest.raises(HTTPException) as exc_info:
+                get_admin_user(request)
+            
+            assert exc_info.value.status_code == 403
+            assert "어드민" in exc_info.value.detail or "권한" in exc_info.value.detail
+
+    def test_get_admin_user_unauthenticated(self, app_client):
+        """인증되지 않은 사용자가 어드민 권한 체크에서 401 에러를 받는지 테스트"""
+        from fastapi import HTTPException
+        from backend.presentation.controllers.auth import get_admin_user
+        from starlette.requests import Request as StarletteRequest
+
+        # 세션이 없는 Request 객체 생성
+        scope = {
+            "type": "http",
+            "method": "GET",
+            "path": "/api/v1/admin/test",
+            "headers": [],
+        }
+        request = StarletteRequest(scope)
+        request.session = {}
+
+        # get_admin_user 호출 (401 에러 발생해야 함)
+        with pytest.raises(HTTPException) as exc_info:
+            get_admin_user(request)
+        
+        assert exc_info.value.status_code == 401
+

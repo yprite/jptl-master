@@ -45,10 +45,21 @@ class Database:
                     total_tests_taken INTEGER DEFAULT 0,
                     study_streak INTEGER DEFAULT 0,
                     preferred_question_types TEXT,
+                    is_admin INTEGER DEFAULT 0,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
+            
+            # 기존 테이블에 is_admin 컬럼이 없는 경우 마이그레이션
+            try:
+                cursor = conn.execute("PRAGMA table_info(users)")
+                columns = [col[1] for col in cursor.fetchall()]
+                if 'is_admin' not in columns:
+                    conn.execute("ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0")
+            except Exception:
+                # 테이블이 없거나 다른 오류가 발생한 경우 무시 (CREATE TABLE IF NOT EXISTS가 처리함)
+                pass
 
             # 문제 테이블
             conn.execute("""
