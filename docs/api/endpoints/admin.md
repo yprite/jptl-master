@@ -231,11 +231,16 @@
     "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
     "correct_answer": "選択肢1",
     "explanation": "説明",
-    "difficulty": 1
+    "difficulty": 1,
+    "audio_url": null
   },
   "message": "문제가 성공적으로 생성되었습니다"
 }
 ```
+
+**특별 동작:**
+- **자동 TTS 생성**: `question_type`이 `listening`인 경우, 문제 생성 시 자동으로 TTS 오디오가 생성되어 `audio_url` 필드에 저장됩니다.
+- TTS 생성 실패 시에도 문제 생성은 성공하며, 오디오는 나중에 수동으로 업로드할 수 있습니다.
 
 **에러 응답:**
 - `400 Bad Request`: 유효성 검증 실패 (예: 정답이 choices에 없음, 선택지 중복 등)
@@ -264,7 +269,8 @@
     "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
     "correct_answer": "選択肢1",
     "explanation": "説明",
-    "difficulty": 1
+    "difficulty": 1,
+    "audio_url": null
   },
   "message": "문제 정보 조회 성공"
 }
@@ -297,6 +303,11 @@
 - `level` (string, optional): JLPT 레벨
 - `question_type` (string, optional): 문제 유형
 - `question_text` (string, optional): 문제 내용
+
+**특별 동작:**
+- **자동 TTS 재생성**: `question_type`이 `listening`으로 변경되거나 `question_text`가 변경된 경우, 자동으로 TTS 오디오가 생성/재생성되어 `audio_url` 필드에 저장됩니다.
+- 기존 TTS 파일이 있으면 자동으로 삭제되고 새 파일이 생성됩니다.
+- TTS 생성 실패 시에도 문제 수정은 성공하며, 오디오는 나중에 수동으로 업로드할 수 있습니다.
 - `choices` (array, optional): 선택지 목록
 - `correct_answer` (string, optional): 정답
 - `explanation` (string, optional): 해설

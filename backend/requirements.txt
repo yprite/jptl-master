@@ -7,3 +7,4 @@ httpx>=0.25.0
 pytest-cov>=4.0.0
 itsdangerous>=2.0.0
 python-multipart>=0.0.6
+gtts>=2.5.0

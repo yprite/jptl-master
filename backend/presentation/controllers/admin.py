@@ -232,7 +232,10 @@ async def create_admin_question(
     request: QuestionCreateRequest,
     admin_user: User = Depends(get_admin_user)
 ):
-    """어드민 문제 생성"""
+    """어드민 문제 생성 (리스닝 문제는 자동으로 TTS 생성)"""
+    from backend.domain.services.tts_service import TTSService
+    from backend.domain.value_objects.jlpt import QuestionType
+    
     repo = get_question_repository()
     
     # 문제 생성
@@ -249,6 +252,33 @@ async def create_admin_question(
     )
     
     saved_question = repo.save(question)
+    
+    # 리스닝 문제인 경우 자동으로 TTS 생성
+    audio_url = None
+    if request.question_type == QuestionType.LISTENING:
+        try:
+            audio_url = TTSService.generate_audio(
+                text=request.question_text,
+                language='ja',
+                slow=False
+            )
+            
+            # audio_url 업데이트
+            updated_question = Question(
+                id=saved_question.id,
+                level=saved_question.level,
+                question_type=saved_question.question_type,
+                question_text=saved_question.question_text,
+                choices=saved_question.choices,
+                correct_answer=saved_question.correct_answer,
+                explanation=saved_question.explanation,
+                difficulty=saved_question.difficulty,
+                audio_url=audio_url
+            )
+            saved_question = repo.save(updated_question)
+        except Exception as e:
+            # TTS 생성 실패해도 문제 생성은 성공 (오디오는 나중에 수동 생성 가능)
+            print(f"TTS 생성 실패 (문제 ID: {saved_question.id}): {str(e)}")
     
     return {
         "success": True,
@@ -288,7 +318,8 @@ async def get_admin_question_by_id(
             choices=question.choices,
             correct_answer=question.correct_answer,
             explanation=question.explanation,
-            difficulty=question.difficulty
+            difficulty=question.difficulty,
+            audio_url=question.audio_url
         ),
         "message": "문제 정보 조회 성공"
     }
@@ -299,7 +330,10 @@ async def update_admin_question(
     request: QuestionUpdateRequest,
     admin_user: User = Depends(get_admin_user)
 ):
-    """어드민 문제 수정"""
+    """어드민 문제 수정 (리스닝 문제로 변경되거나 텍스트 변경 시 자동 TTS 생성)"""
+    from backend.domain.services.tts_service import TTSService
+    from backend.domain.value_objects.jlpt import QuestionType
+    
     repo = get_question_repository()
     question = repo.find_by_id(question_id)
     
@@ -353,6 +387,28 @@ async def update_admin_question(
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+    # 리스닝 문제이고 텍스트가 변경된 경우 TTS 자동 생성/재생성
+    new_question_type = request.question_type if request.question_type is not None else updated_question.question_type
+    new_question_text = request.question_text if request.question_text is not None else updated_question.question_text
+    
+    if (new_question_type == QuestionType.LISTENING and 
+        (request.question_type is not None or request.question_text is not None)):
+        
+        # 기존 TTS 파일 삭제 (있으면)
+        if updated_question.audio_url and "tts" in updated_question.audio_url:
+            TTSService.delete_audio(updated_question.audio_url)
+        
+        try:
+            audio_url = TTSService.generate_audio(
+                text=new_question_text,
+                language='ja',
+                slow=False
+            )
+            updated_question.audio_url = audio_url
+        except Exception as e:
+            # TTS 생성 실패해도 문제 수정은 성공
+            print(f"TTS 생성 실패 (문제 ID: {question_id}): {str(e)}")
     
     # 저장
     saved_question = repo.save(updated_question)
