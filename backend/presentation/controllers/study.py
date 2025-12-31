@@ -26,6 +26,8 @@ class QuestionResponse(BaseModel):
     choices: List[str]
     difficulty: int
     audio_url: Optional[str] = None
+    correct_answer: str  # 학습 모드에서는 정답 표시 필요
+    explanation: str  # 학습 모드에서는 해설 표시 필요
 
 class StudySubmitRequest(BaseModel):
     answers: Dict[int, str]  # question_id -> answer
@@ -95,7 +97,9 @@ async def get_study_questions(
             question_text=q.question_text,
             choices=q.choices,
             difficulty=q.difficulty,
-            audio_url=q.audio_url
+            audio_url=q.audio_url,
+            correct_answer=q.correct_answer,
+            explanation=q.explanation
         )
         for q in questions
     ]
