@@ -35,28 +35,22 @@ class StudySessionMapper:
 
         # level 파싱
         level = None
-        if row.get('level'):
-            try:
-                level = JLPTLevel(row['level'])
-            except (ValueError, KeyError):
-                level = None
+        try:
+            level_str = row['level']
+            if level_str:
+                level = JLPTLevel(level_str)
+        except (KeyError, TypeError, ValueError):
+            level = None
 
         # question_types 파싱 (JSON 배열)
         question_types = None
-        if row.get('question_types'):
-            try:
-                types_list = json.loads(row['question_types'])
-                question_types = [QuestionType(t) for t in types_list]
-            except (json.JSONDecodeError, ValueError, KeyError):
-                question_types = None
-
-        # question_ids 파싱 (JSON 배열)
-        question_ids = None
-        if row.get('question_ids'):
-            try:
-                question_ids = json.loads(row['question_ids'])
-            except (json.JSONDecodeError, ValueError, KeyError):
-                question_ids = None
+        try:
+            question_types_str = row['question_types']
+            if question_types_str:
+                question_types_list = json.loads(question_types_str)
+                question_types = [QuestionType(qt) for qt in question_types_list]
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+            question_types = None
 
         study_session = StudySession(
             id=row['id'],

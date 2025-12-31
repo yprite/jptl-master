@@ -1582,6 +1582,247 @@ class TestTestsController:
                 app.dependency_overrides.clear()
 
 
+class TestStudyController:
+    """Study (학습 모드) 컨트롤러 테스트"""
+
+    @pytest.fixture
+    def temp_db(self):
+        """임시 데이터베이스 파일 생성"""
+        with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as f:
+            db_path = f.name
+        yield db_path
+        if os.path.exists(db_path):
+            os.unlink(db_path)
+
+    def test_get_study_questions_success(self, temp_db):
+        """학습 모드 문제 조회 성공 테스트"""
+        from backend.presentation.controllers.study import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+        from backend.presentation.controllers.auth import get_current_user
+        from backend.domain.entities.user import User
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.study.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 문제 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            for i in range(5):
+                question = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"문제 {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation="해설입니다",
+                    difficulty=1
+                )
+                question_repo.save(question)
+
+            # 사용자 생성 및 인증 모킹
+            from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+
+            # 인증 의존성 오버라이드
+            def get_current_user_override():
+                return saved_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                # 학습 모드 문제 조회
+                response = client.get("/questions?level=N5&question_count=5")
+                assert response.status_code == 200
+                data = response.json()
+                assert isinstance(data, list)
+                assert len(data) == 5
+                assert all("id" in q for q in data)
+                assert all("question_text" in q for q in data)
+                assert all("choices" in q for q in data)
+                assert all("question_type" in q for q in data)
+            finally:
+                app.dependency_overrides.clear()
+
+    def test_get_study_questions_with_type_filter(self, temp_db):
+        """유형별 필터링된 학습 모드 문제 조회 테스트"""
+        from backend.presentation.controllers.study import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+        from backend.presentation.controllers.auth import get_current_user
+        from backend.domain.entities.user import User
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.study.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 문제 생성 (VOCABULARY와 GRAMMAR 유형)
+            question_repo = SqliteQuestionRepository(db=db)
+            for i in range(3):
+                question = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"어휘 문제 {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation="해설입니다",
+                    difficulty=1
+                )
+                question_repo.save(question)
+
+            for i in range(2):
+                question = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.GRAMMAR,
+                    question_text=f"문법 문제 {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation="해설입니다",
+                    difficulty=1
+                )
+                question_repo.save(question)
+
+            # 사용자 생성 및 인증 모킹
+            from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+
+            # 인증 의존성 오버라이드
+            def get_current_user_override():
+                return saved_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                # VOCABULARY 유형만 조회
+                response = client.get("/questions", params={
+                    "level": "N5",
+                    "question_types": ["vocabulary"],
+                    "question_count": 3
+                })
+                assert response.status_code == 200
+                data = response.json()
+                assert isinstance(data, list)
+                assert len(data) == 3
+                assert all(q["question_type"] == "vocabulary" for q in data)
+            finally:
+                app.dependency_overrides.clear()
+
+    def test_get_study_questions_unauthorized(self, temp_db):
+        """인증되지 않은 사용자의 학습 모드 문제 조회 테스트"""
+        from backend.presentation.controllers.study import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from starlette.middleware.sessions import SessionMiddleware
+
+        app = FastAPI()
+        app.add_middleware(SessionMiddleware, secret_key="test-secret-key")
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.study.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 인증 없이 요청
+            response = client.get("/questions?level=N5")
+            assert response.status_code == 401  # 또는 403, 인증 실패
+
+    def test_submit_study_session_success(self, temp_db):
+        """학습 모드 세션 제출 성공 테스트"""
+        from backend.presentation.controllers.study import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+        from backend.presentation.controllers.auth import get_current_user
+        from backend.domain.entities.user import User
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.study.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 문제 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            questions = []
+            for i in range(3):
+                question = Question(
+                    id=0,
+                    level=JLPTLevel.N5,
+                    question_type=QuestionType.VOCABULARY,
+                    question_text=f"문제 {i+1}",
+                    choices=["A", "B", "C", "D"],
+                    correct_answer="A",
+                    explanation="해설입니다",
+                    difficulty=1
+                )
+                saved_q = question_repo.save(question)
+                questions.append(saved_q)
+
+            # 사용자 생성 및 인증 모킹
+            from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+
+            # 인증 의존성 오버라이드
+            def get_current_user_override():
+                return saved_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                # 학습 모드 세션 제출
+                answers = {q.id: "A" for q in questions}
+                response = client.post(
+                    "/submit",
+                    json={
+                        "answers": answers,
+                        "level": "N5",
+                        "question_types": ["vocabulary"],
+                        "time_spent_minutes": 10
+                    }
+                )
+                assert response.status_code == 200
+                data = response.json()
+                assert data["success"] is True
+                assert "study_session_id" in data["data"]
+                assert data["data"]["total_questions"] == 3
+                assert data["data"]["correct_count"] == 3
+                assert "accuracy" in data["data"]
+            finally:
+                app.dependency_overrides.clear()
+
+
 class TestMainApp:
     """메인 애플리케이션 테스트"""
 

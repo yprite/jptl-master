@@ -74,7 +74,7 @@ const StudyUI: React.FC<StudyUIProps> = ({
         </div>
       </div>
 
-      <div className="study-question">
+d      <div className="study-question">
         <div className="question-header">
           <span className="question-type">{currentQuestion.question_type}</span>
           <span className="question-level">{currentQuestion.level}</span>
