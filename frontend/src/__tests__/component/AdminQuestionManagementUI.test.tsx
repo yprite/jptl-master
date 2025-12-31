@@ -280,6 +280,19 @@ describe('AdminQuestionManagementUI', () => {
     const questionTextInput = screen.getByPlaceholderText('문제 내용을 입력하세요') as HTMLInputElement;
     fireEvent.change(questionTextInput, { target: { value: '新しい問題' } });
 
+    // 선택지 입력
+    const choiceInputs = screen.getAllByPlaceholderText(/선택지/);
+    fireEvent.change(choiceInputs[0], { target: { value: '選択肢1' } });
+    fireEvent.change(choiceInputs[1], { target: { value: '選択肢2' } });
+
+    // 정답 선택
+    const correctAnswerSelect = screen.getByLabelText('정답:') as HTMLSelectElement;
+    fireEvent.change(correctAnswerSelect, { target: { value: '選択肢1' } });
+
+    // 해설 입력
+    const explanationInput = screen.getByPlaceholderText('해설을 입력하세요') as HTMLTextAreaElement;
+    fireEvent.change(explanationInput, { target: { value: '新しい説明' } });
+
     const saveButton = screen.getByText('생성');
     fireEvent.click(saveButton);
 
