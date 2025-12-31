@@ -348,3 +348,91 @@ class TestSqliteAnswerDetailRepository:
         question_details = repo.find_by_question_id(1)
         assert len(question_details) == 2
         assert all(d.question_id == 1 for d in question_details)
+
+    def test_answer_detail_repository_find_incorrect_by_user_id(self, temp_db):
+        """AnswerDetailRepository find_incorrect_by_user_id 기능 테스트"""
+        from backend.infrastructure.repositories.answer_detail_repository import SqliteAnswerDetailRepository
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+        from backend.domain.entities.result import Result
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        db = Database(db_path=temp_db)
+        answer_detail_repo = SqliteAnswerDetailRepository(db=db)
+        result_repo = SqliteResultRepository(db=db)
+
+        # Result 생성 (user_id=1)
+        result1 = Result(
+            id=None,
+            test_id=1,
+            user_id=1,
+            attempt_id=1,
+            score=70.0,
+            assessed_level=JLPTLevel.N5,
+            recommended_level=JLPTLevel.N5,
+            correct_answers_count=7,
+            total_questions_count=10,
+            time_taken_minutes=30
+        )
+        saved_result1 = result_repo.save(result1)
+
+        # Result 생성 (user_id=2)
+        result2 = Result(
+            id=None,
+            test_id=2,
+            user_id=2,
+            attempt_id=2,
+            score=80.0,
+            assessed_level=JLPTLevel.N5,
+            recommended_level=JLPTLevel.N5,
+            correct_answers_count=8,
+            total_questions_count=10,
+            time_taken_minutes=25
+        )
+        saved_result2 = result_repo.save(result2)
+
+        # user_id=1의 틀린 문제들
+        d1 = AnswerDetail(
+            id=None, result_id=saved_result1.id, question_id=1,
+            user_answer="A", correct_answer="B", is_correct=False,
+            time_spent_seconds=30, difficulty=3,
+            question_type=QuestionType.VOCABULARY
+        )
+        d2 = AnswerDetail(
+            id=None, result_id=saved_result1.id, question_id=2,
+            user_answer="C", correct_answer="D", is_correct=False,
+            time_spent_seconds=45, difficulty=4,
+            question_type=QuestionType.GRAMMAR
+        )
+        # user_id=1의 맞은 문제
+        d3 = AnswerDetail(
+            id=None, result_id=saved_result1.id, question_id=3,
+            user_answer="A", correct_answer="A", is_correct=True,
+            time_spent_seconds=20, difficulty=2,
+            question_type=QuestionType.VOCABULARY
+        )
+        # user_id=2의 틀린 문제
+        d4 = AnswerDetail(
+            id=None, result_id=saved_result2.id, question_id=4,
+            user_answer="B", correct_answer="C", is_correct=False,
+            time_spent_seconds=35, difficulty=3,
+            question_type=QuestionType.READING
+        )
+
+        answer_detail_repo.save(d1)
+        answer_detail_repo.save(d2)
+        answer_detail_repo.save(d3)
+        answer_detail_repo.save(d4)
+
+        # user_id=1의 틀린 문제만 조회
+        incorrect_details = answer_detail_repo.find_incorrect_by_user_id(1)
+        assert len(incorrect_details) == 2
+        assert all(d.is_correct is False for d in incorrect_details)
+        assert all(d.result_id == saved_result1.id for d in incorrect_details)
+        assert set(d.question_id for d in incorrect_details) == {1, 2}
+
+        # user_id=2의 틀린 문제만 조회
+        incorrect_details_user2 = answer_detail_repo.find_incorrect_by_user_id(2)
+        assert len(incorrect_details_user2) == 1
+        assert incorrect_details_user2[0].is_correct is False
+        assert incorrect_details_user2[0].question_id == 4

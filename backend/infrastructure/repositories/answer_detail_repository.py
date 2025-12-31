@@ -155,3 +155,27 @@ class SqliteAnswerDetailRepository:
             rows = cursor.fetchall()
 
             return [AnswerDetailMapper.to_entity(row) for row in rows]
+
+    def find_incorrect_by_user_id(self, user_id: int) -> List[AnswerDetail]:
+        """
+        사용자 ID로 틀린 문제(오답)만 조회
+        
+        result 테이블과 조인하여 해당 사용자의 틀린 문제만 조회합니다.
+        
+        Args:
+            user_id: 사용자 ID
+            
+        Returns:
+            List[AnswerDetail]: 해당 사용자의 틀린 문제 리스트 (중복 제거된 question_id)
+        """
+        with self.db.get_connection() as conn:
+            cursor = conn.execute("""
+                SELECT DISTINCT ad.* FROM answer_details ad
+                INNER JOIN results r ON ad.result_id = r.id
+                WHERE r.user_id = ? 
+                AND ad.is_correct = 0
+                ORDER BY ad.created_at DESC
+            """, (user_id,))
+            rows = cursor.fetchall()
+
+            return [AnswerDetailMapper.to_entity(row) for row in rows]
