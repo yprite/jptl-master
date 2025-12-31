@@ -10,6 +10,8 @@ export interface Question {
   choices: string[];
   difficulty: number;
   audio_url?: string | null;
+  correct_answer?: string; // 학습 모드에서 사용
+  explanation?: string; // 학습 모드에서 사용
 }
 
 export interface Test {
