@@ -151,6 +151,9 @@ async def submit_study_session(
     study_date = date.today()
     study_hour = datetime.now().hour
     
+    # 문제 ID 리스트 추출 (반복 학습용)
+    question_ids = list(request.answers.keys())
+    
     study_session = StudySession(
         id=None,
         user_id=current_user.id,
@@ -160,15 +163,13 @@ async def submit_study_session(
         correct_count=correct_count,
         time_spent_minutes=request.time_spent_minutes,
         level=request.level,
-        question_types=request.question_types
+        question_types=request.question_types,
+        question_ids=question_ids
     )
     
     saved_session = study_session_repo.save(study_session)
     
     accuracy = study_session.get_accuracy_percentage()
-    
-    # 문제 ID 리스트 추출 (반복 학습용)
-    question_ids = list(request.answers.keys())
     
     return {
         "success": True,
