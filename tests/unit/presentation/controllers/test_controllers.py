@@ -798,6 +798,65 @@ class TestTestsController:
             assert response.status_code == 404
             assert "시험을 찾을 수 없습니다" in response.json()["detail"]
 
+    def test_get_test_success(self, temp_db):
+        """특정 시험 정보 조회 성공 테스트"""
+        from backend.presentation.controllers.tests import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.test_repository import SqliteTestRepository
+        from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
+        from backend.domain.entities.test import Test
+        from backend.domain.entities.question import Question
+        from backend.domain.value_objects.jlpt import JLPTLevel, TestStatus, QuestionType
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.tests.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 문제 생성
+            question_repo = SqliteQuestionRepository(db=db)
+            question = Question(
+                id=0,
+                level=JLPTLevel.N5,
+                question_type=QuestionType.VOCABULARY,
+                question_text="「こんにちは」の意味は何ですか？",
+                choices=["안녕하세요", "감사합니다", "실례합니다", "죄송합니다"],
+                correct_answer="안녕하세요",
+                explanation="「こんにちは」は「안녕하세요」という意味です。",
+                difficulty=1
+            )
+            saved_question = question_repo.save(question)
+
+            # 시험 생성
+            test_repo = SqliteTestRepository(db=db)
+            test = Test(
+                id=0,
+                title="N5 진단 테스트",
+                level=JLPTLevel.N5,
+                status=TestStatus.CREATED,
+                time_limit_minutes=30,
+                questions=[saved_question]
+            )
+            saved_test = test_repo.save(test)
+
+            # 시험 조회
+            response = client.get(f"/{saved_test.id}")
+            assert response.status_code == 200
+            data = response.json()
+            assert data["id"] == saved_test.id
+            assert data["title"] == "N5 진단 테스트"
+            assert data["level"] == "N5"
+            assert data["status"] == "created"
+            assert data["time_limit_minutes"] == 30
+            assert len(data["questions"]) == 1
+            assert data["questions"][0]["id"] == saved_question.id
+            assert data["questions"][0]["question_text"] == "「こんにちは」の意味は何ですか？"
+
     def test_create_n5_diagnostic_test(self, temp_db):
         """N5 진단 테스트 생성 전용 엔드포인트 테스트"""
         from backend.presentation.controllers.tests import router

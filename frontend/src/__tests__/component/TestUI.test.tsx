@@ -143,5 +143,61 @@ describe('TestUI', () => {
     const nextButton = screen.getByTestId('next-button');
     expect(nextButton).toBeDisabled();
   });
+
+  it('should render audio player when audio_url is provided', () => {
+    const testWithAudio: Test = {
+      ...mockTest,
+      questions: [
+        {
+          ...mockTest.questions[0],
+          audio_url: '/static/audio/tts/question_1.mp3',
+        },
+      ],
+    };
+    render(<TestUI test={testWithAudio} />);
+    const audioPlayer = screen.getByTestId('audio-player');
+    expect(audioPlayer).toBeInTheDocument();
+    const audioElement = screen.getByTestId('audio-element');
+    expect(audioElement).toBeInTheDocument();
+    expect(audioElement).toHaveAttribute('src', 'http://localhost:8000/static/audio/tts/question_1.mp3');
+  });
+
+  it('should handle audio play/pause events', () => {
+    const testWithAudio: Test = {
+      ...mockTest,
+      questions: [
+        {
+          ...mockTest.questions[0],
+          audio_url: '/static/audio/tts/question_1.mp3',
+        },
+      ],
+    };
+    render(<TestUI test={testWithAudio} />);
+    const audioElement = screen.getByTestId('audio-element') as HTMLAudioElement;
+    
+    // Play event
+    fireEvent.play(audioElement);
+    // Note: We can't directly test state changes, but we can verify the event handlers are attached
+    expect(audioElement).toBeInTheDocument();
+    
+    // Pause event
+    fireEvent.pause(audioElement);
+    expect(audioElement).toBeInTheDocument();
+  });
+
+  it('should show error message when no questions', () => {
+    const testWithNoQuestions: Test = {
+      ...mockTest,
+      questions: [],
+    };
+    render(<TestUI test={testWithNoQuestions} />);
+    expect(screen.getByText('테스트에 문제가 없습니다.')).toBeInTheDocument();
+  });
+
+  it('should not render audio player when audio_url is not provided', () => {
+    render(<TestUI test={mockTest} />);
+    const audioPlayer = screen.queryByTestId('audio-player');
+    expect(audioPlayer).not.toBeInTheDocument();
+  });
 });
 

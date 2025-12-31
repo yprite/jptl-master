@@ -177,6 +177,139 @@ describe('testApi', () => {
       );
     });
   });
+
+  describe('startTest', () => {
+    it('should start test successfully', async () => {
+      const mockTest = {
+        id: 1,
+        title: 'N5 진단 테스트',
+        level: 'N5',
+        status: 'in_progress',
+        time_limit_minutes: 30,
+        questions: [
+          {
+            id: 1,
+            level: 'N5',
+            question_type: 'vocabulary',
+            question_text: '「こんにちは」の意味は何ですか？',
+            choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+            difficulty: 1,
+          },
+        ],
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockTest,
+        }),
+      });
+
+      const result = await testApi.startTest(1);
+      expect(result).toEqual(mockTest);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/tests/1/start'),
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({}),
+        })
+      );
+    });
+
+    it('should handle start test error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '시험에 등록된 문제가 없습니다. 테스트를 다시 생성해주세요.',
+        }),
+      });
+
+      try {
+        await testApi.startTest(1);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(400);
+          expect(error.message).toContain('시험에 등록된 문제가 없습니다');
+        }
+      }
+    });
+  });
+
+  describe('getTest', () => {
+    it('should fetch test by id', async () => {
+      const mockTest = {
+        id: 1,
+        title: 'N5 진단 테스트',
+        level: 'N5',
+        status: 'created',
+        time_limit_minutes: 30,
+        questions: [
+          {
+            id: 1,
+            level: 'N5',
+            question_type: 'vocabulary',
+            question_text: '「こんにちは」の意味は何ですか？',
+            choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+            difficulty: 1,
+          },
+        ],
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockTest,
+        }),
+      });
+
+      const result = await testApi.getTest(1);
+      expect(result).toEqual(mockTest);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/tests/1'),
+        expect.objectContaining({
+          credentials: 'include',
+        })
+      );
+    });
+
+    it('should handle get test error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '시험을 찾을 수 없습니다',
+        }),
+      });
+
+      try {
+        await testApi.getTest(999);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(404);
+          expect(error.message).toContain('시험을 찾을 수 없습니다');
+        }
+      }
+    });
+  });
 });
 
 describe('resultApi', () => {
@@ -795,6 +928,383 @@ describe('authApi', () => {
         expect.stringContaining('/api/v1/auth/logout'),
         expect.objectContaining({
           method: 'POST',
+        })
+      );
+    });
+  });
+});
+
+describe('adminApi', () => {
+  beforeEach(() => {
+    (fetch as jest.Mock).mockClear();
+  });
+
+  describe('getUsers', () => {
+    it('should fetch all users', async () => {
+      const mockUsers = [
+        {
+          id: 1,
+          email: 'user1@example.com',
+          username: 'user1',
+          target_level: 'N5',
+          current_level: null,
+          total_tests_taken: 5,
+          study_streak: 3,
+          is_admin: false,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockUsers,
+        }),
+      });
+
+      const result = await adminApi.getUsers();
+      expect(result).toEqual(mockUsers);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/users'),
+        expect.objectContaining({
+          credentials: 'include',
+        })
+      );
+    });
+  });
+
+  describe('getUser', () => {
+    it('should fetch user by id', async () => {
+      const mockUser = {
+        id: 1,
+        email: 'user1@example.com',
+        username: 'user1',
+        target_level: 'N5',
+        current_level: null,
+        total_tests_taken: 5,
+        study_streak: 3,
+        is_admin: false,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockUser,
+        }),
+      });
+
+      const result = await adminApi.getUser(1);
+      expect(result).toEqual(mockUser);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/users/1'),
+        expect.objectContaining({
+          credentials: 'include',
+        })
+      );
+    });
+  });
+
+  describe('updateUser', () => {
+    it('should update user', async () => {
+      const mockUser = {
+        id: 1,
+        email: 'user1@example.com',
+        username: 'updateduser',
+        target_level: 'N4',
+        current_level: null,
+        total_tests_taken: 5,
+        study_streak: 3,
+        is_admin: false,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockUser,
+        }),
+      });
+
+      const result = await adminApi.updateUser(1, {
+        username: 'updateduser',
+        target_level: 'N4',
+      });
+      expect(result).toEqual(mockUser);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/users/1'),
+        expect.objectContaining({
+          method: 'PUT',
+          body: JSON.stringify({
+            username: 'updateduser',
+            target_level: 'N4',
+          }),
+        })
+      );
+    });
+  });
+
+  describe('deleteUser', () => {
+    it('should delete user', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+        }),
+      });
+
+      await adminApi.deleteUser(1);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/users/1'),
+        expect.objectContaining({
+          method: 'DELETE',
+        })
+      );
+    });
+  });
+
+  describe('getQuestions', () => {
+    it('should fetch all questions', async () => {
+      const mockQuestions = [
+        {
+          id: 1,
+          level: 'N5',
+          question_type: 'vocabulary',
+          question_text: '「こんにちは」の意味は何ですか？',
+          choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+          correct_answer: '안녕하세요',
+          explanation: 'Explanation',
+          difficulty: 1,
+          audio_url: null,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockQuestions,
+        }),
+      });
+
+      const result = await adminApi.getQuestions();
+      expect(result).toEqual(mockQuestions);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/questions'),
+        expect.objectContaining({
+          credentials: 'include',
+        })
+      );
+    });
+  });
+
+  describe('getQuestion', () => {
+    it('should fetch question by id', async () => {
+      const mockQuestion = {
+        id: 1,
+        level: 'N5',
+        question_type: 'vocabulary',
+        question_text: '「こんにちは」の意味は何ですか？',
+        choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+        correct_answer: '안녕하세요',
+        explanation: 'Explanation',
+        difficulty: 1,
+        audio_url: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockQuestion,
+        }),
+      });
+
+      const result = await adminApi.getQuestion(1);
+      expect(result).toEqual(mockQuestion);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/questions/1'),
+        expect.objectContaining({
+          credentials: 'include',
+        })
+      );
+    });
+  });
+
+  describe('createQuestion', () => {
+    it('should create question', async () => {
+      const mockQuestion = {
+        id: 1,
+        level: 'N5',
+        question_type: 'vocabulary',
+        question_text: '「こんにちは」の意味は何ですか？',
+        choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+        correct_answer: '안녕하세요',
+        explanation: 'Explanation',
+        difficulty: 1,
+        audio_url: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockQuestion,
+        }),
+      });
+
+      const result = await adminApi.createQuestion({
+        level: 'N5',
+        question_type: 'vocabulary',
+        question_text: '「こんにちは」の意味は何ですか？',
+        choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+        correct_answer: '안녕하세요',
+        explanation: 'Explanation',
+        difficulty: 1,
+      });
+      expect(result).toEqual(mockQuestion);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/questions'),
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({
+            level: 'N5',
+            question_type: 'vocabulary',
+            question_text: '「こんにちは」の意味は何ですか？',
+            choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+            correct_answer: '안녕하세요',
+            explanation: 'Explanation',
+            difficulty: 1,
+          }),
+        })
+      );
+    });
+  });
+
+  describe('updateQuestion', () => {
+    it('should update question', async () => {
+      const mockQuestion = {
+        id: 1,
+        level: 'N5',
+        question_type: 'vocabulary',
+        question_text: 'Updated question',
+        choices: ['A', 'B', 'C', 'D'],
+        correct_answer: 'A',
+        explanation: 'Updated explanation',
+        difficulty: 2,
+        audio_url: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockQuestion,
+        }),
+      });
+
+      const result = await adminApi.updateQuestion(1, {
+        question_text: 'Updated question',
+        explanation: 'Updated explanation',
+        difficulty: 2,
+      });
+      expect(result).toEqual(mockQuestion);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/questions/1'),
+        expect.objectContaining({
+          method: 'PUT',
+          body: JSON.stringify({
+            question_text: 'Updated question',
+            explanation: 'Updated explanation',
+            difficulty: 2,
+          }),
+        })
+      );
+    });
+  });
+
+  describe('deleteQuestion', () => {
+    it('should delete question', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+        }),
+      });
+
+      await adminApi.deleteQuestion(1);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/questions/1'),
+        expect.objectContaining({
+          method: 'DELETE',
+        })
+      );
+    });
+  });
+
+  describe('getStatistics', () => {
+    it('should fetch statistics', async () => {
+      const mockStatistics = {
+        total_users: 10,
+        active_users: 5,
+        total_tests: 20,
+        average_score: 75.5,
+        total_questions: 100,
+        questions_by_level: {
+          N5: 50,
+          N4: 30,
+          N3: 20,
+        },
+        learning_data: {
+          total_sessions: 50,
+          total_answers: 1000,
+        },
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockStatistics,
+        }),
+      });
+
+      const result = await adminApi.getStatistics();
+      expect(result).toEqual(mockStatistics);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/statistics'),
+        expect.objectContaining({
+          credentials: 'include',
         })
       );
     });
