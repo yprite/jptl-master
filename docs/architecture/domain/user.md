@@ -23,6 +23,7 @@
 | `total_tests_taken` | `int` | 응시한 총 시험 수 | 0 이상 |
 | `study_streak` | `int` | 연속 학습 일수 | 0 이상 |
 | `preferred_question_types` | `List[QuestionType]` | 선호하는 문제 유형들 | 선택적 |
+| `is_admin` | `bool` | 어드민 권한 여부 | 기본값: False |
 | `created_at` | `datetime` | 생성 일시 | 자동 설정 |
 | `updated_at` | `datetime` | 수정 일시 | 자동 업데이트 |
 

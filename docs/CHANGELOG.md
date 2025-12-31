@@ -7,6 +7,18 @@
 
 ## Unreleased
 
+### Added
+어드민_인증_및_권한_관리: 어드민 인증 및 권한 관리 구현 (2025-01-04)
+- User 엔티티에 is_admin 필드 추가 (기본값: False)
+- 데이터베이스 users 테이블에 is_admin 컬럼 추가 및 마이그레이션
+- UserMapper에 is_admin 필드 매핑 추가
+- UserRepository에 is_admin 필드 저장/조회 로직 추가
+- get_admin_user 의존성 함수 추가 (어드민 권한 체크)
+- 어드민 권한 체크 테스트 작성 (일반 사용자 403 에러, 어드민 사용자 성공)
+- User 엔티티 is_admin 필드 테스트 작성
+- UserRepository is_admin 필드 저장/조회 테스트 작성
+- 모든 테스트 통과 및 커버리지 92% 유지
+
 ### Changed
 스프린트_관리: 스프린트 005 종료 및 스프린트 006 시작 (2025-12-28)
 - 스프린트 JLPT-SPRINT-005 종료 처리 (100% 완료, 83/81 포인트)

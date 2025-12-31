@@ -95,6 +95,28 @@
 2. **인증 확인**: 보호된 엔드포인트에 접근할 때 세션 쿠키를 통해 인증됩니다.
 3. **로그아웃**: 로그아웃하면 세션 쿠키가 삭제됩니다.
 
+## 어드민 권한 체크
+
+어드민 전용 엔드포인트는 `get_admin_user` 의존성 함수를 사용하여 권한을 확인합니다.
+
+**의존성 함수:**
+- `get_current_user`: 현재 로그인된 사용자 조회 (401 에러 발생 가능)
+- `get_admin_user`: 어드민 권한이 있는 사용자 조회 (401 또는 403 에러 발생 가능)
+
+**사용 예시:**
+```python
+from backend.presentation.controllers.auth import get_admin_user
+
+@router.get("/admin/users")
+async def get_all_users(admin_user: User = Depends(get_admin_user)):
+    # 어드민 권한이 있는 사용자만 접근 가능
+    ...
+```
+
+**에러 응답:**
+- `401 Unauthorized`: 인증되지 않은 경우
+- `403 Forbidden`: 어드민 권한이 없는 경우
+
 ## 세션 관리
 
 - 세션은 서버 측에서 관리됩니다.
