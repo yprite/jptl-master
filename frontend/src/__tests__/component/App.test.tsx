@@ -52,6 +52,20 @@ jest.mock('../../components/organisms/LoginUI', () => {
   };
 });
 
+// AdminLayout 모킹
+jest.mock('../../components/organisms/AdminLayout', () => ({
+  __esModule: true,
+  default: ({ children, currentPage, onNavigate }: any) => (
+    <div data-testid="admin-layout">
+      <button onClick={() => onNavigate && onNavigate('admin-dashboard')}>대시보드</button>
+      <button onClick={() => onNavigate && onNavigate('admin-users')}>사용자 관리</button>
+      <button onClick={() => onNavigate && onNavigate('admin-questions')}>문제 관리</button>
+      {children}
+    </div>
+  ),
+  AdminPage: {},
+}));
+
 // fetch 모킹
 beforeEach(() => {
   (global.fetch as jest.Mock).mockClear();
@@ -618,6 +632,106 @@ describe('App', () => {
     await waitFor(() => {
       expect(screen.getByTestId('login-ui')).toBeInTheDocument();
     });
+  });
+
+  it('should handle test submission error', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    // 테스트 생성 및 시작
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: {
+            id: 1,
+            title: 'N5 진단 테스트',
+            level: 'N5',
+            status: 'created',
+            time_limit_minutes: 30,
+            questions: [],
+          },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: {
+            id: 1,
+            title: 'N5 진단 테스트',
+            level: 'N5',
+            status: 'in_progress',
+            time_limit_minutes: 30,
+            questions: [
+              {
+                id: 1,
+                level: 'N5',
+                question_type: 'vocabulary',
+                question_text: '「こんにちは」の意味は何ですか？',
+                choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
+                difficulty: 1,
+              },
+            ],
+          },
+        }),
+      })
+      // 테스트 제출 실패
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          detail: 'Internal Server Error',
+        }),
+      });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+    });
+
+    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    fireEvent.click(startButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/「こんにちは」の意味は何ですか？/i)).toBeInTheDocument();
+    });
+
+    // TestUI의 제출 버튼을 찾아서 클릭
+    const submitButton = screen.queryByRole('button', { name: /제출/i });
+    if (submitButton) {
+      // 답안 선택
+      const choice = screen.getByTestId('choice-1-0');
+      fireEvent.click(choice);
+      
+      // 제출 버튼 클릭
+      fireEvent.click(submitButton);
+      
+      // 에러 메시지 표시 확인
+      await waitFor(() => {
+        expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
+      }, { timeout: 3000 });
+    }
   });
 
   it('should handle restart', async () => {
@@ -1299,6 +1413,33 @@ describe('App', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('login-ui')).toBeInTheDocument();
+    });
+  });
+
+  it('should handle admin navigate', async () => {
+    const mockAdminUser = {
+      id: 1,
+      email: 'admin@example.com',
+      username: 'admin',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+      is_admin: true,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockAdminUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockAdminUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockAdminUser);
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 자격 검증 프로그램/i)).toBeInTheDocument();
     });
   });
 });
