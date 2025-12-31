@@ -1566,6 +1566,7 @@ class TestStudyController:
                     question_text=f"문제 {i+1}",
                     choices=["A", "B", "C", "D"],
                     correct_answer="A",
+                    explanation="해설입니다",
                     difficulty=1
                 )
                 question_repo.save(question)
@@ -1626,6 +1627,7 @@ class TestStudyController:
                     question_text=f"어휘 문제 {i+1}",
                     choices=["A", "B", "C", "D"],
                     correct_answer="A",
+                    explanation="해설입니다",
                     difficulty=1
                 )
                 question_repo.save(question)
@@ -1638,6 +1640,7 @@ class TestStudyController:
                     question_text=f"문법 문제 {i+1}",
                     choices=["A", "B", "C", "D"],
                     correct_answer="A",
+                    explanation="해설입니다",
                     difficulty=1
                 )
                 question_repo.save(question)
@@ -1656,12 +1659,16 @@ class TestStudyController:
 
             try:
                 # VOCABULARY 유형만 조회
-                response = client.get("/questions?level=N5&question_types=VOCABULARY&question_count=3")
+                response = client.get("/questions", params={
+                    "level": "N5",
+                    "question_types": ["vocabulary"],
+                    "question_count": 3
+                })
                 assert response.status_code == 200
                 data = response.json()
                 assert isinstance(data, list)
                 assert len(data) == 3
-                assert all(q["question_type"] == "VOCABULARY" for q in data)
+                assert all(q["question_type"] == "vocabulary" for q in data)
             finally:
                 app.dependency_overrides.clear()
 
@@ -1670,8 +1677,10 @@ class TestStudyController:
         from backend.presentation.controllers.study import router
         from fastapi import FastAPI
         from backend.infrastructure.config.database import Database
+        from starlette.middleware.sessions import SessionMiddleware
 
         app = FastAPI()
+        app.add_middleware(SessionMiddleware, secret_key="test-secret-key")
         app.include_router(router)
 
         client = TestClient(app)
@@ -1715,6 +1724,7 @@ class TestStudyController:
                     question_text=f"문제 {i+1}",
                     choices=["A", "B", "C", "D"],
                     correct_answer="A",
+                    explanation="해설입니다",
                     difficulty=1
                 )
                 saved_q = question_repo.save(question)
@@ -1740,7 +1750,7 @@ class TestStudyController:
                     json={
                         "answers": answers,
                         "level": "N5",
-                        "question_types": ["VOCABULARY"],
+                        "question_types": ["vocabulary"],
                         "time_spent_minutes": 10
                     }
                 )

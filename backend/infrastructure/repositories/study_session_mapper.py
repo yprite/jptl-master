@@ -36,7 +36,7 @@ class StudySessionMapper:
         # level 파싱
         level = None
         try:
-            level_str = row.get('level')
+            level_str = row['level']
             if level_str:
                 level = JLPTLevel(level_str)
         except (KeyError, TypeError, ValueError):
@@ -45,7 +45,7 @@ class StudySessionMapper:
         # question_types 파싱 (JSON 배열)
         question_types = None
         try:
-            question_types_str = row.get('question_types')
+            question_types_str = row['question_types']
             if question_types_str:
                 question_types_list = json.loads(question_types_str)
                 question_types = [QuestionType(qt) for qt in question_types_list]

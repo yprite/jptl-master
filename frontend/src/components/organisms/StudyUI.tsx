@@ -50,7 +50,7 @@ const StudyUI: React.FC<StudyUIProps> = ({
 
     // 즉시 정답 확인
     const question = questions.find(q => q.id === questionId);
-    if (question) {
+    if (question && question.correct_answer) {
       const isCorrect = question.correct_answer === answer;
       setResults(prev => ({
         ...prev,
@@ -58,7 +58,7 @@ const StudyUI: React.FC<StudyUIProps> = ({
           questionId,
           isCorrect,
           userAnswer: answer,
-          correctAnswer: question.correct_answer,
+          correctAnswer: question.correct_answer!,
         },
       }));
       // 해설 자동 표시
