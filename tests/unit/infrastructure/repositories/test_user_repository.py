@@ -118,6 +118,9 @@ class TestSqliteUserRepository:
 
             def __getitem__(self, key):
                 return self.data[key]
+            
+            def keys(self):
+                return self.data.keys()
 
         row = MockRow({
             'id': 1,
@@ -128,6 +131,7 @@ class TestSqliteUserRepository:
             'total_tests_taken': 5,
             'study_streak': 3,
             'preferred_question_types': '["vocabulary", "grammar"]',
+            'is_admin': 0,
             'created_at': '2024-01-01T00:00:00',
             'updated_at': '2024-01-02T00:00:00'
         })
@@ -300,6 +304,9 @@ class TestSqliteUserRepository:
 
             def __getitem__(self, key):
                 return self.data[key]
+            
+            def keys(self):
+                return self.data.keys()
 
         # preferred_question_types가 None인 경우
         row_none_types = MockRow({
@@ -311,6 +318,7 @@ class TestSqliteUserRepository:
             'total_tests_taken': 0,
             'study_streak': 0,
             'preferred_question_types': None,
+            'is_admin': 0,
             'created_at': '2024-01-01T00:00:00',
             'updated_at': '2024-01-02T00:00:00'
         })
@@ -328,6 +336,7 @@ class TestSqliteUserRepository:
             'total_tests_taken': 0,
             'study_streak': 0,
             'preferred_question_types': 'invalid json',
+            'is_admin': 0,
             'created_at': '2024-01-01T00:00:00',
             'updated_at': '2024-01-02T00:00:00'
         })
@@ -345,6 +354,7 @@ class TestSqliteUserRepository:
             'total_tests_taken': 0,
             'study_streak': 0,
             'preferred_question_types': None,
+            'is_admin': 0,
             'created_at': 'invalid datetime',
             'updated_at': 'invalid datetime'
         })
