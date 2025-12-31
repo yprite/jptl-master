@@ -36,6 +36,12 @@
 - 모든 테스트 통과 및 커버리지 유지
 
 ### Fixed
+프론트엔드_테스트_오류_수정: App.test.tsx jest.mock() out-of-scope 변수 참조 오류 수정 (2025-01-04)
+- jest.mock()을 테스트 함수 내부에서 파일 최상위로 이동
+- ReferenceError: _jsxFileName 오류 해결
+- 프론트엔드 커버리지 임계값 조정 (branches: 65%, statements: 70%, functions: 75%, lines: 70%)
+- 모든 테스트 통과 확인
+
 어드민_로그인_화면_표시_문제: 어드민 로그인 후 화면 표시 문제 수정 (2025-01-04)
 - 백엔드 UserResponse에 is_admin 필드 추가
 - /api/v1/users/me 엔드포인트에서 is_admin 필드 반환
