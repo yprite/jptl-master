@@ -838,7 +838,6 @@ class TestTestsController:
                 id=0,
                 title="N5 진단 테스트",
                 level=JLPTLevel.N5,
-                status=TestStatus.CREATED,
                 time_limit_minutes=30,
                 questions=[saved_question]
             )

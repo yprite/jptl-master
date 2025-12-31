@@ -2,7 +2,7 @@
  * API 서비스 유닛 테스트
  */
 
-import { testApi, resultApi, userApi, authApi, ApiError } from '../../services/api';
+import { testApi, resultApi, userApi, authApi, adminApi, ApiError } from '../../services/api';
 
 // fetch 모킹
 global.fetch = jest.fn();
