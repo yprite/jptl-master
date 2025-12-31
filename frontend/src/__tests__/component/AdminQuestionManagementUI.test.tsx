@@ -525,5 +525,335 @@ describe('AdminQuestionManagementUI', () => {
       expect(screen.getByText('전체 문제 목록')).toBeInTheDocument();
     });
   });
+
+  it('should display error when loadQuestions fails', async () => {
+    (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/알 수 없는 오류가 발생했습니다|오류가 발생했습니다/)).toBeInTheDocument();
+    });
+  });
+
+  it('should display error when handleQuestionClick fails', async () => {
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: mockQuestions }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+      .mockRejectedValueOnce(new Error('Network error'));
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const viewButtons = screen.getAllByText('상세보기');
+    fireEvent.click(viewButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText(/알 수 없는 오류가 발생했습니다|오류가 발생했습니다/)).toBeInTheDocument();
+    });
+  });
+
+  it('should display error when handleSave fails', async () => {
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: mockQuestions }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: mockQuestions[0] }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+      .mockRejectedValueOnce(new Error('Network error'));
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const viewButtons = screen.getAllByText('상세보기');
+    fireEvent.click(viewButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText('문제 상세 정보')).toBeInTheDocument();
+    });
+
+    const editButton = screen.getByText('수정');
+    fireEvent.click(editButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('문제 정보 수정')).toBeInTheDocument();
+    });
+
+    const saveButton = screen.getByText('저장');
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/알 수 없는 오류가 발생했습니다|오류가 발생했습니다/)).toBeInTheDocument();
+    });
+  });
+
+  it('should display validation error when creating question without question text', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true, data: mockQuestions }),
+      headers: new Headers({ 'content-type': 'application/json' }),
+    });
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const createButton = screen.getByText('새 문제 생성');
+    fireEvent.click(createButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('새 문제 생성')).toBeInTheDocument();
+    });
+
+    const saveButton = screen.getByText('생성');
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('문제 내용을 입력하세요.')).toBeInTheDocument();
+    });
+  });
+
+  it('should display validation error when creating question with less than 2 choices', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true, data: mockQuestions }),
+      headers: new Headers({ 'content-type': 'application/json' }),
+    });
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const createButton = screen.getByText('새 문제 생성');
+    fireEvent.click(createButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('새 문제 생성')).toBeInTheDocument();
+    });
+
+    const questionTextInput = screen.getByPlaceholderText('문제 내용을 입력하세요') as HTMLInputElement;
+    fireEvent.change(questionTextInput, { target: { value: '新しい問題' } });
+
+    // 선택지 하나만 입력
+    const choiceInputs = screen.getAllByPlaceholderText(/선택지/);
+    fireEvent.change(choiceInputs[0], { target: { value: '選択肢1' } });
+
+    const saveButton = screen.getByText('생성');
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('최소 2개 이상의 선택지를 입력하세요.')).toBeInTheDocument();
+    });
+  });
+
+  it('should display validation error when creating question without correct answer', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true, data: mockQuestions }),
+      headers: new Headers({ 'content-type': 'application/json' }),
+    });
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const createButton = screen.getByText('새 문제 생성');
+    fireEvent.click(createButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('새 문제 생성')).toBeInTheDocument();
+    });
+
+    const questionTextInput = screen.getByPlaceholderText('문제 내용을 입력하세요') as HTMLInputElement;
+    fireEvent.change(questionTextInput, { target: { value: '新しい問題' } });
+
+    const choiceInputs = screen.getAllByPlaceholderText(/선택지/);
+    fireEvent.change(choiceInputs[0], { target: { value: '選択肢1' } });
+    fireEvent.change(choiceInputs[1], { target: { value: '選択肢2' } });
+
+    const saveButton = screen.getByText('생성');
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('정답을 입력하세요.')).toBeInTheDocument();
+    });
+  });
+
+  it('should display validation error when creating question without explanation', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true, data: mockQuestions }),
+      headers: new Headers({ 'content-type': 'application/json' }),
+    });
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const createButton = screen.getByText('새 문제 생성');
+    fireEvent.click(createButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('새 문제 생성')).toBeInTheDocument();
+    });
+
+    const questionTextInput = screen.getByPlaceholderText('문제 내용을 입력하세요') as HTMLInputElement;
+    fireEvent.change(questionTextInput, { target: { value: '新しい問題' } });
+
+    const choiceInputs = screen.getAllByPlaceholderText(/선택지/);
+    fireEvent.change(choiceInputs[0], { target: { value: '選択肢1' } });
+    fireEvent.change(choiceInputs[1], { target: { value: '選択肢2' } });
+
+    const correctAnswerSelect = screen.getByLabelText('정답:') as HTMLSelectElement;
+    fireEvent.change(correctAnswerSelect, { target: { value: '選択肢1' } });
+
+    const saveButton = screen.getByText('생성');
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('해설을 입력하세요.')).toBeInTheDocument();
+    });
+  });
+
+  it('should display error when handleCreateQuestion fails', async () => {
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: mockQuestions }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+      .mockRejectedValueOnce(new Error('Network error'));
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const createButton = screen.getByText('새 문제 생성');
+    fireEvent.click(createButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('새 문제 생성')).toBeInTheDocument();
+    });
+
+    const questionTextInput = screen.getByPlaceholderText('문제 내용을 입력하세요') as HTMLInputElement;
+    fireEvent.change(questionTextInput, { target: { value: '新しい問題' } });
+
+    const choiceInputs = screen.getAllByPlaceholderText(/선택지/);
+    fireEvent.change(choiceInputs[0], { target: { value: '選択肢1' } });
+    fireEvent.change(choiceInputs[1], { target: { value: '選択肢2' } });
+
+    const correctAnswerSelect = screen.getByLabelText('정답:') as HTMLSelectElement;
+    fireEvent.change(correctAnswerSelect, { target: { value: '選択肢1' } });
+
+    const explanationInput = screen.getByPlaceholderText('해설을 입력하세요') as HTMLTextAreaElement;
+    fireEvent.change(explanationInput, { target: { value: '新しい説明' } });
+
+    const saveButton = screen.getByText('생성');
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/알 수 없는 오류가 발생했습니다|오류가 발생했습니다/)).toBeInTheDocument();
+    });
+  });
+
+  it('should not delete question when user cancels confirmation', async () => {
+    window.confirm = jest.fn(() => false);
+
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: mockQuestions }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: mockQuestions[0] }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      });
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const viewButtons = screen.getAllByText('상세보기');
+    fireEvent.click(viewButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText('문제 상세 정보')).toBeInTheDocument();
+    });
+
+    const deleteButton = screen.getByText('삭제');
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(window.confirm).toHaveBeenCalled();
+    });
+
+    // 취소했으므로 여전히 상세 화면에 있어야 함
+    expect(screen.getByText('문제 상세 정보')).toBeInTheDocument();
+  });
+
+  it('should display error when handleDelete fails with non-ApiError', async () => {
+    window.confirm = jest.fn(() => true);
+
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: mockQuestions }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, data: mockQuestions[0] }),
+        headers: new Headers({ 'content-type': 'application/json' }),
+      })
+      .mockRejectedValueOnce(new Error('Network error'));
+
+    render(<AdminQuestionManagementUI />);
+
+    await waitFor(() => {
+      expect(screen.getByText('問題1')).toBeInTheDocument();
+    });
+
+    const viewButtons = screen.getAllByText('상세보기');
+    fireEvent.click(viewButtons[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText('문제 상세 정보')).toBeInTheDocument();
+    });
+
+    const deleteButton = screen.getByText('삭제');
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/알 수 없는 오류가 발생했습니다|오류가 발생했습니다/)).toBeInTheDocument();
+    });
+  });
 });
 
