@@ -444,6 +444,32 @@ export const studyApi = {
     params.append('question_count', questionCount.toString());
     return fetchApi<Question[]>(`/study/wrong-answers/questions?${params.toString()}`);
   },
+
+  /**
+   * 학습 세션 목록 조회
+   */
+  async getStudySessions(): Promise<Array<{
+    id: number;
+    study_date: string;
+    study_hour: number;
+    total_questions: number;
+    correct_count: number;
+    accuracy: number;
+    time_spent_minutes: number;
+    level: string | null;
+    question_types: string[] | null;
+    question_count: number;
+    created_at: string;
+  }>> {
+    return fetchApi('/study/sessions');
+  },
+
+  /**
+   * 학습 세션의 문제 조회 (반복 학습용)
+   */
+  async getStudySessionQuestions(sessionId: number): Promise<Question[]> {
+    return fetchApi<Question[]>(`/study/sessions/${sessionId}/questions`);
+  },
 };
 
 /**

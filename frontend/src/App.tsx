@@ -14,7 +14,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile } from './types
 import { testApi, resultApi, userApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'wrong-answers' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
+type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -387,6 +387,12 @@ function App() {
                 className="wrong-answers-button"
               >
                 오답 노트
+              </button>
+              <button
+                onClick={handleViewRepeatStudy}
+                className="repeat-study-button"
+              >
+                반복 학습
               </button>
               {user?.is_admin && (
                 <>
