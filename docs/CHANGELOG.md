@@ -8,6 +8,24 @@
 ## Unreleased
 
 ### Added
+백엔드_어드민_API_엔드포인트: 백엔드 어드민 API 엔드포인트 구현 (2025-01-04)
+- 어드민 사용자 관리 API 구현 (GET, PUT, DELETE /admin/users)
+  - GET /api/v1/admin/users: 전체 사용자 목록 조회
+  - GET /api/v1/admin/users/{user_id}: 특정 사용자 조회
+  - PUT /api/v1/admin/users/{user_id}: 사용자 정보 수정
+  - DELETE /api/v1/admin/users/{user_id}: 사용자 삭제
+- 어드민 문제 관리 API 구현 (GET, POST, PUT, DELETE /admin/questions)
+  - GET /api/v1/admin/questions: 전체 문제 목록 조회
+  - POST /api/v1/admin/questions: 문제 생성
+  - GET /api/v1/admin/questions/{question_id}: 특정 문제 조회
+  - PUT /api/v1/admin/questions/{question_id}: 문제 수정
+  - DELETE /api/v1/admin/questions/{question_id}: 문제 삭제
+- 어드민 권한 체크 미들웨어 적용 (get_admin_user 의존성 함수)
+- Question 엔티티 필드 수정 시 유효성 검증 추가
+- 모든 어드민 API 엔드포인트에 대한 단위 테스트 작성 (15개 테스트)
+- 어드민 API 문서 작성 (docs/api/endpoints/admin.md)
+- 모든 테스트 통과 및 기존 테스트와 호환성 확인
+
 어드민_인증_및_권한_관리: 어드민 인증 및 권한 관리 구현 (2025-01-04)
 - User 엔티티에 is_admin 필드 추가 (기본값: False)
 - 데이터베이스 users 테이블에 is_admin 컬럼 추가 및 마이그레이션
