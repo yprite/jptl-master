@@ -36,6 +36,7 @@ class StudySubmitRequest(BaseModel):
     level: Optional[JLPTLevel] = None
     question_types: Optional[List[QuestionType]] = None
     time_spent_minutes: int
+    question_ids: Optional[List[int]] = None  # 반복 학습을 위한 문제 ID 리스트
 
 # 의존성 주입 함수
 def get_question_repository() -> SqliteQuestionRepository:
@@ -166,6 +167,9 @@ async def submit_study_session(
     
     accuracy = study_session.get_accuracy_percentage()
     
+    # 문제 ID 리스트 추출 (반복 학습용)
+    question_ids = list(request.answers.keys())
+    
     return {
         "success": True,
         "data": {
@@ -175,7 +179,8 @@ async def submit_study_session(
             "accuracy": accuracy,
             "time_spent_minutes": request.time_spent_minutes,
             "level": request.level.value if request.level else None,
-            "question_types": [qt.value for qt in request.question_types] if request.question_types else None
+            "question_types": [qt.value for qt in request.question_types] if request.question_types else None,
+            "question_ids": question_ids  # 반복 학습을 위한 문제 ID 리스트
         },
         "message": "학습 세션이 성공적으로 저장되었습니다"
     }
