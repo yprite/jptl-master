@@ -25,12 +25,12 @@ class SqliteUserRepository:
                 cursor = conn.execute("""
                     INSERT INTO users (email, username, target_level, current_level,
                                      total_tests_taken, study_streak, preferred_question_types,
-                                     created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                     is_admin, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     data['email'], data['username'], data['target_level'], data['current_level'],
                     data['total_tests_taken'], data['study_streak'], data['preferred_question_types'],
-                    data['created_at'], data['updated_at']
+                    data['is_admin'], data['created_at'], data['updated_at']
                 ))
 
                 # 생성된 ID를 사용자 객체에 설정
@@ -41,12 +41,12 @@ class SqliteUserRepository:
                     UPDATE users
                     SET email = ?, username = ?, target_level = ?, current_level = ?,
                         total_tests_taken = ?, study_streak = ?, preferred_question_types = ?,
-                        updated_at = ?
+                        is_admin = ?, updated_at = ?
                     WHERE id = ?
                 """, (
                     data['email'], data['username'], data['target_level'], data['current_level'],
                     data['total_tests_taken'], data['study_streak'], data['preferred_question_types'],
-                    data['updated_at'], user.id
+                    data['is_admin'], data['updated_at'], user.id
                 ))
 
             conn.commit()

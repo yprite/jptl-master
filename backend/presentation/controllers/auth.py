@@ -3,7 +3,7 @@
 세션 기반 인증을 제공합니다.
 """
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Depends
 from pydantic import BaseModel
 from typing import Optional
 
@@ -86,4 +86,32 @@ def get_current_user(req: Request) -> User:
         raise HTTPException(status_code=401, detail="유효하지 않은 세션입니다")
     
     return user
+
+def get_admin_user(req: Request) -> User:
+    """어드민 권한이 있는 사용자 조회 (의존성 함수)
+    
+    세션에서 사용자 ID를 가져와 사용자 정보를 반환하고, 어드민 권한을 확인합니다.
+    
+    Raises:
+        HTTPException: 인증되지 않은 경우 401 에러
+        HTTPException: 어드민 권한이 없는 경우 403 에러
+    """
+    user = get_current_user(req)
+    
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="어드민 권한이 필요합니다")
+    
+    return user
+
+@router.get("/admin/test")
+async def test_admin_endpoint(admin_user: User = Depends(get_admin_user)):
+    """테스트용 어드민 엔드포인트 (테스트 전용)"""
+    return {
+        "success": True,
+        "data": {
+            "user_id": admin_user.id,
+            "is_admin": admin_user.is_admin
+        },
+        "message": "어드민 권한 확인 성공"
+    }
 
