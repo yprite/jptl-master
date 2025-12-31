@@ -9,11 +9,24 @@ from contextlib import contextmanager
 from typing import Generator
 
 
+def _get_project_root() -> str:
+    """프로젝트 루트 디렉토리 경로 반환"""
+    # 이 파일의 위치를 기준으로 프로젝트 루트 찾기
+    current_file = os.path.abspath(__file__)
+    # backend/infrastructure/config/database.py -> 프로젝트 루트
+    backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_file))))
+    return backend_dir
+
+
 class Database:
     """SQLite 데이터베이스 연결 관리"""
 
-    def __init__(self, db_path: str = "data/jlpt.db"):
-        self.db_path = db_path
+    def __init__(self, db_path: str = None):
+        if db_path is None:
+            # 프로젝트 루트 기준으로 data/jlpt.db 경로 설정
+            project_root = _get_project_root()
+            db_path = os.path.join(project_root, "data", "jlpt.db")
+        self.db_path = os.path.abspath(db_path)  # 절대 경로로 변환
         self._ensure_directory_exists()
         self._create_tables()
 
