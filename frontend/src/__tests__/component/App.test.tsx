@@ -52,6 +52,20 @@ jest.mock('../../components/organisms/LoginUI', () => {
   };
 });
 
+// AdminLayout 모킹
+jest.mock('../../components/organisms/AdminLayout', () => ({
+  __esModule: true,
+  default: ({ children, currentPage, onNavigate }: any) => (
+    <div data-testid="admin-layout">
+      <button onClick={() => onNavigate && onNavigate('admin-dashboard')}>대시보드</button>
+      <button onClick={() => onNavigate && onNavigate('admin-users')}>사용자 관리</button>
+      <button onClick={() => onNavigate && onNavigate('admin-questions')}>문제 관리</button>
+      {children}
+    </div>
+  ),
+  AdminPage: {},
+}));
+
 // fetch 모킹
 beforeEach(() => {
   (global.fetch as jest.Mock).mockClear();
@@ -1421,20 +1435,6 @@ describe('App', () => {
     (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockAdminUser);
     (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
     (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockAdminUser);
-
-    // AdminLayout 컴포넌트 모킹
-    jest.mock('../../components/organisms/AdminLayout', () => ({
-      __esModule: true,
-      default: ({ children, currentPage, onNavigate }: any) => (
-        <div data-testid="admin-layout">
-          <button onClick={() => onNavigate('admin-dashboard')}>대시보드</button>
-          <button onClick={() => onNavigate('admin-users')}>사용자 관리</button>
-          <button onClick={() => onNavigate('admin-questions')}>문제 관리</button>
-          {children}
-        </div>
-      ),
-      AdminPage: {},
-    }));
 
     render(<App />);
 
