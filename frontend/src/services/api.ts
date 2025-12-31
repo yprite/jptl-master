@@ -123,6 +123,11 @@ async function fetchApi<T>(
     if (error instanceof TypeError && error.message === 'Failed to fetch') {
       throw new ApiError(0, '네트워크 오류가 발생했습니다. 서버에 연결할 수 없습니다.');
     }
+    // 더 자세한 에러 정보 로깅
+    console.error('API 요청 중 예상치 못한 오류:', error);
+    if (error instanceof Error) {
+      throw new ApiError(500, `알 수 없는 오류가 발생했습니다: ${error.message}`);
+    }
     throw new ApiError(500, '알 수 없는 오류가 발생했습니다.');
   }
 }
