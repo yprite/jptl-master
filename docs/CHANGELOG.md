@@ -8,6 +8,18 @@
 ## Unreleased
 
 ### Added
+프론트엔드_어드민_사용자_관리_UI: 어드민 사용자 관리 UI 구현 (2025-01-04)
+- AdminUser 타입 정의 추가 (is_admin 필드 포함)
+- adminApi 클라이언트 추가 (getUsers, getUser, updateUser, deleteUser)
+- AdminUserManagementUI 컴포넌트 생성
+  - 사용자 목록 조회 (테이블 형태)
+  - 사용자 상세 조회
+  - 사용자 정보 수정 (username, target_level)
+  - 사용자 삭제 (확인 다이얼로그 포함)
+- App.tsx에 어드민 라우팅 추가 (is_admin 체크)
+- AdminUserManagementUI 테스트 작성 (10개 테스트)
+- 모든 테스트 통과 및 커버리지 93.79% 달성
+
 백엔드_어드민_API_엔드포인트: 백엔드 어드민 API 엔드포인트 구현 (2025-01-04)
 - 어드민 사용자 관리 API 구현 (GET, PUT, DELETE /admin/users)
   - GET /api/v1/admin/users: 전체 사용자 목록 조회
