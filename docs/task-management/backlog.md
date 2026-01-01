@@ -36,6 +36,14 @@ P3_태스크: 3개 (총_포인트: 7)
 ## 새로_추가된_태스크 (우선순위별)
 
 ### P0 (Critical) - 즉시 필요
+P0-JLPT-043: Admin 사용자 로그인 시 어드민 메뉴만 표시 (포인트: 3, 상태: 완료)
+- admin 사용자 로그인 시 자동으로 admin-dashboard로 이동 ✅
+- admin 사용자는 initial 메뉴(테스트 모드, 학습 모드 등)가 보이지 않음 ✅
+- 일반 사용자는 기존과 동일하게 initial 메뉴 표시 ✅
+- App.test.tsx에 admin 자동 리다이렉트 테스트 추가 ✅
+- E2E 테스트 수정: admin 자동 리다이렉트 반영 ✅
+- 수용_기준: admin 사용자가 로그인하면 admin-dashboard로 자동 이동하고, 일반 메뉴가 보이지 않음 ✅
+
 P0-JLPT-014: 학습 데이터 수집 엔티티 구현 (AnswerDetail, LearningHistory, UserPerformance) (포인트: 8, 상태: 완료)
 - AnswerDetail 엔티티 및 Repository 구현 ✅
 - LearningHistory 엔티티 및 Repository 구현 ✅
