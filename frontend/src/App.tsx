@@ -11,13 +11,14 @@ import FlashcardUI from './components/organisms/FlashcardUI';
 import VocabularyListUI from './components/organisms/VocabularyListUI';
 import AdminUserManagementUI from './components/organisms/AdminUserManagementUI';
 import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
+import AdminVocabularyManagementUI from './components/organisms/AdminVocabularyManagementUI';
 import AdminDashboardUI from './components/organisms/AdminDashboardUI';
 import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
 import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Vocabulary } from './types/api';
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
+type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -642,7 +643,7 @@ function App() {
   }
 
   // 어드민 페이지인지 확인
-  const isAdminPage = state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions';
+  const isAdminPage = state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions' || state === 'admin-vocabulary';
 
   return (
     <div className="App">
@@ -990,7 +991,7 @@ function App() {
           </section>
         )}
 
-        {(state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions') && (
+        {(state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions' || state === 'admin-vocabulary') && (
           <AdminLayout
             currentPage={state as AdminPage}
             onNavigate={handleAdminNavigate}
@@ -1000,6 +1001,7 @@ function App() {
             {state === 'admin-dashboard' && <AdminDashboardUI />}
             {state === 'admin-users' && <AdminUserManagementUI />}
             {state === 'admin-questions' && <AdminQuestionManagementUI />}
+            {state === 'admin-vocabulary' && <AdminVocabularyManagementUI />}
           </AdminLayout>
         )}
 

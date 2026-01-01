@@ -583,6 +583,73 @@ export const adminApi = {
   async getStatistics(): Promise<AdminStatistics> {
     return fetchApi<AdminStatistics>('/admin/statistics');
   },
+
+  /**
+   * 전체 단어 목록 조회
+   */
+  async getVocabularies(params?: {
+    level?: string;
+    status?: string;
+    search?: string;
+  }): Promise<Vocabulary[]> {
+    const queryParams = new URLSearchParams();
+    if (params?.level) queryParams.append('level', params.level);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.search) queryParams.append('search', params.search);
+    const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return fetchApi<Vocabulary[]>(`/admin/vocabulary${query}`);
+  },
+
+  /**
+   * 특정 단어 조회
+   */
+  async getVocabulary(vocabularyId: number): Promise<Vocabulary> {
+    return fetchApi<Vocabulary>(`/admin/vocabulary/${vocabularyId}`);
+  },
+
+  /**
+   * 단어 생성
+   */
+  async createVocabulary(request: {
+    word: string;
+    reading: string;
+    meaning: string;
+    level: string;
+    example_sentence?: string;
+  }): Promise<Vocabulary> {
+    return fetchApi<Vocabulary>('/admin/vocabulary', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  },
+
+  /**
+   * 단어 수정
+   */
+  async updateVocabulary(
+    vocabularyId: number,
+    request: {
+      word?: string;
+      reading?: string;
+      meaning?: string;
+      level?: string;
+      example_sentence?: string;
+    }
+  ): Promise<Vocabulary> {
+    return fetchApi<Vocabulary>(`/admin/vocabulary/${vocabularyId}`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    });
+  },
+
+  /**
+   * 단어 삭제
+   */
+  async deleteVocabulary(vocabularyId: number): Promise<void> {
+    await fetchApi(`/admin/vocabulary/${vocabularyId}`, {
+      method: 'DELETE',
+    });
+  },
 };
 
 /**
