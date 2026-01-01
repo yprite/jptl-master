@@ -540,6 +540,91 @@ function App() {
     }
   };
 
+  // 단어 학습 시작
+  const handleStartVocabulary = async () => {
+    // 인증 확인
+    if (!authService.isAuthenticated()) {
+      setState('login');
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const vocabularies = await vocabularyApi.getVocabularies({ level: vocabularyLevel });
+      if (vocabularies.length === 0) {
+        setError('해당 레벨의 단어가 없습니다.');
+        setState('error');
+        return;
+      }
+      setCurrentVocabularies(vocabularies);
+      setState('vocabulary');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else {
+          setError(err.message);
+          setState('error');
+        }
+      } else {
+        setError('단어 학습을 시작하는 중 오류가 발생했습니다.');
+        setState('error');
+      }
+    }
+  };
+
+  // 단어 목록 보기
+  const handleViewVocabularyList = async () => {
+    // 인증 확인
+    if (!authService.isAuthenticated()) {
+      setState('login');
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const vocabularies = await vocabularyApi.getVocabularies();
+      setCurrentVocabularies(vocabularies);
+      setState('vocabulary-list');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else {
+          setError(err.message);
+          setState('error');
+        }
+      } else {
+        setError('단어 목록을 불러오는 중 오류가 발생했습니다.');
+        setState('error');
+      }
+    }
+  };
+
+  // 단어 암기 상태 업데이트
+  const handleVocabularyStatusUpdate = async (vocabularyId: number, status: string) => {
+    try {
+      await vocabularyApi.studyVocabulary(vocabularyId, status);
+      // 목록 업데이트
+      const updatedVocabularies = currentVocabularies.map(v =>
+        v.id === vocabularyId ? { ...v, memorization_status: status } : v
+      );
+      setCurrentVocabularies(updatedVocabularies);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('암기 상태 업데이트 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
   // 초기화 중이면 로딩 표시
   if (isInitializing) {
     return (
