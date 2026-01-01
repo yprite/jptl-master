@@ -22,7 +22,6 @@ const AdminVocabularyManagementUI: React.FC<AdminVocabularyManagementUIProps> = 
   const [error, setError] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
   const [levelFilter, setLevelFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [editForm, setEditForm] = useState<{
     word: string;
     reading: string;
@@ -65,10 +64,9 @@ const AdminVocabularyManagementUI: React.FC<AdminVocabularyManagementUIProps> = 
         v.reading.toLowerCase().includes(searchText.toLowerCase()) ||
         v.meaning.toLowerCase().includes(searchText.toLowerCase());
       const matchesLevel = levelFilter === 'all' || v.level === levelFilter;
-      const matchesStatus = statusFilter === 'all' || v.memorization_status === statusFilter;
-      return matchesSearch && matchesLevel && matchesStatus;
+      return matchesSearch && matchesLevel;
     });
-  }, [vocabularies, searchText, levelFilter, statusFilter]);
+  }, [vocabularies, searchText, levelFilter]);
 
   const loadVocabularies = async () => {
     setLoading(true);
@@ -255,16 +253,6 @@ const AdminVocabularyManagementUI: React.FC<AdminVocabularyManagementUIProps> = 
               <option value="N2">N2</option>
               <option value="N1">N1</option>
             </select>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="admin-filter-select"
-            >
-              <option value="all">전체 상태</option>
-              <option value="not_memorized">미암기</option>
-              <option value="learning">학습중</option>
-              <option value="memorized">암기완료</option>
-            </select>
           </div>
 
           <div className="admin-vocabulary-table">
@@ -276,7 +264,6 @@ const AdminVocabularyManagementUI: React.FC<AdminVocabularyManagementUIProps> = 
                   <th>읽기</th>
                   <th>의미</th>
                   <th>레벨</th>
-                  <th>상태</th>
                   <th>작업</th>
                 </tr>
               </thead>
@@ -288,7 +275,6 @@ const AdminVocabularyManagementUI: React.FC<AdminVocabularyManagementUIProps> = 
                     <td>{vocabulary.reading}</td>
                     <td>{vocabulary.meaning}</td>
                     <td>{vocabulary.level}</td>
-                    <td>{getStatusLabel(vocabulary.memorization_status)}</td>
                     <td>
                       <button
                         onClick={() => handleVocabularyClick(vocabulary.id)}
@@ -358,10 +344,6 @@ const AdminVocabularyManagementUI: React.FC<AdminVocabularyManagementUIProps> = 
             <div className="admin-detail-field">
               <label>레벨:</label>
               <span>{selectedVocabulary.level}</span>
-            </div>
-            <div className="admin-detail-field">
-              <label>상태:</label>
-              <span>{getStatusLabel(selectedVocabulary.memorization_status)}</span>
             </div>
             {selectedVocabulary.example_sentence && (
               <div className="admin-detail-field">

@@ -38,28 +38,26 @@ class SqliteVocabularyRepository:
             data = VocabularyMapper.to_dict(vocabulary)
 
             if vocabulary.id is None or vocabulary.id == 0:
-                # 새 단어 생성
+                # 새 단어 생성 (memorization_status는 더 이상 사용하지 않음, 기본값 유지)
                 cursor = conn.execute("""
-                    INSERT INTO vocabulary (word, reading, meaning, level, memorization_status, example_sentence)
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    INSERT INTO vocabulary (word, reading, meaning, level, example_sentence)
+                    VALUES (?, ?, ?, ?, ?)
                 """, (
                     data['word'], data['reading'], data['meaning'],
-                    data['level'], data['memorization_status'], data.get('example_sentence')
+                    data['level'], data.get('example_sentence')
                 ))
 
                 # 생성된 ID를 단어 객체에 설정
                 vocabulary.id = cursor.lastrowid
             else:
-                # 기존 단어 업데이트
+                # 기존 단어 업데이트 (memorization_status는 업데이트하지 않음)
                 conn.execute("""
                     UPDATE vocabulary
-                    SET word = ?, reading = ?, meaning = ?, level = ?,
-                        memorization_status = ?, example_sentence = ?
+                    SET word = ?, reading = ?, meaning = ?, level = ?, example_sentence = ?
                     WHERE id = ?
                 """, (
                     data['word'], data['reading'], data['meaning'],
-                    data['level'], data['memorization_status'],
-                    data.get('example_sentence'), vocabulary.id
+                    data['level'], data.get('example_sentence'), vocabulary.id
                 ))
 
             conn.commit()
@@ -107,15 +105,12 @@ class SqliteVocabularyRepository:
             return [VocabularyMapper.to_entity(row) for row in rows]
 
     def find_by_status(self, status: str) -> List[Vocabulary]:
-        """암기 상태별 단어 조회"""
-        with self.db.get_connection() as conn:
-            cursor = conn.execute(
-                "SELECT * FROM vocabulary WHERE memorization_status = ? ORDER BY id DESC",
-                (status,)
-            )
-            rows = cursor.fetchall()
-
-            return [VocabularyMapper.to_entity(row) for row in rows]
+        """
+        암기 상태별 단어 조회 (더 이상 사용하지 않음)
+        사용자별 상태는 UserVocabularyRepository를 사용해야 함
+        """
+        # 이 메서드는 더 이상 사용하지 않지만, 호환성을 위해 빈 리스트 반환
+        return []
 
     def search_by_word(self, word: str) -> List[Vocabulary]:
         """단어로 검색 (부분 일치)"""

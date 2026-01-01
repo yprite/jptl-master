@@ -9,6 +9,7 @@ from typing import Optional, List
 from backend.domain.entities.user import User
 from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
 from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
+from backend.infrastructure.repositories.user_vocabulary_repository import SqliteUserVocabularyRepository
 from backend.infrastructure.config.database import get_database
 from backend.presentation.controllers.auth import get_current_user
 
@@ -47,6 +48,11 @@ def get_vocabulary_repository() -> SqliteVocabularyRepository:
     db = get_database()
     return SqliteVocabularyRepository(db)
 
+def get_user_vocabulary_repository() -> SqliteUserVocabularyRepository:
+    """사용자별 단어 학습 상태 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteUserVocabularyRepository(db)
+
 @router.get("/", response_model=List[VocabularyResponse])
 async def get_vocabularies(
     level: Optional[JLPTLevel] = Query(None, description="JLPT 레벨 필터"),
@@ -54,32 +60,46 @@ async def get_vocabularies(
     search: Optional[str] = Query(None, description="단어 또는 의미 검색"),
     current_user: User = Depends(get_current_user)
 ):
-    """단어 목록 조회
+    """단어 목록 조회 (사용자별 상태 포함)
     
     Args:
         level: JLPT 레벨 필터 (선택적)
-        status: 암기 상태 필터 (선택적)
+        status: 암기 상태 필터 (선택적) - 현재 사용자의 상태 기준
         search: 단어 또는 의미 검색 (선택적)
         current_user: 현재 로그인한 사용자 (인증 필수)
     
     Returns:
-        단어 목록
+        단어 목록 (현재 사용자의 학습 상태 포함)
     """
-    repo = get_vocabulary_repository()
+    vocab_repo = get_vocabulary_repository()
+    user_vocab_repo = get_user_vocabulary_repository()
     
+    # 단어 목록 조회
     if search:
         # 검색 기능
-        by_word = repo.search_by_word(search)
-        by_meaning = repo.search_by_meaning(search)
+        by_word = vocab_repo.search_by_word(search)
+        by_meaning = vocab_repo.search_by_meaning(search)
         # 중복 제거 (ID 기준)
         vocabularies = {v.id: v for v in by_word + by_meaning}.values()
         vocabularies = list(vocabularies)
     elif level:
-        vocabularies = repo.find_by_level(level)
-    elif status:
-        vocabularies = repo.find_by_status(status)
+        vocabularies = vocab_repo.find_by_level(level)
     else:
-        vocabularies = repo.find_all()
+        vocabularies = vocab_repo.find_all()
+    
+    # 상태 필터 적용 (사용자별 상태 기준)
+    if status:
+        user_vocabs = user_vocab_repo.find_by_user_and_status(
+            current_user.id, MemorizationStatus(status)
+        )
+        vocab_ids_with_status = {uv.vocabulary_id for uv in user_vocabs}
+        vocabularies = [v for v in vocabularies if v.id in vocab_ids_with_status]
+    
+    # 사용자별 상태 조회
+    user_vocabs_dict = {
+        uv.vocabulary_id: uv.memorization_status
+        for uv in user_vocab_repo.find_by_user_id(current_user.id)
+    }
     
     return [
         VocabularyResponse(
@@ -88,7 +108,7 @@ async def get_vocabularies(
             reading=v.reading,
             meaning=v.meaning,
             level=v.level.value,
-            memorization_status=v.memorization_status.value,
+            memorization_status=user_vocabs_dict.get(v.id, MemorizationStatus.NOT_MEMORIZED).value,
             example_sentence=v.example_sentence
         )
         for v in vocabularies
@@ -99,20 +119,28 @@ async def get_vocabulary(
     vocabulary_id: int,
     current_user: User = Depends(get_current_user)
 ):
-    """특정 단어 조회
+    """특정 단어 조회 (사용자별 상태 포함)
     
     Args:
         vocabulary_id: 단어 ID
         current_user: 현재 로그인한 사용자 (인증 필수)
     
     Returns:
-        단어 정보
+        단어 정보 (현재 사용자의 학습 상태 포함)
     """
-    repo = get_vocabulary_repository()
-    vocabulary = repo.find_by_id(vocabulary_id)
+    vocab_repo = get_vocabulary_repository()
+    user_vocab_repo = get_user_vocabulary_repository()
+    
+    vocabulary = vocab_repo.find_by_id(vocabulary_id)
     
     if not vocabulary:
         raise HTTPException(status_code=404, detail="단어를 찾을 수 없습니다")
+    
+    # 사용자별 상태 조회
+    user_vocab = user_vocab_repo.find_by_user_and_vocabulary(
+        current_user.id, vocabulary_id
+    )
+    status = user_vocab.memorization_status if user_vocab else MemorizationStatus.NOT_MEMORIZED
     
     return VocabularyResponse(
         id=vocabulary.id,
@@ -120,7 +148,7 @@ async def get_vocabulary(
         reading=vocabulary.reading,
         meaning=vocabulary.meaning,
         level=vocabulary.level.value,
-        memorization_status=vocabulary.memorization_status.value,
+        memorization_status=status.value,
         example_sentence=vocabulary.example_sentence
     )
 
@@ -148,7 +176,6 @@ async def create_vocabulary(
         reading=request.reading,
         meaning=request.meaning,
         level=request.level,
-        memorization_status=MemorizationStatus.NOT_MEMORIZED,
         example_sentence=request.example_sentence
     )
     
@@ -160,7 +187,7 @@ async def create_vocabulary(
         reading=saved_vocabulary.reading,
         meaning=saved_vocabulary.meaning,
         level=saved_vocabulary.level.value,
-        memorization_status=saved_vocabulary.memorization_status.value,
+        memorization_status=MemorizationStatus.NOT_MEMORIZED.value,
         example_sentence=saved_vocabulary.example_sentence
     )
 
@@ -200,13 +227,20 @@ async def update_vocabulary(
     
     updated_vocabulary = repo.save(vocabulary)
     
+    # 사용자별 상태 조회
+    user_vocab_repo = get_user_vocabulary_repository()
+    user_vocab = user_vocab_repo.find_by_user_and_vocabulary(
+        current_user.id, vocabulary_id
+    )
+    status = user_vocab.memorization_status if user_vocab else MemorizationStatus.NOT_MEMORIZED
+    
     return VocabularyResponse(
         id=updated_vocabulary.id,
         word=updated_vocabulary.word,
         reading=updated_vocabulary.reading,
         meaning=updated_vocabulary.meaning,
         level=updated_vocabulary.level.value,
-        memorization_status=updated_vocabulary.memorization_status.value,
+        memorization_status=status.value,
         example_sentence=updated_vocabulary.example_sentence
     )
 
@@ -240,7 +274,7 @@ async def study_vocabulary(
     request: VocabularyStudyRequest,
     current_user: User = Depends(get_current_user)
 ):
-    """단어 학습 (암기 상태 업데이트)
+    """단어 학습 (사용자별 암기 상태 업데이트)
     
     Args:
         vocabulary_id: 단어 ID
@@ -248,24 +282,28 @@ async def study_vocabulary(
         current_user: 현재 로그인한 사용자 (인증 필수)
     
     Returns:
-        업데이트된 단어 정보
+        업데이트된 단어 정보 (사용자별 상태 포함)
     """
-    repo = get_vocabulary_repository()
-    vocabulary = repo.find_by_id(vocabulary_id)
+    vocab_repo = get_vocabulary_repository()
+    user_vocab_repo = get_user_vocabulary_repository()
+    
+    vocabulary = vocab_repo.find_by_id(vocabulary_id)
     
     if not vocabulary:
         raise HTTPException(status_code=404, detail="단어를 찾을 수 없습니다")
     
-    vocabulary.update_memorization_status(request.memorization_status)
-    updated_vocabulary = repo.save(vocabulary)
+    # 사용자별 상태 업데이트
+    user_vocab_repo.upsert(
+        current_user.id, vocabulary_id, request.memorization_status
+    )
     
     return VocabularyResponse(
-        id=updated_vocabulary.id,
-        word=updated_vocabulary.word,
-        reading=updated_vocabulary.reading,
-        meaning=updated_vocabulary.meaning,
-        level=updated_vocabulary.level.value,
-        memorization_status=updated_vocabulary.memorization_status.value,
-        example_sentence=updated_vocabulary.example_sentence
+        id=vocabulary.id,
+        word=vocabulary.word,
+        reading=vocabulary.reading,
+        meaning=vocabulary.meaning,
+        level=vocabulary.level.value,
+        memorization_status=request.memorization_status.value,
+        example_sentence=vocabulary.example_sentence
     )
 

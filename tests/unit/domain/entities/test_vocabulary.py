@@ -5,7 +5,7 @@ TDD 방식으로 Vocabulary 엔티티의 비즈니스 로직 검증
 
 import pytest
 from backend.domain.entities.vocabulary import Vocabulary
-from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+from backend.domain.value_objects.jlpt import JLPTLevel
 
 
 class TestVocabulary:
@@ -19,8 +19,7 @@ class TestVocabulary:
             reading="こんにちは",
             meaning="안녕하세요",
             level=JLPTLevel.N5,
-            example_sentence="こんにちは、元気ですか？",
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            example_sentence="こんにちは、元気ですか？"
         )
 
         assert vocabulary.id == 1
@@ -29,7 +28,6 @@ class TestVocabulary:
         assert vocabulary.meaning == "안녕하세요"
         assert vocabulary.level == JLPTLevel.N5
         assert vocabulary.example_sentence == "こんにちは、元気ですか？"
-        assert vocabulary.memorization_status == MemorizationStatus.NOT_MEMORIZED
 
     def test_create_vocabulary_without_example_sentence(self):
         """예문 없이 Vocabulary 생성 테스트"""
@@ -38,8 +36,7 @@ class TestVocabulary:
             word="ありがとう",
             reading="ありがとう",
             meaning="감사합니다",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
 
         assert vocabulary.id == 1
@@ -56,8 +53,7 @@ class TestVocabulary:
                 word="",
                 reading="ありがとう",
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
 
         # 빈 읽기
@@ -67,8 +63,7 @@ class TestVocabulary:
                 word="ありがとう",
                 reading="",
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
 
         # 빈 의미
@@ -78,8 +73,7 @@ class TestVocabulary:
                 word="ありがとう",
                 reading="ありがとう",
                 meaning="",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
 
         # 단어 길이 초과
@@ -89,8 +83,7 @@ class TestVocabulary:
                 word="あ" * 101,
                 reading="ありがとう",
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
 
         # 읽기 길이 초과
@@ -100,8 +93,7 @@ class TestVocabulary:
                 word="ありがとう",
                 reading="あ" * 201,
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
 
         # 의미 길이 초과
@@ -111,8 +103,7 @@ class TestVocabulary:
                 word="ありがとう",
                 reading="ありがとう",
                 meaning="가" * 501,
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
 
         # 예문 길이 초과
@@ -123,28 +114,8 @@ class TestVocabulary:
                 reading="ありがとう",
                 meaning="감사합니다",
                 level=JLPTLevel.N5,
-                example_sentence="あ" * 1001,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                example_sentence="あ" * 1001
             )
-
-    def test_update_memorization_status(self):
-        """암기 상태 업데이트 테스트"""
-        vocabulary = Vocabulary(
-            id=1,
-            word="ありがとう",
-            reading="ありがとう",
-            meaning="감사합니다",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
-        )
-
-        assert vocabulary.memorization_status == MemorizationStatus.NOT_MEMORIZED
-
-        vocabulary.update_memorization_status(MemorizationStatus.LEARNING)
-        assert vocabulary.memorization_status == MemorizationStatus.LEARNING
-
-        vocabulary.update_memorization_status(MemorizationStatus.MEMORIZED)
-        assert vocabulary.memorization_status == MemorizationStatus.MEMORIZED
 
     def test_vocabulary_equality(self):
         """Vocabulary 동등성 비교 테스트"""
@@ -153,8 +124,7 @@ class TestVocabulary:
             word="ありがとう",
             reading="ありがとう",
             meaning="감사합니다",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
 
         vocab2 = Vocabulary(
@@ -162,8 +132,7 @@ class TestVocabulary:
             word="こんにちは",
             reading="こんにちは",
             meaning="안녕하세요",
-            level=JLPTLevel.N4,
-            memorization_status=MemorizationStatus.MEMORIZED
+            level=JLPTLevel.N4
         )
 
         vocab3 = Vocabulary(
@@ -171,8 +140,7 @@ class TestVocabulary:
             word="ありがとう",
             reading="ありがとう",
             meaning="감사합니다",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
 
         assert vocab1 == vocab2  # 같은 ID
@@ -185,8 +153,7 @@ class TestVocabulary:
             word="ありがとう",
             reading="ありがとう",
             meaning="감사합니다",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
 
         vocab2 = Vocabulary(
@@ -194,8 +161,7 @@ class TestVocabulary:
             word="こんにちは",
             reading="こんにちは",
             meaning="안녕하세요",
-            level=JLPTLevel.N4,
-            memorization_status=MemorizationStatus.MEMORIZED
+            level=JLPTLevel.N4
         )
 
         assert hash(vocab1) == hash(vocab2)  # 같은 ID는 같은 해시
@@ -207,13 +173,11 @@ class TestVocabulary:
             word="ありがとう",
             reading="ありがとう",
             meaning="감사합니다",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
 
         repr_str = repr(vocabulary)
         assert "Vocabulary" in repr_str
         assert "id=1" in repr_str
         assert "level=N5" in repr_str
-        assert "status=not_memorized" in repr_str
 
