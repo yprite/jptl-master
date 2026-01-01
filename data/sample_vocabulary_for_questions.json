@@ -1,0 +1,35 @@
+{
+  "N5": [
+    {"word": "こんにちは", "meaning": "안녕하세요", "reading": "こんにちは"},
+    {"word": "ありがとう", "meaning": "감사합니다", "reading": "ありがとう"},
+    {"word": "本", "meaning": "책", "reading": "ほん"},
+    {"word": "水", "meaning": "물", "reading": "みず"},
+    {"word": "食べる", "meaning": "먹다", "reading": "たべる"},
+    {"word": "学校", "meaning": "학교", "reading": "がっこう"},
+    {"word": "友達", "meaning": "친구", "reading": "ともだち"},
+    {"word": "見る", "meaning": "보다", "reading": "みる"},
+    {"word": "行く", "meaning": "가다", "reading": "いく"},
+    {"word": "来る", "meaning": "오다", "reading": "くる"}
+  ],
+  "N4": [
+    {"word": "勉強", "meaning": "공부", "reading": "べんきょう"},
+    {"word": "旅行", "meaning": "여행", "reading": "りょこう"},
+    {"word": "病気", "meaning": "병", "reading": "びょうき"},
+    {"word": "準備", "meaning": "준비", "reading": "じゅんび"},
+    {"word": "約束", "meaning": "약속", "reading": "やくそく"}
+  ],
+  "N3": [
+    {"word": "経験", "meaning": "경험", "reading": "けいけん"},
+    {"word": "影響", "meaning": "영향", "reading": "えいきょう"},
+    {"word": "環境", "meaning": "환경", "reading": "かんきょう"}
+  ],
+  "N2": [
+    {"word": "改善", "meaning": "개선", "reading": "かいぜん"},
+    {"word": "開発", "meaning": "개발", "reading": "かいはつ"}
+  ],
+  "N1": [
+    {"word": "抽象的", "meaning": "추상적", "reading": "ちゅうしょうてき"},
+    {"word": "複雑", "meaning": "복잡", "reading": "ふくざつ"}
+  ]
+}
+

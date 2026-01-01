@@ -4,6 +4,8 @@ JLPT 문제를 대량 생성하는 비즈니스 로직
 """
 
 import random
+import json
+from pathlib import Path
 from typing import List, Dict, Optional
 from backend.domain.entities.question import Question
 from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
@@ -14,57 +16,66 @@ class QuestionGeneratorService:
     문제 생성 도메인 서비스
     
     JLPT 문제를 대량 생성하는 비즈니스 로직을 담당합니다.
-    샘플 데이터 생성 및 기출문제 임포트 기능을 제공합니다.
+    JSON 파일에서 샘플 데이터를 로드하여 사용합니다.
     """
     
-    # 레벨별 샘플 어휘 데이터
-    VOCABULARY_SAMPLES = {
-        JLPTLevel.N5: [
-            {"word": "こんにちは", "meaning": "안녕하세요", "reading": "こんにちは"},
-            {"word": "ありがとう", "meaning": "감사합니다", "reading": "ありがとう"},
-            {"word": "本", "meaning": "책", "reading": "ほん"},
-            {"word": "水", "meaning": "물", "reading": "みず"},
-            {"word": "食べる", "meaning": "먹다", "reading": "たべる"},
-            {"word": "学校", "meaning": "학교", "reading": "がっこう"},
-            {"word": "友達", "meaning": "친구", "reading": "ともだち"},
-            {"word": "見る", "meaning": "보다", "reading": "みる"},
-            {"word": "行く", "meaning": "가다", "reading": "いく"},
-            {"word": "来る", "meaning": "오다", "reading": "くる"},
-        ],
-        JLPTLevel.N4: [
-            {"word": "勉強", "meaning": "공부", "reading": "べんきょう"},
-            {"word": "旅行", "meaning": "여행", "reading": "りょこう"},
-            {"word": "病気", "meaning": "병", "reading": "びょうき"},
-            {"word": "準備", "meaning": "준비", "reading": "じゅんび"},
-            {"word": "約束", "meaning": "약속", "reading": "やくそく"},
-        ],
-        JLPTLevel.N3: [
-            {"word": "経験", "meaning": "경험", "reading": "けいけん"},
-            {"word": "影響", "meaning": "영향", "reading": "えいきょう"},
-            {"word": "環境", "meaning": "환경", "reading": "かんきょう"},
-        ],
-        JLPTLevel.N2: [
-            {"word": "改善", "meaning": "개선", "reading": "かいぜん"},
-            {"word": "開発", "meaning": "개발", "reading": "かいはつ"},
-        ],
-        JLPTLevel.N1: [
-            {"word": "抽象的", "meaning": "추상적", "reading": "ちゅうしょうてき"},
-            {"word": "複雑", "meaning": "복잡", "reading": "ふくざつ"},
-        ],
-    }
+    _vocabulary_samples = None
+    _grammar_patterns = None
     
-    # 문법 패턴 샘플
-    GRAMMAR_PATTERNS = {
-        JLPTLevel.N5: [
-            {"pattern": "___を", "example": "コーヒーを飲みます", "explanation": "목적어를 나타내는 조사"},
-            {"pattern": "___に", "example": "学校に行きます", "explanation": "방향이나 목적지를 나타내는 조사"},
-            {"pattern": "___で", "example": "電車で行きます", "explanation": "수단이나 방법을 나타내는 조사"},
-        ],
-        JLPTLevel.N4: [
-            {"pattern": "___たい", "example": "食べたい", "explanation": "~하고 싶다"},
-            {"pattern": "___てください", "example": "読んでください", "explanation": "~해 주세요"},
-        ],
-    }
+    @classmethod
+    def _get_data_dir(cls) -> Path:
+        """데이터 디렉토리 경로 반환"""
+        # backend/domain/services/question_generator_service.py
+        # -> backend/domain/services/ -> backend/domain/ -> backend/ -> 프로젝트 루트
+        return Path(__file__).parent.parent.parent.parent / "data"
+    
+    @classmethod
+    def _load_vocabulary_samples(cls) -> Dict[JLPTLevel, List[Dict]]:
+        """JSON 파일에서 어휘 샘플 로드"""
+        if cls._vocabulary_samples is None:
+            data_file = cls._get_data_dir() / "sample_vocabulary_for_questions.json"
+            
+            if not data_file.exists():
+                # 파일이 없으면 빈 딕셔너리 반환
+                cls._vocabulary_samples = {}
+                return cls._vocabulary_samples
+            
+            with open(data_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            cls._vocabulary_samples = {}
+            for level_str, words in data.items():
+                try:
+                    level = JLPTLevel(level_str)
+                    cls._vocabulary_samples[level] = words
+                except ValueError:
+                    continue
+        
+        return cls._vocabulary_samples
+    
+    @classmethod
+    def _load_grammar_patterns(cls) -> Dict[JLPTLevel, List[Dict]]:
+        """JSON 파일에서 문법 패턴 로드"""
+        if cls._grammar_patterns is None:
+            data_file = cls._get_data_dir() / "sample_grammar_patterns.json"
+            
+            if not data_file.exists():
+                # 파일이 없으면 빈 딕셔너리 반환
+                cls._grammar_patterns = {}
+                return cls._grammar_patterns
+            
+            with open(data_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            cls._grammar_patterns = {}
+            for level_str, patterns in data.items():
+                try:
+                    level = JLPTLevel(level_str)
+                    cls._grammar_patterns[level] = patterns
+                except ValueError:
+                    continue
+        
+        return cls._grammar_patterns
     
     @staticmethod
     def generate_vocabulary_questions(
@@ -82,7 +93,7 @@ class QuestionGeneratorService:
             생성된 문제 목록
         """
         questions = []
-        vocab_list = QuestionGeneratorService.VOCABULARY_SAMPLES.get(level, [])
+        vocab_list = QuestionGeneratorService._load_vocabulary_samples().get(level, [])
         
         if not vocab_list:
             return questions
@@ -150,7 +161,7 @@ class QuestionGeneratorService:
             생성된 문제 목록
         """
         questions = []
-        patterns = QuestionGeneratorService.GRAMMAR_PATTERNS.get(level, [])
+        patterns = QuestionGeneratorService._load_grammar_patterns().get(level, [])
         
         if not patterns:
             return questions

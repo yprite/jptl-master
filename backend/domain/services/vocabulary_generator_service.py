@@ -3,6 +3,8 @@
 JLPT 단어를 대량 생성하는 비즈니스 로직
 """
 
+import json
+from pathlib import Path
 from typing import List, Dict, Optional
 from backend.domain.entities.vocabulary import Vocabulary
 from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
@@ -13,57 +15,41 @@ class VocabularyGeneratorService:
     단어 생성 도메인 서비스
     
     JLPT 단어를 대량 생성하는 비즈니스 로직을 담당합니다.
-    샘플 데이터 생성 및 기출단어 임포트 기능을 제공합니다.
+    JSON 파일에서 샘플 데이터를 로드하여 사용합니다.
     """
     
-    # 레벨별 샘플 단어 데이터
-    VOCABULARY_SAMPLES = {
-        JLPTLevel.N5: [
-            {"word": "こんにちは", "reading": "こんにちは", "meaning": "안녕하세요", "example": "こんにちは、元気ですか？"},
-            {"word": "ありがとう", "reading": "ありがとう", "meaning": "감사합니다", "example": "ありがとうございます。"},
-            {"word": "本", "reading": "ほん", "meaning": "책", "example": "この本は面白いです。"},
-            {"word": "水", "reading": "みず", "meaning": "물", "example": "水を飲みます。"},
-            {"word": "食べる", "reading": "たべる", "meaning": "먹다", "example": "ご飯を食べます。"},
-            {"word": "学校", "reading": "がっこう", "meaning": "학교", "example": "学校に行きます。"},
-            {"word": "友達", "reading": "ともだち", "meaning": "친구", "example": "友達と遊びます。"},
-            {"word": "見る", "reading": "みる", "meaning": "보다", "example": "映画を見ます。"},
-            {"word": "行く", "reading": "いく", "meaning": "가다", "example": "公園に行きます。"},
-            {"word": "来る", "reading": "くる", "meaning": "오다", "example": "日本に来ます。"},
-            {"word": "大きい", "reading": "おおきい", "meaning": "크다", "example": "大きい家です。"},
-            {"word": "小さい", "reading": "ちいさい", "meaning": "작다", "example": "小さい犬です。"},
-            {"word": "新しい", "reading": "あたらしい", "meaning": "새로운", "example": "新しい車です。"},
-            {"word": "古い", "reading": "ふるい", "meaning": "오래된", "example": "古い建物です。"},
-            {"word": "高い", "reading": "たかい", "meaning": "높다, 비싸다", "example": "高い山です。"},
-        ],
-        JLPTLevel.N4: [
-            {"word": "勉強", "reading": "べんきょう", "meaning": "공부", "example": "日本語を勉強します。"},
-            {"word": "旅行", "reading": "りょこう", "meaning": "여행", "example": "旅行に行きます。"},
-            {"word": "病気", "reading": "びょうき", "meaning": "병", "example": "病気になりました。"},
-            {"word": "準備", "reading": "じゅんび", "meaning": "준비", "example": "試験の準備をします。"},
-            {"word": "約束", "reading": "やくそく", "meaning": "약속", "example": "友達と約束しました。"},
-            {"word": "経験", "reading": "けいけん", "meaning": "경험", "example": "良い経験になりました。"},
-            {"word": "練習", "reading": "れんしゅう", "meaning": "연습", "example": "毎日練習します。"},
-            {"word": "質問", "reading": "しつもん", "meaning": "질문", "example": "質問があります。"},
-        ],
-        JLPTLevel.N3: [
-            {"word": "経験", "reading": "けいけん", "meaning": "경험", "example": "貴重な経験をしました。"},
-            {"word": "影響", "reading": "えいきょう", "meaning": "영향", "example": "環境への影響を考えます。"},
-            {"word": "環境", "reading": "かんきょう", "meaning": "환경", "example": "自然環境を守ります。"},
-            {"word": "開発", "reading": "かいはつ", "meaning": "개발", "example": "新しい技術を開発します。"},
-            {"word": "改善", "reading": "かいぜん", "meaning": "개선", "example": "サービスを改善します。"},
-        ],
-        JLPTLevel.N2: [
-            {"word": "改善", "reading": "かいぜん", "meaning": "개선", "example": "品質を改善します。"},
-            {"word": "開発", "reading": "かいはつ", "meaning": "개발", "example": "ソフトウェアを開発します。"},
-            {"word": "複雑", "reading": "ふくざつ", "meaning": "복잡", "example": "複雑な問題です。"},
-            {"word": "具体的", "reading": "ぐたいてき", "meaning": "구체적", "example": "具体的な計画を立てます。"},
-        ],
-        JLPTLevel.N1: [
-            {"word": "抽象的", "reading": "ちゅうしょうてき", "meaning": "추상적", "example": "抽象的な概念を理解します。"},
-            {"word": "複雑", "reading": "ふくざつ", "meaning": "복잡", "example": "複雑な状況を分析します。"},
-            {"word": "分析", "reading": "ぶんせき", "meaning": "분석", "example": "データを分析します。"},
-        ],
-    }
+    _vocabulary_samples = None
+    
+    @classmethod
+    def _get_data_dir(cls) -> Path:
+        """데이터 디렉토리 경로 반환"""
+        # backend/domain/services/vocabulary_generator_service.py
+        # -> backend/domain/services/ -> backend/domain/ -> backend/ -> 프로젝트 루트
+        return Path(__file__).parent.parent.parent.parent / "data"
+    
+    @classmethod
+    def _load_vocabulary_samples(cls) -> Dict[JLPTLevel, List[Dict]]:
+        """JSON 파일에서 단어 샘플 로드"""
+        if cls._vocabulary_samples is None:
+            data_file = cls._get_data_dir() / "sample_vocabulary.json"
+            
+            if not data_file.exists():
+                # 파일이 없으면 빈 딕셔너리 반환
+                cls._vocabulary_samples = {}
+                return cls._vocabulary_samples
+            
+            with open(data_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            cls._vocabulary_samples = {}
+            for level_str, words in data.items():
+                try:
+                    level = JLPTLevel(level_str)
+                    cls._vocabulary_samples[level] = words
+                except ValueError:
+                    continue
+        
+        return cls._vocabulary_samples
     
     @staticmethod
     def generate_vocabularies(
@@ -80,7 +66,7 @@ class VocabularyGeneratorService:
         Returns:
             생성된 단어 목록
         """
-        vocab_list = VocabularyGeneratorService.VOCABULARY_SAMPLES.get(level, [])
+        vocab_list = VocabularyGeneratorService._load_vocabulary_samples().get(level, [])
         
         if not vocab_list:
             return []
