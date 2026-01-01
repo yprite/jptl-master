@@ -454,6 +454,11 @@ run_frontend_e2e_tests() {
     echo "🌱 E2E 테스트용 N5 문제 시딩(최소 20개 보장) 중..."
     python scripts/seed_n5_questions.py --ensure-minimum 20 --non-interactive 2>&1 || true
 
+    # E2E 테스트 전에 이전 테스트 데이터 정리
+    echo ""
+    echo "🧹 이전 E2E 테스트 데이터 정리 중..."
+    python scripts/cleanup_test_data.py --all 2>&1 | grep -E "(✅|❌|총)" || true
+
     # E2E 테스트에 필요한 admin 계정 확인 및 생성
     echo ""
     echo "👤 E2E 테스트용 admin 계정 확인 중..."
@@ -637,6 +642,15 @@ run_frontend_e2e_tests() {
 
     echo ""
     echo "✅ 프론트엔드 E2E 테스트 통과!"
+
+    # E2E 테스트 후 테스트 데이터 정리
+    echo ""
+    echo "🧹 E2E 테스트 데이터 정리 중..."
+    cd ..
+    python scripts/cleanup_test_data.py --all 2>&1 | grep -E "(✅|❌|총)" || true
+    echo ""
+
+    cd frontend
     return 0
 }
 
