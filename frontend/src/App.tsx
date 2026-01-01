@@ -283,6 +283,8 @@ function App() {
 
   // 다시 시작
   const handleRestart = () => {
+    const wasFromDailyChecklist = selectedDay > 0 && state === 'result';
+    
     setCurrentTest(null);
     setCurrentStudyQuestions([]);
     setCurrentResult(null);
@@ -290,7 +292,11 @@ function App() {
     setCurrentHistory([]);
     setCurrentProfile(null);
     setError(null);
-    if (user?.is_admin) {
+    
+    // 일일 체크리스트에서 모의고사를 시작한 경우 체크리스트로 복귀
+    if (wasFromDailyChecklist) {
+      setState('daily-checklist');
+    } else if (user?.is_admin) {
       setState('admin-dashboard');
     } else {
       setState('study-plan');
