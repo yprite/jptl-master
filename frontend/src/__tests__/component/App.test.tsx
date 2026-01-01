@@ -148,7 +148,7 @@ describe('App', () => {
 
     // 초기에는 초기 화면
     await waitFor(() => {
-      expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
     });
 
     // 사용자가 null로 변경 (로그아웃 시뮬레이션)
@@ -223,7 +223,7 @@ describe('App', () => {
 
     // 초기 화면으로 리다이렉트
     await waitFor(() => {
-      expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
     }, { timeout: 3000 });
   });
 
@@ -277,8 +277,8 @@ describe('App', () => {
 
     // 초기 화면 표시 확인
     await waitFor(() => {
-      expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     }, { timeout: 3000 });
   });
 
@@ -380,10 +380,10 @@ describe('App', () => {
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
 
-    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    const startButton = screen.getByRole('button', { name: /테스트 모드/i });
     fireEvent.click(startButton);
 
     // 로그인 화면으로 리다이렉트 확인
@@ -414,10 +414,10 @@ describe('App', () => {
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
 
-    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    const startButton = screen.getByRole('button', { name: /테스트 모드/i });
     fireEvent.click(startButton);
 
     // 로그인 화면으로 리다이렉트 확인
@@ -456,10 +456,10 @@ describe('App', () => {
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
 
-    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    const startButton = screen.getByRole('button', { name: /테스트 모드/i });
     fireEvent.click(startButton);
 
     // 에러 메시지 표시 확인
@@ -496,7 +496,7 @@ describe('App', () => {
           success: true,
           data: {
             id: 1,
-            title: 'N5 진단 테스트',
+            title: 'JLPT 학습 플랫폼',
             level: 'N5',
             status: 'created',
             time_limit_minutes: 30,
@@ -511,7 +511,7 @@ describe('App', () => {
           success: true,
           data: {
             id: 1,
-            title: 'N5 진단 테스트',
+            title: 'JLPT 학습 플랫폼',
             level: 'N5',
             status: 'in_progress',
             time_limit_minutes: 30,
@@ -580,10 +580,10 @@ describe('App', () => {
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
 
-    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    const startButton = screen.getByRole('button', { name: /테스트 모드/i });
     fireEvent.click(startButton);
 
     await waitFor(() => {
@@ -662,7 +662,7 @@ describe('App', () => {
           success: true,
           data: {
             id: 1,
-            title: 'N5 진단 테스트',
+            title: 'JLPT 학습 플랫폼',
             level: 'N5',
             status: 'created',
             time_limit_minutes: 30,
@@ -677,7 +677,7 @@ describe('App', () => {
           success: true,
           data: {
             id: 1,
-            title: 'N5 진단 테스트',
+            title: 'JLPT 학습 플랫폼',
             level: 'N5',
             status: 'in_progress',
             time_limit_minutes: 30,
@@ -707,10 +707,10 @@ describe('App', () => {
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
 
-    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    const startButton = screen.getByRole('button', { name: /테스트 모드/i });
     fireEvent.click(startButton);
 
     await waitFor(() => {
@@ -756,10 +756,10 @@ describe('App', () => {
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /테스트 시작/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
 
-    // 테스트 시작
+    // 테스트 모드
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
         ok: true,
@@ -768,7 +768,7 @@ describe('App', () => {
           success: true,
           data: {
             id: 1,
-            title: 'N5 진단 테스트',
+            title: 'JLPT 학습 플랫폼',
             level: 'N5',
             status: 'created',
             time_limit_minutes: 30,
@@ -783,7 +783,7 @@ describe('App', () => {
           success: true,
           data: {
             id: 1,
-            title: 'N5 진단 테스트',
+            title: 'JLPT 학습 플랫폼',
             level: 'N5',
             status: 'in_progress',
             time_limit_minutes: 30,
@@ -801,7 +801,7 @@ describe('App', () => {
         }),
       });
 
-    const startButton = screen.getByRole('button', { name: /테스트 시작/i });
+    const startButton = screen.getByRole('button', { name: /테스트 모드/i });
     fireEvent.click(startButton);
 
     await waitFor(() => {
@@ -817,7 +817,7 @@ describe('App', () => {
 
     // 초기 화면으로 돌아가는지 확인
     await waitFor(() => {
-      expect(screen.getByText(/N5 진단 테스트/i)).toBeInTheDocument();
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
     });
   });
 
@@ -1440,6 +1440,56 @@ describe('App', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/JLPT 자격 검증 프로그램/i)).toBeInTheDocument();
+    });
+  });
+
+  it('should handle start study mode', async () => {
+    const mockUser = {
+      id: 1,
+      email: 'user@example.com',
+      username: '학습자1',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+    };
+
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listener(mockUser);
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      headers: { get: () => 'application/json' },
+      json: async () => [
+        {
+          id: 1,
+          question_text: 'Test question',
+          choices: ['A', 'B', 'C', 'D'],
+          correct_answer: 'A',
+          explanation: 'Test explanation',
+          level: 'N5',
+          question_type: 'VOCABULARY',
+          difficulty: 1,
+        },
+      ],
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /학습 모드/i })).toBeInTheDocument();
+    });
+
+    const studyButton = screen.getByRole('button', { name: /학습 모드/i });
+    fireEvent.click(studyButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/학습 모드 설정/i)).toBeInTheDocument();
     });
   });
 });
