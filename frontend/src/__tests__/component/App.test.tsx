@@ -1416,6 +1416,107 @@ describe('App', () => {
     });
   });
 
+  it('should redirect admin user to admin-dashboard automatically on login', async () => {
+    const mockAdminUser = {
+      id: 1,
+      email: 'admin@example.com',
+      username: 'admin',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+      is_admin: true,
+    };
+    
+    let listenerFn: any = null;
+    let initializeResolve: any = null;
+    const initializePromise = new Promise((resolve) => {
+      initializeResolve = resolve;
+    });
+    
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listenerFn = listener;
+      // 초기화 완료 후에 listener 호출
+      initializePromise.then(() => {
+        listener(mockAdminUser);
+      });
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockAdminUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockImplementation(async () => {
+      await new Promise(resolve => setTimeout(resolve, 10));
+      if (initializeResolve) {
+        initializeResolve();
+      }
+      return mockAdminUser;
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(mockAuthService.initialize).toHaveBeenCalled();
+    });
+    await initializePromise;
+
+    // admin 사용자는 자동으로 admin-dashboard로 이동
+    await waitFor(() => {
+      expect(screen.getByTestId('admin-layout')).toBeInTheDocument();
+    }, { timeout: 3000 });
+  });
+
+  it('should not show initial menu for admin user', async () => {
+    const mockAdminUser = {
+      id: 1,
+      email: 'admin@example.com',
+      username: 'admin',
+      target_level: 'N5',
+      current_level: null,
+      total_tests_taken: 0,
+      study_streak: 0,
+      is_admin: true,
+    };
+    
+    let listenerFn: any = null;
+    let initializeResolve: any = null;
+    const initializePromise = new Promise((resolve) => {
+      initializeResolve = resolve;
+    });
+    
+    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+      listenerFn = listener;
+      initializePromise.then(() => {
+        listener(mockAdminUser);
+      });
+      return jest.fn();
+    });
+    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockAdminUser);
+    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
+    (mockAuthService.initialize as jest.Mock).mockImplementation(async () => {
+      await new Promise(resolve => setTimeout(resolve, 10));
+      if (initializeResolve) {
+        initializeResolve();
+      }
+      return mockAdminUser;
+    });
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(mockAuthService.initialize).toHaveBeenCalled();
+    });
+    await initializePromise;
+
+    // admin 사용자는 initial 메뉴가 보이지 않아야 함
+    await waitFor(() => {
+      expect(screen.queryByText(/테스트 모드/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/학습 모드/i)).not.toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    // admin layout만 보여야 함
+    expect(screen.getByTestId('admin-layout')).toBeInTheDocument();
+  });
+
   it('should handle admin navigate', async () => {
     const mockAdminUser = {
       id: 1,
@@ -1439,8 +1540,17 @@ describe('App', () => {
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByText(/JLPT 자격 검증 프로그램/i)).toBeInTheDocument();
+      expect(mockAuthService.initialize).toHaveBeenCalled();
     });
+
+    // admin 사용자는 자동으로 admin-dashboard로 이동
+    await waitFor(() => {
+      expect(screen.getByTestId('admin-layout')).toBeInTheDocument();
+    });
+
+    // admin layout 내에서 네비게이션 버튼 확인
+    const dashboardButton = screen.getByText('대시보드');
+    expect(dashboardButton).toBeInTheDocument();
   });
 
   it('should handle start study mode', async () => {

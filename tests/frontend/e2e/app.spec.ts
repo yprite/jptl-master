@@ -574,29 +574,30 @@ test.describe('JLPT App E2E', () => {
   });
 
   test.describe('어드민 플로우 검증', () => {
-    test('should display admin buttons when admin user logs in', async ({ page }) => {
+    test('should automatically redirect admin user to admin dashboard on login', async ({ page }) => {
       // 어드민 계정으로 로그인
       await page.getByLabel('이메일').fill('admin@example.com');
       await page.getByRole('button', { name: '로그인' }).click();
 
-      // 초기 페이지에서 어드민 버튼들이 표시되는지 확인
-      await expect(page.getByText('JLPT 학습 플랫폼')).toBeVisible({ timeout: 15000 });
-      await expect(page.getByRole('button', { name: '어드민 - 대시보드' })).toBeVisible();
-      await expect(page.getByRole('button', { name: '어드민 - 사용자 관리' })).toBeVisible();
-      await expect(page.getByRole('button', { name: '어드민 - 문제 관리' })).toBeVisible();
+      // admin 사용자는 자동으로 admin-dashboard로 이동
+      await expect(page.getByText('어드민 관리')).toBeVisible({ timeout: 15000 });
+      await expect(page.getByRole('button', { name: '대시보드' })).toBeVisible();
+      await expect(page.getByRole('button', { name: '사용자 관리' })).toBeVisible();
+      await expect(page.getByRole('button', { name: '문제 관리' })).toBeVisible();
+      
+      // 일반 메뉴는 보이지 않아야 함
+      await expect(page.getByText('JLPT 학습 플랫폼')).not.toBeVisible();
     });
 
     test('should navigate to admin dashboard', async ({ page }) => {
       // 어드민 계정으로 로그인
       await page.getByLabel('이메일').fill('admin@example.com');
       await page.getByRole('button', { name: '로그인' }).click();
-      await expect(page.getByText('JLPT 학습 플랫폼')).toBeVisible({ timeout: 15000 });
 
-      // 어드민 대시보드로 이동
-      await page.getByRole('button', { name: '어드민 - 대시보드' }).click();
+      // admin 사용자는 자동으로 admin-dashboard로 이동
+      await expect(page.getByText('어드민 관리')).toBeVisible({ timeout: 15000 });
 
       // 어드민 레이아웃과 네비게이션이 표시되는지 확인
-      await expect(page.getByText('어드민 관리')).toBeVisible();
       await expect(page.getByRole('button', { name: '대시보드' })).toBeVisible();
       await expect(page.getByRole('button', { name: '사용자 관리' })).toBeVisible();
       await expect(page.getByRole('button', { name: '문제 관리' })).toBeVisible();
@@ -606,11 +607,9 @@ test.describe('JLPT App E2E', () => {
       // 어드민 계정으로 로그인
       await page.getByLabel('이메일').fill('admin@example.com');
       await page.getByRole('button', { name: '로그인' }).click();
-      await expect(page.getByText('JLPT 학습 플랫폼')).toBeVisible({ timeout: 15000 });
-
-      // 어드민 대시보드로 이동
-      await page.getByRole('button', { name: '어드민 - 대시보드' }).click();
-      await expect(page.getByText('어드민 관리')).toBeVisible();
+      
+      // admin 사용자는 자동으로 admin-dashboard로 이동
+      await expect(page.getByText('어드민 관리')).toBeVisible({ timeout: 15000 });
 
       // 사용자 관리로 이동
       await page.getByRole('button', { name: '사용자 관리' }).click();
