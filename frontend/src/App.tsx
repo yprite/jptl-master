@@ -7,15 +7,17 @@ import LoginUI from './components/organisms/LoginUI';
 import UserPerformanceUI from './components/organisms/UserPerformanceUI';
 import UserHistoryUI from './components/organisms/UserHistoryUI';
 import UserProfileUI from './components/organisms/UserProfileUI';
+import FlashcardUI from './components/organisms/FlashcardUI';
+import VocabularyListUI from './components/organisms/VocabularyListUI';
 import AdminUserManagementUI from './components/organisms/AdminUserManagementUI';
 import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
 import AdminDashboardUI from './components/organisms/AdminDashboardUI';
 import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
-import { Test, Result, UserPerformance, UserHistory, UserProfile, Question } from './types/api';
-import { testApi, resultApi, userApi, studyApi, ApiError } from './services/api';
+import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Vocabulary } from './types/api';
+import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
+type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -40,6 +42,8 @@ function App() {
   const [currentPerformance, setCurrentPerformance] = useState<UserPerformance | null>(null);
   const [currentHistory, setCurrentHistory] = useState<UserHistory[]>([]);
   const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
+  const [currentVocabularies, setCurrentVocabularies] = useState<Vocabulary[]>([]);
+  const [vocabularyLevel, setVocabularyLevel] = useState<string>('N5');
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
@@ -536,6 +540,91 @@ function App() {
     }
   };
 
+  // 단어 학습 시작
+  const handleStartVocabulary = async () => {
+    // 인증 확인
+    if (!authService.isAuthenticated()) {
+      setState('login');
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const vocabularies = await vocabularyApi.getVocabularies({ level: vocabularyLevel });
+      if (vocabularies.length === 0) {
+        setError('해당 레벨의 단어가 없습니다.');
+        setState('error');
+        return;
+      }
+      setCurrentVocabularies(vocabularies);
+      setState('vocabulary');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else {
+          setError(err.message);
+          setState('error');
+        }
+      } else {
+        setError('단어 학습을 시작하는 중 오류가 발생했습니다.');
+        setState('error');
+      }
+    }
+  };
+
+  // 단어 목록 보기
+  const handleViewVocabularyList = async () => {
+    // 인증 확인
+    if (!authService.isAuthenticated()) {
+      setState('login');
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const vocabularies = await vocabularyApi.getVocabularies();
+      setCurrentVocabularies(vocabularies);
+      setState('vocabulary-list');
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else {
+          setError(err.message);
+          setState('error');
+        }
+      } else {
+        setError('단어 목록을 불러오는 중 오류가 발생했습니다.');
+        setState('error');
+      }
+    }
+  };
+
+  // 단어 암기 상태 업데이트
+  const handleVocabularyStatusUpdate = async (vocabularyId: number, status: string) => {
+    try {
+      await vocabularyApi.studyVocabulary(vocabularyId, status);
+      // 목록 업데이트
+      const updatedVocabularies = currentVocabularies.map(v =>
+        v.id === vocabularyId ? { ...v, memorization_status: status } : v
+      );
+      setCurrentVocabularies(updatedVocabularies);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('암기 상태 업데이트 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
   // 초기화 중이면 로딩 표시
   if (isInitializing) {
     return (
@@ -628,6 +717,12 @@ function App() {
                 className="repeat-study-button"
               >
                 반복 학습
+              </button>
+              <button
+                onClick={handleStartVocabulary}
+                className="vocabulary-button"
+              >
+                단어 학습
               </button>
             </div>
           </section>
@@ -845,6 +940,52 @@ function App() {
             <StudyUI 
               questions={currentStudyQuestions} 
               onSubmit={handleSubmitStudy} 
+            />
+          </section>
+        )}
+
+        {state === 'vocabulary' && currentVocabularies.length > 0 && (
+          <section className="vocabulary-section">
+            <div className="vocabulary-controls">
+              <button
+                onClick={() => setState('initial')}
+                className="back-button"
+              >
+                뒤로 가기
+              </button>
+              <button
+                onClick={handleViewVocabularyList}
+                className="list-button"
+              >
+                단어 목록 보기
+              </button>
+            </div>
+            <FlashcardUI
+              vocabularies={currentVocabularies}
+              onStatusUpdate={handleVocabularyStatusUpdate}
+            />
+          </section>
+        )}
+
+        {state === 'vocabulary-list' && (
+          <section className="vocabulary-list-section">
+            <div className="vocabulary-controls">
+              <button
+                onClick={() => setState('initial')}
+                className="back-button"
+              >
+                뒤로 가기
+              </button>
+              <button
+                onClick={handleStartVocabulary}
+                className="flashcard-button"
+              >
+                플래시카드 학습
+              </button>
+            </div>
+            <VocabularyListUI
+              vocabularies={currentVocabularies}
+              onStatusUpdate={handleVocabularyStatusUpdate}
             />
           </section>
         )}

@@ -30,7 +30,10 @@
 - [헬스 체크 API](./health.md) - 시스템 상태 확인
 
 ### 어드민 관리 (Admin)
-- [어드민 API](./admin.md) - 어드민 사용자 관리, 문제 관리
+- [어드민 API](./admin.md) - 어드민 사용자 관리, 문제 관리, 단어 관리
+
+### 단어 학습 (Vocabulary)
+- [단어 학습 API](./vocabulary.md) - 단어 목록 조회, 플래시카드 학습, 암기 상태 관리
 
 ## OpenAPI 스펙
 

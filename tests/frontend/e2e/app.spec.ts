@@ -746,7 +746,7 @@ test.describe('JLPT App E2E', () => {
           });
           return { status: response.status, ok: response.ok };
         } catch (error) {
-          return { error: error.message };
+          return { error: error instanceof Error ? error.message : String(error) };
         }
       });
 

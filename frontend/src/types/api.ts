@@ -151,3 +151,13 @@ export interface AdminStatistics {
   };
 }
 
+export interface Vocabulary {
+  id: number;
+  word: string;
+  reading: string;
+  meaning: string;
+  level: string;
+  memorization_status: string;
+  example_sentence?: string | null;
+}
+

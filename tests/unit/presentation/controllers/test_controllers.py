@@ -1886,3 +1886,338 @@ class TestMainApp:
             if os.path.exists(temp_db_path):
                 os.unlink(temp_db_path)
 
+
+class TestVocabularyController:
+    """Vocabulary 컨트롤러 테스트"""
+
+    @pytest.fixture
+    def temp_db(self):
+        """임시 데이터베이스 파일 생성"""
+        with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as f:
+            db_path = f.name
+        yield db_path
+        if os.path.exists(db_path):
+            os.unlink(db_path)
+
+    @pytest.fixture
+    def mock_user(self):
+        """모의 사용자 생성"""
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel
+        return User(id=1, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+
+    def test_get_vocabularies_success(self, temp_db, mock_user):
+        """단어 목록 조회 성공 테스트"""
+        from backend.presentation.controllers.vocabulary import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.domain.entities.vocabulary import Vocabulary
+        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
+        from backend.presentation.controllers.auth import get_current_user
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.vocabulary.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 테스트 데이터 생성
+            repo = SqliteVocabularyRepository(db=db)
+            vocab = Vocabulary(
+                id=0,
+                word="ありがとう",
+                reading="ありがとう",
+                meaning="감사합니다",
+                level=JLPTLevel.N5,
+                memorization_status=MemorizationStatus.NOT_MEMORIZED
+            )
+            repo.save(vocab)
+
+            # get_current_user dependency override
+            def get_current_user_override():
+                return mock_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                response = client.get("/")
+                assert response.status_code == 200
+                data = response.json()
+                assert len(data) == 1
+                assert data[0]["word"] == "ありがとう"
+                assert data[0]["meaning"] == "감사합니다"
+            finally:
+                app.dependency_overrides.clear()
+
+    def test_get_vocabulary_by_id_success(self, temp_db, mock_user):
+        """특정 단어 조회 성공 테스트"""
+        from backend.presentation.controllers.vocabulary import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.domain.entities.vocabulary import Vocabulary
+        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
+        from backend.presentation.controllers.auth import get_current_user
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.vocabulary.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 테스트 데이터 생성
+            repo = SqliteVocabularyRepository(db=db)
+            vocab = Vocabulary(
+                id=0,
+                word="ありがとう",
+                reading="ありがとう",
+                meaning="감사합니다",
+                level=JLPTLevel.N5,
+                memorization_status=MemorizationStatus.NOT_MEMORIZED
+            )
+            saved_vocab = repo.save(vocab)
+
+            # get_current_user dependency override
+            def get_current_user_override():
+                return mock_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                response = client.get(f"/{saved_vocab.id}")
+                assert response.status_code == 200
+                data = response.json()
+                assert data["word"] == "ありがとう"
+                assert data["meaning"] == "감사합니다"
+            finally:
+                app.dependency_overrides.clear()
+
+    def test_get_vocabulary_not_found(self, temp_db, mock_user):
+        """단어 조회 실패 테스트 (존재하지 않는 ID)"""
+        from backend.presentation.controllers.vocabulary import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.presentation.controllers.auth import get_current_user
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.vocabulary.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # get_current_user dependency override
+            def get_current_user_override():
+                return mock_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                response = client.get("/999")
+                assert response.status_code == 404
+                assert "단어를 찾을 수 없습니다" in response.json()["detail"]
+            finally:
+                app.dependency_overrides.clear()
+
+    def test_create_vocabulary_success(self, temp_db, mock_user):
+        """단어 생성 성공 테스트"""
+        from backend.presentation.controllers.vocabulary import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.presentation.controllers.auth import get_current_user
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.vocabulary.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # get_current_user dependency override
+            def get_current_user_override():
+                return mock_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                response = client.post(
+                    "/",
+                    json={
+                        "word": "ありがとう",
+                        "reading": "ありがとう",
+                        "meaning": "감사합니다",
+                        "level": "N5",
+                        "example_sentence": "ありがとうございます。"
+                    }
+                )
+
+                assert response.status_code == 200
+                data = response.json()
+                assert data["word"] == "ありがとう"
+                assert data["meaning"] == "감사합니다"
+                assert data["id"] is not None
+            finally:
+                app.dependency_overrides.clear()
+
+    def test_update_vocabulary_success(self, temp_db, mock_user):
+        """단어 수정 성공 테스트"""
+        from backend.presentation.controllers.vocabulary import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.domain.entities.vocabulary import Vocabulary
+        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
+        from backend.presentation.controllers.auth import get_current_user
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.vocabulary.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 테스트 데이터 생성
+            repo = SqliteVocabularyRepository(db=db)
+            vocab = Vocabulary(
+                id=0,
+                word="ありがとう",
+                reading="ありがとう",
+                meaning="감사합니다",
+                level=JLPTLevel.N5,
+                memorization_status=MemorizationStatus.NOT_MEMORIZED
+            )
+            saved_vocab = repo.save(vocab)
+
+            # get_current_user dependency override
+            def get_current_user_override():
+                return mock_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                response = client.put(
+                    f"/{saved_vocab.id}",
+                    json={
+                        "meaning": "고맙습니다"
+                    }
+                )
+
+                assert response.status_code == 200
+                data = response.json()
+                assert data["meaning"] == "고맙습니다"
+            finally:
+                app.dependency_overrides.clear()
+
+    def test_delete_vocabulary_success(self, temp_db, mock_user):
+        """단어 삭제 성공 테스트"""
+        from backend.presentation.controllers.vocabulary import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.domain.entities.vocabulary import Vocabulary
+        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
+        from backend.presentation.controllers.auth import get_current_user
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.vocabulary.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 테스트 데이터 생성
+            repo = SqliteVocabularyRepository(db=db)
+            vocab = Vocabulary(
+                id=0,
+                word="ありがとう",
+                reading="ありがとう",
+                meaning="감사합니다",
+                level=JLPTLevel.N5,
+                memorization_status=MemorizationStatus.NOT_MEMORIZED
+            )
+            saved_vocab = repo.save(vocab)
+
+            # get_current_user dependency override
+            def get_current_user_override():
+                return mock_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                response = client.delete(f"/{saved_vocab.id}")
+                assert response.status_code == 200
+                data = response.json()
+                assert data["success"] is True
+
+                # 삭제 확인
+                found_vocab = repo.find_by_id(saved_vocab.id)
+                assert found_vocab is None
+            finally:
+                app.dependency_overrides.clear()
+
+    def test_study_vocabulary_success(self, temp_db, mock_user):
+        """단어 학습 (암기 상태 업데이트) 성공 테스트"""
+        from backend.presentation.controllers.vocabulary import router
+        from fastapi import FastAPI
+        from backend.infrastructure.config.database import Database
+        from backend.domain.entities.vocabulary import Vocabulary
+        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
+        from backend.presentation.controllers.auth import get_current_user
+
+        app = FastAPI()
+        app.include_router(router)
+
+        client = TestClient(app)
+
+        with patch('backend.presentation.controllers.vocabulary.get_database') as mock_get_db:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 테스트 데이터 생성
+            repo = SqliteVocabularyRepository(db=db)
+            vocab = Vocabulary(
+                id=0,
+                word="ありがとう",
+                reading="ありがとう",
+                meaning="감사합니다",
+                level=JLPTLevel.N5,
+                memorization_status=MemorizationStatus.NOT_MEMORIZED
+            )
+            saved_vocab = repo.save(vocab)
+
+            # get_current_user dependency override
+            def get_current_user_override():
+                return mock_user
+
+            app.dependency_overrides[get_current_user] = get_current_user_override
+
+            try:
+                response = client.post(
+                    f"/{saved_vocab.id}/study",
+                    json={
+                        "memorization_status": "memorized"
+                    }
+                )
+
+                assert response.status_code == 200
+                data = response.json()
+                assert data["memorization_status"] == "memorized"
+            finally:
+                app.dependency_overrides.clear()
+

@@ -45,3 +45,13 @@ class QuestionType(Enum):
 
     def __str__(self) -> str:
         return self.value
+
+
+class MemorizationStatus(Enum):
+    """단어 암기 상태 열거형"""
+    NOT_MEMORIZED = "not_memorized"  # 미암기
+    LEARNING = "learning"            # 학습중
+    MEMORIZED = "memorized"          # 암기완료
+
+    def __str__(self) -> str:
+        return self.value

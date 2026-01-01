@@ -7,6 +7,19 @@
 
 ## Unreleased
 
+### Added
+단어_학습_기능: 단어 학습 기능 구현 (2025-01-04)
+- Vocabulary 엔티티 및 Repository 구현 (TDD)
+- MemorizationStatus Enum 추가 (미암기/학습중/암기완료)
+- VocabularyMapper 및 SqliteVocabularyRepository 구현
+- 단어 학습 API 엔드포인트 구현 (GET, POST, PUT, DELETE, POST /study)
+- 플래시카드 UI 구현 (카드 뒤집기 기능)
+- 단어 목록 조회 UI 구현 (검색, 필터링 포함)
+- 단어 암기 상태 관리 기능 구현
+- 레벨별 단어 필터링 기능 구현
+- 어드민 단어 관리 API 구현
+- 모든 단위 테스트 통과 (7개 엔티티 테스트, 8개 Repository 테스트, 7개 컨트롤러 테스트)
+
 ### Fixed
 E2E_테스트_성능_개선: E2E 테스트 retries 감소 및 안정성 개선 (2025-01-04)
 - Playwright retries를 5에서 1로 감소하여 테스트 실행 시간 단축
