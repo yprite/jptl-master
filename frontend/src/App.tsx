@@ -226,22 +226,41 @@ function App() {
         question_count: questionCount,
       });
       
+      // 문제가 없는 경우 에러 처리
+      if (!questions || questions.length === 0) {
+        setError('해당 유형의 문제가 없습니다. 관리자에게 문의해주세요.');
+        setState('error');
+        return;
+      }
+      
       setCurrentStudyQuestions(questions);
       setStudyLevel(level);
       setStudyQuestionTypes(questionTypes);
       setState('study');
     } catch (err) {
+      // 에러 발생 시 로딩 상태 해제
+      setState('error');
+      
       if (err instanceof ApiError) {
         // 401 에러인 경우 로그인 화면으로
         if (err.status === 401) {
           setState('login');
+        } else if (err.status === 404) {
+          setError('해당 유형의 문제를 찾을 수 없습니다.');
+        } else if (err.status === 500) {
+          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         } else {
-          setError(err.message);
-          setState('error');
+          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
+        }
+      } else if (err instanceof Error) {
+        // 네트워크 에러 등
+        if (err.message.includes('fetch') || err.message.includes('network')) {
+          setError('네트워크 연결을 확인해주세요.');
+        } else {
+          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
         }
       } else {
         setError('학습 모드를 시작하는 중 오류가 발생했습니다.');
-        setState('error');
       }
     }
   };
@@ -320,7 +339,12 @@ function App() {
 
     // 모의고사인 경우 테스트 모드로 시작
     if (taskType === 'mockTest') {
-      await handleStartTest();
+      try {
+        await handleStartTest();
+      } catch (err) {
+        // handleStartTest에서 이미 에러 처리를 하므로 여기서는 추가 처리 불필요
+        console.error('모의고사 시작 중 오류:', err);
+      }
       return;
     }
 
@@ -347,22 +371,41 @@ function App() {
         question_count: 20,
       });
       
+      // 문제가 없는 경우 에러 처리
+      if (!questions || questions.length === 0) {
+        setError('해당 유형의 문제가 없습니다. 관리자에게 문의해주세요.');
+        setState('error');
+        return;
+      }
+      
       setCurrentStudyQuestions(questions);
       setStudyLevel(level);
       setStudyQuestionTypes(questionTypes);
       setState('study');
     } catch (err) {
+      // 에러 발생 시 로딩 상태 해제
+      setState('error');
+      
       if (err instanceof ApiError) {
         // 401 에러인 경우 로그인 화면으로
         if (err.status === 401) {
           setState('login');
+        } else if (err.status === 404) {
+          setError('해당 유형의 문제를 찾을 수 없습니다.');
+        } else if (err.status === 500) {
+          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         } else {
-          setError(err.message);
-          setState('error');
+          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
+        }
+      } else if (err instanceof Error) {
+        // 네트워크 에러 등
+        if (err.message.includes('fetch') || err.message.includes('network')) {
+          setError('네트워크 연결을 확인해주세요.');
+        } else {
+          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
         }
       } else {
         setError('학습 모드를 시작하는 중 오류가 발생했습니다.');
-        setState('error');
       }
     }
   };
