@@ -11,7 +11,7 @@ import './DailyChecklistUI.css';
 interface DailyChecklistUIProps {
   day: number;
   week: number;
-  onStartStudy: (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening') => void;
+  onStartStudy: (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest') => void;
   onBack: () => void;
 }
 
@@ -27,6 +27,7 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
     grammar: boolean;
     reading?: boolean;
     listening?: boolean;
+    mockTest?: boolean;
   }>({
     vocabulary: false,
     grammar: false,
@@ -54,7 +55,7 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
     }
   }, [day, week]);
 
-  const handleTaskComplete = (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening') => {
+  const handleTaskComplete = (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest') => {
     setCompletedTasks(prev => {
       const updated = { ...prev, [taskType]: !prev[taskType] };
       
@@ -64,7 +65,8 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
       // 전체 태스크 완료 여부 확인
       const allCompleted = updated.vocabulary && updated.grammar && 
         (!dailyTask?.tasks.reading || updated.reading) &&
-        (!dailyTask?.tasks.listening || updated.listening);
+        (!dailyTask?.tasks.listening || updated.listening) &&
+        (!dailyTask?.tasks.mockTest || updated.mockTest);
       
       if (allCompleted && dailyTask) {
         // 태스크 완료 처리
@@ -97,7 +99,8 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
   const weekPlan = n5StudyPlan.weeks.find(w => w.week === week);
   const allCompleted = completedTasks.vocabulary && completedTasks.grammar &&
     (!dailyTask.tasks.reading || completedTasks.reading) &&
-    (!dailyTask.tasks.listening || completedTasks.listening);
+    (!dailyTask.tasks.listening || completedTasks.listening) &&
+    (!dailyTask.tasks.mockTest || completedTasks.mockTest);
 
   return (
     <div className="daily-checklist">
@@ -199,6 +202,31 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
                   type="checkbox"
                   checked={completedTasks.listening || false}
                   onChange={() => handleTaskComplete('listening')}
+                />
+                <span>완료</span>
+              </label>
+            </div>
+          </div>
+        )}
+
+        {dailyTask.tasks.mockTest && (
+          <div className="task-card">
+            <div className="task-header">
+              <h3>📝 모의고사</h3>
+              <span className="task-count">{dailyTask.tasks.mockTest}회</span>
+            </div>
+            <div className="task-actions">
+              <button
+                className={`task-button ${completedTasks.mockTest ? 'completed' : ''}`}
+                onClick={() => onStartStudy('mockTest')}
+              >
+                모의고사 시작
+              </button>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={completedTasks.mockTest || false}
+                  onChange={() => handleTaskComplete('mockTest')}
                 />
                 <span>완료</span>
               </label>

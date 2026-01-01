@@ -10,6 +10,7 @@ export interface DailyTask {
     grammar: number; // 문법 개수
     reading?: number; // 독해 문제 수 (해당 주차에만)
     listening?: number; // 청해 문제 수 (해당 주차에만)
+    mockTest?: number; // 모의고사 횟수 (6주차에만)
   };
   completed: boolean;
 }
@@ -44,6 +45,7 @@ export interface StudyProgress {
     grammar: boolean;
     reading?: boolean;
     listening?: boolean;
+    mockTest?: boolean;
   };
   completedAt?: string;
 }

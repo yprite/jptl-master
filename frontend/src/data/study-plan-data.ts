@@ -171,15 +171,21 @@ export const n5StudyPlan: StudyPlan = {
         ],
       },
       keyPoint: '새로 배우지 말고 정리만',
-      dailyTasks: Array.from({ length: 7 }, (_, i) => ({
-        day: i + 36,
-        week: 6,
-        tasks: {
-          vocabulary: 20,
-          grammar: 2,
-        },
-        completed: false,
-      })),
+      dailyTasks: [
+        // Day 36-37: 기본 학습 + 오답 정리
+        { day: 36, week: 6, tasks: { vocabulary: 20, grammar: 2 }, completed: false },
+        { day: 37, week: 6, tasks: { vocabulary: 20, grammar: 2 }, completed: false },
+        // Day 38: 첫 번째 모의고사
+        { day: 38, week: 6, tasks: { vocabulary: 20, grammar: 2, mockTest: 1 }, completed: false },
+        // Day 39: 오답 정리
+        { day: 39, week: 6, tasks: { vocabulary: 20, grammar: 2 }, completed: false },
+        // Day 40: 두 번째 모의고사
+        { day: 40, week: 6, tasks: { vocabulary: 20, grammar: 2, mockTest: 1 }, completed: false },
+        // Day 41: 오답 정리
+        { day: 41, week: 6, tasks: { vocabulary: 20, grammar: 2 }, completed: false },
+        // Day 42: 세 번째 모의고사 (선택적)
+        { day: 42, week: 6, tasks: { vocabulary: 20, grammar: 2, mockTest: 1 }, completed: false },
+      ],
     },
   ],
 };

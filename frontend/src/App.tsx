@@ -190,6 +190,9 @@ function App() {
       
       setCurrentResult(result);
       setState('result');
+      
+      // 일일 체크리스트에서 모의고사를 시작한 경우, 결과 확인 후 체크리스트로 복귀
+      // (handleRestart에서 처리됨)
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
@@ -302,10 +305,16 @@ function App() {
   };
 
   // 일일 체크리스트에서 학습 시작
-  const handleStartDailyStudy = async (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening') => {
+  const handleStartDailyStudy = async (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest') => {
     // 인증 확인
     if (!authService.isAuthenticated()) {
       setState('login');
+      return;
+    }
+
+    // 모의고사인 경우 테스트 모드로 시작
+    if (taskType === 'mockTest') {
+      await handleStartTest();
       return;
     }
 
