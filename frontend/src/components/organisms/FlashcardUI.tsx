@@ -48,7 +48,9 @@ const FlashcardUI: React.FC<FlashcardUIProps> = ({
   const handleStatusUpdate = (status: string) => {
     if (currentVocabulary && onStatusUpdate) {
       onStatusUpdate(currentVocabulary.id, status);
-      setStudiedIds(new Set([...studiedIds, currentVocabulary.id]));
+      const newStudiedIds = new Set(studiedIds);
+      newStudiedIds.add(currentVocabulary.id);
+      setStudiedIds(newStudiedIds);
     }
   };
 
