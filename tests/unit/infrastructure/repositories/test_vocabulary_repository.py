@@ -120,7 +120,7 @@ class TestSqliteVocabularyRepository:
             'reading': 'ありがとう',
             'meaning': '감사합니다',
             'level': 'N5',
-            'memorization_status': 'not_memorized',
+            'memorization_status': 'not_memorized',  # 더 이상 사용하지 않지만 호환성을 위해 존재
             'example_sentence': 'ありがとうございます。'
         })
 
@@ -131,7 +131,6 @@ class TestSqliteVocabularyRepository:
         assert vocabulary.reading == 'ありがとう'
         assert vocabulary.meaning == '감사합니다'
         assert vocabulary.level == JLPTLevel.N5
-        assert vocabulary.memorization_status == MemorizationStatus.NOT_MEMORIZED
         assert vocabulary.example_sentence == 'ありがとうございます。'
 
     def test_vocabulary_mapper_to_dict(self):
@@ -144,7 +143,6 @@ class TestSqliteVocabularyRepository:
             reading="ありがとう",
             meaning="감사합니다",
             level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED,
             example_sentence="ありがとうございます。"
         )
 
@@ -154,7 +152,7 @@ class TestSqliteVocabularyRepository:
         assert data['reading'] == "ありがとう"
         assert data['meaning'] == "감사합니다"
         assert data['level'] == 'N5'
-        assert data['memorization_status'] == 'not_memorized'
+        assert 'memorization_status' not in data  # 더 이상 포함하지 않음
         assert data['example_sentence'] == "ありがとうございます。"
 
     def test_vocabulary_find_by_level(self, temp_db):
@@ -171,16 +169,14 @@ class TestSqliteVocabularyRepository:
             word="ありがとう",
             reading="ありがとう",
             meaning="감사합니다",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
         vocab_n5_2 = Vocabulary(
             id=0,
             word="こんにちは",
             reading="こんにちは",
             meaning="안녕하세요",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
 
         # N4 단어 생성
@@ -189,8 +185,7 @@ class TestSqliteVocabularyRepository:
             word="おはよう",
             reading="おはよう",
             meaning="좋은 아침",
-            level=JLPTLevel.N4,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N4
         )
 
         repo.save(vocab_n5_1)
@@ -217,7 +212,6 @@ class TestSqliteVocabularyRepository:
             reading="ありがとう",
             meaning="감사합니다",
             level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
         )
         vocab2 = Vocabulary(
             id=0,
@@ -225,7 +219,6 @@ class TestSqliteVocabularyRepository:
             reading="こんにちは",
             meaning="안녕하세요",
             level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
         )
 
         repo.save(vocab1)
@@ -250,7 +243,6 @@ class TestSqliteVocabularyRepository:
             reading="ありがとう",
             meaning="감사합니다",
             level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
         )
         saved_vocab = repo.save(vocabulary)
 
