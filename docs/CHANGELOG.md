@@ -8,6 +8,12 @@
 ## Unreleased
 
 ### Added
+ChatGPT_JSON_생성_프롬프트: 샘플 데이터 생성을 위한 ChatGPT 프롬프트 문서 추가 (2025-01-04)
+- docs/prompts/chatgpt-json-generation-prompts.md 문서 생성
+- 문제 생성용 단어장, 학습용 단어장, 문법 패턴, 청해 문제, 독해 문제 유형별 프롬프트 제공
+- 각 유형별 기본 프롬프트 및 레벨별 변형 프롬프트 포함
+- 사용 팁 및 주의사항 가이드 포함
+
 문제_단어_생성_임포트_기능: 문제 및 단어 대량 생성 및 기출문제 임포트 기능 구현 (2025-01-04)
 - QuestionGeneratorService: JLPT 문제를 자동 생성하는 서비스
 - VocabularyGeneratorService: JLPT 단어를 자동 생성하는 서비스

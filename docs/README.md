@@ -7,6 +7,7 @@
 - `architecture/` - 시스템 아키텍처 및 설계 문서
 - `api/` - API 엔드포인트 및 스키마 문서
 - `development/` - 개발 환경 및 배포 관련 문서
+- `prompts/` - AI 도구를 위한 프롬프트 모음
 - `user-guides/` - 사용자 가이드 및 튜토리얼
 - `CHANGELOG.md` - 프로젝트 변경 이력
 
