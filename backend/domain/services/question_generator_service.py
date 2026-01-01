@@ -21,6 +21,8 @@ class QuestionGeneratorService:
     
     _vocabulary_samples = None
     _grammar_patterns = None
+    _reading_questions = None
+    _listening_questions = None
     
     @classmethod
     def _get_data_dir(cls) -> Path:
@@ -76,6 +78,52 @@ class QuestionGeneratorService:
                     continue
         
         return cls._grammar_patterns
+    
+    @classmethod
+    def _load_reading_questions(cls) -> Dict[JLPTLevel, List[Dict]]:
+        """JSON 파일에서 독해 문제 로드"""
+        if cls._reading_questions is None:
+            data_file = cls._get_data_dir() / "sample_reading_questions.json"
+            
+            if not data_file.exists():
+                cls._reading_questions = {}
+                return cls._reading_questions
+            
+            with open(data_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            cls._reading_questions = {}
+            for level_str, questions in data.items():
+                try:
+                    level = JLPTLevel(level_str)
+                    cls._reading_questions[level] = questions
+                except ValueError:
+                    continue
+        
+        return cls._reading_questions
+    
+    @classmethod
+    def _load_listening_questions(cls) -> Dict[JLPTLevel, List[Dict]]:
+        """JSON 파일에서 청해 문제 로드"""
+        if cls._listening_questions is None:
+            data_file = cls._get_data_dir() / "sample_listening_questions.json"
+            
+            if not data_file.exists():
+                cls._listening_questions = {}
+                return cls._listening_questions
+            
+            with open(data_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            cls._listening_questions = {}
+            for level_str, questions in data.items():
+                try:
+                    level = JLPTLevel(level_str)
+                    cls._listening_questions[level] = questions
+                except ValueError:
+                    continue
+        
+        return cls._listening_questions
     
     @staticmethod
     def generate_vocabulary_questions(
@@ -200,6 +248,117 @@ class QuestionGeneratorService:
         return questions
     
     @staticmethod
+    def generate_reading_questions(
+        level: JLPTLevel,
+        count: int = 10
+    ) -> List[Question]:
+        """
+        독해 문제 생성
+        
+        Args:
+            level: JLPT 레벨
+            count: 생성할 문제 수
+            
+        Returns:
+            생성된 문제 목록
+        """
+        questions = []
+        reading_list = QuestionGeneratorService._load_reading_questions().get(level, [])
+        
+        if not reading_list:
+            return questions
+        
+        # 요청한 개수만큼 랜덤으로 선택
+        selected_questions = random.sample(
+            reading_list,
+            min(count, len(reading_list))
+        )
+        
+        for q_data in selected_questions:
+            # question_text는 passage + question으로 구성
+            question_text = f"{q_data['passage']}\n\n{q_data['question']}"
+            
+            question = Question(
+                id=0,
+                level=level,
+                question_type=QuestionType.READING,
+                question_text=question_text,
+                choices=q_data['choices'],
+                correct_answer=q_data['correct_answer'],
+                explanation=q_data['explanation'],
+                difficulty=q_data.get('difficulty', 2)
+            )
+            questions.append(question)
+        
+        return questions
+    
+    @staticmethod
+    def generate_listening_questions(
+        level: JLPTLevel,
+        count: int = 10
+    ) -> List[Question]:
+        """
+        청해 문제 생성
+        
+        Args:
+            level: JLPT 레벨
+            count: 생성할 문제 수
+            
+        Returns:
+            생성된 문제 목록
+        """
+        questions = []
+        listening_list = QuestionGeneratorService._load_listening_questions().get(level, [])
+        
+        if not listening_list:
+            return questions
+        
+        # 요청한 개수만큼 랜덤으로 선택
+        selected_questions = random.sample(
+            listening_list,
+            min(count, len(listening_list))
+        )
+        
+        for q_data in selected_questions:
+            # question_text는 dialogue + question으로 구성
+            question_text = f"{q_data['dialogue']}\n\n{q_data['question']}"
+            
+            # TTS 오디오 생성 (audio_text가 있으면 사용, 없으면 dialogue 사용)
+            audio_url = None
+            audio_text = q_data.get('audio_text', q_data.get('dialogue', ''))
+            if audio_text:
+                try:
+                    from backend.domain.services.tts_service import TTSService
+                    # 대화 형식 제거
+                    clean_text = audio_text.replace('（会話）', '').replace('\n', ' ').strip()
+                    # A:, B: 같은 화자 표시 제거
+                    import re
+                    clean_text = re.sub(r'[A-Z]:\s*', '', clean_text)
+                    audio_url = TTSService.generate_audio(
+                        text=clean_text,
+                        language='ja',
+                        slow=False
+                    )
+                except Exception as e:
+                    # TTS 생성 실패해도 문제 생성은 진행
+                    print(f"TTS 생성 실패: {str(e)}")
+            
+            question = Question(
+                id=0,
+                level=level,
+                question_type=QuestionType.LISTENING,
+                question_text=question_text,
+                choices=q_data['choices'],
+                correct_answer=q_data['correct_answer'],
+                explanation=q_data['explanation'],
+                difficulty=q_data.get('difficulty', 2),
+                audio_url=audio_url
+            )
+            questions.append(question)
+        
+        return questions
+    
+    @staticmethod
     def generate_questions(
         level: JLPTLevel,
         question_type: Optional[QuestionType] = None,
@@ -219,15 +378,23 @@ class QuestionGeneratorService:
         all_questions = []
         
         if question_type is None:
-            # 모든 유형 생성
-            vocab_count = count // 2
-            grammar_count = count - vocab_count
+            # 모든 유형 생성 (각 유형별로 균등 분배)
+            vocab_count = count // 4
+            grammar_count = count // 4
+            reading_count = count // 4
+            listening_count = count - vocab_count - grammar_count - reading_count
             
             all_questions.extend(
                 QuestionGeneratorService.generate_vocabulary_questions(level, vocab_count)
             )
             all_questions.extend(
                 QuestionGeneratorService.generate_grammar_questions(level, grammar_count)
+            )
+            all_questions.extend(
+                QuestionGeneratorService.generate_reading_questions(level, reading_count)
+            )
+            all_questions.extend(
+                QuestionGeneratorService.generate_listening_questions(level, listening_count)
             )
         elif question_type == QuestionType.VOCABULARY:
             all_questions.extend(
@@ -236,6 +403,14 @@ class QuestionGeneratorService:
         elif question_type == QuestionType.GRAMMAR:
             all_questions.extend(
                 QuestionGeneratorService.generate_grammar_questions(level, count)
+            )
+        elif question_type == QuestionType.READING:
+            all_questions.extend(
+                QuestionGeneratorService.generate_reading_questions(level, count)
+            )
+        elif question_type == QuestionType.LISTENING:
+            all_questions.extend(
+                QuestionGeneratorService.generate_listening_questions(level, count)
             )
         
         return all_questions

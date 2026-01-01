@@ -126,4 +126,88 @@ class TestQuestionGeneratorService:
         assert len(questions) == 2
         assert questions[0].question_text == "問題1"
         assert questions[1].question_text == "問題2"
+    
+    def test_generate_reading_questions_n5(self):
+        """N5 독해 문제 생성 테스트"""
+        questions = QuestionGeneratorService.generate_reading_questions(
+            level=JLPTLevel.N5,
+            count=3
+        )
+        
+        assert len(questions) <= 3  # 샘플 데이터가 부족할 수 있음
+        for question in questions:
+            assert isinstance(question, Question)
+            assert question.level == JLPTLevel.N5
+            assert question.question_type == QuestionType.READING
+            assert question.question_text
+            assert len(question.choices) >= 2
+            assert question.correct_answer in question.choices
+            assert question.explanation
+            assert 1 <= question.difficulty <= 5
+            # 독해 문제는 passage와 question이 포함되어야 함
+            assert "\n\n" in question.question_text
+    
+    def test_generate_listening_questions_n5(self):
+        """N5 청해 문제 생성 테스트"""
+        questions = QuestionGeneratorService.generate_listening_questions(
+            level=JLPTLevel.N5,
+            count=3
+        )
+        
+        assert len(questions) <= 3  # 샘플 데이터가 부족할 수 있음
+        for question in questions:
+            assert isinstance(question, Question)
+            assert question.level == JLPTLevel.N5
+            assert question.question_type == QuestionType.LISTENING
+            assert question.question_text
+            assert len(question.choices) >= 2
+            assert question.correct_answer in question.choices
+            assert question.explanation
+            assert 1 <= question.difficulty <= 5
+            # 청해 문제는 dialogue와 question이 포함되어야 함
+            assert "\n\n" in question.question_text
+    
+    def test_generate_questions_all_types(self):
+        """모든 유형 문제 생성 테스트 (독해, 청해 포함)"""
+        questions = QuestionGeneratorService.generate_questions(
+            level=JLPTLevel.N5,
+            question_type=None,
+            count=8
+        )
+        
+        assert len(questions) == 8
+        # 모든 유형이 포함되어야 함
+        vocab_count = sum(1 for q in questions if q.question_type == QuestionType.VOCABULARY)
+        grammar_count = sum(1 for q in questions if q.question_type == QuestionType.GRAMMAR)
+        reading_count = sum(1 for q in questions if q.question_type == QuestionType.READING)
+        listening_count = sum(1 for q in questions if q.question_type == QuestionType.LISTENING)
+        
+        assert vocab_count > 0
+        assert grammar_count > 0
+        assert reading_count > 0
+        assert listening_count > 0
+    
+    def test_generate_questions_reading_type(self):
+        """독해 유형만 생성 테스트"""
+        questions = QuestionGeneratorService.generate_questions(
+            level=JLPTLevel.N5,
+            question_type=QuestionType.READING,
+            count=3
+        )
+        
+        assert len(questions) <= 3
+        for question in questions:
+            assert question.question_type == QuestionType.READING
+    
+    def test_generate_questions_listening_type(self):
+        """청해 유형만 생성 테스트"""
+        questions = QuestionGeneratorService.generate_questions(
+            level=JLPTLevel.N5,
+            question_type=QuestionType.LISTENING,
+            count=3
+        )
+        
+        assert len(questions) <= 3
+        for question in questions:
+            assert question.question_type == QuestionType.LISTENING
 
