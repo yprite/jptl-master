@@ -526,6 +526,280 @@
 }
 ```
 
+## 문제/단어 생성 및 임포트 API
+
+### 문제 대량 생성
+
+**엔드포인트:** `POST /api/v1/admin/questions/generate`
+
+**설명:** 어드민이 문제를 대량 생성합니다. 샘플 데이터를 기반으로 자동 생성됩니다.
+
+**인증:** 어드민 권한 필요
+
+**요청 본문:**
+
+```json
+{
+  "level": "N5",
+  "question_type": "vocabulary",
+  "count": 10
+}
+```
+
+**요청 필드:**
+- `level` (string, required): JLPT 레벨 (N1-N5)
+- `question_type` (string, optional): 문제 유형 (vocabulary, grammar, reading, listening). None이면 모든 유형 생성
+- `count` (int, required): 생성할 문제 수
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "count": 10,
+    "questions": [
+      {
+        "id": 1,
+        "level": "N5",
+        "question_type": "vocabulary",
+        "question_text": "「こんにちは」の意味は何ですか？",
+        "choices": ["안녕하세요", "감사합니다", "실례합니다", "죄송합니다"],
+        "correct_answer": "안녕하세요",
+        "explanation": "説明",
+        "difficulty": 1,
+        "audio_url": null
+      }
+    ]
+  },
+  "message": "10개의 문제가 생성되었습니다"
+}
+```
+
+### 기출문제 임포트 (JSON)
+
+**엔드포인트:** `POST /api/v1/admin/questions/import`
+
+**설명:** 어드민이 JSON 형식으로 기출문제를 임포트합니다.
+
+**인증:** 어드민 권한 필요
+
+**요청 본문:**
+
+```json
+{
+  "questions": [
+    {
+      "level": "N5",
+      "question_type": "vocabulary",
+      "question_text": "「ありがとう」の意味は何ですか？",
+      "choices": ["안녕하세요", "감사합니다", "실례합니다", "죄송합니다"],
+      "correct_answer": "감사합니다",
+      "explanation": "説明",
+      "difficulty": 2,
+      "audio_url": null
+    }
+  ]
+}
+```
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "imported": 1,
+    "total": 1,
+    "questions": [...]
+  },
+  "message": "1/1개의 문제가 임포트되었습니다"
+}
+```
+
+### 기출문제 파일 임포트
+
+**엔드포인트:** `POST /api/v1/admin/questions/import-file`
+
+**설명:** 어드민이 JSON 또는 CSV 파일로 기출문제를 임포트합니다.
+
+**인증:** 어드민 권한 필요
+
+**요청 형식:** `multipart/form-data`
+
+**요청 필드:**
+- `file` (file, required): JSON 또는 CSV 파일
+
+**JSON 파일 형식:**
+
+```json
+[
+  {
+    "level": "N5",
+    "question_type": "vocabulary",
+    "question_text": "問題",
+    "choices": ["選択肢1", "選択肢2", "選択肢3", "選択肢4"],
+    "correct_answer": "選択肢1",
+    "explanation": "説明",
+    "difficulty": 2,
+    "audio_url": null
+  }
+]
+```
+
+**CSV 파일 형식:**
+
+```csv
+level,question_type,question_text,choices,correct_answer,explanation,difficulty,audio_url
+N5,vocabulary,問題,"選択肢1,選択肢2,選択肢3,選択肢4",選択肢1,説明,2,
+```
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "imported": 10,
+    "total": 10,
+    "questions": [...]
+  },
+  "message": "10/10개의 문제가 임포트되었습니다"
+}
+```
+
+### 단어 대량 생성
+
+**엔드포인트:** `POST /api/v1/admin/vocabulary/generate`
+
+**설명:** 어드민이 단어를 대량 생성합니다. 샘플 데이터를 기반으로 자동 생성됩니다.
+
+**인증:** 어드민 권한 필요
+
+**요청 본문:**
+
+```json
+{
+  "level": "N5",
+  "count": 10
+}
+```
+
+**요청 필드:**
+- `level` (string, required): JLPT 레벨 (N1-N5)
+- `count` (int, required): 생성할 단어 수
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "count": 10,
+    "vocabularies": [
+      {
+        "id": 1,
+        "word": "こんにちは",
+        "reading": "こんにちは",
+        "meaning": "안녕하세요",
+        "level": "N5",
+        "memorization_status": "not_memorized",
+        "example_sentence": "こんにちは、元気ですか？"
+      }
+    ]
+  },
+  "message": "10개의 단어가 생성되었습니다"
+}
+```
+
+### 기출단어 임포트 (JSON)
+
+**엔드포인트:** `POST /api/v1/admin/vocabulary/import`
+
+**설명:** 어드민이 JSON 형식으로 기출단어를 임포트합니다.
+
+**인증:** 어드민 권한 필요
+
+**요청 본문:**
+
+```json
+{
+  "vocabularies": [
+    {
+      "word": "ありがとう",
+      "reading": "ありがとう",
+      "meaning": "감사합니다",
+      "level": "N5",
+      "memorization_status": "not_memorized",
+      "example_sentence": "ありがとうございます。"
+    }
+  ]
+}
+```
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "imported": 1,
+    "total": 1,
+    "vocabularies": [...]
+  },
+  "message": "1/1개의 단어가 임포트되었습니다"
+}
+```
+
+### 기출단어 파일 임포트
+
+**엔드포인트:** `POST /api/v1/admin/vocabulary/import-file`
+
+**설명:** 어드민이 JSON 또는 CSV 파일로 기출단어를 임포트합니다.
+
+**인증:** 어드민 권한 필요
+
+**요청 형식:** `multipart/form-data`
+
+**요청 필드:**
+- `file` (file, required): JSON 또는 CSV 파일
+
+**JSON 파일 형식:**
+
+```json
+[
+  {
+    "word": "単語",
+    "reading": "たんご",
+    "meaning": "단어",
+    "level": "N5",
+    "memorization_status": "not_memorized",
+    "example_sentence": "これは単語です。"
+  }
+]
+```
+
+**CSV 파일 형식:**
+
+```csv
+word,reading,meaning,level,memorization_status,example_sentence
+単語,たんご,단어,N5,not_memorized,これは単語です。
+```
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "imported": 10,
+    "total": 10,
+    "vocabularies": [...]
+  },
+  "message": "10/10개의 단어가 임포트되었습니다"
+}
+```
+
 ## 통계 API
 
 ### 통계 조회
