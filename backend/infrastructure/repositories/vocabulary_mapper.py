@@ -5,7 +5,7 @@ Vocabulary 엔티티와 데이터베이스 행 간 변환 매퍼
 import sqlite3
 from typing import Dict, Any
 from backend.domain.entities.vocabulary import Vocabulary
-from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+from backend.domain.value_objects.jlpt import JLPTLevel
 
 
 class VocabularyMapper:
@@ -34,7 +34,6 @@ class VocabularyMapper:
             reading=row['reading'],
             meaning=row['meaning'],
             level=JLPTLevel(row['level']),
-            memorization_status=MemorizationStatus(row['memorization_status']),
             example_sentence=example_sentence
         )
 
@@ -46,7 +45,6 @@ class VocabularyMapper:
             'reading': vocabulary.reading,
             'meaning': vocabulary.meaning,
             'level': vocabulary.level.value,
-            'memorization_status': vocabulary.memorization_status.value,
             'example_sentence': vocabulary.example_sentence
         }
         return data

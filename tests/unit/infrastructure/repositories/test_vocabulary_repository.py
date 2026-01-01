@@ -7,7 +7,7 @@ import pytest
 import os
 import tempfile
 from backend.domain.entities.vocabulary import Vocabulary
-from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+from backend.domain.value_objects.jlpt import JLPTLevel
 
 
 class TestSqliteVocabularyRepository:
@@ -39,7 +39,6 @@ class TestSqliteVocabularyRepository:
             reading="ありがとう",
             meaning="감사합니다",
             level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED,
             example_sentence="ありがとうございます。"
         )
 
@@ -55,7 +54,6 @@ class TestSqliteVocabularyRepository:
         assert found_vocabulary.reading == "ありがとう"
         assert found_vocabulary.meaning == "감사합니다"
         assert found_vocabulary.level == JLPTLevel.N5
-        assert found_vocabulary.memorization_status == MemorizationStatus.NOT_MEMORIZED
         assert found_vocabulary.example_sentence == "ありがとうございます。"
 
     def test_vocabulary_table_creation(self, temp_db):
@@ -72,8 +70,7 @@ class TestSqliteVocabularyRepository:
             word="こんにちは",
             reading="こんにちは",
             meaning="안녕하세요",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
         repo.save(vocabulary)
 
@@ -89,7 +86,7 @@ class TestSqliteVocabularyRepository:
             assert result is not None
             assert result[0] == 'vocabulary'
 
-            # 컬럼 구조 확인
+            # 컬럼 구조 확인 (memorization_status는 더 이상 사용하지 않지만 호환성을 위해 존재)
             cursor.execute("PRAGMA table_info(vocabulary)")
             columns = cursor.fetchall()
 
@@ -278,16 +275,17 @@ class TestSqliteVocabularyRepository:
             word="ありがとう",
             reading="ありがとう",
             meaning="감사합니다",
-            level=JLPTLevel.N5,
-            memorization_status=MemorizationStatus.NOT_MEMORIZED
+            level=JLPTLevel.N5
         )
         saved_vocab = repo.save(vocabulary)
 
-        # 암기 상태 업데이트
-        saved_vocab.update_memorization_status(MemorizationStatus.MEMORIZED)
+        # 단어 정보 업데이트
+        saved_vocab.word = "こんにちは"
+        saved_vocab.meaning = "안녕하세요"
         updated_vocab = repo.save(saved_vocab)
 
         # 업데이트 확인
         found_vocab = repo.find_by_id(updated_vocab.id)
-        assert found_vocab.memorization_status == MemorizationStatus.MEMORIZED
+        assert found_vocab.word == "こんにちは"
+        assert found_vocab.meaning == "안녕하세요"
 

@@ -634,11 +634,10 @@ class VocabularyUpdateRequest(BaseModel):
 @router.get("/vocabulary")
 async def get_admin_vocabularies(
     level: Optional[JLPTLevel] = None,
-    status: Optional[str] = None,
     search: Optional[str] = None,
     admin_user: User = Depends(get_admin_user)
 ):
-    """어드민 전체 단어 목록 조회"""
+    """어드민 전체 단어 목록 조회 (상태 필터 제거 - 사용자별 상태는 별도 관리)"""
     repo = get_vocabulary_repository()
     
     if search:
@@ -648,8 +647,6 @@ async def get_admin_vocabularies(
         vocabularies = list(vocabularies)
     elif level:
         vocabularies = repo.find_by_level(level)
-    elif status:
-        vocabularies = repo.find_by_status(status)
     else:
         vocabularies = repo.find_all()
     
@@ -662,7 +659,7 @@ async def get_admin_vocabularies(
                 reading=v.reading,
                 meaning=v.meaning,
                 level=v.level.value,
-                memorization_status=v.memorization_status.value,
+                memorization_status="not_memorized",  # Admin에서는 기본값만 표시
                 example_sentence=v.example_sentence
             )
             for v in vocabularies
@@ -690,7 +687,7 @@ async def get_admin_vocabulary(
             reading=vocabulary.reading,
             meaning=vocabulary.meaning,
             level=vocabulary.level.value,
-            memorization_status=vocabulary.memorization_status.value,
+            memorization_status="not_memorized",  # Admin에서는 기본값만 표시
             example_sentence=vocabulary.example_sentence
         ),
         "message": "단어 조회 성공"
@@ -710,7 +707,6 @@ async def create_admin_vocabulary(
         reading=request.reading,
         meaning=request.meaning,
         level=request.level,
-        memorization_status=MemorizationStatus.NOT_MEMORIZED,
         example_sentence=request.example_sentence
     )
     
@@ -724,7 +720,7 @@ async def create_admin_vocabulary(
             reading=saved_vocabulary.reading,
             meaning=saved_vocabulary.meaning,
             level=saved_vocabulary.level.value,
-            memorization_status=saved_vocabulary.memorization_status.value,
+            memorization_status="not_memorized",  # Admin에서는 기본값만 표시
             example_sentence=saved_vocabulary.example_sentence
         ),
         "message": "단어 생성 성공"
@@ -765,7 +761,7 @@ async def update_admin_vocabulary(
             reading=updated_vocabulary.reading,
             meaning=updated_vocabulary.meaning,
             level=updated_vocabulary.level.value,
-            memorization_status=updated_vocabulary.memorization_status.value,
+            memorization_status="not_memorized",  # Admin에서는 기본값만 표시
             example_sentence=updated_vocabulary.example_sentence
         ),
         "message": "단어 수정 성공"

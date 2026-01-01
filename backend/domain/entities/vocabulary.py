@@ -4,7 +4,7 @@ JLPT 단어 학습의 도메인 로직을 표현
 """
 
 from typing import Optional
-from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+from backend.domain.value_objects.jlpt import JLPTLevel
 
 
 class Vocabulary:
@@ -12,7 +12,8 @@ class Vocabulary:
     JLPT 단어 엔티티
 
     DDD에서 Entity로 분류되며, 고유 식별자를 가짐
-    JLPT 단어 학습을 위한 단어 정보를 표현하며 암기 상태 관리 등의 비즈니스 로직을 포함
+    JLPT 단어 학습을 위한 단어 정보를 표현
+    사용자별 암기 상태는 UserVocabulary 엔티티에서 관리
     """
 
     def __init__(
@@ -22,7 +23,6 @@ class Vocabulary:
         reading: str,
         meaning: str,
         level: JLPTLevel,
-        memorization_status: MemorizationStatus = MemorizationStatus.NOT_MEMORIZED,
         example_sentence: Optional[str] = None
     ):
         """
@@ -34,7 +34,6 @@ class Vocabulary:
             reading: 읽기 (히라가나/가타카나)
             meaning: 의미 (한국어)
             level: JLPT 레벨 (N1-N5)
-            memorization_status: 암기 상태 (기본값: NOT_MEMORIZED)
             example_sentence: 예문 (선택적)
 
         Raises:
@@ -50,7 +49,6 @@ class Vocabulary:
         self.reading = reading
         self.meaning = meaning
         self.level = level
-        self.memorization_status = memorization_status
         self.example_sentence = example_sentence
 
     def _validate_word(self, word: str) -> None:
@@ -95,15 +93,6 @@ class Vocabulary:
             if len(example_sentence) > 1000:
                 raise ValueError("예문은 1000자를 초과할 수 없습니다")
 
-    def update_memorization_status(self, status: MemorizationStatus) -> None:
-        """
-        암기 상태 업데이트
-
-        Args:
-            status: 새로운 암기 상태
-        """
-        self.memorization_status = status
-
     def __eq__(self, other) -> bool:
         """ID 기반 동등성 비교"""
         if not isinstance(other, Vocabulary):
@@ -116,5 +105,5 @@ class Vocabulary:
 
     def __repr__(self) -> str:
         """문자열 표현"""
-        return f"Vocabulary(id={self.id}, word={self.word}, level={self.level}, status={self.memorization_status})"
+        return f"Vocabulary(id={self.id}, word={self.word}, level={self.level})"
 
