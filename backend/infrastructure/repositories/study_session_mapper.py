@@ -52,6 +52,15 @@ class StudySessionMapper:
         except (KeyError, TypeError, ValueError, json.JSONDecodeError):
             question_types = None
 
+        # question_ids 파싱 (JSON 배열)
+        question_ids = None
+        try:
+            question_ids_str = row['question_ids']
+            if question_ids_str:
+                question_ids = json.loads(question_ids_str)
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+            question_ids = None
+
         study_session = StudySession(
             id=row['id'],
             user_id=row['user_id'],

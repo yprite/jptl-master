@@ -351,59 +351,6 @@ export const userApi = {
 };
 
 /**
- * 학습 모드 관련 API
- */
-export const studyApi = {
-  /**
-   * 학습 모드 문제 조회
-   */
-  async getStudyQuestions(params: {
-    level: string;
-    question_types?: string[];
-    question_count?: number;
-  }): Promise<Question[]> {
-    const queryParams = new URLSearchParams();
-    queryParams.append('level', params.level);
-    if (params.question_types && params.question_types.length > 0) {
-      params.question_types.forEach(type => {
-        queryParams.append('question_types', type);
-      });
-    }
-    if (params.question_count) {
-      queryParams.append('question_count', params.question_count.toString());
-    }
-    return fetchApi<Question[]>(`/study/questions?${queryParams.toString()}`);
-  },
-
-  /**
-   * 학습 모드 세션 제출
-   */
-  async submitStudySession(request: {
-    answers: Record<number, string>;
-    level?: string;
-    question_types?: string[];
-    time_spent_minutes: number;
-  }): Promise<{
-    success: boolean;
-    data: {
-      study_session_id: number;
-      total_questions: number;
-      correct_count: number;
-      accuracy: number;
-      time_spent_minutes: number;
-      level: string | null;
-      question_types: string[] | null;
-    };
-    message: string;
-  }> {
-    return fetchApi(`/study/submit`, {
-      method: 'POST',
-      body: JSON.stringify(request),
-    });
-  },
-};
-
-/**
  * 인증 관련 API
  */
 export const authApi = {
