@@ -5,7 +5,7 @@ JLPT 어드민 관리 API 컨트롤러
 
 from fastapi import APIRouter, HTTPException, Depends, Request, UploadFile, File
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional, List, Dict
 import os
 import shutil
 from pathlib import Path
@@ -789,4 +789,340 @@ async def delete_admin_vocabulary(
         "success": True,
         "message": "단어 삭제 성공"
     }
+
+# ========== 어드민 문제/단어 생성 API ==========
+
+class QuestionGenerateRequest(BaseModel):
+    level: JLPTLevel
+    question_type: Optional[QuestionType] = None
+    count: int = 10
+
+class VocabularyGenerateRequest(BaseModel):
+    level: JLPTLevel
+    count: int = 10
+
+class QuestionImportRequest(BaseModel):
+    questions: List[Dict]
+
+class VocabularyImportRequest(BaseModel):
+    vocabularies: List[Dict]
+
+@router.post("/questions/generate")
+async def generate_questions(
+    request: QuestionGenerateRequest,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 문제 대량 생성"""
+    from backend.domain.services.question_generator_service import QuestionGeneratorService
+    
+    repo = get_question_repository()
+    
+    # 문제 생성
+    questions = QuestionGeneratorService.generate_questions(
+        level=request.level,
+        question_type=request.question_type,
+        count=request.count
+    )
+    
+    # 데이터베이스에 저장
+    saved_questions = []
+    for question in questions:
+        saved_question = repo.save(question)
+        saved_questions.append(saved_question)
+    
+    return {
+        "success": True,
+        "data": {
+            "count": len(saved_questions),
+            "questions": [
+                QuestionResponse(
+                    id=q.id,
+                    level=q.level.value,
+                    question_type=q.question_type.value,
+                    question_text=q.question_text,
+                    choices=q.choices,
+                    correct_answer=q.correct_answer,
+                    explanation=q.explanation,
+                    difficulty=q.difficulty,
+                    audio_url=q.audio_url
+                )
+                for q in saved_questions
+            ]
+        },
+        "message": f"{len(saved_questions)}개의 문제가 생성되었습니다"
+    }
+
+@router.post("/questions/import")
+async def import_questions(
+    request: QuestionImportRequest,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 기출문제 임포트 (JSON 형식)"""
+    from backend.domain.services.question_generator_service import QuestionGeneratorService
+    
+    repo = get_question_repository()
+    
+    # 문제 임포트
+    questions = QuestionGeneratorService.import_from_list(request.questions)
+    
+    # 데이터베이스에 저장
+    saved_questions = []
+    for question in questions:
+        try:
+            saved_question = repo.save(question)
+            saved_questions.append(saved_question)
+        except Exception as e:
+            # 개별 문제 저장 실패해도 계속 진행
+            print(f"문제 임포트 실패: {str(e)}")
+            continue
+    
+    return {
+        "success": True,
+        "data": {
+            "imported": len(saved_questions),
+            "total": len(questions),
+            "questions": [
+                QuestionResponse(
+                    id=q.id,
+                    level=q.level.value,
+                    question_type=q.question_type.value,
+                    question_text=q.question_text,
+                    choices=q.choices,
+                    correct_answer=q.correct_answer,
+                    explanation=q.explanation,
+                    difficulty=q.difficulty,
+                    audio_url=q.audio_url
+                )
+                for q in saved_questions
+            ]
+        },
+        "message": f"{len(saved_questions)}/{len(questions)}개의 문제가 임포트되었습니다"
+    }
+
+@router.post("/questions/import-file")
+async def import_questions_from_file(
+    file: UploadFile = File(...),
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 기출문제 파일 임포트 (JSON/CSV 파일)"""
+    from backend.infrastructure.adapters.jlpt_question_importer import JLPTQuestionImporter
+    import tempfile
+    
+    repo = get_question_repository()
+    
+    # 파일 확장자 확인
+    file_ext = Path(file.filename).suffix.lower()
+    if file_ext not in ['.json', '.csv']:
+        raise HTTPException(
+            status_code=400,
+            detail="지원하지 않는 파일 형식입니다. JSON 또는 CSV 파일만 지원합니다."
+        )
+    
+    # 임시 파일로 저장
+    with tempfile.NamedTemporaryFile(mode='wb', suffix=file_ext, delete=False) as tmp_file:
+        content = await file.read()
+        tmp_file.write(content)
+        tmp_file_path = tmp_file.name
+    
+    try:
+        # 파일 형식에 따라 임포트
+        if file_ext == '.json':
+            questions = JLPTQuestionImporter.import_from_json(tmp_file_path)
+        else:
+            questions = JLPTQuestionImporter.import_from_csv(tmp_file_path)
+        
+        # 데이터베이스에 저장
+        saved_questions = []
+        for question in questions:
+            try:
+                saved_question = repo.save(question)
+                saved_questions.append(saved_question)
+            except Exception as e:
+                # 개별 문제 저장 실패해도 계속 진행
+                print(f"문제 임포트 실패: {str(e)}")
+                continue
+        
+        return {
+            "success": True,
+            "data": {
+                "imported": len(saved_questions),
+                "total": len(questions),
+                "questions": [
+                    QuestionResponse(
+                        id=q.id,
+                        level=q.level.value,
+                        question_type=q.question_type.value,
+                        question_text=q.question_text,
+                        choices=q.choices,
+                        correct_answer=q.correct_answer,
+                        explanation=q.explanation,
+                        difficulty=q.difficulty,
+                        audio_url=q.audio_url
+                    )
+                    for q in saved_questions
+                ]
+            },
+            "message": f"{len(saved_questions)}/{len(questions)}개의 문제가 임포트되었습니다"
+        }
+    finally:
+        # 임시 파일 삭제
+        import os
+        if os.path.exists(tmp_file_path):
+            os.unlink(tmp_file_path)
+
+@router.post("/vocabulary/generate")
+async def generate_vocabularies(
+    request: VocabularyGenerateRequest,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 단어 대량 생성"""
+    from backend.domain.services.vocabulary_generator_service import VocabularyGeneratorService
+    
+    repo = get_vocabulary_repository()
+    
+    # 단어 생성
+    vocabularies = VocabularyGeneratorService.generate_vocabularies(
+        level=request.level,
+        count=request.count
+    )
+    
+    # 데이터베이스에 저장
+    saved_vocabularies = []
+    for vocabulary in vocabularies:
+        saved_vocabulary = repo.save(vocabulary)
+        saved_vocabularies.append(saved_vocabulary)
+    
+    return {
+        "success": True,
+        "data": {
+            "count": len(saved_vocabularies),
+            "vocabularies": [
+                VocabularyResponse(
+                    id=v.id,
+                    word=v.word,
+                    reading=v.reading,
+                    meaning=v.meaning,
+                    level=v.level.value,
+                    memorization_status=v.memorization_status.value,
+                    example_sentence=v.example_sentence
+                )
+                for v in saved_vocabularies
+            ]
+        },
+        "message": f"{len(saved_vocabularies)}개의 단어가 생성되었습니다"
+    }
+
+@router.post("/vocabulary/import")
+async def import_vocabularies(
+    request: VocabularyImportRequest,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 기출단어 임포트 (JSON 형식)"""
+    from backend.domain.services.vocabulary_generator_service import VocabularyGeneratorService
+    
+    repo = get_vocabulary_repository()
+    
+    # 단어 임포트
+    vocabularies = VocabularyGeneratorService.import_from_list(request.vocabularies)
+    
+    # 데이터베이스에 저장
+    saved_vocabularies = []
+    for vocabulary in vocabularies:
+        try:
+            saved_vocabulary = repo.save(vocabulary)
+            saved_vocabularies.append(saved_vocabulary)
+        except Exception as e:
+            # 개별 단어 저장 실패해도 계속 진행
+            print(f"단어 임포트 실패: {str(e)}")
+            continue
+    
+    return {
+        "success": True,
+        "data": {
+            "imported": len(saved_vocabularies),
+            "total": len(vocabularies),
+            "vocabularies": [
+                VocabularyResponse(
+                    id=v.id,
+                    word=v.word,
+                    reading=v.reading,
+                    meaning=v.meaning,
+                    level=v.level.value,
+                    memorization_status=v.memorization_status.value,
+                    example_sentence=v.example_sentence
+                )
+                for v in saved_vocabularies
+            ]
+        },
+        "message": f"{len(saved_vocabularies)}/{len(vocabularies)}개의 단어가 임포트되었습니다"
+    }
+
+@router.post("/vocabulary/import-file")
+async def import_vocabularies_from_file(
+    file: UploadFile = File(...),
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 기출단어 파일 임포트 (JSON/CSV 파일)"""
+    from backend.infrastructure.adapters.jlpt_question_importer import JLPTQuestionImporter
+    import tempfile
+    
+    repo = get_vocabulary_repository()
+    
+    # 파일 확장자 확인
+    file_ext = Path(file.filename).suffix.lower()
+    if file_ext not in ['.json', '.csv']:
+        raise HTTPException(
+            status_code=400,
+            detail="지원하지 않는 파일 형식입니다. JSON 또는 CSV 파일만 지원합니다."
+        )
+    
+    # 임시 파일로 저장
+    with tempfile.NamedTemporaryFile(mode='wb', suffix=file_ext, delete=False) as tmp_file:
+        content = await file.read()
+        tmp_file.write(content)
+        tmp_file_path = tmp_file.name
+    
+    try:
+        # 파일 형식에 따라 임포트
+        if file_ext == '.json':
+            vocabularies = JLPTQuestionImporter.import_vocabulary_from_json(tmp_file_path)
+        else:
+            vocabularies = JLPTQuestionImporter.import_vocabulary_from_csv(tmp_file_path)
+        
+        # 데이터베이스에 저장
+        saved_vocabularies = []
+        for vocabulary in vocabularies:
+            try:
+                saved_vocabulary = repo.save(vocabulary)
+                saved_vocabularies.append(saved_vocabulary)
+            except Exception as e:
+                # 개별 단어 저장 실패해도 계속 진행
+                print(f"단어 임포트 실패: {str(e)}")
+                continue
+        
+        return {
+            "success": True,
+            "data": {
+                "imported": len(saved_vocabularies),
+                "total": len(vocabularies),
+                "vocabularies": [
+                    VocabularyResponse(
+                        id=v.id,
+                        word=v.word,
+                        reading=v.reading,
+                        meaning=v.meaning,
+                        level=v.level.value,
+                        memorization_status=v.memorization_status.value,
+                        example_sentence=v.example_sentence
+                    )
+                    for v in saved_vocabularies
+                ]
+            },
+            "message": f"{len(saved_vocabularies)}/{len(vocabularies)}개의 단어가 임포트되었습니다"
+        }
+    finally:
+        # 임시 파일 삭제
+        import os
+        if os.path.exists(tmp_file_path):
+            os.unlink(tmp_file_path)
 

@@ -1,0 +1,12 @@
+{
+  "N5": [
+    {"pattern": "___を", "example": "コーヒーを飲みます", "explanation": "목적어를 나타내는 조사"},
+    {"pattern": "___に", "example": "学校に行きます", "explanation": "방향이나 목적지를 나타내는 조사"},
+    {"pattern": "___で", "example": "電車で行きます", "explanation": "수단이나 방법을 나타내는 조사"}
+  ],
+  "N4": [
+    {"pattern": "___たい", "example": "食べたい", "explanation": "~하고 싶다"},
+    {"pattern": "___てください", "example": "読んでください", "explanation": "~해 주세요"}
+  ]
+}
+
