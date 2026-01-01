@@ -454,6 +454,11 @@ run_frontend_e2e_tests() {
     echo "🌱 E2E 테스트용 N5 문제 시딩(최소 20개 보장) 중..."
     python scripts/seed_n5_questions.py --ensure-minimum 20 --non-interactive 2>&1 || true
 
+    # E2E 테스트에 필요한 admin 계정 확인 및 생성
+    echo ""
+    echo "👤 E2E 테스트용 admin 계정 확인 중..."
+    python scripts/create_admin_user.py --email admin@example.com --username admin --non-interactive 2>&1 | grep -E "(✅|이미)" || true
+
     # 기존 백엔드 서버 프로세스 확인 및 종료
     BACKEND_PID_FILE=".backend.pid"
     if [ -f "$BACKEND_PID_FILE" ]; then
