@@ -8,6 +8,17 @@
 ## Unreleased
 
 ### Added
+문제_단어_생성_임포트_기능: 문제 및 단어 대량 생성 및 기출문제 임포트 기능 구현 (2025-01-04)
+- QuestionGeneratorService: JLPT 문제를 자동 생성하는 서비스
+- VocabularyGeneratorService: JLPT 단어를 자동 생성하는 서비스
+- JLPTQuestionImporter: JSON/CSV 파일에서 기출문제를 임포트하는 어댑터
+- 어드민 API 엔드포인트: POST /api/v1/admin/questions/generate, POST /api/v1/admin/questions/import, POST /api/v1/admin/questions/import-file
+- 어드민 API 엔드포인트: POST /api/v1/admin/vocabulary/generate, POST /api/v1/admin/vocabulary/import, POST /api/v1/admin/vocabulary/import-file
+- 문제 생성 서비스 테스트 추가
+- 단어 생성 서비스 테스트 추가
+- 기출문제 임포트 어댑터 테스트 추가
+- 어드민 API 문서 업데이트 (문제/단어 생성 및 임포트 API 섹션 추가)
+
 단어_학습_기능: 단어 학습 기능 구현 (2025-01-04)
 - Vocabulary 엔티티 및 Repository 구현 (TDD)
 - MemorizationStatus Enum 추가 (미암기/학습중/암기완료)
