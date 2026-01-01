@@ -11,6 +11,7 @@ from .tests import router as tests_router
 from .results import router as results_router
 from .admin import router as admin_router
 from .study import router as study_router
+from .vocabulary import router as vocabulary_router
 
 # 메인 API 라우터
 router = APIRouter()
@@ -23,3 +24,4 @@ router.include_router(tests_router, prefix="/tests", tags=["tests"])
 router.include_router(results_router, prefix="/results", tags=["results"])
 router.include_router(admin_router, prefix="/admin", tags=["admin"])
 router.include_router(study_router, prefix="/study", tags=["study"])
+router.include_router(vocabulary_router, prefix="/vocabulary", tags=["vocabulary"])
