@@ -1,0 +1,315 @@
+.admin-vocabulary-management {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.admin-vocabulary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-vocabulary-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.admin-error-message {
+  background-color: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #fcc;
+}
+
+.admin-vocabulary-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.admin-search-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.admin-search-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.admin-filter-select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 120px;
+}
+
+.admin-filter-select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.admin-vocabulary-table {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.admin-vocabulary-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-vocabulary-table th,
+.admin-vocabulary-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-vocabulary-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.admin-vocabulary-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.admin-empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.admin-vocabulary-detail {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #eee;
+}
+
+.admin-detail-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.admin-detail-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-detail-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.admin-detail-field label {
+  font-weight: 600;
+  color: #666;
+  min-width: 100px;
+}
+
+.admin-detail-field span {
+  color: #333;
+  flex: 1;
+}
+
+.admin-vocabulary-form {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #eee;
+}
+
+.admin-form-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.admin-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-form-field label {
+  font-weight: 600;
+  color: #333;
+}
+
+.admin-form-field input,
+.admin-form-field select,
+.admin-form-field textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.admin-form-field input:focus,
+.admin-form-field select:focus,
+.admin-form-field textarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.admin-form-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.admin-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.admin-create-button,
+.admin-save-button,
+.admin-edit-button,
+.admin-view-button,
+.admin-back-button,
+.admin-cancel-button,
+.admin-delete-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-create-button,
+.admin-save-button {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.admin-create-button:hover,
+.admin-save-button:hover {
+  background-color: #357abd;
+}
+
+.admin-edit-button {
+  background-color: #ff9800;
+  color: white;
+}
+
+.admin-edit-button:hover {
+  background-color: #f57c00;
+}
+
+.admin-view-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+.admin-view-button:hover {
+  background-color: #1976d2;
+}
+
+.admin-back-button,
+.admin-cancel-button {
+  background-color: #757575;
+  color: white;
+}
+
+.admin-back-button:hover,
+.admin-cancel-button:hover {
+  background-color: #616161;
+}
+
+.admin-delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.admin-delete-button:hover {
+  background-color: #d32f2f;
+}
+
+.admin-create-button:disabled,
+.admin-save-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .admin-vocabulary-filters {
+    flex-direction: column;
+  }
+
+  .admin-search-input,
+  .admin-filter-select {
+    width: 100%;
+  }
+
+  .admin-vocabulary-table {
+    overflow-x: auto;
+  }
+
+  .admin-detail-actions,
+  .admin-form-actions {
+    flex-direction: column;
+  }
+
+  .admin-create-button,
+  .admin-save-button,
+  .admin-edit-button,
+  .admin-view-button,
+  .admin-back-button,
+  .admin-cancel-button,
+  .admin-delete-button {
+    width: 100%;
+  }
+}
+

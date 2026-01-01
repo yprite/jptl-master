@@ -5,7 +5,7 @@
 import React from 'react';
 import './AdminNavigation.css';
 
-export type AdminPage = 'admin-dashboard' | 'admin-users' | 'admin-questions';
+export type AdminPage = 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary';
 
 interface AdminNavigationProps {
   currentPage: AdminPage;
@@ -22,6 +22,7 @@ const AdminNavigation: React.FC<AdminNavigationProps> = ({
     { key: 'admin-dashboard', label: '대시보드' },
     { key: 'admin-users', label: '사용자 관리' },
     { key: 'admin-questions', label: '문제 관리' },
+    { key: 'admin-vocabulary', label: '단어 관리' },
   ];
 
   return (
