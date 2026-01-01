@@ -10,5 +10,6 @@ from .answer_detail import AnswerDetail
 from .learning_history import LearningHistory
 from .user_performance import UserPerformance
 from .study_session import StudySession
+from .vocabulary import Vocabulary
 
-__all__ = ["User", "Question", "Test", "Result", "AnswerDetail", "LearningHistory", "UserPerformance"]
+__all__ = ["User", "Question", "Test", "Result", "AnswerDetail", "LearningHistory", "UserPerformance", "StudySession", "Vocabulary"]
