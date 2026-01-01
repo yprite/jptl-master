@@ -69,9 +69,13 @@ function App() {
       if (!isInitializingRef.current && !currentUser && stateRef.current !== 'login') {
         setState('login');
       }
-      // 사용자가 있으면 초기 화면으로
+      // 사용자가 있으면 초기 화면으로 (admin 사용자는 admin-dashboard로)
       if (!isInitializingRef.current && currentUser && stateRef.current === 'login') {
-        setState('initial');
+        if (currentUser.is_admin) {
+          setState('admin-dashboard');
+        } else {
+          setState('initial');
+        }
       }
     });
 
@@ -83,7 +87,11 @@ function App() {
       // 초기화 후 사용자 상태에 따라 화면 설정
       const currentUser = authService.getCurrentUser();
       if (currentUser) {
-        setState('initial');
+        if (currentUser.is_admin) {
+          setState('admin-dashboard');
+        } else {
+          setState('initial');
+        }
       } else {
         setState('login');
       }
@@ -98,7 +106,11 @@ function App() {
   // 로그인 성공 핸들러
   const handleLoginSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
-    setState('initial');
+    if (loggedInUser.is_admin) {
+      setState('admin-dashboard');
+    } else {
+      setState('initial');
+    }
   };
 
   // 로그아웃 핸들러
@@ -570,7 +582,7 @@ function App() {
           </section>
         )}
 
-        {state === 'initial' && (
+        {state === 'initial' && !user?.is_admin && (
           <section className="initial-section">
             <h2>JLPT 학습 플랫폼</h2>
             <p>테스트 모드와 학습 모드 중 선택하세요.</p>
@@ -617,28 +629,6 @@ function App() {
               >
                 반복 학습
               </button>
-              {user?.is_admin && (
-                <>
-                  <button
-                    onClick={() => setState('admin-dashboard')}
-                    className="admin-button"
-                  >
-                    어드민 - 대시보드
-                  </button>
-                  <button
-                    onClick={() => setState('admin-users')}
-                    className="admin-button"
-                  >
-                    어드민 - 사용자 관리
-                  </button>
-                  <button
-                    onClick={() => setState('admin-questions')}
-                    className="admin-button"
-                  >
-                    어드민 - 문제 관리
-                  </button>
-                </>
-              )}
             </div>
           </section>
         )}
