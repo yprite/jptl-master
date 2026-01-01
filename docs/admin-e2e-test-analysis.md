@@ -62,3 +62,36 @@
 
 모든 테스트가 통과하고, 실제 서버에서도 동일하게 동작해야 합니다.
 
+## 테스트 데이터 정리
+
+### 문제점
+E2E 테스트 후 테스트 데이터가 데이터베이스에 계속 쌓이는 문제가 있었습니다.
+
+### 해결 방법
+1. **테스트 데이터 정리 스크립트 추가** (`scripts/cleanup_test_data.py`)
+   - `test-`로 시작하는 이메일 패턴의 사용자 자동 삭제
+   - 관련 데이터 자동 삭제: answer_details, learning_history, user_performance, results, test_attempts, tests
+   - 외래키 제약조건을 고려한 삭제 순서
+
+2. **run_tests.sh에 정리 로직 통합**
+   - E2E 테스트 전: 이전 테스트 데이터 정리
+   - E2E 테스트 후: 현재 테스트 데이터 정리
+
+### 사용 방법
+```bash
+# 모든 테스트 데이터 정리
+python scripts/cleanup_test_data.py --all
+
+# 특정 패턴의 테스트 데이터 정리
+python scripts/cleanup_test_data.py --email-pattern "test-%@example.com"
+```
+
+### 삭제되는 데이터
+- 테스트 사용자 (test-로 시작하는 이메일)
+- 사용자 관련 answer_details
+- 사용자 관련 learning_history
+- 사용자 관련 user_performance
+- 사용자 관련 results
+- 사용자 관련 test_attempts
+- 사용자가 생성한 tests
+
