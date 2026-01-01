@@ -12,11 +12,13 @@ from pathlib import Path
 
 from backend.domain.entities.user import User
 from backend.domain.entities.question import Question
-from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+from backend.domain.entities.vocabulary import Vocabulary
+from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType, MemorizationStatus
 from backend.infrastructure.repositories.user_repository import SqliteUserRepository
 from backend.infrastructure.repositories.question_repository import SqliteQuestionRepository
 from backend.infrastructure.repositories.test_repository import SqliteTestRepository
 from backend.infrastructure.repositories.result_repository import SqliteResultRepository
+from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
 from backend.infrastructure.config.database import get_database
 from backend.presentation.controllers.auth import get_admin_user
 
@@ -86,6 +88,11 @@ def get_result_repository() -> SqliteResultRepository:
     """결과 리포지토리 의존성 주입"""
     db = get_database()
     return SqliteResultRepository(db)
+
+def get_vocabulary_repository() -> SqliteVocabularyRepository:
+    """단어 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteVocabularyRepository(db)
 
 # ========== 어드민 사용자 관리 API ==========
 
@@ -597,5 +604,189 @@ async def get_admin_statistics(admin_user: User = Depends(get_admin_user)):
             }
         },
         "message": "통계 조회 성공"
+    }
+
+# ========== 어드민 단어 관리 API ==========
+
+class VocabularyResponse(BaseModel):
+    id: int
+    word: str
+    reading: str
+    meaning: str
+    level: str
+    memorization_status: str
+    example_sentence: Optional[str] = None
+
+class VocabularyCreateRequest(BaseModel):
+    word: str
+    reading: str
+    meaning: str
+    level: JLPTLevel
+    example_sentence: Optional[str] = None
+
+class VocabularyUpdateRequest(BaseModel):
+    word: Optional[str] = None
+    reading: Optional[str] = None
+    meaning: Optional[str] = None
+    level: Optional[JLPTLevel] = None
+    example_sentence: Optional[str] = None
+
+@router.get("/vocabulary")
+async def get_admin_vocabularies(
+    level: Optional[JLPTLevel] = None,
+    status: Optional[str] = None,
+    search: Optional[str] = None,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 전체 단어 목록 조회"""
+    repo = get_vocabulary_repository()
+    
+    if search:
+        by_word = repo.search_by_word(search)
+        by_meaning = repo.search_by_meaning(search)
+        vocabularies = {v.id: v for v in by_word + by_meaning}.values()
+        vocabularies = list(vocabularies)
+    elif level:
+        vocabularies = repo.find_by_level(level)
+    elif status:
+        vocabularies = repo.find_by_status(status)
+    else:
+        vocabularies = repo.find_all()
+    
+    return {
+        "success": True,
+        "data": [
+            VocabularyResponse(
+                id=v.id,
+                word=v.word,
+                reading=v.reading,
+                meaning=v.meaning,
+                level=v.level.value,
+                memorization_status=v.memorization_status.value,
+                example_sentence=v.example_sentence
+            )
+            for v in vocabularies
+        ],
+        "message": "단어 목록 조회 성공"
+    }
+
+@router.get("/vocabulary/{vocabulary_id}")
+async def get_admin_vocabulary(
+    vocabulary_id: int,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 특정 단어 조회"""
+    repo = get_vocabulary_repository()
+    vocabulary = repo.find_by_id(vocabulary_id)
+    
+    if not vocabulary:
+        raise HTTPException(status_code=404, detail="단어를 찾을 수 없습니다")
+    
+    return {
+        "success": True,
+        "data": VocabularyResponse(
+            id=vocabulary.id,
+            word=vocabulary.word,
+            reading=vocabulary.reading,
+            meaning=vocabulary.meaning,
+            level=vocabulary.level.value,
+            memorization_status=vocabulary.memorization_status.value,
+            example_sentence=vocabulary.example_sentence
+        ),
+        "message": "단어 조회 성공"
+    }
+
+@router.post("/vocabulary")
+async def create_admin_vocabulary(
+    request: VocabularyCreateRequest,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 단어 생성"""
+    repo = get_vocabulary_repository()
+    
+    vocabulary = Vocabulary(
+        id=0,
+        word=request.word,
+        reading=request.reading,
+        meaning=request.meaning,
+        level=request.level,
+        memorization_status=MemorizationStatus.NOT_MEMORIZED,
+        example_sentence=request.example_sentence
+    )
+    
+    saved_vocabulary = repo.save(vocabulary)
+    
+    return {
+        "success": True,
+        "data": VocabularyResponse(
+            id=saved_vocabulary.id,
+            word=saved_vocabulary.word,
+            reading=saved_vocabulary.reading,
+            meaning=saved_vocabulary.meaning,
+            level=saved_vocabulary.level.value,
+            memorization_status=saved_vocabulary.memorization_status.value,
+            example_sentence=saved_vocabulary.example_sentence
+        ),
+        "message": "단어 생성 성공"
+    }
+
+@router.put("/vocabulary/{vocabulary_id}")
+async def update_admin_vocabulary(
+    vocabulary_id: int,
+    request: VocabularyUpdateRequest,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 단어 수정"""
+    repo = get_vocabulary_repository()
+    vocabulary = repo.find_by_id(vocabulary_id)
+    
+    if not vocabulary:
+        raise HTTPException(status_code=404, detail="단어를 찾을 수 없습니다")
+    
+    # 수정할 필드만 업데이트
+    if request.word is not None:
+        vocabulary.word = request.word
+    if request.reading is not None:
+        vocabulary.reading = request.reading
+    if request.meaning is not None:
+        vocabulary.meaning = request.meaning
+    if request.level is not None:
+        vocabulary.level = request.level
+    if request.example_sentence is not None:
+        vocabulary.example_sentence = request.example_sentence
+    
+    updated_vocabulary = repo.save(vocabulary)
+    
+    return {
+        "success": True,
+        "data": VocabularyResponse(
+            id=updated_vocabulary.id,
+            word=updated_vocabulary.word,
+            reading=updated_vocabulary.reading,
+            meaning=updated_vocabulary.meaning,
+            level=updated_vocabulary.level.value,
+            memorization_status=updated_vocabulary.memorization_status.value,
+            example_sentence=updated_vocabulary.example_sentence
+        ),
+        "message": "단어 수정 성공"
+    }
+
+@router.delete("/vocabulary/{vocabulary_id}")
+async def delete_admin_vocabulary(
+    vocabulary_id: int,
+    admin_user: User = Depends(get_admin_user)
+):
+    """어드민 단어 삭제"""
+    repo = get_vocabulary_repository()
+    vocabulary = repo.find_by_id(vocabulary_id)
+    
+    if not vocabulary:
+        raise HTTPException(status_code=404, detail="단어를 찾을 수 없습니다")
+    
+    repo.delete(vocabulary)
+    
+    return {
+        "success": True,
+        "message": "단어 삭제 성공"
     }
 
