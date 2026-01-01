@@ -7,7 +7,6 @@ import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import App from '../../App';
-import { ApiError } from '../../services/api';
 
 // authService 모킹
 jest.mock('../../services/auth', () => {
@@ -149,21 +148,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => mockQuestions,
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const vocabularyButton = screen.getByText('단어 학습 시작');
-      fireEvent.click(vocabularyButton);
+      await act(async () => {
+        const vocabularyButton = screen.getByText('단어 학습 시작');
+        fireEvent.click(vocabularyButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-ui')).toBeInTheDocument();
@@ -190,21 +195,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => mockQuestions,
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const grammarButton = screen.getByText('문법 학습 시작');
-      fireEvent.click(grammarButton);
+      await act(async () => {
+        const grammarButton = screen.getByText('문법 학습 시작');
+        fireEvent.click(grammarButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-ui')).toBeInTheDocument();
@@ -220,21 +231,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => [],
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const vocabularyButton = screen.getByText('단어 학습 시작');
-      fireEvent.click(vocabularyButton);
+      await act(async () => {
+        const vocabularyButton = screen.getByText('단어 학습 시작');
+        fireEvent.click(vocabularyButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/해당 유형의 문제가 없습니다/i)).toBeInTheDocument();
@@ -249,21 +266,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => ({ detail: 'Questions not found' }),
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const vocabularyButton = screen.getByText('단어 학습 시작');
-      fireEvent.click(vocabularyButton);
+      await act(async () => {
+        const vocabularyButton = screen.getByText('단어 학습 시작');
+        fireEvent.click(vocabularyButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/해당 유형의 문제를 찾을 수 없습니다/i)).toBeInTheDocument();
@@ -278,21 +301,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => ({ detail: 'Unauthorized' }),
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const vocabularyButton = screen.getByText('단어 학습 시작');
-      fireEvent.click(vocabularyButton);
+      await act(async () => {
+        const vocabularyButton = screen.getByText('단어 학습 시작');
+        fireEvent.click(vocabularyButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('login-ui')).toBeInTheDocument();
@@ -307,21 +336,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => ({ detail: 'Internal Server Error' }),
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const vocabularyButton = screen.getByText('단어 학습 시작');
-      fireEvent.click(vocabularyButton);
+      await act(async () => {
+        const vocabularyButton = screen.getByText('단어 학습 시작');
+        fireEvent.click(vocabularyButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/서버 오류가 발생했습니다/i)).toBeInTheDocument();
@@ -330,28 +365,34 @@ describe('App - Study Mode Error Handling', () => {
 
     it('should handle network error', async () => {
       (global.fetch as jest.Mock).mockRejectedValueOnce(
-        new Error('Network request failed')
+        new Error('fetch failed')
       );
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const vocabularyButton = screen.getByText('단어 학습 시작');
-      fireEvent.click(vocabularyButton);
+      await act(async () => {
+        const vocabularyButton = screen.getByText('단어 학습 시작');
+        fireEvent.click(vocabularyButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/네트워크 연결을 확인해주세요/i)).toBeInTheDocument();
-      });
+      }, { timeout: 3000 });
     });
 
     it('should handle JSON parsing error', async () => {
@@ -363,21 +404,27 @@ describe('App - Study Mode Error Handling', () => {
         },
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const vocabularyButton = screen.getByText('단어 학습 시작');
-      fireEvent.click(vocabularyButton);
+      await act(async () => {
+        const vocabularyButton = screen.getByText('단어 학습 시작');
+        fireEvent.click(vocabularyButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
@@ -391,21 +438,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => null,
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const vocabularyButton = screen.getByText('단어 학습 시작');
-      fireEvent.click(vocabularyButton);
+      await act(async () => {
+        const vocabularyButton = screen.getByText('단어 학습 시작');
+        fireEvent.click(vocabularyButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/해당 유형의 문제가 없습니다/i)).toBeInTheDocument();
@@ -434,21 +487,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => mockQuestions,
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const readingButton = screen.getByText('독해 연습 시작');
-      fireEvent.click(readingButton);
+      await act(async () => {
+        const readingButton = screen.getByText('독해 연습 시작');
+        fireEvent.click(readingButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-ui')).toBeInTheDocument();
@@ -476,21 +535,27 @@ describe('App - Study Mode Error Handling', () => {
         json: async () => mockQuestions,
       });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const listeningButton = screen.getByText('청해 연습 시작');
-      fireEvent.click(listeningButton);
+      await act(async () => {
+        const listeningButton = screen.getByText('청해 연습 시작');
+        fireEvent.click(listeningButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-ui')).toBeInTheDocument();
@@ -528,21 +593,27 @@ describe('App - Study Mode Error Handling', () => {
           json: async () => ({ success: true, data: mockTest }),
         });
 
-      render(<App />);
+      await act(async () => {
+        render(<App />);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
 
-      const dayDetailButton = screen.getByText('Day 1 상세보기');
-      fireEvent.click(dayDetailButton);
+      await act(async () => {
+        const dayDetailButton = screen.getByText('Day 1 상세보기');
+        fireEvent.click(dayDetailButton);
+      });
 
       await waitFor(() => {
         expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
       });
 
-      const mockTestButton = screen.getByText('모의고사 시작');
-      fireEvent.click(mockTestButton);
+      await act(async () => {
+        const mockTestButton = screen.getByText('모의고사 시작');
+        fireEvent.click(mockTestButton);
+      });
 
       // 모의고사는 테스트 모드로 시작되므로 StudyUI가 아닌 TestUI가 표시되어야 함
       // (TestUI 모킹이 필요하지만 여기서는 기본 동작 확인)
