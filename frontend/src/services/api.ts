@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하는 중앙화된 서비스
  */
 
-import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics } from '../types/api';
+import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics, Vocabulary } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1';
@@ -582,5 +582,90 @@ export const adminApi = {
    */
   async getStatistics(): Promise<AdminStatistics> {
     return fetchApi<AdminStatistics>('/admin/statistics');
+  },
+};
+
+/**
+ * 단어 학습 관련 API
+ */
+export const vocabularyApi = {
+  /**
+   * 단어 목록 조회
+   */
+  async getVocabularies(params?: {
+    level?: string;
+    status?: string;
+    search?: string;
+  }): Promise<Vocabulary[]> {
+    const queryParams = new URLSearchParams();
+    if (params?.level) queryParams.append('level', params.level);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.search) queryParams.append('search', params.search);
+    const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
+    return fetchApi<Vocabulary[]>(`/vocabulary${query}`);
+  },
+
+  /**
+   * 특정 단어 조회
+   */
+  async getVocabulary(vocabularyId: number): Promise<Vocabulary> {
+    return fetchApi<Vocabulary>(`/vocabulary/${vocabularyId}`);
+  },
+
+  /**
+   * 단어 생성
+   */
+  async createVocabulary(request: {
+    word: string;
+    reading: string;
+    meaning: string;
+    level: string;
+    example_sentence?: string;
+  }): Promise<Vocabulary> {
+    return fetchApi<Vocabulary>('/vocabulary', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  },
+
+  /**
+   * 단어 수정
+   */
+  async updateVocabulary(
+    vocabularyId: number,
+    request: {
+      word?: string;
+      reading?: string;
+      meaning?: string;
+      level?: string;
+      example_sentence?: string;
+    }
+  ): Promise<Vocabulary> {
+    return fetchApi<Vocabulary>(`/vocabulary/${vocabularyId}`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    });
+  },
+
+  /**
+   * 단어 삭제
+   */
+  async deleteVocabulary(vocabularyId: number): Promise<void> {
+    await fetchApi(`/vocabulary/${vocabularyId}`, {
+      method: 'DELETE',
+    });
+  },
+
+  /**
+   * 단어 학습 (암기 상태 업데이트)
+   */
+  async studyVocabulary(
+    vocabularyId: number,
+    memorizationStatus: string
+  ): Promise<Vocabulary> {
+    return fetchApi<Vocabulary>(`/vocabulary/${vocabularyId}/study`, {
+      method: 'POST',
+      body: JSON.stringify({ memorization_status: memorizationStatus }),
+    });
   },
 };
