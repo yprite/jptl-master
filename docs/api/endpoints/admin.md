@@ -363,6 +363,169 @@
 **에러 응답:**
 - `404 Not Found`: 문제를 찾을 수 없는 경우
 
+## 단어 관리 API
+
+### 전체 단어 목록 조회
+
+**엔드포인트:** `GET /api/v1/admin/vocabulary`
+
+**설명:** 어드민이 전체 단어 목록을 조회합니다.
+
+**Query Parameters:**
+- `level` (optional): JLPT 레벨 필터 (N5, N4, N3, N2, N1)
+- `status` (optional): 암기 상태 필터 (not_memorized, learning, memorized)
+- `search` (optional): 검색어 (단어, 읽기, 의미로 검색)
+
+**인증:** 어드민 권한 필요
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "word": "ありがとう",
+      "reading": "ありがとう",
+      "meaning": "감사합니다",
+      "level": "N5",
+      "memorization_status": "not_memorized",
+      "example_sentence": "ありがとうございます。"
+    }
+  ],
+  "message": "단어 목록 조회 성공"
+}
+```
+
+### 특정 단어 조회
+
+**엔드포인트:** `GET /api/v1/admin/vocabulary/{vocabulary_id}`
+
+**설명:** 어드민이 특정 단어를 조회합니다.
+
+**Path Parameters:**
+- `vocabulary_id` (required): 단어 ID
+
+**인증:** 어드민 권한 필요
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "word": "ありがとう",
+    "reading": "ありがとう",
+    "meaning": "감사합니다",
+    "level": "N5",
+    "memorization_status": "not_memorized",
+    "example_sentence": "ありがとうございます。"
+  },
+  "message": "단어 조회 성공"
+}
+```
+
+### 단어 생성
+
+**엔드포인트:** `POST /api/v1/admin/vocabulary`
+
+**설명:** 어드민이 새로운 단어를 생성합니다.
+
+**인증:** 어드민 권한 필요
+
+**Request Body:**
+
+```json
+{
+  "word": "ありがとう",
+  "reading": "ありがとう",
+  "meaning": "감사합니다",
+  "level": "N5",
+  "example_sentence": "ありがとうございます。"
+}
+```
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "word": "ありがとう",
+    "reading": "ありがとう",
+    "meaning": "감사합니다",
+    "level": "N5",
+    "memorization_status": "not_memorized",
+    "example_sentence": "ありがとうございます。"
+  },
+  "message": "단어 생성 성공"
+}
+```
+
+### 단어 수정
+
+**엔드포인트:** `PUT /api/v1/admin/vocabulary/{vocabulary_id}`
+
+**설명:** 어드민이 단어 정보를 수정합니다.
+
+**Path Parameters:**
+- `vocabulary_id` (required): 단어 ID
+
+**인증:** 어드민 권한 필요
+
+**Request Body:**
+
+```json
+{
+  "word": "ありがとう",
+  "reading": "ありがとう",
+  "meaning": "고맙습니다",
+  "level": "N5",
+  "example_sentence": "ありがとうございます。"
+}
+```
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "word": "ありがとう",
+    "reading": "ありがとう",
+    "meaning": "고맙습니다",
+    "level": "N5",
+    "memorization_status": "not_memorized",
+    "example_sentence": "ありがとうございます。"
+  },
+  "message": "단어 수정 성공"
+}
+```
+
+### 단어 삭제
+
+**엔드포인트:** `DELETE /api/v1/admin/vocabulary/{vocabulary_id}`
+
+**설명:** 어드민이 단어를 삭제합니다.
+
+**Path Parameters:**
+- `vocabulary_id` (required): 단어 ID
+
+**인증:** 어드민 권한 필요
+
+**응답 예시:**
+
+```json
+{
+  "success": true,
+  "message": "단어 삭제 성공"
+}
+```
+
 ## 통계 API
 
 ### 통계 조회
