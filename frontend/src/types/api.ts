@@ -161,3 +161,22 @@ export interface Vocabulary {
   example_sentence?: string | null;
 }
 
+export interface VocabularyReview {
+  id: number;
+  word: string;
+  reading: string;
+  meaning: string;
+  level: string;
+  memorization_status: string;
+  example_sentence?: string | null;
+  next_review_date?: string | null;
+  interval_days: number;
+  review_count: number;
+}
+
+export interface ReviewStatistics {
+  total_due: number;
+  reviewed_today: number;
+  success_rate: number;
+}
+

@@ -9,6 +9,7 @@ import UserHistoryUI from './components/organisms/UserHistoryUI';
 import UserProfileUI from './components/organisms/UserProfileUI';
 import FlashcardUI from './components/organisms/FlashcardUI';
 import VocabularyListUI from './components/organisms/VocabularyListUI';
+import VocabularyReviewUI from './components/organisms/VocabularyReviewUI';
 import AdminUserManagementUI from './components/organisms/AdminUserManagementUI';
 import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
 import AdminVocabularyManagementUI from './components/organisms/AdminVocabularyManagementUI';
@@ -20,7 +21,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Voca
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -973,6 +974,12 @@ function App() {
               >
                 단어 학습
               </button>
+              <button
+                onClick={() => setState('vocabulary-review')}
+                className="vocabulary-review-button"
+              >
+                단어 복습
+              </button>
             </div>
           </section>
         )}
@@ -1245,6 +1252,14 @@ function App() {
             <VocabularyListUI
               vocabularies={currentVocabularies}
               onStatusUpdate={handleVocabularyStatusUpdate}
+            />
+          </section>
+        )}
+
+        {state === 'vocabulary-review' && (
+          <section className="vocabulary-review-section">
+            <VocabularyReviewUI
+              onBack={() => setState('initial')}
             />
           </section>
         )}

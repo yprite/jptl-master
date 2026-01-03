@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하는 중앙화된 서비스
  */
 
-import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics, Vocabulary } from '../types/api';
+import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics, Vocabulary, VocabularyReview, ReviewStatistics } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1';
@@ -761,5 +761,32 @@ export const vocabularyApi = {
       method: 'POST',
       body: JSON.stringify({ memorization_status: memorizationStatus }),
     });
+  },
+
+  /**
+   * 오늘 복습해야 하는 단어 목록 조회
+   */
+  async getReviewVocabularies(): Promise<VocabularyReview[]> {
+    return fetchApi<VocabularyReview[]>(`/vocabulary/review`);
+  },
+
+  /**
+   * 단어 복습 (Anki 스타일 간격 반복)
+   */
+  async reviewVocabulary(
+    vocabularyId: number,
+    difficulty: 'easy' | 'normal' | 'hard'
+  ): Promise<VocabularyReview> {
+    return fetchApi<VocabularyReview>(`/vocabulary/${vocabularyId}/review`, {
+      method: 'POST',
+      body: JSON.stringify({ difficulty }),
+    });
+  },
+
+  /**
+   * 복습 통계 조회
+   */
+  async getReviewStatistics(): Promise<ReviewStatistics> {
+    return fetchApi<ReviewStatistics>(`/vocabulary/review/statistics`);
   },
 };
