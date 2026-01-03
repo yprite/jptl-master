@@ -14,11 +14,13 @@ import AdminQuestionManagementUI from './components/organisms/AdminQuestionManag
 import AdminVocabularyManagementUI from './components/organisms/AdminVocabularyManagementUI';
 import AdminDashboardUI from './components/organisms/AdminDashboardUI';
 import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
+import StudyPlanDashboardUI from './components/organisms/StudyPlanDashboardUI';
+import DailyChecklistUI from './components/organisms/DailyChecklistUI';
 import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Vocabulary } from './types/api';
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -48,6 +50,8 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
+  const [selectedDay, setSelectedDay] = useState<number>(1);
+  const [selectedWeek, setSelectedWeek] = useState<number>(1);
   
   // 최신 상태를 참조하기 위한 ref
   const stateRef = useRef(state);
@@ -79,7 +83,7 @@ function App() {
         if (currentUser.is_admin) {
           setState('admin-dashboard');
         } else {
-          setState('initial');
+          setState('study-plan');
         }
       }
     });
@@ -95,7 +99,7 @@ function App() {
         if (currentUser.is_admin) {
           setState('admin-dashboard');
         } else {
-          setState('initial');
+          setState('study-plan');
         }
       } else {
         setState('login');
@@ -114,7 +118,7 @@ function App() {
     if (loggedInUser.is_admin) {
       setState('admin-dashboard');
     } else {
-      setState('initial');
+      setState('study-plan');
     }
   };
 
@@ -186,6 +190,9 @@ function App() {
       
       setCurrentResult(result);
       setState('result');
+      
+      // 일일 체크리스트에서 모의고사를 시작한 경우, 결과 확인 후 체크리스트로 복귀
+      // (handleRestart에서 처리됨)
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
@@ -219,22 +226,41 @@ function App() {
         question_count: questionCount,
       });
       
+      // 문제가 없는 경우 에러 처리
+      if (!questions || questions.length === 0) {
+        setError('해당 유형의 문제가 없습니다. 관리자에게 문의해주세요.');
+        setState('error');
+        return;
+      }
+      
       setCurrentStudyQuestions(questions);
       setStudyLevel(level);
       setStudyQuestionTypes(questionTypes);
       setState('study');
     } catch (err) {
+      // 에러 발생 시 로딩 상태 해제
+      setState('error');
+      
       if (err instanceof ApiError) {
         // 401 에러인 경우 로그인 화면으로
         if (err.status === 401) {
           setState('login');
+        } else if (err.status === 404) {
+          setError('해당 유형의 문제를 찾을 수 없습니다.');
+        } else if (err.status === 500) {
+          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         } else {
-          setError(err.message);
-          setState('error');
+          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
+        }
+      } else if (err instanceof Error) {
+        // 네트워크 에러 등
+        if (err.message.includes('fetch') || err.message.includes('network')) {
+          setError('네트워크 연결을 확인해주세요.');
+        } else {
+          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
         }
       } else {
         setError('학습 모드를 시작하는 중 오류가 발생했습니다.');
-        setState('error');
       }
     }
   };
@@ -255,9 +281,15 @@ function App() {
         time_spent_minutes: timeSpentMinutes,
       });
       
-      // 학습 완료 후 초기 화면으로
+      // 학습 완료 후 이전 화면으로
       setCurrentStudyQuestions([]);
-      setState('initial');
+      
+      // 일일 체크리스트에서 온 경우 다시 체크리스트로, 아니면 학습 계획으로
+      if (state === 'study' && selectedDay > 0) {
+        setState('daily-checklist');
+      } else {
+        setState('study-plan');
+      }
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
@@ -270,6 +302,8 @@ function App() {
 
   // 다시 시작
   const handleRestart = () => {
+    const wasFromDailyChecklist = selectedDay > 0 && state === 'result';
+    
     setCurrentTest(null);
     setCurrentStudyQuestions([]);
     setCurrentResult(null);
@@ -277,7 +311,110 @@ function App() {
     setCurrentHistory([]);
     setCurrentProfile(null);
     setError(null);
-    setState('initial');
+    
+    // 일일 체크리스트에서 모의고사를 시작한 경우 체크리스트로 복귀
+    if (wasFromDailyChecklist) {
+      setState('daily-checklist');
+    } else if (user?.is_admin) {
+      setState('admin-dashboard');
+    } else {
+      setState('study-plan');
+    }
+  };
+
+  // 학습 계획에서 일일 체크리스트로 이동
+  const handleViewDayDetail = (day: number, week: number) => {
+    setSelectedDay(day);
+    setSelectedWeek(week);
+    setState('daily-checklist');
+  };
+
+  // 일일 체크리스트에서 학습 시작
+  const handleStartDailyStudy = async (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest') => {
+    // 인증 확인
+    if (!authService.isAuthenticated()) {
+      setState('login');
+      return;
+    }
+
+    // 모의고사인 경우 테스트 모드로 시작
+    if (taskType === 'mockTest') {
+      try {
+        await handleStartTest();
+      } catch (err) {
+        // handleStartTest에서 이미 에러 처리를 하므로 여기서는 추가 처리 불필요
+        console.error('모의고사 시작 중 오류:', err);
+      }
+      return;
+    }
+
+    setState('loading');
+    setError(null);
+
+    try {
+      const level = 'N5';
+      let questionTypes: string[] = [];
+      
+      if (taskType === 'vocabulary') {
+        questionTypes = ['VOCABULARY'];
+      } else if (taskType === 'grammar') {
+        questionTypes = ['GRAMMAR'];
+      } else if (taskType === 'reading') {
+        questionTypes = ['READING'];
+      } else if (taskType === 'listening') {
+        questionTypes = ['LISTENING'];
+      }
+
+      const questions = await studyApi.getStudyQuestions({
+        level,
+        question_types: questionTypes.length > 0 ? questionTypes : undefined,
+        question_count: 20,
+      });
+      
+      // 문제가 없는 경우 에러 처리
+      if (!questions || questions.length === 0) {
+        setError('해당 유형의 문제가 없습니다. 관리자에게 문의해주세요.');
+        setState('error');
+        return;
+      }
+      
+      setCurrentStudyQuestions(questions);
+      setStudyLevel(level);
+      setStudyQuestionTypes(questionTypes);
+      setState('study');
+    } catch (err) {
+      // 에러 발생 시 로딩 상태 해제
+      setState('error');
+      
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else if (err.status === 404) {
+          setError('해당 유형의 문제를 찾을 수 없습니다.');
+        } else if (err.status === 500) {
+          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        } else {
+          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
+        }
+      } else if (err instanceof Error) {
+        // 네트워크 에러 등
+        if (err.message.includes('fetch') || err.message.includes('network')) {
+          setError('네트워크 연결을 확인해주세요.');
+        } else {
+          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
+        }
+      } else {
+        setError('학습 모드를 시작하는 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  // 학습 계획에서 오늘 학습 시작
+  const handleStartTodayStudy = async (day: number, week: number) => {
+    setSelectedDay(day);
+    setSelectedWeek(week);
+    setState('daily-checklist');
   };
 
   // 어드민 페이지 네비게이션
@@ -672,11 +809,45 @@ function App() {
           </section>
         )}
 
+        {state === 'study-plan' && !user?.is_admin && (
+          <section className="study-plan-section">
+            <StudyPlanDashboardUI
+              onStartStudy={handleStartTodayStudy}
+              onViewDayDetail={handleViewDayDetail}
+            />
+            <div className="study-plan-actions">
+              <button
+                onClick={() => setState('initial')}
+                className="menu-button"
+              >
+                메뉴
+              </button>
+            </div>
+          </section>
+        )}
+
+        {state === 'daily-checklist' && !user?.is_admin && (
+          <section className="daily-checklist-section">
+            <DailyChecklistUI
+              day={selectedDay}
+              week={selectedWeek}
+              onStartStudy={handleStartDailyStudy}
+              onBack={() => setState('study-plan')}
+            />
+          </section>
+        )}
+
         {state === 'initial' && !user?.is_admin && (
           <section className="initial-section">
             <h2>JLPT 학습 플랫폼</h2>
             <p>테스트 모드와 학습 모드 중 선택하세요.</p>
             <div className="initial-actions">
+              <button
+                onClick={() => setState('study-plan')}
+                className="study-plan-button"
+              >
+                6주 학습 계획
+              </button>
               <button
                 onClick={handleStartTest}
                 className="start-button"
