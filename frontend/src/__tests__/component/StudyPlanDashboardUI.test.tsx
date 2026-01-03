@@ -60,7 +60,7 @@ describe('StudyPlanDashboardUI', () => {
     expect(screen.getByText(/전체 진행률/i)).toBeInTheDocument();
   });
 
-  it('should expand and collapse week cards', () => {
+  it('should expand and collapse week cards', async () => {
     render(
       <StudyPlanDashboardUI
         onStartStudy={mockOnStartStudy}
@@ -68,14 +68,29 @@ describe('StudyPlanDashboardUI', () => {
       />
     );
 
-    const weekHeader = screen.getByText(/1주차/i).closest('.week-header');
+    // week-header 내부의 week-number를 찾기 위해 getAllByText 사용
+    const weekNumbers = screen.getAllByText(/1주차/i);
+    const weekHeader = weekNumbers.find(el => 
+      el.classList.contains('week-number')
+    )?.closest('.week-header');
+    
     expect(weekHeader).toBeInTheDocument();
 
     if (weekHeader) {
+      // 이미 확장되어 있을 수 있으므로, 먼저 접기
+      const isExpanded = weekHeader.closest('.week-card')?.classList.contains('expanded');
+      if (isExpanded) {
+        fireEvent.click(weekHeader);
+        await waitFor(() => {
+          expect(screen.queryByText(/학습 목표/i)).not.toBeInTheDocument();
+        });
+      }
+      
+      // 다시 확장
       fireEvent.click(weekHeader);
       
       // 주차 내용이 표시되는지 확인
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByText(/학습 목표/i)).toBeInTheDocument();
       });
     }
@@ -98,7 +113,7 @@ describe('StudyPlanDashboardUI', () => {
     expect(mockOnStartStudy).toHaveBeenCalledWith(1, 1);
   });
 
-  it('should call onViewDayDetail when clicking a daily task', () => {
+  it('should call onViewDayDetail when clicking a daily task', async () => {
     render(
       <StudyPlanDashboardUI
         onStartStudy={mockOnStartStudy}
@@ -106,19 +121,39 @@ describe('StudyPlanDashboardUI', () => {
       />
     );
 
-    // 주차 확장
-    const weekHeader = screen.getByText(/1주차/i).closest('.week-header');
-    if (weekHeader) {
+    // 주차 확장 - week-header 내부의 week-number를 찾기 위해 getAllByText 사용
+    const weekNumbers = screen.getAllByText(/1주차/i);
+    const weekHeader = weekNumbers.find(el => 
+      el.classList.contains('week-number')
+    )?.closest('.week-header');
+    
+    // 이미 확장되어 있을 수 있으므로, 확장 상태 확인
+    const weekCard = weekHeader?.closest('.week-card');
+    const isExpanded = weekCard?.classList.contains('expanded');
+    
+    if (weekHeader && !isExpanded) {
       fireEvent.click(weekHeader);
     }
 
-    waitFor(() => {
-      const dayTask = screen.getByText(/Day 1/i);
-      if (dayTask) {
-        fireEvent.click(dayTask);
-        expect(mockOnViewDayDetail).toHaveBeenCalled();
+    // task-item 내부의 Day 1 찾기 - 주차가 확장될 때까지 대기
+    let dayTask: HTMLElement | undefined;
+    await waitFor(() => {
+      const dayTasks = screen.getAllByText(/Day 1/i);
+      dayTask = dayTasks.find(el => 
+        el.closest('.task-item') !== null
+      );
+      expect(dayTask).toBeInTheDocument();
+    }, { timeout: 3000 });
+
+    if (dayTask) {
+      const taskItem = dayTask.closest('.task-item');
+      if (taskItem) {
+        fireEvent.click(taskItem);
+        await waitFor(() => {
+          expect(mockOnViewDayDetail).toHaveBeenCalled();
+        });
       }
-    });
+    }
   });
 
   it('should display minimum study formula', () => {
@@ -130,8 +165,12 @@ describe('StudyPlanDashboardUI', () => {
     );
 
     expect(screen.getByText(/하루 최소 학습 공식/i)).toBeInTheDocument();
-    expect(screen.getByText(/단어 20개/i)).toBeInTheDocument();
-    expect(screen.getByText(/문법 2개/i)).toBeInTheDocument();
+    // li 태그 내의 "단어 20개" 찾기
+    const vocabularyItems = screen.getAllByText(/단어 20개/i);
+    expect(vocabularyItems.length).toBeGreaterThan(0);
+    // li 태그 내의 "문법 2개" 찾기
+    const grammarItems = screen.getAllByText(/문법 2개/i);
+    expect(grammarItems.length).toBeGreaterThan(0);
   });
 
   it('should load saved progress from localStorage', () => {
@@ -145,7 +184,8 @@ describe('StudyPlanDashboardUI', () => {
       />
     );
 
-    expect(screen.getByText(/Day 5/i)).toBeInTheDocument();
+    // "오늘의 학습" 섹션의 Day 5 찾기
+    expect(screen.getByText(/오늘의 학습 \(Day 5\)/i)).toBeInTheDocument();
   });
 });
 

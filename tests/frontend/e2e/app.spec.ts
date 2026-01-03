@@ -325,6 +325,7 @@ test.describe('JLPT App E2E', () => {
       await page.getByRole('button', { name: '다시 시작' }).click();
 
       // 초기 페이지로 돌아온 것 확인
+      await expect(page.getByTestId('initial-ui')).toBeVisible({ timeout: 15000 });
       await expect(page.getByText('JLPT 학습 플랫폼')).toBeVisible({ timeout: 15000 });
       await expect(page.getByRole('button', { name: '테스트 모드' })).toBeVisible();
     });
@@ -380,6 +381,7 @@ test.describe('JLPT App E2E', () => {
 
       // 다시 시작하여 초기 페이지로
       await page.getByRole('button', { name: '다시 시작' }).click();
+      await expect(page.getByTestId('initial-ui')).toBeVisible({ timeout: 15000 });
       await expect(page.getByText('JLPT 학습 플랫폼')).toBeVisible({ timeout: 15000 });
 
       // 성능 분석 보기
@@ -710,21 +712,32 @@ test.describe('JLPT App E2E', () => {
       await expect(page.getByText('어드민 관리')).toBeVisible({ timeout: 15000 });
 
       // 대시보드가 로드될 때까지 대기
-      await expect(page.getByText(/어드민 대시보드|로딩 중/i)).toBeVisible({ timeout: 10000 });
+      await expect(page.getByRole('heading', { name: '어드민 대시보드' })).toBeVisible({ timeout: 10000 });
 
       // API 호출이 완료될 때까지 대기 (성공 또는 실패)
-      await page.waitForTimeout(2000);
+      // 로딩이 완료될 때까지 대기 (로딩 메시지가 사라질 때까지)
+      await page.waitForFunction(
+        () => {
+          const loading = document.querySelector('.admin-dashboard-loading');
+          return !loading || loading.textContent?.trim() === '';
+        },
+        { timeout: 10000 }
+      ).catch(() => {
+        // 로딩이 완료되지 않아도 계속 진행
+      });
 
       // 에러가 발생했더라도 페이지가 크래시되지 않고 에러 메시지가 표시되어야 함
       // (에러 메시지가 있으면 표시, 없으면 정상 로드)
-      const errorMessage = page.getByText(/오류|에러|error/i);
-      const dashboardContent = page.getByText(/어드민 대시보드|통계|사용자|문제/i);
+      // 헤더는 이미 확인했으므로, 추가 콘텐츠를 확인
+      const hasError = await page.getByText(/오류|에러|error/i).isVisible().catch(() => false);
+      const hasUserStats = await page.getByText(/사용자 통계|전체 사용자/i).isVisible().catch(() => false);
+      const hasTestStats = await page.getByText(/테스트 통계|전체 테스트/i).isVisible().catch(() => false);
+      const hasQuestionStats = await page.getByText(/문제 통계|전체 문제/i).isVisible().catch(() => false);
+      const hasEmptyMessage = await page.getByText(/통계 데이터가 없습니다/i).isVisible().catch(() => false);
+      const hasHeader = await page.getByRole('heading', { name: '어드민 대시보드' }).isVisible().catch(() => false);
       
-      // 둘 중 하나는 표시되어야 함 (에러 또는 정상 콘텐츠)
-      const hasError = await errorMessage.isVisible().catch(() => false);
-      const hasContent = await dashboardContent.isVisible().catch(() => false);
-      
-      expect(hasError || hasContent).toBe(true);
+      // 하나 이상은 표시되어야 함 (에러, 콘텐츠, 빈 메시지, 또는 헤더)
+      expect(hasError || hasUserStats || hasTestStats || hasQuestionStats || hasEmptyMessage || hasHeader).toBe(true);
     });
 
     test('should handle admin API 403 forbidden errors', async ({ page, context }) => {

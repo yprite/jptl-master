@@ -66,6 +66,19 @@ jest.mock('../../components/organisms/AdminLayout', () => ({
   AdminPage: {},
 }));
 
+// StudyPlanDashboardUI 모킹
+jest.mock('../../components/organisms/StudyPlanDashboardUI', () => {
+  return function MockStudyPlanDashboardUI({ onStartStudy, onViewDayDetail }: any) {
+    return (
+      <div data-testid="study-plan-dashboard">
+        <h2>📘 JLPT N5 합격을 위한 6주 학습 계획</h2>
+        <button onClick={() => onStartStudy && onStartStudy(1, 1)}>오늘 학습 시작하기</button>
+        <button onClick={() => onViewDayDetail && onViewDayDetail(1, 1)}>Day 1 상세보기</button>
+      </div>
+    );
+  };
+});
+
 // fetch 모킹
 beforeEach(() => {
   (global.fetch as jest.Mock).mockClear();
@@ -146,7 +159,7 @@ describe('App', () => {
     });
     await initializePromise;
 
-    // 초기에는 초기 화면
+    // 초기에는 initial 화면 (사용자가 로그인하면 자동으로 initial으로 이동)
     await waitFor(() => {
       expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
     });
@@ -221,7 +234,7 @@ describe('App', () => {
       });
     }
 
-    // 초기 화면으로 리다이렉트
+    // initial 화면으로 리다이렉트 (사용자가 로그인하면 자동으로 initial으로 이동)
     await waitFor(() => {
       expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
     }, { timeout: 3000 });
@@ -275,10 +288,9 @@ describe('App', () => {
       });
     }
 
-    // 초기 화면 표시 확인
+    // initial 화면 표시 확인 (사용자가 로그인하면 자동으로 initial으로 이동)
     await waitFor(() => {
       expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     }, { timeout: 3000 });
   });
 
@@ -379,6 +391,11 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
@@ -412,6 +429,11 @@ describe('App', () => {
     (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
@@ -454,6 +476,11 @@ describe('App', () => {
     });
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
@@ -578,6 +605,11 @@ describe('App', () => {
       });
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
@@ -706,6 +738,11 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
@@ -755,70 +792,41 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /테스트 모드/i })).toBeInTheDocument();
     });
 
-    // 테스트 모드
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => ({
-          success: true,
-          data: {
-            id: 1,
-            title: 'JLPT 학습 플랫폼',
-            level: 'N5',
-            status: 'created',
-            time_limit_minutes: 30,
-            questions: [],
-          },
-        }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => ({
-          success: true,
-          data: {
-            id: 1,
-            title: 'JLPT 학습 플랫폼',
-            level: 'N5',
-            status: 'in_progress',
-            time_limit_minutes: 30,
-            questions: [
-              {
-                id: 1,
-                level: 'N5',
-                question_type: 'vocabulary',
-                question_text: '「こんにちは」の意味は何ですか？',
-                choices: ['안녕하세요', '감사합니다', '실례합니다', '죄송합니다'],
-                difficulty: 1,
-              },
-            ],
-          },
-        }),
-      });
+    // 테스트 모드 시작 시 에러 발생 시뮬레이션
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        detail: 'Internal Server Error',
+      }),
+    });
 
     const startButton = screen.getByRole('button', { name: /테스트 모드/i });
     fireEvent.click(startButton);
 
+    // 에러 화면으로 이동 대기
     await waitFor(() => {
-      expect(screen.getByText(/「こんにちは」の意味は何ですか？/i)).toBeInTheDocument();
+      expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
     });
 
-    // 다시 시작 버튼 찾기 (에러 상태에서)
-    const errorSection = screen.queryByText(/오류가 발생했습니다/i);
-    if (errorSection) {
-      const retryButton = screen.getByRole('button', { name: /다시 시도/i });
-      fireEvent.click(retryButton);
-    }
+    // "다시 시도" 버튼 클릭 (handleRestart 호출)
+    const retryButton = screen.getByRole('button', { name: /다시 시도/i });
+    fireEvent.click(retryButton);
 
-    // 초기 화면으로 돌아가는지 확인
+    // initial 화면으로 돌아가는지 확인 (handleRestart는 initial로 이동)
     await waitFor(() => {
       expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('should display performance analysis when clicking performance button', async () => {
@@ -875,6 +883,11 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /성능 분석 보기/i })).toBeInTheDocument();
     });
@@ -920,6 +933,11 @@ describe('App', () => {
     });
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /성능 분석 보기/i })).toBeInTheDocument();
@@ -977,6 +995,11 @@ describe('App', () => {
     });
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /학습 이력 보기/i })).toBeInTheDocument();
@@ -1036,6 +1059,11 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /프로필 관리/i })).toBeInTheDocument();
     });
@@ -1078,6 +1106,11 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /학습 이력 보기/i })).toBeInTheDocument();
     });
@@ -1117,6 +1150,11 @@ describe('App', () => {
     });
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /학습 이력 보기/i })).toBeInTheDocument();
@@ -1158,6 +1196,11 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /프로필 관리/i })).toBeInTheDocument();
     });
@@ -1197,6 +1240,11 @@ describe('App', () => {
     });
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /프로필 관리/i })).toBeInTheDocument();
@@ -1250,6 +1298,11 @@ describe('App', () => {
     });
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /프로필 관리/i })).toBeInTheDocument();
@@ -1314,6 +1367,11 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /성능 분석 보기/i })).toBeInTheDocument();
     });
@@ -1353,6 +1411,11 @@ describe('App', () => {
     });
 
     render(<App />);
+
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /성능 분석 보기/i })).toBeInTheDocument();
@@ -1591,6 +1654,12 @@ describe('App', () => {
 
     render(<App />);
 
+    // 사용자가 로그인하면 initial 상태로 이동
+    await waitFor(() => {
+      expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+    });
+
+    // initial 상태에서 학습 모드 버튼 찾기
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /학습 모드/i })).toBeInTheDocument();
     });

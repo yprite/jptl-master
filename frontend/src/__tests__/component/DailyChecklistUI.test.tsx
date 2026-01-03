@@ -61,8 +61,15 @@ describe('DailyChecklistUI', () => {
       />
     );
 
-    expect(screen.getByText(/단어 학습/i)).toBeInTheDocument();
-    expect(screen.getByText(/20개/i)).toBeInTheDocument();
+    // h3 태그 내의 "단어 학습" 찾기
+    expect(screen.getByRole('heading', { name: /단어 학습/i })).toBeInTheDocument();
+    // task-count 클래스를 가진 요소에서 "20개" 찾기
+    const taskCounts = screen.getAllByText(/20개/i);
+    const vocabularyCount = taskCounts.find(el => 
+      el.classList.contains('task-count') && 
+      el.closest('.task-card')?.querySelector('h3')?.textContent?.includes('단어')
+    );
+    expect(vocabularyCount).toBeInTheDocument();
   });
 
   it('should display grammar task', () => {
@@ -75,7 +82,8 @@ describe('DailyChecklistUI', () => {
       />
     );
 
-    expect(screen.getByText(/문법 학습/i)).toBeInTheDocument();
+    // h3 태그 내의 "문법 학습" 찾기
+    expect(screen.getByRole('heading', { name: /문법 학습/i })).toBeInTheDocument();
   });
 
   it('should display reading task for week 4', () => {
@@ -88,7 +96,8 @@ describe('DailyChecklistUI', () => {
       />
     );
 
-    expect(screen.getByText(/독해 연습/i)).toBeInTheDocument();
+    // h3 태그 내의 "독해 연습" 찾기
+    expect(screen.getByRole('heading', { name: /독해 연습/i })).toBeInTheDocument();
   });
 
   it('should display listening task for week 5', () => {
@@ -101,7 +110,8 @@ describe('DailyChecklistUI', () => {
       />
     );
 
-    expect(screen.getByText(/청해 연습/i)).toBeInTheDocument();
+    // h3 태그 내의 "청해 연습" 찾기
+    expect(screen.getByRole('heading', { name: /청해 연습/i })).toBeInTheDocument();
   });
 
   it('should call onStartStudy when clicking vocabulary button', () => {
@@ -117,7 +127,7 @@ describe('DailyChecklistUI', () => {
     const vocabularyButton = screen.getByText(/단어 학습 시작/i);
     fireEvent.click(vocabularyButton);
 
-    expect(mockOnStartStudy).toHaveBeenCalledWith('vocabulary');
+    expect(mockOnStartStudy).toHaveBeenCalledWith('vocabulary', 20);
   });
 
   it('should call onStartStudy when clicking grammar button', () => {
@@ -133,7 +143,7 @@ describe('DailyChecklistUI', () => {
     const grammarButton = screen.getByText(/문법 학습 시작/i);
     fireEvent.click(grammarButton);
 
-    expect(mockOnStartStudy).toHaveBeenCalledWith('grammar');
+    expect(mockOnStartStudy).toHaveBeenCalledWith('grammar', 2);
   });
 
   it('should call onBack when clicking back button', () => {
@@ -173,7 +183,7 @@ describe('DailyChecklistUI', () => {
     }
   });
 
-  it('should show completion message when all tasks are completed', () => {
+  it('should show completion message when all tasks are completed', async () => {
     localStorageMock.setItem(
       'studyPlan_day1_completed',
       JSON.stringify({
@@ -191,7 +201,7 @@ describe('DailyChecklistUI', () => {
       />
     );
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByText(/오늘의 학습을 모두 완료했습니다/i)).toBeInTheDocument();
     });
   });
