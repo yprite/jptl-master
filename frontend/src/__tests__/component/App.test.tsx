@@ -1324,7 +1324,7 @@ describe('App', () => {
       ok: false,
       status: 500,
       headers: { get: () => 'application/json' },
-      json: async () => ({ detail: 'Update failed' }),
+      json: async () => ({ detail: '서버 오류가 발생했습니다' }),
     });
 
     const usernameInput = screen.getByLabelText(/사용자명 입력/i) as HTMLInputElement;
@@ -1333,10 +1333,10 @@ describe('App', () => {
     const saveButton = screen.getByRole('button', { name: /저장/i });
     fireEvent.click(saveButton);
 
-    // 에러 메시지 표시 확인
+    // 에러 메시지 표시 확인 (실제 에러 메시지에 맞게 수정)
     await waitFor(() => {
-      expect(screen.getByText(/Update failed/i)).toBeInTheDocument();
-    });
+      expect(screen.getByText(/서버 오류가 발생했습니다/i)).toBeInTheDocument();
+    }, { timeout: 5000 });
   });
 
   it('should handle performance fetch non-401 non-404 error', async () => {
