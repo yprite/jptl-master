@@ -5,10 +5,13 @@ JLPT 문제를 대량 생성하는 비즈니스 로직
 
 import random
 import json
+import logging
 from pathlib import Path
 from typing import List, Dict, Optional
 from backend.domain.entities.question import Question
 from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+logger = logging.getLogger(__name__)
 
 
 class QuestionGeneratorService:
@@ -356,7 +359,7 @@ class QuestionGeneratorService:
                     )
                 except Exception as e:
                     # TTS 생성 실패해도 문제 생성은 진행
-                    print(f"TTS 생성 실패: {str(e)}")
+                    logger.warning(f"TTS 생성 실패: {str(e)}")
             
             question = Question(
                 id=0,
