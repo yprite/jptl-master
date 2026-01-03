@@ -1,0 +1,46 @@
+[MASTER]
+# Python 코드 파일 경로
+init-hook='import sys; sys.path.append("backend")'
+
+[MESSAGES CONTROL]
+# 비활성화할 메시지
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-few-public-methods,
+    too-many-arguments,
+    too-many-locals,
+    too-many-branches,
+    too-many-statements,
+    too-many-instance-attributes,
+    too-many-public-methods,
+    too-many-return-statements,
+    too-many-boolean-expressions,
+    import-outside-toplevel,
+    consider-using-f-string,
+    fixme,
+    line-too-long
+
+[FORMAT]
+# 최대 줄 길이
+max-line-length=88
+
+[BASIC]
+# 좋은 변수명 패턴
+good-names=i,j,k,ex,Run,_,id,db
+
+[DESIGN]
+# 최대 인자 수
+max-args=10
+# 최대 속성 수
+max-attributes=15
+# 최대 부모 클래스 수
+max-parents=7
+# 최대 공개 메서드 수
+max-public-methods=30
+
+[IMPORTS]
+# import 순서 확인 비활성화 (black이 처리)
+disable=wrong-import-order,ungrouped-imports
+
