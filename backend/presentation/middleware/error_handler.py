@@ -39,12 +39,15 @@ async def http_exception_handler(request: Request, exc: HTTPException):
     """HTTP 예외 핸들러"""
     logger.warning(f"HTTP exception: {exc.status_code} - {exc.detail}")
     
+    # FastAPI 기본 형식과 호환성을 위해 detail 필드 유지
+    detail = exc.detail if isinstance(exc.detail, str) else str(exc.detail) if exc.detail else "요청 처리 중 오류가 발생했습니다"
+    
     return JSONResponse(
         status_code=exc.status_code,
         content={
+            "detail": detail,
             "success": False,
-            "message": exc.detail if isinstance(exc.detail, str) else "요청 처리 중 오류가 발생했습니다",
-            "detail": exc.detail if not isinstance(exc.detail, str) else None
+            "message": detail
         }
     )
 
