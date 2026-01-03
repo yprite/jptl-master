@@ -75,19 +75,24 @@ $CHANGED_FILES
 
 # PR 생성
 echo "📝 PR 생성 중..."
-PR_URL=$(gh pr create \
+PR_OUTPUT=$(gh pr create \
   --base develop \
   --head "$BRANCH_NAME" \
   --title "$PR_TITLE" \
-  --body "$PR_BODY" \
-  --json url --jq '.url')
+  --body "$PR_BODY" 2>&1)
 
 if [ $? -eq 0 ]; then
     echo "✅ PR 생성 완료!"
-    echo "🔗 PR URL: $PR_URL"
+    echo "$PR_OUTPUT"
+    # URL 추출 (출력에서 URL 찾기)
+    PR_URL=$(echo "$PR_OUTPUT" | grep -o 'https://github.com/[^ ]*' | head -1)
+    if [ -n "$PR_URL" ]; then
+        echo "🔗 PR URL: $PR_URL"
+    fi
     exit 0
 else
     echo "❌ PR 생성 실패"
+    echo "$PR_OUTPUT"
     exit 1
 fi
 
