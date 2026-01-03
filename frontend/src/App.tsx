@@ -9,6 +9,7 @@ import UserHistoryUI from './components/organisms/UserHistoryUI';
 import UserProfileUI from './components/organisms/UserProfileUI';
 import FlashcardUI from './components/organisms/FlashcardUI';
 import VocabularyListUI from './components/organisms/VocabularyListUI';
+import VocabularyReviewUI from './components/organisms/VocabularyReviewUI';
 import AdminUserManagementUI from './components/organisms/AdminUserManagementUI';
 import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
 import AdminVocabularyManagementUI from './components/organisms/AdminVocabularyManagementUI';
@@ -20,7 +21,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Voca
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -50,7 +51,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
-  const [selectedDay, setSelectedDay] = useState<number>(1);
+  const [selectedDay, setSelectedDay] = useState<number>(0);
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
   
   // 최신 상태를 참조하기 위한 ref
@@ -83,7 +84,7 @@ function App() {
         if (currentUser.is_admin) {
           setState('admin-dashboard');
         } else {
-          setState('study-plan');
+          setState('initial');
         }
       }
     });
@@ -99,7 +100,7 @@ function App() {
         if (currentUser.is_admin) {
           setState('admin-dashboard');
         } else {
-          setState('study-plan');
+          setState('initial');
         }
       } else {
         setState('login');
@@ -118,7 +119,7 @@ function App() {
     if (loggedInUser.is_admin) {
       setState('admin-dashboard');
     } else {
-      setState('study-plan');
+      setState('initial');
     }
   };
 
@@ -284,8 +285,50 @@ function App() {
       // 학습 완료 후 이전 화면으로
       setCurrentStudyQuestions([]);
       
-      // 일일 체크리스트에서 온 경우 다시 체크리스트로, 아니면 학습 계획으로
+      // 일일 체크리스트에서 온 경우 체크리스트 상태 업데이트
       if (state === 'study' && selectedDay > 0) {
+        // 학습한 문제 유형에 따라 체크리스트 상태 업데이트
+        if (studyQuestionTypes.includes('grammar')) {
+          const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              parsed.grammar = true;
+              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify(parsed));
+            } catch (e) {
+              // 파싱 실패 시 새로 생성
+              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ grammar: true }));
+            }
+          } else {
+            localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ grammar: true }));
+          }
+        } else if (studyQuestionTypes.includes('reading')) {
+          const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              parsed.reading = true;
+              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify(parsed));
+            } catch (e) {
+              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ reading: true }));
+            }
+          } else {
+            localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ reading: true }));
+          }
+        } else if (studyQuestionTypes.includes('listening')) {
+          const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              parsed.listening = true;
+              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify(parsed));
+            } catch (e) {
+              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ listening: true }));
+            }
+          } else {
+            localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ listening: true }));
+          }
+        }
         setState('daily-checklist');
       } else {
         setState('study-plan');
@@ -311,6 +354,8 @@ function App() {
     setCurrentHistory([]);
     setCurrentProfile(null);
     setError(null);
+    setSelectedDay(0);
+    setSelectedWeek(1);
     
     // 일일 체크리스트에서 모의고사를 시작한 경우 체크리스트로 복귀
     if (wasFromDailyChecklist) {
@@ -318,7 +363,7 @@ function App() {
     } else if (user?.is_admin) {
       setState('admin-dashboard');
     } else {
-      setState('study-plan');
+      setState('initial');
     }
   };
 
@@ -330,7 +375,7 @@ function App() {
   };
 
   // 일일 체크리스트에서 학습 시작
-  const handleStartDailyStudy = async (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest') => {
+  const handleStartDailyStudy = async (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest', taskCount?: number) => {
     // 인증 확인
     if (!authService.isAuthenticated()) {
       setState('login');
@@ -348,6 +393,38 @@ function App() {
       return;
     }
 
+    // 단어 학습인 경우 FlashcardUI로 이동
+    if (taskType === 'vocabulary') {
+      setState('loading');
+      setError(null);
+
+      try {
+        const vocabularies = await vocabularyApi.getVocabularies({ level: 'N5' });
+        if (vocabularies.length === 0) {
+          setError('해당 레벨의 단어가 없습니다.');
+          setState('error');
+          return;
+        }
+        // taskCount만큼만 단어 가져오기
+        const limitedVocabularies = taskCount ? vocabularies.slice(0, taskCount) : vocabularies;
+        setCurrentVocabularies(limitedVocabularies);
+        setVocabularyLevel('N5');
+        setState('vocabulary');
+      } catch (err) {
+        if (err instanceof ApiError) {
+          if (err.status === 401) {
+            setState('login');
+          } else {
+            setError(err.message);
+          }
+        } else {
+          setError('단어 학습을 시작하는 중 오류가 발생했습니다.');
+        }
+        setState('error');
+      }
+      return;
+    }
+
     setState('loading');
     setError(null);
 
@@ -355,20 +432,21 @@ function App() {
       const level = 'N5';
       let questionTypes: string[] = [];
       
-      if (taskType === 'vocabulary') {
-        questionTypes = ['VOCABULARY'];
-      } else if (taskType === 'grammar') {
-        questionTypes = ['GRAMMAR'];
+      if (taskType === 'grammar') {
+        questionTypes = ['grammar'];
       } else if (taskType === 'reading') {
-        questionTypes = ['READING'];
+        questionTypes = ['reading'];
       } else if (taskType === 'listening') {
-        questionTypes = ['LISTENING'];
+        questionTypes = ['listening'];
       }
+
+      // taskCount가 있으면 그만큼만, 없으면 기본값 20개
+      const questionCount = taskCount || 20;
 
       const questions = await studyApi.getStudyQuestions({
         level,
         question_types: questionTypes.length > 0 ? questionTypes : undefined,
-        question_count: 20,
+        question_count: questionCount,
       });
       
       // 문제가 없는 경우 에러 처리
@@ -837,8 +915,8 @@ function App() {
           </section>
         )}
 
-        {state === 'initial' && !user?.is_admin && (
-          <section className="initial-section">
+        {state === 'initial' && (
+          <section className="initial-section" data-testid="initial-ui">
             <h2>JLPT 학습 플랫폼</h2>
             <p>테스트 모드와 학습 모드 중 선택하세요.</p>
             <div className="initial-actions">
@@ -896,6 +974,12 @@ function App() {
               >
                 단어 학습
               </button>
+              <button
+                onClick={() => setState('vocabulary-review')}
+                className="vocabulary-review-button"
+              >
+                단어 복습
+              </button>
             </div>
           </section>
         )}
@@ -921,7 +1005,7 @@ function App() {
               <div className="form-group">
                 <label>문제 유형 선택 (복수 선택 가능):</label>
                 <div className="checkbox-group">
-                  {['VOCABULARY', 'GRAMMAR', 'READING', 'LISTENING'].map((type) => (
+                  {['vocabulary', 'grammar', 'reading', 'listening'].map((type) => (
                     <label key={type} className="checkbox-label">
                       <input
                         type="checkbox"
@@ -934,9 +1018,9 @@ function App() {
                           }
                         }}
                       />
-                      {type === 'VOCABULARY' ? '어휘' : 
-                       type === 'GRAMMAR' ? '문법' : 
-                       type === 'READING' ? '독해' : '청해'}
+                      {type === 'vocabulary' ? '어휘' : 
+                       type === 'grammar' ? '문법' : 
+                       type === 'reading' ? '독해' : '청해'}
                     </label>
                   ))}
                 </div>
@@ -1107,20 +1191,30 @@ function App() {
           </section>
         )}
 
-        {state === 'study' && currentStudyQuestions.length > 0 && (
-          <section className="study-section">
-            <StudyUI 
-              questions={currentStudyQuestions} 
-              onSubmit={handleSubmitStudy} 
-            />
-          </section>
-        )}
-
         {state === 'vocabulary' && currentVocabularies.length > 0 && (
           <section className="vocabulary-section">
             <div className="vocabulary-controls">
               <button
-                onClick={() => setState('initial')}
+                onClick={() => {
+                  // 일일 체크리스트에서 온 경우 체크리스트 상태 업데이트
+                  if (selectedDay > 0) {
+                    const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
+                    if (saved) {
+                      try {
+                        const parsed = JSON.parse(saved);
+                        parsed.vocabulary = true;
+                        localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify(parsed));
+                      } catch (e) {
+                        localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ vocabulary: true }));
+                      }
+                    } else {
+                      localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ vocabulary: true }));
+                    }
+                    setState('daily-checklist');
+                  } else {
+                    setState('initial');
+                  }
+                }}
                 className="back-button"
               >
                 뒤로 가기
@@ -1158,6 +1252,14 @@ function App() {
             <VocabularyListUI
               vocabularies={currentVocabularies}
               onStatusUpdate={handleVocabularyStatusUpdate}
+            />
+          </section>
+        )}
+
+        {state === 'vocabulary-review' && (
+          <section className="vocabulary-review-section">
+            <VocabularyReviewUI
+              onBack={() => setState('initial')}
             />
           </section>
         )}

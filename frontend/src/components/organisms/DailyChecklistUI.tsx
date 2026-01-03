@@ -11,7 +11,7 @@ import './DailyChecklistUI.css';
 interface DailyChecklistUIProps {
   day: number;
   week: number;
-  onStartStudy: (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest') => void;
+  onStartStudy: (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest', taskCount?: number) => void;
   onBack: () => void;
 }
 
@@ -121,7 +121,7 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
           <div className="task-actions">
             <button
               className={`task-button ${completedTasks.vocabulary ? 'completed' : ''}`}
-              onClick={() => onStartStudy('vocabulary')}
+              onClick={() => onStartStudy('vocabulary', dailyTask.tasks.vocabulary)}
             >
               단어 학습 시작
             </button>
@@ -144,7 +144,7 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
           <div className="task-actions">
             <button
               className={`task-button ${completedTasks.grammar ? 'completed' : ''}`}
-              onClick={() => onStartStudy('grammar')}
+              onClick={() => onStartStudy('grammar', dailyTask.tasks.grammar)}
             >
               문법 학습 시작
             </button>
@@ -168,7 +168,7 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
             <div className="task-actions">
               <button
                 className={`task-button ${completedTasks.reading ? 'completed' : ''}`}
-                onClick={() => onStartStudy('reading')}
+                onClick={() => onStartStudy('reading', dailyTask.tasks.reading)}
               >
                 독해 연습 시작
               </button>
@@ -193,7 +193,7 @@ const DailyChecklistUI: React.FC<DailyChecklistUIProps> = ({
             <div className="task-actions">
               <button
                 className={`task-button ${completedTasks.listening ? 'completed' : ''}`}
-                onClick={() => onStartStudy('listening')}
+                onClick={() => onStartStudy('listening', dailyTask.tasks.listening)}
               >
                 청해 연습 시작
               </button>

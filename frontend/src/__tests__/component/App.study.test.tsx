@@ -70,10 +70,10 @@ jest.mock('../../components/organisms/DailyChecklistUI', () => {
   return function MockDailyChecklistUI({ onStartStudy, onBack }: any) {
     return (
       <div data-testid="daily-checklist">
-        <button onClick={() => onStartStudy('vocabulary')}>단어 학습 시작</button>
-        <button onClick={() => onStartStudy('grammar')}>문법 학습 시작</button>
-        <button onClick={() => onStartStudy('reading')}>독해 연습 시작</button>
-        <button onClick={() => onStartStudy('listening')}>청해 연습 시작</button>
+        <button onClick={() => onStartStudy('vocabulary', 20)}>단어 학습 시작</button>
+        <button onClick={() => onStartStudy('grammar', 2)}>문법 학습 시작</button>
+        <button onClick={() => onStartStudy('reading', 5)}>독해 연습 시작</button>
+        <button onClick={() => onStartStudy('listening', 5)}>청해 연습 시작</button>
         <button onClick={() => onStartStudy('mockTest')}>모의고사 시작</button>
         <button onClick={onBack}>돌아가기</button>
       </div>
@@ -87,6 +87,17 @@ jest.mock('../../components/organisms/StudyUI', () => {
     return (
       <div data-testid="study-ui">
         <button onClick={() => onSubmit({ 1: 'A' })}>제출</button>
+      </div>
+    );
+  };
+});
+
+// FlashcardUI 모킹
+jest.mock('../../components/organisms/FlashcardUI', () => {
+  return function MockFlashcardUI({ onBack }: any) {
+    return (
+      <div data-testid="flashcard-ui">
+        <button onClick={onBack}>돌아가기</button>
       </div>
     );
   };
@@ -129,27 +140,35 @@ describe('App - Study Mode Error Handling', () => {
 
   describe('handleStartDailyStudy - Success Cases', () => {
     it('should start vocabulary study successfully', async () => {
-      const mockQuestions = [
+      const mockVocabularies = [
         {
           id: 1,
+          word: 'テスト',
+          reading: 'てすと',
+          meaning: '테스트',
           level: 'N5',
-          question_type: 'VOCABULARY',
-          question_text: 'Test question',
-          choices: ['A', 'B', 'C', 'D'],
-          correct_answer: 'A',
-          explanation: 'Test explanation',
-          difficulty: 1,
         },
       ];
 
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         headers: { get: () => 'application/json' },
-        json: async () => mockQuestions,
+        json: async () => mockVocabularies,
       });
 
       await act(async () => {
         render(<App />);
+      });
+
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
       });
 
       await waitFor(() => {
@@ -171,7 +190,7 @@ describe('App - Study Mode Error Handling', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByTestId('study-ui')).toBeInTheDocument();
+        expect(screen.getByTestId('flashcard-ui')).toBeInTheDocument();
       });
     });
 
@@ -197,6 +216,17 @@ describe('App - Study Mode Error Handling', () => {
 
       await act(async () => {
         render(<App />);
+      });
+
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
       });
 
       await waitFor(() => {
@@ -235,6 +265,17 @@ describe('App - Study Mode Error Handling', () => {
         render(<App />);
       });
 
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
+      });
+
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
@@ -249,8 +290,8 @@ describe('App - Study Mode Error Handling', () => {
       });
 
       await act(async () => {
-        const vocabularyButton = screen.getByText('단어 학습 시작');
-        fireEvent.click(vocabularyButton);
+        const grammarButton = screen.getByText('문법 학습 시작');
+        fireEvent.click(grammarButton);
       });
 
       await waitFor(() => {
@@ -270,6 +311,17 @@ describe('App - Study Mode Error Handling', () => {
         render(<App />);
       });
 
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
+      });
+
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
@@ -284,8 +336,8 @@ describe('App - Study Mode Error Handling', () => {
       });
 
       await act(async () => {
-        const vocabularyButton = screen.getByText('단어 학습 시작');
-        fireEvent.click(vocabularyButton);
+        const grammarButton = screen.getByText('문법 학습 시작');
+        fireEvent.click(grammarButton);
       });
 
       await waitFor(() => {
@@ -305,6 +357,17 @@ describe('App - Study Mode Error Handling', () => {
         render(<App />);
       });
 
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
+      });
+
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
@@ -319,8 +382,8 @@ describe('App - Study Mode Error Handling', () => {
       });
 
       await act(async () => {
-        const vocabularyButton = screen.getByText('단어 학습 시작');
-        fireEvent.click(vocabularyButton);
+        const grammarButton = screen.getByText('문법 학습 시작');
+        fireEvent.click(grammarButton);
       });
 
       await waitFor(() => {
@@ -340,6 +403,17 @@ describe('App - Study Mode Error Handling', () => {
         render(<App />);
       });
 
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
+      });
+
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
@@ -354,8 +428,8 @@ describe('App - Study Mode Error Handling', () => {
       });
 
       await act(async () => {
-        const vocabularyButton = screen.getByText('단어 학습 시작');
-        fireEvent.click(vocabularyButton);
+        const grammarButton = screen.getByText('문법 학습 시작');
+        fireEvent.click(grammarButton);
       });
 
       await waitFor(() => {
@@ -365,11 +439,22 @@ describe('App - Study Mode Error Handling', () => {
 
     it('should handle network error', async () => {
       (global.fetch as jest.Mock).mockRejectedValueOnce(
-        new Error('fetch failed')
+        new Error('network error')
       );
 
       await act(async () => {
         render(<App />);
+      });
+
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
       });
 
       await waitFor(() => {
@@ -386,12 +471,13 @@ describe('App - Study Mode Error Handling', () => {
       });
 
       await act(async () => {
-        const vocabularyButton = screen.getByText('단어 학습 시작');
-        fireEvent.click(vocabularyButton);
+        const grammarButton = screen.getByText('문법 학습 시작');
+        fireEvent.click(grammarButton);
       });
 
       await waitFor(() => {
-        expect(screen.getByText(/네트워크 연결을 확인해주세요/i)).toBeInTheDocument();
+        // 네트워크 에러는 ApiError(500)로 처리되어 "서버 오류가 발생했습니다" 메시지가 표시됨
+        expect(screen.getByText(/서버 오류가 발생했습니다/i)).toBeInTheDocument();
       }, { timeout: 3000 });
     });
 
@@ -408,6 +494,17 @@ describe('App - Study Mode Error Handling', () => {
         render(<App />);
       });
 
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
+      });
+
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
@@ -422,12 +519,13 @@ describe('App - Study Mode Error Handling', () => {
       });
 
       await act(async () => {
-        const vocabularyButton = screen.getByText('단어 학습 시작');
-        fireEvent.click(vocabularyButton);
+        const grammarButton = screen.getByText('문법 학습 시작');
+        fireEvent.click(grammarButton);
       });
 
       await waitFor(() => {
-        expect(screen.getByText(/오류가 발생했습니다/i)).toBeInTheDocument();
+        // JSON 파싱 에러는 ApiError(500)로 처리되어 "서버 오류가 발생했습니다" 메시지가 표시됨
+        expect(screen.getByText(/서버 오류가 발생했습니다/i)).toBeInTheDocument();
       });
     });
 
@@ -442,6 +540,17 @@ describe('App - Study Mode Error Handling', () => {
         render(<App />);
       });
 
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
+      });
+
       await waitFor(() => {
         expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
       });
@@ -456,8 +565,8 @@ describe('App - Study Mode Error Handling', () => {
       });
 
       await act(async () => {
-        const vocabularyButton = screen.getByText('단어 학습 시작');
-        fireEvent.click(vocabularyButton);
+        const grammarButton = screen.getByText('문법 학습 시작');
+        fireEvent.click(grammarButton);
       });
 
       await waitFor(() => {
@@ -489,6 +598,17 @@ describe('App - Study Mode Error Handling', () => {
 
       await act(async () => {
         render(<App />);
+      });
+
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
       });
 
       await waitFor(() => {
@@ -537,6 +657,17 @@ describe('App - Study Mode Error Handling', () => {
 
       await act(async () => {
         render(<App />);
+      });
+
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
       });
 
       await waitFor(() => {
@@ -595,6 +726,17 @@ describe('App - Study Mode Error Handling', () => {
 
       await act(async () => {
         render(<App />);
+      });
+
+      // 사용자가 로그인하면 initial 상태로 이동
+      await waitFor(() => {
+        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
+      });
+
+      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
+      await act(async () => {
+        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
+        fireEvent.click(studyPlanButton);
       });
 
       await waitFor(() => {

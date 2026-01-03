@@ -912,4 +912,10 @@ if [ $EXIT_CODE -eq 0 ]; then
     echo "✅ 모든 테스트 완료!"
 fi
 
+# 테스트 후 데이터 클린업
+echo ""
+echo "🧹 테스트 후 데이터 클린업 중..."
+python scripts/cleanup_test_data.py --all 2>&1 | grep -E "(✅|❌|총)" || true
+echo ""
+
 exit $EXIT_CODE

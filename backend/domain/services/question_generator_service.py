@@ -214,17 +214,32 @@ class QuestionGeneratorService:
         if not patterns:
             return questions
         
+        # pattern에 "___"가 있는 패턴만 필터링
+        valid_patterns = [p for p in patterns if "___" in p.get("pattern", "")]
+        
+        if not valid_patterns:
+            return questions
+        
         # 기본 조사 선택지
         particles = ["を", "が", "に", "で", "へ", "と", "から", "まで"]
         
-        for i in range(count):
-            pattern = random.choice(patterns)
+        attempts = 0
+        max_attempts = count * 10  # 무한 루프 방지
+        
+        while len(questions) < count and attempts < max_attempts:
+            attempts += 1
+            pattern = random.choice(valid_patterns)
             
             # 문제 텍스트 생성
-            question_text = pattern["example"].replace(pattern["pattern"].replace("___", ""), "___")
+            pattern_without_blank = pattern["pattern"].replace("___", "")
+            question_text = pattern["example"].replace(pattern_without_blank, "___")
+            
+            # 생성된 문제 텍스트에 "___"가 없으면 건너뛰기
+            if "___" not in question_text:
+                continue
             
             # 정답 추출
-            correct_particle = pattern["pattern"].replace("___", "")
+            correct_particle = pattern_without_blank
             
             # 선택지 생성
             choices = [correct_particle] + random.sample(

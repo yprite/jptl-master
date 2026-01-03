@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import List, Dict, Optional
 from backend.domain.entities.vocabulary import Vocabulary
-from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+from backend.domain.value_objects.jlpt import JLPTLevel
 
 
 class VocabularyGeneratorService:
@@ -82,7 +82,6 @@ class VocabularyGeneratorService:
                 reading=vocab_data["reading"],
                 meaning=vocab_data["meaning"],
                 level=level,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED,
                 example_sentence=vocab_data.get("example")
             )
             vocabularies.append(vocabulary)
@@ -106,7 +105,6 @@ class VocabularyGeneratorService:
             reading=data.get("reading", ""),
             meaning=data.get("meaning", ""),
             level=JLPTLevel(data.get("level", "N5")),
-            memorization_status=MemorizationStatus(data.get("memorization_status", "not_memorized")),
             example_sentence=data.get("example_sentence")
         )
     

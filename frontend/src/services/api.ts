@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하는 중앙화된 서비스
  */
 
-import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics, Vocabulary } from '../types/api';
+import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics, Vocabulary, VocabularyReview, ReviewStatistics } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1';
@@ -96,10 +96,37 @@ async function fetchApi<T>(
       // 반환하는 경우도 메시지를 최대한 살립니다.
       if (payload && typeof payload === 'object') {
         const anyPayload = payload as any;
-        const message =
-          anyPayload.message ||
-          anyPayload.detail ||
-          `HTTP ${response.status} ${response.statusText}`;
+        
+        // detail이 배열인 경우 (FastAPI validation error)
+        let message: string;
+        if (anyPayload.message) {
+          message = anyPayload.message;
+        } else if (Array.isArray(anyPayload.detail)) {
+          // validation error 배열에서 메시지 추출
+          message = anyPayload.detail
+            .map((err: any) => {
+              if (typeof err === 'string') {
+                return err;
+              }
+              if (err && typeof err === 'object' && err.msg) {
+                return err.msg;
+              }
+              return JSON.stringify(err);
+            })
+            .join(', ');
+        } else if (anyPayload.detail) {
+          // detail이 문자열이거나 단일 객체인 경우
+          if (typeof anyPayload.detail === 'string') {
+            message = anyPayload.detail;
+          } else if (typeof anyPayload.detail === 'object' && anyPayload.detail.msg) {
+            message = anyPayload.detail.msg;
+          } else {
+            message = JSON.stringify(anyPayload.detail);
+          }
+        } else {
+          message = `HTTP ${response.status} ${response.statusText}`;
+        }
+        
         throw new ApiError(response.status, message, anyPayload.errors);
       }
       throw new ApiError(
@@ -734,5 +761,32 @@ export const vocabularyApi = {
       method: 'POST',
       body: JSON.stringify({ memorization_status: memorizationStatus }),
     });
+  },
+
+  /**
+   * 오늘 복습해야 하는 단어 목록 조회
+   */
+  async getReviewVocabularies(): Promise<VocabularyReview[]> {
+    return fetchApi<VocabularyReview[]>(`/vocabulary/review`);
+  },
+
+  /**
+   * 단어 복습 (Anki 스타일 간격 반복)
+   */
+  async reviewVocabulary(
+    vocabularyId: number,
+    difficulty: 'easy' | 'normal' | 'hard'
+  ): Promise<VocabularyReview> {
+    return fetchApi<VocabularyReview>(`/vocabulary/${vocabularyId}/review`, {
+      method: 'POST',
+      body: JSON.stringify({ difficulty }),
+    });
+  },
+
+  /**
+   * 복습 통계 조회
+   */
+  async getReviewStatistics(): Promise<ReviewStatistics> {
+    return fetchApi<ReviewStatistics>(`/vocabulary/review/statistics`);
   },
 };
