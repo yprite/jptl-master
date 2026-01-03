@@ -10,9 +10,24 @@ from starlette.middleware.sessions import SessionMiddleware
 from datetime import datetime
 import secrets
 import os
+import logging
 
 from backend.presentation.controllers import router as api_router
 from backend.infrastructure.config.database import get_database
+from backend.presentation.middleware.error_handler import (
+    validation_exception_handler,
+    http_exception_handler,
+    general_exception_handler
+)
+from fastapi.exceptions import RequestValidationError
+from fastapi import HTTPException
+
+# 로깅 설정
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # FastAPI 애플리케이션 생성
 app = FastAPI(
@@ -46,6 +61,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 전역 예외 핸들러 등록
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(Exception, general_exception_handler)
+
 # API 라우터 등록
 app.include_router(api_router, prefix="/api/v1")
 
@@ -64,7 +84,7 @@ async def startup_event():
     with db.get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT 1")
-    print("Database connection established")
+    logger.info("Database connection established")
 
 @app.get("/")
 async def root():
