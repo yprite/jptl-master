@@ -2,7 +2,7 @@
  * API 서비스 유닛 테스트
  */
 
-import { testApi, resultApi, userApi, authApi, adminApi, ApiError } from '../../services/api';
+import { testApi, resultApi, userApi, authApi, adminApi, studyApi, vocabularyApi, ApiError } from '../../services/api';
 
 // fetch 모킹
 global.fetch = jest.fn();
@@ -714,6 +714,39 @@ describe('userApi', () => {
     (fetch as jest.Mock).mockClear();
   });
 
+  describe('getCurrentUser', () => {
+    it('should fetch current user', async () => {
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        username: 'testuser',
+        target_level: 'N5',
+        current_level: null,
+        total_tests_taken: 0,
+        study_streak: 0,
+        is_admin: false,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          success: true,
+          data: mockUser,
+        }),
+      });
+
+      const result = await userApi.getCurrentUser();
+      expect(result).toEqual(mockUser);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/users/me'),
+        expect.any(Object)
+      );
+    });
+  });
+
   describe('updateCurrentUser', () => {
     it('should update current user', async () => {
       const mockUser = {
@@ -1308,6 +1341,762 @@ describe('adminApi', () => {
         })
       );
     });
+  });
+
+  describe('vocabulary management', () => {
+    it('should fetch vocabularies with all parameters', async () => {
+      const mockVocabularies = [
+        {
+          id: 1,
+          word: 'テスト',
+          reading: 'てすと',
+          meaning: '테스트',
+          level: 'N5',
+          memorization_status: 'learning',
+          example_sentence: null,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabularies,
+        }),
+      });
+
+      const result = await adminApi.getVocabularies({
+        level: 'N5',
+        status: 'learning',
+        search: 'テスト',
+      });
+      expect(result).toEqual(mockVocabularies);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/vocabulary?level=N5&status=learning&search='),
+        expect.any(Object)
+      );
+    });
+
+    it('should fetch vocabulary by id', async () => {
+      const mockVocabulary = {
+        id: 1,
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '테스트',
+        level: 'N5',
+        memorization_status: 'learning',
+        example_sentence: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabulary,
+        }),
+      });
+
+      const result = await adminApi.getVocabulary(1);
+      expect(result).toEqual(mockVocabulary);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/vocabulary/1'),
+        expect.any(Object)
+      );
+    });
+
+    it('should create vocabulary', async () => {
+      const mockVocabulary = {
+        id: 1,
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '테스트',
+        level: 'N5',
+        memorization_status: 'learning',
+        example_sentence: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabulary,
+        }),
+      });
+
+      const result = await adminApi.createVocabulary({
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '테스트',
+        level: 'N5',
+      });
+      expect(result).toEqual(mockVocabulary);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/vocabulary'),
+        expect.objectContaining({
+          method: 'POST',
+        })
+      );
+    });
+
+    it('should update vocabulary', async () => {
+      const mockVocabulary = {
+        id: 1,
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '업데이트된 테스트',
+        level: 'N5',
+        memorization_status: 'learning',
+        example_sentence: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabulary,
+        }),
+      });
+
+      const result = await adminApi.updateVocabulary(1, {
+        meaning: '업데이트된 테스트',
+      });
+      expect(result).toEqual(mockVocabulary);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/vocabulary/1'),
+        expect.objectContaining({
+          method: 'PUT',
+        })
+      );
+    });
+
+    it('should delete vocabulary', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+        }),
+      });
+
+      await adminApi.deleteVocabulary(1);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/admin/vocabulary/1'),
+        expect.objectContaining({
+          method: 'DELETE',
+        })
+      );
+    });
+  });
+});
+
+describe('studyApi', () => {
+  beforeEach(() => {
+    (fetch as jest.Mock).mockClear();
+  });
+
+  describe('getStudyQuestions', () => {
+    it('should fetch study questions with all parameters', async () => {
+      const mockQuestions = [
+        {
+          id: 1,
+          level: 'N5',
+          question_type: 'vocabulary',
+          question_text: 'Test question',
+          choices: ['A', 'B', 'C', 'D'],
+          correct_answer: 'A',
+          explanation: 'Test explanation',
+          difficulty: 1,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockQuestions,
+        }),
+      });
+
+      const result = await studyApi.getStudyQuestions({
+        level: 'N5',
+        question_types: ['vocabulary', 'grammar'],
+        question_count: 20,
+      });
+      expect(result).toEqual(mockQuestions);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/study/questions?level=N5&question_types=vocabulary&question_types=grammar&question_count=20'),
+        expect.any(Object)
+      );
+    });
+
+    it('should fetch study questions with minimal parameters', async () => {
+      const mockQuestions = [
+        {
+          id: 1,
+          level: 'N5',
+          question_type: 'vocabulary',
+          question_text: 'Test question',
+          choices: ['A', 'B', 'C', 'D'],
+          correct_answer: 'A',
+          explanation: 'Test explanation',
+          difficulty: 1,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockQuestions,
+        }),
+      });
+
+      const result = await studyApi.getStudyQuestions({
+        level: 'N5',
+      });
+      expect(result).toEqual(mockQuestions);
+    });
+  });
+
+  describe('submitStudySession', () => {
+    it('should submit study session', async () => {
+      const mockResponse = {
+        success: true,
+        data: {
+          study_session_id: 1,
+          total_questions: 20,
+          correct_count: 15,
+          accuracy: 75.0,
+          time_spent_minutes: 30,
+          level: 'N5',
+          question_types: ['vocabulary'],
+        },
+        message: '학습 세션이 제출되었습니다',
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => mockResponse,
+      });
+
+      const result = await studyApi.submitStudySession({
+        answers: { 1: 'A', 2: 'B' },
+        level: 'N5',
+        question_types: ['vocabulary'],
+        time_spent_minutes: 30,
+      });
+      // fetchApi가 data를 unwrap하므로 data만 비교
+      expect(result).toEqual(mockResponse.data);
+    });
+  });
+
+  describe('getWrongAnswerQuestions', () => {
+    it('should fetch wrong answer questions', async () => {
+      const mockQuestions = [
+        {
+          id: 1,
+          level: 'N5',
+          question_type: 'vocabulary',
+          question_text: 'Test question',
+          choices: ['A', 'B', 'C', 'D'],
+          correct_answer: 'A',
+          explanation: 'Test explanation',
+          difficulty: 1,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockQuestions,
+        }),
+      });
+
+      const result = await studyApi.getWrongAnswerQuestions();
+      expect(result).toEqual(mockQuestions);
+    });
+  });
+
+  describe('getWrongAnswerQuestionsForStudy', () => {
+    it('should fetch wrong answer questions for study', async () => {
+      const mockQuestions = [
+        {
+          id: 1,
+          level: 'N5',
+          question_type: 'vocabulary',
+          question_text: 'Test question',
+          choices: ['A', 'B', 'C', 'D'],
+          correct_answer: 'A',
+          explanation: 'Test explanation',
+          difficulty: 1,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockQuestions,
+        }),
+      });
+
+      const result = await studyApi.getWrongAnswerQuestionsForStudy(20);
+      expect(result).toEqual(mockQuestions);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/study/wrong-answers/questions?question_count=20'),
+        expect.any(Object)
+      );
+    });
+  });
+
+  describe('getStudySessions', () => {
+    it('should fetch study sessions', async () => {
+      const mockSessions = [
+        {
+          id: 1,
+          study_date: '2025-01-01',
+          study_hour: 10,
+          total_questions: 20,
+          correct_count: 15,
+          accuracy: 75.0,
+          time_spent_minutes: 30,
+          level: 'N5',
+          question_types: ['vocabulary'],
+          question_count: 20,
+          created_at: '2025-01-01T10:00:00Z',
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockSessions,
+        }),
+      });
+
+      const result = await studyApi.getStudySessions();
+      expect(result).toEqual(mockSessions);
+    });
+  });
+
+  describe('getStudySessionQuestions', () => {
+    it('should fetch study session questions', async () => {
+      const mockQuestions = [
+        {
+          id: 1,
+          level: 'N5',
+          question_type: 'vocabulary',
+          question_text: 'Test question',
+          choices: ['A', 'B', 'C', 'D'],
+          correct_answer: 'A',
+          explanation: 'Test explanation',
+          difficulty: 1,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockQuestions,
+        }),
+      });
+
+      const result = await studyApi.getStudySessionQuestions(1);
+      expect(result).toEqual(mockQuestions);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/study/sessions/1/questions'),
+        expect.any(Object)
+      );
+    });
+  });
+});
+
+describe('vocabularyApi', () => {
+  beforeEach(() => {
+    (fetch as jest.Mock).mockClear();
+  });
+
+  describe('getVocabularies', () => {
+    it('should fetch vocabularies with all parameters', async () => {
+      const mockVocabularies = [
+        {
+          id: 1,
+          word: 'テスト',
+          reading: 'てすと',
+          meaning: '테스트',
+          level: 'N5',
+          memorization_status: 'learning',
+          example_sentence: null,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabularies,
+        }),
+      });
+
+      const result = await vocabularyApi.getVocabularies({
+        level: 'N5',
+        status: 'learning',
+        search: 'テスト',
+      });
+      expect(result).toEqual(mockVocabularies);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/vocabulary?level=N5&status=learning&search='),
+        expect.any(Object)
+      );
+    });
+
+    it('should fetch vocabularies with minimal parameters', async () => {
+      const mockVocabularies = [
+        {
+          id: 1,
+          word: 'テスト',
+          reading: 'てすと',
+          meaning: '테스트',
+          level: 'N5',
+          memorization_status: 'learning',
+          example_sentence: null,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabularies,
+        }),
+      });
+
+      const result = await vocabularyApi.getVocabularies({ level: 'N5' });
+      expect(result).toEqual(mockVocabularies);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/vocabulary?level=N5'),
+        expect.any(Object)
+      );
+    });
+
+    it('should fetch vocabularies without parameters', async () => {
+      const mockVocabularies = [
+        {
+          id: 1,
+          word: 'テスト',
+          reading: 'てすと',
+          meaning: '테스트',
+          level: 'N5',
+          memorization_status: 'learning',
+          example_sentence: null,
+        },
+      ];
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabularies,
+        }),
+      });
+
+      const result = await vocabularyApi.getVocabularies();
+      expect(result).toEqual(mockVocabularies);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/vocabulary'),
+        expect.any(Object)
+      );
+    });
+  });
+
+  describe('getVocabulary', () => {
+    it('should fetch vocabulary by id', async () => {
+      const mockVocabulary = {
+        id: 1,
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '테스트',
+        level: 'N5',
+        memorization_status: 'learning',
+        example_sentence: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabulary,
+        }),
+      });
+
+      const result = await vocabularyApi.getVocabulary(1);
+      expect(result).toEqual(mockVocabulary);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/vocabulary/1'),
+        expect.any(Object)
+      );
+    });
+  });
+
+  describe('createVocabulary', () => {
+    it('should create vocabulary', async () => {
+      const mockVocabulary = {
+        id: 1,
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '테스트',
+        level: 'N5',
+        memorization_status: 'learning',
+        example_sentence: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabulary,
+        }),
+      });
+
+      const result = await vocabularyApi.createVocabulary({
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '테스트',
+        level: 'N5',
+      });
+      expect(result).toEqual(mockVocabulary);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/vocabulary'),
+        expect.objectContaining({
+          method: 'POST',
+        })
+      );
+    });
+  });
+
+  describe('updateVocabulary', () => {
+    it('should update vocabulary', async () => {
+      const mockVocabulary = {
+        id: 1,
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '업데이트된 테스트',
+        level: 'N5',
+        memorization_status: 'learning',
+        example_sentence: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabulary,
+        }),
+      });
+
+      const result = await vocabularyApi.updateVocabulary(1, {
+        meaning: '업데이트된 테스트',
+      });
+      expect(result).toEqual(mockVocabulary);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/vocabulary/1'),
+        expect.objectContaining({
+          method: 'PUT',
+        })
+      );
+    });
+  });
+
+  describe('deleteVocabulary', () => {
+    it('should delete vocabulary', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+        }),
+      });
+
+      await vocabularyApi.deleteVocabulary(1);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/vocabulary/1'),
+        expect.objectContaining({
+          method: 'DELETE',
+        })
+      );
+    });
+  });
+
+  describe('studyVocabulary', () => {
+    it('should update vocabulary memorization status', async () => {
+      const mockVocabulary = {
+        id: 1,
+        word: 'テスト',
+        reading: 'てすと',
+        meaning: '테스트',
+        level: 'N5',
+        memorization_status: 'mastered',
+        example_sentence: null,
+      };
+
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          success: true,
+          data: mockVocabulary,
+        }),
+      });
+
+      const result = await vocabularyApi.studyVocabulary(1, 'mastered');
+      expect(result).toEqual(mockVocabulary);
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/v1/vocabulary/1/study'),
+        expect.objectContaining({
+          method: 'POST',
+        })
+      );
+    });
+  });
+});
+
+describe('fetchApi error handling', () => {
+  beforeEach(() => {
+    (fetch as jest.Mock).mockClear();
+  });
+
+  it('should handle validation error array', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 422,
+      statusText: 'Unprocessable Entity',
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        detail: [
+          { msg: 'Field is required', type: 'value_error' },
+          'Another error',
+        ],
+      }),
+    });
+
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.status).toBe(422);
+        expect(error.message).toContain('Field is required');
+        expect(error.message).toContain('Another error');
+      }
+    }
+  });
+
+  it('should handle detail object with msg', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      statusText: 'Bad Request',
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        detail: { msg: 'Custom error message' },
+      }),
+    });
+
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.status).toBe(400);
+        expect(error.message).toContain('Custom error message');
+      }
+    }
+  });
+
+  it('should handle detail as JSON string', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      statusText: 'Bad Request',
+      headers: { get: () => 'application/json' },
+      json: async () => ({
+        detail: { complex: 'object', nested: { value: 123 } },
+      }),
+    });
+
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.status).toBe(400);
+        expect(error.message).toContain('complex');
+      }
+    }
+  });
+
+  it('should handle error response without detail', async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+      headers: { get: () => 'application/json' },
+      json: async () => ({}),
+    });
+
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.status).toBe(500);
+        expect(error.message).toContain('HTTP 500');
+      }
+    }
+  });
+
+  it('should handle non-Error exception', async () => {
+    // console.error를 모킹하여 테스트 출력을 깔끔하게 유지
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    
+    (fetch as jest.Mock).mockRejectedValueOnce('String error');
+
+    try {
+      await testApi.getTest(1);
+      fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      if (error instanceof ApiError) {
+        expect(error.status).toBe(500);
+        expect(error.message).toContain('알 수 없는 오류');
+      }
+    } finally {
+      consoleSpy.mockRestore();
+    }
   });
 });
 

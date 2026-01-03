@@ -9,7 +9,7 @@ from typing import List, Dict, Optional
 from pathlib import Path
 from backend.domain.entities.question import Question
 from backend.domain.entities.vocabulary import Vocabulary
-from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType, MemorizationStatus
+from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
 
 
 class JLPTQuestionImporter:
@@ -151,7 +151,6 @@ class JLPTQuestionImporter:
                     reading=item.get("reading", ""),
                     meaning=item.get("meaning", ""),
                     level=JLPTLevel(item.get("level", "N5")),
-                    memorization_status=MemorizationStatus(item.get("memorization_status", "not_memorized")),
                     example_sentence=item.get("example_sentence")
                 )
                 vocabularies.append(vocabulary)
@@ -196,7 +195,6 @@ class JLPTQuestionImporter:
                         reading=row.get("reading", ""),
                         meaning=row.get("meaning", ""),
                         level=JLPTLevel(row.get("level", "N5")),
-                        memorization_status=MemorizationStatus(row.get("memorization_status", "not_memorized")),
                         example_sentence=row.get("example_sentence") if row.get("example_sentence") else None
                     )
                     vocabularies.append(vocabulary)

@@ -1912,7 +1912,7 @@ class TestVocabularyController:
         from fastapi import FastAPI
         from backend.infrastructure.config.database import Database
         from backend.domain.entities.vocabulary import Vocabulary
-        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.domain.value_objects.jlpt import JLPTLevel
         from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
         from backend.presentation.controllers.auth import get_current_user
 
@@ -1932,8 +1932,7 @@ class TestVocabularyController:
                 word="ありがとう",
                 reading="ありがとう",
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
             repo.save(vocab)
 
@@ -1959,7 +1958,7 @@ class TestVocabularyController:
         from fastapi import FastAPI
         from backend.infrastructure.config.database import Database
         from backend.domain.entities.vocabulary import Vocabulary
-        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.domain.value_objects.jlpt import JLPTLevel
         from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
         from backend.presentation.controllers.auth import get_current_user
 
@@ -1979,8 +1978,7 @@ class TestVocabularyController:
                 word="ありがとう",
                 reading="ありがとう",
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
             saved_vocab = repo.save(vocab)
 
@@ -2076,7 +2074,7 @@ class TestVocabularyController:
         from fastapi import FastAPI
         from backend.infrastructure.config.database import Database
         from backend.domain.entities.vocabulary import Vocabulary
-        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.domain.value_objects.jlpt import JLPTLevel
         from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
         from backend.presentation.controllers.auth import get_current_user
 
@@ -2096,8 +2094,7 @@ class TestVocabularyController:
                 word="ありがとう",
                 reading="ありがとう",
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
             saved_vocab = repo.save(vocab)
 
@@ -2127,7 +2124,7 @@ class TestVocabularyController:
         from fastapi import FastAPI
         from backend.infrastructure.config.database import Database
         from backend.domain.entities.vocabulary import Vocabulary
-        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.domain.value_objects.jlpt import JLPTLevel
         from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
         from backend.presentation.controllers.auth import get_current_user
 
@@ -2147,8 +2144,7 @@ class TestVocabularyController:
                 word="ありがとう",
                 reading="ありがとう",
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
             saved_vocab = repo.save(vocab)
 
@@ -2176,7 +2172,7 @@ class TestVocabularyController:
         from fastapi import FastAPI
         from backend.infrastructure.config.database import Database
         from backend.domain.entities.vocabulary import Vocabulary
-        from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+        from backend.domain.value_objects.jlpt import JLPTLevel
         from backend.infrastructure.repositories.vocabulary_repository import SqliteVocabularyRepository
         from backend.presentation.controllers.auth import get_current_user
 
@@ -2196,8 +2192,7 @@ class TestVocabularyController:
                 word="ありがとう",
                 reading="ありがとう",
                 meaning="감사합니다",
-                level=JLPTLevel.N5,
-                memorization_status=MemorizationStatus.NOT_MEMORIZED
+                level=JLPTLevel.N5
             )
             saved_vocab = repo.save(vocab)
 
