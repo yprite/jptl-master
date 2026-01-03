@@ -251,3 +251,188 @@ class TestUsersAPI:
             data = response.json()
             assert "사용자를 찾을 수 없습니다" in data["detail"]
 
+    def test_get_daily_goal_success(self, app_client, temp_db):
+        """일일 목표 조회 성공 테스트"""
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.repositories.daily_goal_repository import SqliteDailyGoalRepository
+        from backend.domain.entities.user import User
+        from backend.domain.entities.daily_goal import DailyGoal
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db, \
+             patch('backend.presentation.controllers.users.get_current_user') as mock_get_user, \
+             patch('backend.presentation.controllers.users.get_learning_history_repository') as mock_get_learning_history:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+            mock_get_user.return_value = saved_user
+
+            # LearningHistory Repository 모킹
+            from backend.infrastructure.repositories.learning_history_repository import SqliteLearningHistoryRepository
+            learning_history_repo = SqliteLearningHistoryRepository(db=db)
+            mock_get_learning_history.return_value = learning_history_repo
+
+            # 일일 목표 생성
+            daily_goal_repo = SqliteDailyGoalRepository(db=db)
+            daily_goal = DailyGoal(id=None, user_id=saved_user.id, target_questions=10, target_minutes=30)
+            daily_goal_repo.save(daily_goal)
+
+            # 일일 목표 조회
+            response = app_client.get(f"/api/v1/users/{saved_user.id}/daily-goal")
+            assert response.status_code == 200
+            data = response.json()
+            assert "success" in data
+            assert "data" in data
+            assert "goal" in data["data"]
+            assert "statistics" in data["data"]
+            assert "achievement" in data["data"]
+            assert data["data"]["goal"]["target_questions"] == 10
+            assert data["data"]["goal"]["target_minutes"] == 30
+
+    def test_get_daily_goal_no_goal(self, app_client, temp_db):
+        """일일 목표가 없는 경우 조회 테스트 (기본값 사용)"""
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db, \
+             patch('backend.presentation.controllers.users.get_current_user') as mock_get_user, \
+             patch('backend.presentation.controllers.users.get_learning_history_repository') as mock_get_learning_history:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+            mock_get_user.return_value = saved_user
+
+            # LearningHistory Repository 모킹
+            from backend.infrastructure.repositories.learning_history_repository import SqliteLearningHistoryRepository
+            learning_history_repo = SqliteLearningHistoryRepository(db=db)
+            mock_get_learning_history.return_value = learning_history_repo
+
+            # 일일 목표 조회 (목표 없음)
+            response = app_client.get(f"/api/v1/users/{saved_user.id}/daily-goal")
+            assert response.status_code == 200
+            data = response.json()
+            assert "success" in data
+            assert "data" in data
+            assert "goal" in data["data"]
+            # 기본값 사용
+            assert data["data"]["goal"]["target_questions"] == 10
+            assert data["data"]["goal"]["target_minutes"] == 30
+
+    def test_update_daily_goal_create_new(self, app_client, temp_db):
+        """새 일일 목표 생성 테스트"""
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.repositories.daily_goal_repository import SqliteDailyGoalRepository
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db, \
+             patch('backend.presentation.controllers.users.get_current_user') as mock_get_user:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+            mock_get_user.return_value = saved_user
+
+            # 일일 목표 설정
+            response = app_client.put(
+                f"/api/v1/users/{saved_user.id}/daily-goal",
+                json={
+                    "target_questions": 20,
+                    "target_minutes": 60
+                }
+            )
+            assert response.status_code == 200
+            data = response.json()
+            assert "success" in data
+            assert "data" in data
+            assert data["data"]["target_questions"] == 20
+            assert data["data"]["target_minutes"] == 60
+
+            # 저장 확인
+            daily_goal_repo = SqliteDailyGoalRepository(db=db)
+            saved_goal = daily_goal_repo.find_by_user_id(saved_user.id)
+            assert saved_goal is not None
+            assert saved_goal.target_questions == 20
+            assert saved_goal.target_minutes == 60
+
+    def test_update_daily_goal_update_existing(self, app_client, temp_db):
+        """기존 일일 목표 업데이트 테스트"""
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.infrastructure.repositories.daily_goal_repository import SqliteDailyGoalRepository
+        from backend.domain.entities.user import User
+        from backend.domain.entities.daily_goal import DailyGoal
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db, \
+             patch('backend.presentation.controllers.users.get_current_user') as mock_get_user:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 생성
+            user_repo = SqliteUserRepository(db=db)
+            user = User(id=None, email="test@example.com", username="testuser", target_level=JLPTLevel.N5)
+            saved_user = user_repo.save(user)
+            mock_get_user.return_value = saved_user
+
+            # 기존 일일 목표 생성
+            daily_goal_repo = SqliteDailyGoalRepository(db=db)
+            daily_goal = DailyGoal(id=None, user_id=saved_user.id, target_questions=10, target_minutes=30)
+            daily_goal_repo.save(daily_goal)
+
+            # 일일 목표 업데이트
+            response = app_client.put(
+                f"/api/v1/users/{saved_user.id}/daily-goal",
+                json={
+                    "target_questions": 25,
+                    "target_minutes": 90
+                }
+            )
+            assert response.status_code == 200
+            data = response.json()
+            assert "success" in data
+            assert data["data"]["target_questions"] == 25
+            assert data["data"]["target_minutes"] == 90
+
+    def test_get_daily_goal_unauthorized(self, app_client, temp_db):
+        """다른 사용자의 일일 목표 조회 시도 테스트 (권한 없음)"""
+        from backend.infrastructure.config.database import Database
+        from backend.infrastructure.repositories.user_repository import SqliteUserRepository
+        from backend.domain.entities.user import User
+        from backend.domain.value_objects.jlpt import JLPTLevel
+
+        with patch('backend.presentation.controllers.users.get_database') as mock_get_db, \
+             patch('backend.presentation.controllers.users.get_current_user') as mock_get_user:
+            db = Database(db_path=temp_db)
+            mock_get_db.return_value = db
+
+            # 사용자 1 생성
+            user_repo = SqliteUserRepository(db=db)
+            user1 = User(id=None, email="user1@example.com", username="user1", target_level=JLPTLevel.N5)
+            user2 = User(id=None, email="user2@example.com", username="user2", target_level=JLPTLevel.N5)
+            saved_user1 = user_repo.save(user1)
+            saved_user2 = user_repo.save(user2)
+            
+            # user1로 로그인했지만 user2의 목표 조회 시도
+            mock_get_user.return_value = saved_user1
+
+            response = app_client.get(f"/api/v1/users/{saved_user2.id}/daily-goal")
+            assert response.status_code == 403
+            data = response.json()
+            assert "다른 사용자의 목표를 조회할 수 없습니다" in data["detail"]
+
