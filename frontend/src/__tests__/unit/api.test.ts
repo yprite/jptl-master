@@ -243,6 +243,71 @@ describe('testApi', () => {
         }
       }
     });
+
+    it('should handle start test 401 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '인증이 필요합니다',
+        }),
+      });
+
+      try {
+        await testApi.startTest(1);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(401);
+          expect(error.message).toContain('인증이 필요합니다');
+        }
+      }
+    });
+
+    it('should handle start test 500 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '서버 내부 오류가 발생했습니다',
+        }),
+      });
+
+      try {
+        await testApi.startTest(1);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(500);
+          expect(error.message).toContain('서버 내부 오류가 발생했습니다');
+        }
+      }
+    });
+
+    it('should handle start test network error', async () => {
+      (fetch as jest.Mock).mockRejectedValueOnce(
+        new TypeError('Failed to fetch')
+      );
+
+      try {
+        await testApi.startTest(1);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(0);
+          expect(error.message).toContain('네트워크 오류');
+        }
+      }
+    });
   });
 
   describe('getTest', () => {
@@ -306,6 +371,71 @@ describe('testApi', () => {
         if (error instanceof ApiError) {
           expect(error.status).toBe(404);
           expect(error.message).toContain('시험을 찾을 수 없습니다');
+        }
+      }
+    });
+
+    it('should handle get test 401 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '인증이 필요합니다',
+        }),
+      });
+
+      try {
+        await testApi.getTest(1);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(401);
+          expect(error.message).toContain('인증이 필요합니다');
+        }
+      }
+    });
+
+    it('should handle get test 500 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '서버 내부 오류가 발생했습니다',
+        }),
+      });
+
+      try {
+        await testApi.getTest(1);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(500);
+          expect(error.message).toContain('서버 내부 오류가 발생했습니다');
+        }
+      }
+    });
+
+    it('should handle get test network error', async () => {
+      (fetch as jest.Mock).mockRejectedValueOnce(
+        new TypeError('Failed to fetch')
+      );
+
+      try {
+        await testApi.getTest(1);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(0);
+          expect(error.message).toContain('네트워크 오류');
         }
       }
     });
@@ -1007,6 +1137,78 @@ describe('adminApi', () => {
         })
       );
     });
+
+    it('should handle getUsers 401 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '인증이 필요합니다',
+        }),
+      });
+
+      try {
+        await adminApi.getUsers();
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(401);
+          expect(error.message).toContain('인증이 필요합니다');
+        }
+      }
+    });
+
+    it('should handle getUsers 403 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '관리자 권한이 필요합니다',
+        }),
+      });
+
+      try {
+        await adminApi.getUsers();
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(403);
+          expect(error.message).toContain('관리자 권한이 필요합니다');
+        }
+      }
+    });
+
+    it('should handle getUsers 500 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '서버 내부 오류가 발생했습니다',
+        }),
+      });
+
+      try {
+        await adminApi.getUsers();
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(500);
+          expect(error.message).toContain('서버 내부 오류가 발생했습니다');
+        }
+      }
+    });
   });
 
   describe('getUser', () => {
@@ -1041,6 +1243,30 @@ describe('adminApi', () => {
           credentials: 'include',
         })
       );
+    });
+
+    it('should handle getUser 404 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '사용자를 찾을 수 없습니다',
+        }),
+      });
+
+      try {
+        await adminApi.getUser(999);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(404);
+          expect(error.message).toContain('사용자를 찾을 수 없습니다');
+        }
+      }
     });
   });
 
@@ -1084,6 +1310,30 @@ describe('adminApi', () => {
         })
       );
     });
+
+    it('should handle updateUser 400 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '잘못된 요청입니다',
+        }),
+      });
+
+      try {
+        await adminApi.updateUser(1, { username: '' });
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(400);
+          expect(error.message).toContain('잘못된 요청입니다');
+        }
+      }
+    });
   });
 
   describe('deleteUser', () => {
@@ -1105,6 +1355,30 @@ describe('adminApi', () => {
           method: 'DELETE',
         })
       );
+    });
+
+    it('should handle deleteUser 404 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '사용자를 찾을 수 없습니다',
+        }),
+      });
+
+      try {
+        await adminApi.deleteUser(999);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(404);
+          expect(error.message).toContain('사용자를 찾을 수 없습니다');
+        }
+      }
     });
   });
 
@@ -1144,6 +1418,30 @@ describe('adminApi', () => {
         })
       );
     });
+
+    it('should handle getQuestions 403 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '관리자 권한이 필요합니다',
+        }),
+      });
+
+      try {
+        await adminApi.getQuestions();
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(403);
+          expect(error.message).toContain('관리자 권한이 필요합니다');
+        }
+      }
+    });
   });
 
   describe('getQuestion', () => {
@@ -1179,6 +1477,30 @@ describe('adminApi', () => {
           credentials: 'include',
         })
       );
+    });
+
+    it('should handle getQuestion 404 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '문제를 찾을 수 없습니다',
+        }),
+      });
+
+      try {
+        await adminApi.getQuestion(999);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(404);
+          expect(error.message).toContain('문제를 찾을 수 없습니다');
+        }
+      }
     });
   });
 
@@ -1233,6 +1555,38 @@ describe('adminApi', () => {
         })
       );
     });
+
+    it('should handle createQuestion 400 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '잘못된 요청입니다',
+        }),
+      });
+
+      try {
+        await adminApi.createQuestion({
+          level: 'N5',
+          question_type: 'vocabulary',
+          question_text: '',
+          choices: [],
+          correct_answer: '',
+          explanation: '',
+          difficulty: 1,
+        });
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(400);
+          expect(error.message).toContain('잘못된 요청입니다');
+        }
+      }
+    });
   });
 
   describe('updateQuestion', () => {
@@ -1278,6 +1632,30 @@ describe('adminApi', () => {
         })
       );
     });
+
+    it('should handle updateQuestion 404 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '문제를 찾을 수 없습니다',
+        }),
+      });
+
+      try {
+        await adminApi.updateQuestion(999, { question_text: 'Updated' });
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(404);
+          expect(error.message).toContain('문제를 찾을 수 없습니다');
+        }
+      }
+    });
   });
 
   describe('deleteQuestion', () => {
@@ -1299,6 +1677,30 @@ describe('adminApi', () => {
           method: 'DELETE',
         })
       );
+    });
+
+    it('should handle deleteQuestion 404 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '문제를 찾을 수 없습니다',
+        }),
+      });
+
+      try {
+        await adminApi.deleteQuestion(999);
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(404);
+          expect(error.message).toContain('문제를 찾을 수 없습니다');
+        }
+      }
     });
   });
 
@@ -1340,6 +1742,30 @@ describe('adminApi', () => {
           credentials: 'include',
         })
       );
+    });
+
+    it('should handle getStatistics 403 error', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        headers: {
+          get: () => 'application/json',
+        },
+        json: async () => ({
+          detail: '관리자 권한이 필요합니다',
+        }),
+      });
+
+      try {
+        await adminApi.getStatistics();
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        if (error instanceof ApiError) {
+          expect(error.status).toBe(403);
+          expect(error.message).toContain('관리자 권한이 필요합니다');
+        }
+      }
     });
   });
 
