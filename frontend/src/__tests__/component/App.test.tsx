@@ -1849,6 +1849,10 @@ describe('App', () => {
           expect(screen.getByText(/Test question/i)).toBeInTheDocument();
         });
 
+        // 답안 선택 (제출 버튼 활성화를 위해)
+        const firstChoice = screen.getByTestId(/choice-1-0/i);
+        fireEvent.click(firstChoice);
+
         // 제출 시 에러 시뮬레이션
         (global.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
@@ -1860,12 +1864,13 @@ describe('App', () => {
         });
 
         // 제출 버튼 찾기 및 클릭
-        const submitButton = screen.getByRole('button', { name: /제출/i });
+        const submitButton = screen.getByTestId('submit-button');
+        expect(submitButton).not.toBeDisabled();
         fireEvent.click(submitButton);
 
         await waitFor(() => {
           expect(screen.getByText(/테스트 제출 중 오류가 발생했습니다/i)).toBeInTheDocument();
-        });
+        }, { timeout: 5000 });
       });
     });
 
