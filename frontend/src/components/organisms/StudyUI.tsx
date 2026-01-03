@@ -53,7 +53,14 @@ const StudyUI: React.FC<StudyUIProps> = ({
 
   const isAllAnswered = questions.every((q) => answers[q.id]);
   const currentAnswer = answers[currentQuestion?.id] || '';
-  const isCorrect = currentQuestion && currentAnswer === currentQuestion.correct_answer;
+  // currentAnswer는 A, B, C, D 라벨이고, correct_answer는 실제 선택지 텍스트이므로 변환 필요
+  const getAnswerText = (label: string): string | null => {
+    if (!currentQuestion || !label) return null;
+    const index = label.charCodeAt(0) - 65; // A=0, B=1, C=2, D=3
+    return currentQuestion.choices[index] || null;
+  };
+  const currentAnswerText = getAnswerText(currentAnswer);
+  const isCorrect = currentQuestion && currentAnswerText === currentQuestion.correct_answer;
   const showCurrentFeedback = currentQuestion && showFeedback[currentQuestion.id];
 
   if (!currentQuestion) {
@@ -74,7 +81,7 @@ const StudyUI: React.FC<StudyUIProps> = ({
         </div>
       </div>
 
-d      <div className="study-question">
+      <div className="study-question">
         <div className="question-header">
           <span className="question-type">{currentQuestion.question_type}</span>
           <span className="question-level">{currentQuestion.level}</span>
@@ -99,7 +106,7 @@ d      <div className="study-question">
           {currentQuestion.choices.map((choice, index) => {
             const choiceLabel = String.fromCharCode(65 + index); // A, B, C, D
             const isSelected = currentAnswer === choiceLabel;
-            const isCorrectChoice = choiceLabel === currentQuestion.correct_answer;
+            const isCorrectChoice = choice === currentQuestion.correct_answer;
             let choiceClass = 'choice';
             
             if (showCurrentFeedback) {
@@ -136,7 +143,12 @@ d      <div className="study-question">
                 <span className="feedback-icon">✗</span>
               )}
               <span className="feedback-text">
-                {isCorrect ? '정답입니다!' : `오답입니다. 정답은 ${currentQuestion.correct_answer}입니다.`}
+                {isCorrect ? '정답입니다!' : (() => {
+                  // 정답의 인덱스를 찾아서 라벨로 변환
+                  const correctIndex = currentQuestion.choices.findIndex(c => c === currentQuestion.correct_answer);
+                  const correctLabel = correctIndex >= 0 ? String.fromCharCode(65 + correctIndex) : '?';
+                  return `오답입니다. 정답은 ${correctLabel}입니다.`;
+                })()}
               </span>
             </div>
             {currentQuestion.explanation && (

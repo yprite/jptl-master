@@ -128,7 +128,7 @@ class SqliteUserVocabularyRepository:
             return self.save(existing)
         else:
             new_user_vocab = UserVocabulary(
-                id=0,
+                id=None,
                 user_id=user_id,
                 vocabulary_id=vocabulary_id,
                 memorization_status=status

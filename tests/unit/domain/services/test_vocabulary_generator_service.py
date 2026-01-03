@@ -6,7 +6,7 @@ TDD 방식으로 VocabularyGeneratorService 검증
 import pytest
 from backend.domain.services.vocabulary_generator_service import VocabularyGeneratorService
 from backend.domain.entities.vocabulary import Vocabulary
-from backend.domain.value_objects.jlpt import JLPTLevel, MemorizationStatus
+from backend.domain.value_objects.jlpt import JLPTLevel
 
 
 class TestVocabularyGeneratorService:
@@ -26,7 +26,6 @@ class TestVocabularyGeneratorService:
             assert vocabulary.word
             assert vocabulary.reading
             assert vocabulary.meaning
-            assert vocabulary.memorization_status == MemorizationStatus.NOT_MEMORIZED
     
     def test_generate_vocabularies_n4(self):
         """N4 단어 생성 테스트"""
@@ -58,7 +57,6 @@ class TestVocabularyGeneratorService:
         assert vocabulary.reading == "てすと"
         assert vocabulary.meaning == "테스트"
         assert vocabulary.level == JLPTLevel.N5
-        assert vocabulary.memorization_status == MemorizationStatus.NOT_MEMORIZED
         assert vocabulary.example_sentence == "これはテストです。"
     
     def test_import_from_list(self):
