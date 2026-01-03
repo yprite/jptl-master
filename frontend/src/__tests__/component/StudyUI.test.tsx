@@ -82,15 +82,16 @@ describe('StudyUI', () => {
   it('should show feedback immediately when selecting an answer', async () => {
     render(<StudyUI questions={mockQuestions} />);
 
-    // name 속성으로 input 찾기
-    const choiceAInput = document.querySelector('input[name="question-1"][value="A"]') as HTMLInputElement;
-    expect(choiceAInput).toBeInTheDocument();
+    // label을 찾아서 클릭 (이렇게 하면 input의 onChange가 트리거됨)
+    const choiceALabel = screen.getByText('A.').closest('label');
+    expect(choiceALabel).toBeInTheDocument();
     
-    // onChange 이벤트를 직접 트리거
+    // label을 클릭하면 내부의 input이 체크되고 onChange가 발생함
     await act(async () => {
-      fireEvent.change(choiceAInput, { target: { value: 'A', checked: true } });
+      fireEvent.click(choiceALabel!);
     });
 
+    // 피드백이 나타날 때까지 대기
     await waitFor(() => {
       expect(screen.getByText('정답입니다!')).toBeInTheDocument();
     }, { timeout: 3000 });
@@ -99,13 +100,13 @@ describe('StudyUI', () => {
   it('should show incorrect feedback when selecting wrong answer', async () => {
     render(<StudyUI questions={mockQuestions} />);
 
-    // name 속성으로 input 찾기
-    const choiceBInput = document.querySelector('input[name="question-1"][value="B"]') as HTMLInputElement;
-    expect(choiceBInput).toBeInTheDocument();
+    // label을 찾아서 클릭
+    const choiceBLabel = screen.getByText('B.').closest('label');
+    expect(choiceBLabel).toBeInTheDocument();
     
-    // onChange 이벤트를 직접 트리거
+    // label을 클릭하면 내부의 input이 체크되고 onChange가 발생함
     await act(async () => {
-      fireEvent.change(choiceBInput, { target: { value: 'B', checked: true } });
+      fireEvent.click(choiceBLabel!);
     });
 
     await waitFor(() => {
@@ -129,13 +130,13 @@ describe('StudyUI', () => {
   it('should highlight correct answer in green', async () => {
     render(<StudyUI questions={mockQuestions} />);
 
-    // name 속성으로 input 찾기
-    const choiceAInput = document.querySelector('input[name="question-1"][value="A"]') as HTMLInputElement;
-    expect(choiceAInput).toBeInTheDocument();
+    // label을 찾아서 클릭
+    const choiceALabel = screen.getByText('A.').closest('label');
+    expect(choiceALabel).toBeInTheDocument();
     
-    // onChange 이벤트를 직접 트리거
+    // label을 클릭하면 내부의 input이 체크되고 onChange가 발생함
     await act(async () => {
-      fireEvent.change(choiceAInput, { target: { value: 'A', checked: true } });
+      fireEvent.click(choiceALabel!);
     });
 
     await waitFor(() => {

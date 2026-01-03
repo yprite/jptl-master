@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import AdminVocabularyManagementUI from '../../components/organisms/AdminVocabularyManagementUI';
 import { Vocabulary } from '../../types/api';
@@ -162,16 +162,22 @@ describe('AdminVocabularyManagementUI', () => {
     });
 
     const editButton = screen.getByText('수정');
-    fireEvent.click(editButton);
-
-    // edit 모드로 전환되었는지 확인 (h2 태그의 텍스트 확인)
-    await waitFor(() => {
-      // h2 태그로 직접 확인
-      const headings = screen.getAllByRole('heading');
-      const editHeading = headings.find(h => h.textContent === '단어 수정');
-      expect(editHeading).toBeInTheDocument();
-      expect(screen.getByDisplayValue('こんにちは')).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(editButton);
     });
+
+    // edit 모드로 전환되었는지 확인
+    await waitFor(() => {
+      // "단어 수정" 텍스트가 있는지 확인 (h2 태그 내부)
+      expect(screen.getByText('단어 수정')).toBeInTheDocument();
+    });
+
+    // input 값 확인 (useEffect로 폼이 업데이트될 때까지 대기)
+    await waitFor(() => {
+      const wordInput = screen.getByLabelText('단어 *');
+      expect(wordInput).toBeInTheDocument();
+      expect((wordInput as HTMLInputElement).value).toBe('こんにちは');
+    }, { timeout: 3000 });
   });
 
   it('should handle error when loading vocabularies fails', async () => {
