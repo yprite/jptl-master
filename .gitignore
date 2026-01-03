@@ -188,3 +188,10 @@ logs/
 *.temp
 coverage.json
 coverage/*
+
+# TTS audio files (generated during testing/development)
+backend/static/audio/tts/*.mp3
+
+# Playwright test reports
+frontend/playwright-report/
+test-results/
