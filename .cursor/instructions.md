@@ -13,8 +13,9 @@ This document explains how to use the rule system in `.cursor/rules/`.
    - Writing tests → Read `rules/testing.md`
    - Refactoring → Read `rules/refactoring.md`
    - Legacy systems → Read `rules/legacy.md`
-3. [ ] **Review Work Completion Checklist** - See `rules/core.md` → "Work Completion Checklist"
-4. [ ] **Confirm understanding** - Ensure you understand all applicable rules before proceeding
+3. [ ] **Consult architecture docs for non-trivial changes** - See "Architecture Knowledge" section below
+4. [ ] **Review Work Completion Checklist** - See `rules/core.md` → "Work Completion Checklist"
+5. [ ] **Confirm understanding** - Ensure you understand all applicable rules before proceeding
 
 **Violation**: Starting work without reading `rules/core.md` is FORBIDDEN.
 
@@ -136,6 +137,37 @@ Rules are organized by context to reduce cognitive load and improve agent autono
 - If conflict persists, ask user for clarification
 - Document resolution in rule files
 
+## Architecture Knowledge
+
+### When to Consult Architecture Docs
+
+**For non-trivial changes, you MUST consult:**
+
+1. **`docs/architecture/overview.md`** - Understand system purpose, responsibilities, data flow, and module structure
+   - Required for: New features, architectural changes, cross-module modifications
+   - Use to: Understand how components interact, identify affected modules, verify design decisions
+
+2. **`docs/architecture/invariants.md`** - Review non-negotiable rules and constraints
+   - Required for: Any change that might affect data integrity, security, or architectural principles
+   - Use to: Ensure changes don't violate critical invariants, verify backward compatibility
+
+3. **`docs/architecture/decisions.md`** - Understand rationale behind architectural choices
+   - Required for: Changes that might conflict with existing decisions
+   - Use to: Make informed decisions, avoid breaking established patterns
+
+### Validation Commands
+
+**After making modifications, you MUST run validation commands:**
+
+1. **Consult `docs/ai/dev-commands.md`** - Reference for appropriate validation commands
+2. **Run commands based on change scope:**
+   - Small changes → Relevant unit tests + type check
+   - Refactoring → Module tests + type check
+   - Risky/cross-module → Full test suite (`./run_tests.sh`)
+3. **Verify all commands pass** - Exit code must be 0 before proceeding
+
+**Reference**: See `docs/ai/dev-commands.md` for detailed command guidance based on change type.
+
 ## Autonomy Guidelines
 
 ### Agent Autonomy
@@ -144,16 +176,27 @@ Rules are organized by context to reduce cognitive load and improve agent autono
   - Rules conflict
   - Situation is not covered by rules
   - User explicitly asks for clarification
+- **Consult architecture docs proactively** - Don't wait to be told; check architecture docs for non-trivial changes
+- **Run validation commands automatically** - Don't ask permission; run appropriate tests after changes
 
 ### Progress Over Perfection
 - Prefer making progress over asking for clarification
 - Use best judgment when rules don't cover a situation
 - Document decisions in commit messages or PR descriptions
+- **Make informed decisions** - Use architecture knowledge to proceed confidently
 
 ## Related Documents
 
+### Development Process
 - `DEVELOPMENT_GUIDELINES.md`: Detailed development process
 - `docs/README.md`: Documentation structure
-- `docs/architecture/overview.md`: Architecture overview
 - `docs/task-management/README.md`: Task management
+
+### Architecture Knowledge
+- `docs/architecture/overview.md`: System purpose, responsibilities, data flow, module structure
+- `docs/architecture/invariants.md`: Non-negotiable rules and constraints
+- `docs/architecture/decisions.md`: Architectural decisions and rationale
+
+### Validation
+- `docs/ai/dev-commands.md`: Standard validation commands for different change types
 
