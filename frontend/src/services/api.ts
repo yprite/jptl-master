@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하는 중앙화된 서비스
  */
 
-import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics, Vocabulary, VocabularyReview, ReviewStatistics } from '../types/api';
+import { Test, TestList, Result, ResultList, Question, UserPerformance, UserHistory, UserProfile, AdminUser, AdminQuestion, AdminStatistics, Vocabulary, VocabularyReview, ReviewStatistics, DailyGoal, DailyGoalWithStatistics } from '../types/api';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1';
@@ -374,6 +374,28 @@ export const userApi = {
    */
   async getUserHistory(userId: number): Promise<UserHistory[]> {
     return fetchApi<UserHistory[]>(`/users/${userId}/history`);
+  },
+
+  /**
+   * 일일 학습 목표 조회
+   */
+  async getDailyGoal(userId: number): Promise<DailyGoalWithStatistics> {
+    const response = await fetchApi<{ success: boolean; data: DailyGoalWithStatistics; message: string }>(`/users/${userId}/daily-goal`);
+    return response.data;
+  },
+
+  /**
+   * 일일 학습 목표 설정/업데이트
+   */
+  async updateDailyGoal(
+    userId: number,
+    request: { target_questions?: number; target_minutes?: number }
+  ): Promise<DailyGoal> {
+    const response = await fetchApi<{ success: boolean; data: DailyGoal; message: string }>(`/users/${userId}/daily-goal`, {
+      method: 'PUT',
+      body: JSON.stringify(request),
+    });
+    return response.data;
   },
 };
 

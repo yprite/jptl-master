@@ -7,6 +7,7 @@ import LoginUI from './components/organisms/LoginUI';
 import UserPerformanceUI from './components/organisms/UserPerformanceUI';
 import UserHistoryUI from './components/organisms/UserHistoryUI';
 import UserProfileUI from './components/organisms/UserProfileUI';
+import DailyGoalUI from './components/organisms/DailyGoalUI';
 import FlashcardUI from './components/organisms/FlashcardUI';
 import VocabularyListUI from './components/organisms/VocabularyListUI';
 import VocabularyReviewUI from './components/organisms/VocabularyReviewUI';
@@ -21,7 +22,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Voca
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -609,6 +610,17 @@ function App() {
     }
   };
 
+  // 일일 목표 조회
+  const handleViewDailyGoal = async () => {
+    // 인증 확인
+    if (!authService.isAuthenticated() || !user) {
+      setState('login');
+      return;
+    }
+
+    setState('daily-goal');
+  };
+
   // 프로필 업데이트
   const handleProfileUpdate = async (updates: { username?: string; target_level?: string }) => {
     if (!user) {
@@ -957,6 +969,12 @@ function App() {
                 프로필 관리
               </button>
               <button
+                onClick={handleViewDailyGoal}
+                className="daily-goal-button"
+              >
+                일일 목표
+              </button>
+              <button
                 onClick={handleViewWrongAnswers}
                 className="wrong-answers-button"
               >
@@ -1107,6 +1125,17 @@ function App() {
           <section className="profile-section">
             <UserProfileUI profile={currentProfile} onUpdate={handleProfileUpdate} />
             <div className="profile-actions">
+              <button onClick={handleRestart} className="back-button">
+                돌아가기
+              </button>
+            </div>
+          </section>
+        )}
+
+        {state === 'daily-goal' && user && (
+          <section className="daily-goal-section">
+            <DailyGoalUI userId={user.id} />
+            <div className="daily-goal-actions">
               <button onClick={handleRestart} className="back-button">
                 돌아가기
               </button>

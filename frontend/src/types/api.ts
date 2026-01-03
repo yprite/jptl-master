@@ -180,3 +180,31 @@ export interface ReviewStatistics {
   success_rate: number;
 }
 
+export interface DailyGoal {
+  target_questions: number;
+  target_minutes: number;
+}
+
+export interface DailyStatistics {
+  date: string;
+  total_questions: number;
+  total_minutes: number;
+  study_sessions: number;
+}
+
+export interface GoalAchievement {
+  questions_achievement_rate: number;
+  minutes_achievement_rate: number;
+  overall_achievement_rate: number;
+  is_questions_achieved: boolean;
+  is_minutes_achieved: boolean;
+  is_fully_achieved: boolean;
+  has_goal: boolean;
+}
+
+export interface DailyGoalWithStatistics {
+  goal: DailyGoal;
+  statistics: DailyStatistics;
+  achievement: GoalAchievement;
+}
+
