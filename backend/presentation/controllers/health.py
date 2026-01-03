@@ -1,21 +1,24 @@
 """
-헬스 체크 컨트롤러
+JLPT 헬스 체크 컨트롤러
 """
 
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter
+from datetime import datetime
 
-from infrastructure.config.database import get_db
+from backend.infrastructure.config.database import get_database
 
 router = APIRouter()
 
 @router.get("/health")
-async def health_check(db: AsyncSession = Depends(get_db)):
+async def health_check():
     """시스템 헬스 체크"""
     # 데이터베이스 연결 테스트
     try:
-        await db.execute("SELECT 1")
-        db_status = "healthy"
+        db = get_database()
+        with db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT 1")
+            db_status = "healthy"
     except Exception:
         db_status = "unhealthy"
 
@@ -23,7 +26,7 @@ async def health_check(db: AsyncSession = Depends(get_db)):
         "status": "healthy" if db_status == "healthy" else "unhealthy",
         "database": db_status,
         "version": "1.0.0",
-        "timestamp": "2024-12-27"
+        "timestamp": datetime.now().isoformat()
     }
 
 @router.get("/ready")

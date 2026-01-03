@@ -1,0 +1,2736 @@
+{
+  "N5": [
+    {
+      "word": "こんにちは",
+      "reading": "こんにちは",
+      "meaning": "안녕하세요",
+      "example": "こんにちは、はじめまして。"
+    },
+    {
+      "word": "ありがとう",
+      "reading": "ありがとう",
+      "meaning": "고마워요",
+      "example": "手伝ってくれて、ありがとう。"
+    },
+    {
+      "word": "はい",
+      "reading": "はい",
+      "meaning": "네",
+      "example": "はい、わかりました。"
+    },
+    {
+      "word": "いいえ",
+      "reading": "いいえ",
+      "meaning": "아니요",
+      "example": "いいえ、ちがいます。"
+    },
+    {
+      "word": "すみません",
+      "reading": "すみません",
+      "meaning": "실례합니다/죄송합니다",
+      "example": "すみません、駅はどこですか。"
+    },
+    {
+      "word": "おねがいします",
+      "reading": "おねがいします",
+      "meaning": "부탁합니다",
+      "example": "もう一度おねがいします。"
+    },
+    {
+      "word": "名前",
+      "reading": "なまえ",
+      "meaning": "이름",
+      "example": "名前はキムです。"
+    },
+    {
+      "word": "人",
+      "reading": "ひと",
+      "meaning": "사람",
+      "example": "あの人は先生です。"
+    },
+    {
+      "word": "友だち",
+      "reading": "ともだち",
+      "meaning": "친구",
+      "example": "友だちと話します。"
+    },
+    {
+      "word": "先生",
+      "reading": "せんせい",
+      "meaning": "선생님",
+      "example": "先生に質問します。"
+    },
+    {
+      "word": "学生",
+      "reading": "がくせい",
+      "meaning": "학생",
+      "example": "わたしは学生です。"
+    },
+    {
+      "word": "学校",
+      "reading": "がっこう",
+      "meaning": "학교",
+      "example": "毎日学校へ行きます。"
+    },
+    {
+      "word": "会社",
+      "reading": "かいしゃ",
+      "meaning": "회사",
+      "example": "会社で働いています。"
+    },
+    {
+      "word": "家",
+      "reading": "いえ",
+      "meaning": "집",
+      "example": "家に帰ります。"
+    },
+    {
+      "word": "部屋",
+      "reading": "へや",
+      "meaning": "방",
+      "example": "部屋がきれいです。"
+    },
+    {
+      "word": "本",
+      "reading": "ほん",
+      "meaning": "책",
+      "example": "本を読みます。"
+    },
+    {
+      "word": "水",
+      "reading": "みず",
+      "meaning": "물",
+      "example": "水を飲みます。"
+    },
+    {
+      "word": "お茶",
+      "reading": "おちゃ",
+      "meaning": "차",
+      "example": "お茶をください。"
+    },
+    {
+      "word": "ごはん",
+      "reading": "ごはん",
+      "meaning": "밥/식사",
+      "example": "ごはんを食べます。"
+    },
+    {
+      "word": "朝",
+      "reading": "あさ",
+      "meaning": "아침",
+      "example": "朝は早く起きます。"
+    },
+    {
+      "word": "昼",
+      "reading": "ひる",
+      "meaning": "낮/점심",
+      "example": "昼にごはんを食べます。"
+    },
+    {
+      "word": "夜",
+      "reading": "よる",
+      "meaning": "밤",
+      "example": "夜は家にいます。"
+    },
+    {
+      "word": "今日",
+      "reading": "きょう",
+      "meaning": "오늘",
+      "example": "今日は忙しいです。"
+    },
+    {
+      "word": "明日",
+      "reading": "あした",
+      "meaning": "내일",
+      "example": "明日、休みです。"
+    },
+    {
+      "word": "昨日",
+      "reading": "きのう",
+      "meaning": "어제",
+      "example": "昨日は雨でした。"
+    },
+    {
+      "word": "今",
+      "reading": "いま",
+      "meaning": "지금",
+      "example": "今、勉強しています。"
+    },
+    {
+      "word": "時間",
+      "reading": "じかん",
+      "meaning": "시간",
+      "example": "時間がありません。"
+    },
+    {
+      "word": "駅",
+      "reading": "えき",
+      "meaning": "역",
+      "example": "駅で会いましょう。"
+    },
+    {
+      "word": "電車",
+      "reading": "でんしゃ",
+      "meaning": "전철",
+      "example": "電車に乗ります。"
+    },
+    {
+      "word": "バス",
+      "reading": "ばす",
+      "meaning": "버스",
+      "example": "バスで行きます。"
+    },
+    {
+      "word": "店",
+      "reading": "みせ",
+      "meaning": "가게",
+      "example": "この店は安いです。"
+    },
+    {
+      "word": "行く",
+      "reading": "いく",
+      "meaning": "가다",
+      "example": "学校へ行きます。"
+    },
+    {
+      "word": "来る",
+      "reading": "くる",
+      "meaning": "오다",
+      "example": "友だちが来ます。"
+    },
+    {
+      "word": "帰る",
+      "reading": "かえる",
+      "meaning": "돌아가다",
+      "example": "家に帰ります。"
+    },
+    {
+      "word": "食べる",
+      "reading": "たべる",
+      "meaning": "먹다",
+      "example": "パンを食べます。"
+    },
+    {
+      "word": "飲む",
+      "reading": "のむ",
+      "meaning": "마시다",
+      "example": "水を飲みます。"
+    },
+    {
+      "word": "見る",
+      "reading": "みる",
+      "meaning": "보다",
+      "example": "テレビを見ます。"
+    },
+    {
+      "word": "聞く",
+      "reading": "きく",
+      "meaning": "듣다/묻다",
+      "example": "音楽を聞きます。"
+    },
+    {
+      "word": "話す",
+      "reading": "はなす",
+      "meaning": "말하다",
+      "example": "日本語で話します。"
+    },
+    {
+      "word": "読む",
+      "reading": "よむ",
+      "meaning": "읽다",
+      "example": "新聞を読みます。"
+    },
+    {
+      "word": "書く",
+      "reading": "かく",
+      "meaning": "쓰다",
+      "example": "名前を書きます。"
+    },
+    {
+      "word": "勉強する",
+      "reading": "べんきょうする",
+      "meaning": "공부하다",
+      "example": "日本語を勉強します。"
+    },
+    {
+      "word": "仕事",
+      "reading": "しごと",
+      "meaning": "일",
+      "example": "仕事が忙しいです。"
+    },
+    {
+      "word": "休む",
+      "reading": "やすむ",
+      "meaning": "쉬다",
+      "example": "今日は休みます。"
+    },
+    {
+      "word": "大きい",
+      "reading": "おおきい",
+      "meaning": "크다",
+      "example": "大きい家です。"
+    },
+    {
+      "word": "小さい",
+      "reading": "ちいさい",
+      "meaning": "작다",
+      "example": "小さい犬です。"
+    },
+    {
+      "word": "新しい",
+      "reading": "あたらしい",
+      "meaning": "새롭다",
+      "example": "新しいかばんです。"
+    },
+    {
+      "word": "古い",
+      "reading": "ふるい",
+      "meaning": "오래되다",
+      "example": "古い本です。"
+    },
+    {
+      "word": "とても",
+      "reading": "とても",
+      "meaning": "아주",
+      "example": "とてもおいしいです。"
+    },
+    {
+      "word": "天気",
+      "reading": "てんき",
+      "meaning": "날씨",
+      "example": "今日は天気がいいです。"
+    },
+    {
+      "word": "雨",
+      "reading": "あめ",
+      "meaning": "비",
+      "example": "雨が降っています。"
+    },
+    {
+      "word": "雪",
+      "reading": "ゆき",
+      "meaning": "눈",
+      "example": "冬は雪が多いです。"
+    },
+    {
+      "word": "風",
+      "reading": "かぜ",
+      "meaning": "바람",
+      "example": "風が強いです。"
+    },
+    {
+      "word": "空",
+      "reading": "そら",
+      "meaning": "하늘",
+      "example": "空が青いです。"
+    },
+    {
+      "word": "暑い",
+      "reading": "あつい",
+      "meaning": "덥다",
+      "example": "今日は暑いです。"
+    },
+    {
+      "word": "寒い",
+      "reading": "さむい",
+      "meaning": "춥다",
+      "example": "冬は寒いです。"
+    },
+    {
+      "word": "暖かい",
+      "reading": "あたたかい",
+      "meaning": "따뜻하다",
+      "example": "今日は暖かいですね。"
+    },
+    {
+      "word": "涼しい",
+      "reading": "すずしい",
+      "meaning": "시원하다",
+      "example": "夜は涼しいです。"
+    },
+    {
+      "word": "春",
+      "reading": "はる",
+      "meaning": "봄",
+      "example": "春に花が咲きます。"
+    },
+    {
+      "word": "夏",
+      "reading": "なつ",
+      "meaning": "여름",
+      "example": "夏は海に行きます。"
+    },
+    {
+      "word": "秋",
+      "reading": "あき",
+      "meaning": "가을",
+      "example": "秋は涼しいです。"
+    },
+    {
+      "word": "冬",
+      "reading": "ふゆ",
+      "meaning": "겨울",
+      "example": "冬は雪が降ります。"
+    },
+    {
+      "word": "月",
+      "reading": "つき",
+      "meaning": "달",
+      "example": "月がきれいです。"
+    },
+    {
+      "word": "火",
+      "reading": "ひ",
+      "meaning": "불",
+      "example": "火を使います。"
+    },
+    {
+      "word": "水曜日",
+      "reading": "すいようび",
+      "meaning": "수요일",
+      "example": "水曜日に会います。"
+    },
+    {
+      "word": "金曜日",
+      "reading": "きんようび",
+      "meaning": "금요일",
+      "example": "金曜日は忙しいです。"
+    },
+    {
+      "word": "朝ごはん",
+      "reading": "あさごはん",
+      "meaning": "아침밥",
+      "example": "朝ごはんを食べます。"
+    },
+    {
+      "word": "昼ごはん",
+      "reading": "ひるごはん",
+      "meaning": "점심밥",
+      "example": "昼ごはんはラーメンです。"
+    },
+    {
+      "word": "晩ごはん",
+      "reading": "ばんごはん",
+      "meaning": "저녁밥",
+      "example": "晩ごはんを作ります。"
+    },
+    {
+      "word": "肉",
+      "reading": "にく",
+      "meaning": "고기",
+      "example": "肉を食べます。"
+    },
+    {
+      "word": "魚",
+      "reading": "さかな",
+      "meaning": "생선",
+      "example": "魚が好きです。"
+    },
+    {
+      "word": "野菜",
+      "reading": "やさい",
+      "meaning": "채소",
+      "example": "野菜をたくさん食べます。"
+    },
+    {
+      "word": "果物",
+      "reading": "くだもの",
+      "meaning": "과일",
+      "example": "果物は甘いです。"
+    },
+    {
+      "word": "パン",
+      "reading": "ぱん",
+      "meaning": "빵",
+      "example": "朝はパンを食べます。"
+    },
+    {
+      "word": "牛乳",
+      "reading": "ぎゅうにゅう",
+      "meaning": "우유",
+      "example": "牛乳を飲みます。"
+    },
+    {
+      "word": "コーヒー",
+      "reading": "こーひー",
+      "meaning": "커피",
+      "example": "コーヒーが好きです。"
+    },
+    {
+      "word": "買い物",
+      "reading": "かいもの",
+      "meaning": "쇼핑",
+      "example": "買い物に行きます。"
+    },
+    {
+      "word": "旅行",
+      "reading": "りょこう",
+      "meaning": "여행",
+      "example": "日本へ旅行します。"
+    },
+    {
+      "word": "歩く",
+      "reading": "あるく",
+      "meaning": "걷다",
+      "example": "駅まで歩きます。"
+    },
+    {
+      "word": "走る",
+      "reading": "はしる",
+      "meaning": "달리다",
+      "example": "公園で走ります。"
+    },
+    {
+      "word": "立つ",
+      "reading": "たつ",
+      "meaning": "서다",
+      "example": "ここに立ってください。"
+    },
+    {
+      "word": "座る",
+      "reading": "すわる",
+      "meaning": "앉다",
+      "example": "椅子に座ります。"
+    },
+    {
+      "word": "開ける",
+      "reading": "あける",
+      "meaning": "열다",
+      "example": "ドアを開けます。"
+    },
+    {
+      "word": "閉める",
+      "reading": "しめる",
+      "meaning": "닫다",
+      "example": "窓を閉めます。"
+    },
+    {
+      "word": "使う",
+      "reading": "つかう",
+      "meaning": "사용하다",
+      "example": "スマホを使います。"
+    },
+    {
+      "word": "作る",
+      "reading": "つくる",
+      "meaning": "만들다",
+      "example": "料理を作ります。"
+    },
+    {
+      "word": "知る",
+      "reading": "しる",
+      "meaning": "알다",
+      "example": "そのことを知っています。"
+    },
+    {
+      "word": "分かる",
+      "reading": "わかる",
+      "meaning": "알다/이해하다",
+      "example": "日本語が分かります。"
+    },
+    {
+      "word": "好き",
+      "reading": "すき",
+      "meaning": "좋아하다",
+      "example": "音楽が好きです。"
+    },
+    {
+      "word": "嫌い",
+      "reading": "きらい",
+      "meaning": "싫어하다",
+      "example": "雨が嫌いです。"
+    },
+    {
+      "word": "上",
+      "reading": "うえ",
+      "meaning": "위",
+      "example": "机の上にあります。"
+    },
+    {
+      "word": "下",
+      "reading": "した",
+      "meaning": "아래",
+      "example": "椅子の下です。"
+    },
+    {
+      "word": "中",
+      "reading": "なか",
+      "meaning": "안",
+      "example": "かばんの中です。"
+    },
+    {
+      "word": "外",
+      "reading": "そと",
+      "meaning": "밖",
+      "example": "外は寒いです。"
+    },
+    {
+      "word": "前",
+      "reading": "まえ",
+      "meaning": "앞",
+      "example": "駅の前です。"
+    },
+    {
+      "word": "後ろ",
+      "reading": "うしろ",
+      "meaning": "뒤",
+      "example": "後ろを見てください。"
+    },
+    {
+      "word": "近い",
+      "reading": "ちかい",
+      "meaning": "가깝다",
+      "example": "家は近いです。"
+    },
+    {
+      "word": "遠い",
+      "reading": "とおい",
+      "meaning": "멀다",
+      "example": "学校は遠いです。"
+    },
+    {
+      "word": "多い",
+      "reading": "おおい",
+      "meaning": "많다",
+      "example": "人が多いです。"
+    },
+    {
+      "word": "少ない",
+      "reading": "すくない",
+      "meaning": "적다",
+      "example": "時間が少ないです。"
+    },
+    {
+      "word": "早い",
+      "reading": "はやい",
+      "meaning": "빠르다/이르다",
+      "example": "朝が早いです。"
+    },
+    {
+      "word": "遅い",
+      "reading": "おそい",
+      "meaning": "늦다",
+      "example": "電車が遅いです。"
+    },
+    {
+      "word": "きれい",
+      "reading": "きれい",
+      "meaning": "깨끗하다/예쁘다",
+      "example": "部屋がきれいです。"
+    },
+    {
+      "word": "静か",
+      "reading": "しずか",
+      "meaning": "조용하다",
+      "example": "ここは静かです。"
+    },
+    {
+      "word": "にぎやか",
+      "reading": "にぎやか",
+      "meaning": "번화하다",
+      "example": "町はにぎやかです。"
+    },
+    {
+      "word": "便利",
+      "reading": "べんり",
+      "meaning": "편리하다",
+      "example": "この店は便利です。"
+    },
+    {
+      "word": "父",
+      "reading": "ちち",
+      "meaning": "아버지",
+      "example": "父は会社で働いています。"
+    },
+    {
+      "word": "母",
+      "reading": "はは",
+      "meaning": "어머니",
+      "example": "母は料理が上手です。"
+    },
+    {
+      "word": "兄",
+      "reading": "あに",
+      "meaning": "형/오빠",
+      "example": "兄は背が高いです。"
+    },
+    {
+      "word": "姉",
+      "reading": "あね",
+      "meaning": "누나/언니",
+      "example": "姉は学生です。"
+    },
+    {
+      "word": "弟",
+      "reading": "おとうと",
+      "meaning": "남동생",
+      "example": "弟は小学生です。"
+    },
+    {
+      "word": "妹",
+      "reading": "いもうと",
+      "meaning": "여동생",
+      "example": "妹と遊びます。"
+    },
+    {
+      "word": "家族",
+      "reading": "かぞく",
+      "meaning": "가족",
+      "example": "家族と旅行します。"
+    },
+    {
+      "word": "子ども",
+      "reading": "こども",
+      "meaning": "아이",
+      "example": "子どもが公園で遊んでいます。"
+    },
+    {
+      "word": "男",
+      "reading": "おとこ",
+      "meaning": "남자",
+      "example": "あの男の人は先生です。"
+    },
+    {
+      "word": "女",
+      "reading": "おんな",
+      "meaning": "여자",
+      "example": "女の人が来ました。"
+    },
+    {
+      "word": "体",
+      "reading": "からだ",
+      "meaning": "몸",
+      "example": "体が元気です。"
+    },
+    {
+      "word": "頭",
+      "reading": "あたま",
+      "meaning": "머리",
+      "example": "頭が痛いです。"
+    },
+    {
+      "word": "目",
+      "reading": "め",
+      "meaning": "눈",
+      "example": "目が大きいです。"
+    },
+    {
+      "word": "耳",
+      "reading": "みみ",
+      "meaning": "귀",
+      "example": "耳で音を聞きます。"
+    },
+    {
+      "word": "口",
+      "reading": "くち",
+      "meaning": "입",
+      "example": "口を開けてください。"
+    },
+    {
+      "word": "手",
+      "reading": "て",
+      "meaning": "손",
+      "example": "手を洗います。"
+    },
+    {
+      "word": "足",
+      "reading": "あし",
+      "meaning": "발/다리",
+      "example": "足が疲れました。"
+    },
+    {
+      "word": "病院",
+      "reading": "びょういん",
+      "meaning": "병원",
+      "example": "病院へ行きます。"
+    },
+    {
+      "word": "薬",
+      "reading": "くすり",
+      "meaning": "약",
+      "example": "薬を飲みます。"
+    },
+    {
+      "word": "町",
+      "reading": "まち",
+      "meaning": "마을/도시",
+      "example": "この町は静かです。"
+    },
+    {
+      "word": "道",
+      "reading": "みち",
+      "meaning": "길",
+      "example": "この道をまっすぐ行きます。"
+    },
+    {
+      "word": "公園",
+      "reading": "こうえん",
+      "meaning": "공원",
+      "example": "公園で散歩します。"
+    },
+    {
+      "word": "建物",
+      "reading": "たてもの",
+      "meaning": "건물",
+      "example": "高い建物です。"
+    },
+    {
+      "word": "机",
+      "reading": "つくえ",
+      "meaning": "책상",
+      "example": "机の上に本があります。"
+    },
+    {
+      "word": "椅子",
+      "reading": "いす",
+      "meaning": "의자",
+      "example": "椅子に座ります。"
+    },
+    {
+      "word": "窓",
+      "reading": "まど",
+      "meaning": "창문",
+      "example": "窓を開けます。"
+    },
+    {
+      "word": "ドア",
+      "reading": "どあ",
+      "meaning": "문",
+      "example": "ドアを閉めてください。"
+    },
+    {
+      "word": "服",
+      "reading": "ふく",
+      "meaning": "옷",
+      "example": "新しい服を買いました。"
+    },
+    {
+      "word": "靴",
+      "reading": "くつ",
+      "meaning": "신발",
+      "example": "靴をはきます。"
+    },
+    {
+      "word": "帽子",
+      "reading": "ぼうし",
+      "meaning": "모자",
+      "example": "帽子をかぶります。"
+    },
+    {
+      "word": "天気予報",
+      "reading": "てんきよほう",
+      "meaning": "일기예보",
+      "example": "天気予報を見ます。"
+    },
+    {
+      "word": "写真",
+      "reading": "しゃしん",
+      "meaning": "사진",
+      "example": "写真を撮ります。"
+    },
+    {
+      "word": "音楽",
+      "reading": "おんがく",
+      "meaning": "음악",
+      "example": "音楽を聞きます。"
+    },
+    {
+      "word": "映画",
+      "reading": "えいが",
+      "meaning": "영화",
+      "example": "映画を見ました。"
+    },
+    {
+      "word": "電話",
+      "reading": "でんわ",
+      "meaning": "전화",
+      "example": "電話をかけます。"
+    },
+    {
+      "word": "メール",
+      "reading": "めーる",
+      "meaning": "메일",
+      "example": "メールを送ります。"
+    },
+    {
+      "word": "切る",
+      "reading": "きる",
+      "meaning": "자르다",
+      "example": "紙を切ります。"
+    },
+    {
+      "word": "入る",
+      "reading": "はいる",
+      "meaning": "들어가다",
+      "example": "部屋に入ります。"
+    },
+    {
+      "word": "出る",
+      "reading": "でる",
+      "meaning": "나가다",
+      "example": "家を出ます。"
+    },
+    {
+      "word": "始まる",
+      "reading": "はじまる",
+      "meaning": "시작되다",
+      "example": "授業が始まります。"
+    },
+    {
+      "word": "終わる",
+      "reading": "おわる",
+      "meaning": "끝나다",
+      "example": "仕事が終わります。"
+    },
+    {
+      "word": "持つ",
+      "reading": "もつ",
+      "meaning": "가지다/들다",
+      "example": "かばんを持ちます。"
+    },
+    {
+      "word": "置く",
+      "reading": "おく",
+      "meaning": "놓다",
+      "example": "机に置きます。"
+    },
+    {
+      "word": "借りる",
+      "reading": "かりる",
+      "meaning": "빌리다",
+      "example": "本を借ります。"
+    },
+    {
+      "word": "返す",
+      "reading": "かえす",
+      "meaning": "돌려주다",
+      "example": "図書館に返します。"
+    },
+    {
+      "word": "高い",
+      "reading": "たかい",
+      "meaning": "비싸다/높다",
+      "example": "この店は高いです。"
+    },
+    {
+      "word": "安い",
+      "reading": "やすい",
+      "meaning": "싸다",
+      "example": "安い服を買います。"
+    },
+    {
+      "word": "難しい",
+      "reading": "むずかしい",
+      "meaning": "어렵다",
+      "example": "日本語は難しいです。"
+    },
+    {
+      "word": "簡単",
+      "reading": "かんたん",
+      "meaning": "간단하다",
+      "example": "この問題は簡単です。"
+    },
+    {
+      "word": "早く",
+      "reading": "はやく",
+      "meaning": "빨리",
+      "example": "早く来てください。"
+    },
+    {
+      "word": "ゆっくり",
+      "reading": "ゆっくり",
+      "meaning": "천천히",
+      "example": "ゆっくり話してください。"
+    },
+    {
+      "word": "一人",
+      "reading": "ひとり",
+      "meaning": "한 사람",
+      "example": "一人で行きます。"
+    },
+    {
+      "word": "二人",
+      "reading": "ふたり",
+      "meaning": "두 사람",
+      "example": "二人で食べます。"
+    },
+    {
+      "word": "全部",
+      "reading": "ぜんぶ",
+      "meaning": "전부",
+      "example": "全部終わりました。"
+    },
+    {
+      "word": "本当",
+      "reading": "ほんとう",
+      "meaning": "정말",
+      "example": "それは本当です。"
+    },
+    {
+      "word": "大丈夫",
+      "reading": "だいじょうぶ",
+      "meaning": "괜찮다",
+      "example": "大丈夫です。"
+    },
+    {
+      "word": "毎日",
+      "reading": "まいにち",
+      "meaning": "매일",
+      "example": "毎日日本語を勉強します。"
+    },
+    {
+      "word": "毎週",
+      "reading": "まいしゅう",
+      "meaning": "매주",
+      "example": "毎週スーパーに行きます。"
+    },
+    {
+      "word": "毎年",
+      "reading": "まいとし",
+      "meaning": "매년",
+      "example": "毎年旅行します。"
+    },
+    {
+      "word": "午前",
+      "reading": "ごぜん",
+      "meaning": "오전",
+      "example": "午前9時に始まります。"
+    },
+    {
+      "word": "午後",
+      "reading": "ごご",
+      "meaning": "오후",
+      "example": "午後は忙しいです。"
+    },
+    {
+      "word": "夜中",
+      "reading": "よなか",
+      "meaning": "한밤중",
+      "example": "夜中に目が覚めました。"
+    },
+    {
+      "word": "週",
+      "reading": "しゅう",
+      "meaning": "주",
+      "example": "一週間休みます。"
+    },
+    {
+      "word": "月",
+      "reading": "つき",
+      "meaning": "달",
+      "example": "来月日本へ行きます。"
+    },
+    {
+      "word": "年",
+      "reading": "とし",
+      "meaning": "해/년",
+      "example": "今年は忙しいです。"
+    },
+    {
+      "word": "今週",
+      "reading": "こんしゅう",
+      "meaning": "이번 주",
+      "example": "今週は予定があります。"
+    },
+    {
+      "word": "来週",
+      "reading": "らいしゅう",
+      "meaning": "다음 주",
+      "example": "来週会いましょう。"
+    },
+    {
+      "word": "先週",
+      "reading": "せんしゅう",
+      "meaning": "지난주",
+      "example": "先週旅行しました。"
+    },
+    {
+      "word": "今月",
+      "reading": "こんげつ",
+      "meaning": "이번 달",
+      "example": "今月は忙しいです。"
+    },
+    {
+      "word": "来月",
+      "reading": "らいげつ",
+      "meaning": "다음 달",
+      "example": "来月引っ越します。"
+    },
+    {
+      "word": "先月",
+      "reading": "せんげつ",
+      "meaning": "지난달",
+      "example": "先月日本に行きました。"
+    },
+    {
+      "word": "時",
+      "reading": "とき",
+      "meaning": "때/시",
+      "example": "時間がある時に来てください。"
+    },
+    {
+      "word": "分",
+      "reading": "ふん",
+      "meaning": "분",
+      "example": "10分待ちます。"
+    },
+    {
+      "word": "番号",
+      "reading": "ばんごう",
+      "meaning": "번호",
+      "example": "電話番号を教えてください。"
+    },
+    {
+      "word": "住所",
+      "reading": "じゅうしょ",
+      "meaning": "주소",
+      "example": "住所を書きます。"
+    },
+    {
+      "word": "店員",
+      "reading": "てんいん",
+      "meaning": "점원",
+      "example": "店員に聞きます。"
+    },
+    {
+      "word": "客",
+      "reading": "きゃく",
+      "meaning": "손님",
+      "example": "客が多いです。"
+    },
+    {
+      "word": "値段",
+      "reading": "ねだん",
+      "meaning": "가격",
+      "example": "値段が高いです。"
+    },
+    {
+      "word": "お金",
+      "reading": "おかね",
+      "meaning": "돈",
+      "example": "お金がありません。"
+    },
+    {
+      "word": "切符",
+      "reading": "きっぷ",
+      "meaning": "표",
+      "example": "切符を買います。"
+    },
+    {
+      "word": "入口",
+      "reading": "いりぐち",
+      "meaning": "입구",
+      "example": "入口はこちらです。"
+    },
+    {
+      "word": "出口",
+      "reading": "でぐち",
+      "meaning": "출구",
+      "example": "出口を出ます。"
+    },
+    {
+      "word": "会う",
+      "reading": "あう",
+      "meaning": "만나다",
+      "example": "友だちに会います。"
+    },
+    {
+      "word": "待つ",
+      "reading": "まつ",
+      "meaning": "기다리다",
+      "example": "駅で待ちます。"
+    },
+    {
+      "word": "止まる",
+      "reading": "とまる",
+      "meaning": "멈추다",
+      "example": "電車が止まります。"
+    },
+    {
+      "word": "乗る",
+      "reading": "のる",
+      "meaning": "타다",
+      "example": "バスに乗ります。"
+    },
+    {
+      "word": "降りる",
+      "reading": "おりる",
+      "meaning": "내리다",
+      "example": "次の駅で降ります。"
+    },
+    {
+      "word": "始める",
+      "reading": "はじめる",
+      "meaning": "시작하다",
+      "example": "勉強を始めます。"
+    },
+    {
+      "word": "続ける",
+      "reading": "つづける",
+      "meaning": "계속하다",
+      "example": "仕事を続けます。"
+    },
+    {
+      "word": "やめる",
+      "reading": "やめる",
+      "meaning": "그만두다",
+      "example": "たばこをやめます。"
+    },
+    {
+      "word": "集める",
+      "reading": "あつめる",
+      "meaning": "모으다",
+      "example": "切手を集めます。"
+    },
+    {
+      "word": "洗う",
+      "reading": "あらう",
+      "meaning": "씻다",
+      "example": "手を洗います。"
+    },
+    {
+      "word": "消す",
+      "reading": "けす",
+      "meaning": "끄다/지우다",
+      "example": "電気を消します。"
+    },
+    {
+      "word": "点ける",
+      "reading": "つける",
+      "meaning": "켜다",
+      "example": "電気を点けます。"
+    },
+    {
+      "word": "痛い",
+      "reading": "いたい",
+      "meaning": "아프다",
+      "example": "頭が痛いです。"
+    },
+    {
+      "word": "眠い",
+      "reading": "ねむい",
+      "meaning": "졸리다",
+      "example": "とても眠いです。"
+    },
+    {
+      "word": "忙しい",
+      "reading": "いそがしい",
+      "meaning": "바쁘다",
+      "example": "今日は忙しいです。"
+    },
+    {
+      "word": "楽しい",
+      "reading": "たのしい",
+      "meaning": "즐겁다",
+      "example": "旅行は楽しいです。"
+    },
+    {
+      "word": "うれしい",
+      "reading": "うれしい",
+      "meaning": "기쁘다",
+      "example": "会えてうれしいです。"
+    },
+    {
+      "word": "同じ",
+      "reading": "おなじ",
+      "meaning": "같다",
+      "example": "同じ色です。"
+    },
+    {
+      "word": "違う",
+      "reading": "ちがう",
+      "meaning": "다르다",
+      "example": "答えが違います。"
+    },
+    {
+      "word": "もう",
+      "reading": "もう",
+      "meaning": "이미/벌써",
+      "example": "もう食べました。"
+    },
+    {
+      "word": "まだ",
+      "reading": "まだ",
+      "meaning": "아직",
+      "example": "まだ終わっていません。"
+    },
+    {
+      "word": "すぐ",
+      "reading": "すぐ",
+      "meaning": "곧/바로",
+      "example": "すぐ行きます。"
+    },
+    {
+      "word": "あとで",
+      "reading": "あとで",
+      "meaning": "나중에",
+      "example": "あとで電話します。"
+    },
+    {
+      "word": "一緒に",
+      "reading": "いっしょに",
+      "meaning": "함께",
+      "example": "一緒に行きましょう。"
+    },
+    {
+      "word": "別々",
+      "reading": "べつべつ",
+      "meaning": "각각",
+      "example": "別々に帰ります。"
+    },
+    {
+      "word": "必要",
+      "reading": "ひつよう",
+      "meaning": "필요",
+      "example": "パスポートが必要です。"
+    },
+    {
+      "word": "大切",
+      "reading": "たいせつ",
+      "meaning": "소중하다",
+      "example": "家族は大切です。"
+    },
+    {
+      "word": "問題",
+      "reading": "もんだい",
+      "meaning": "문제",
+      "example": "問題が難しいです。"
+    },
+    {
+      "word": "答え",
+      "reading": "こたえ",
+      "meaning": "정답/대답",
+      "example": "答えを書きます。"
+    },
+    {
+      "word": "天気",
+      "reading": "てんき",
+      "meaning": "날씨",
+      "example": "今日は天気がいいです。"
+    },
+    {
+      "word": "曇り",
+      "reading": "くもり",
+      "meaning": "흐림",
+      "example": "明日は曇りです。"
+    },
+    {
+      "word": "晴れ",
+      "reading": "はれ",
+      "meaning": "맑음",
+      "example": "今日は晴れです。"
+    },
+    {
+      "word": "台風",
+      "reading": "たいふう",
+      "meaning": "태풍",
+      "example": "台風が来ます。"
+    },
+    {
+      "word": "色",
+      "reading": "いろ",
+      "meaning": "색",
+      "example": "この色が好きです。"
+    },
+    {
+      "word": "白",
+      "reading": "しろ",
+      "meaning": "하얀색",
+      "example": "白いシャツです。"
+    },
+    {
+      "word": "黒",
+      "reading": "くろ",
+      "meaning": "검은색",
+      "example": "黒のかばんです。"
+    },
+    {
+      "word": "赤",
+      "reading": "あか",
+      "meaning": "빨간색",
+      "example": "赤いりんごです。"
+    },
+    {
+      "word": "青",
+      "reading": "あお",
+      "meaning": "파란색",
+      "example": "空が青いです。"
+    },
+    {
+      "word": "形",
+      "reading": "かたち",
+      "meaning": "모양",
+      "example": "形がきれいです。"
+    },
+    {
+      "word": "音",
+      "reading": "おと",
+      "meaning": "소리",
+      "example": "大きい音がします。"
+    },
+    {
+      "word": "声",
+      "reading": "こえ",
+      "meaning": "목소리",
+      "example": "声が小さいです。"
+    },
+    {
+      "word": "道具",
+      "reading": "どうぐ",
+      "meaning": "도구",
+      "example": "道具を使います。"
+    },
+    {
+      "word": "鍵",
+      "reading": "かぎ",
+      "meaning": "열쇠",
+      "example": "鍵をなくしました。"
+    },
+    {
+      "word": "時計",
+      "reading": "とけい",
+      "meaning": "시계",
+      "example": "時計を見ます。"
+    },
+    {
+      "word": "雨",
+      "reading": "あめ",
+      "meaning": "비",
+      "example": "雨が降っています。"
+    },
+    {
+      "word": "傘",
+      "reading": "かさ",
+      "meaning": "우산",
+      "example": "傘を持って行きます。"
+    },
+    {
+      "word": "道",
+      "reading": "みち",
+      "meaning": "길",
+      "example": "この道を行きます。"
+    },
+    {
+      "word": "橋",
+      "reading": "はし",
+      "meaning": "다리",
+      "example": "橋を渡ります。"
+    },
+    {
+      "word": "動物",
+      "reading": "どうぶつ",
+      "meaning": "동물",
+      "example": "動物が好きです。"
+    },
+    {
+      "word": "犬",
+      "reading": "いぬ",
+      "meaning": "개",
+      "example": "犬を飼っています。"
+    },
+    {
+      "word": "猫",
+      "reading": "ねこ",
+      "meaning": "고양이",
+      "example": "猫が寝ています。"
+    },
+    {
+      "word": "鳥",
+      "reading": "とり",
+      "meaning": "새",
+      "example": "鳥が飛んでいます。"
+    },
+    {
+      "word": "料理",
+      "reading": "りょうり",
+      "meaning": "요리",
+      "example": "料理を作ります。"
+    },
+    {
+      "word": "味",
+      "reading": "あじ",
+      "meaning": "맛",
+      "example": "味がいいです。"
+    },
+    {
+      "word": "甘い",
+      "reading": "あまい",
+      "meaning": "달다",
+      "example": "このケーキは甘いです。"
+    },
+    {
+      "word": "辛い",
+      "reading": "からい",
+      "meaning": "맵다",
+      "example": "辛い料理です。"
+    },
+    {
+      "word": "苦い",
+      "reading": "にがい",
+      "meaning": "쓰다",
+      "example": "この薬は苦いです。"
+    },
+    {
+      "word": "重い",
+      "reading": "おもい",
+      "meaning": "무겁다",
+      "example": "このかばんは重いです。"
+    },
+    {
+      "word": "軽い",
+      "reading": "かるい",
+      "meaning": "가볍다",
+      "example": "この箱は軽いです。"
+    },
+    {
+      "word": "広い",
+      "reading": "ひろい",
+      "meaning": "넓다",
+      "example": "広い部屋です。"
+    },
+    {
+      "word": "狭い",
+      "reading": "せまい",
+      "meaning": "좁다",
+      "example": "狭い道です。"
+    },
+    {
+      "word": "危ない",
+      "reading": "あぶない",
+      "meaning": "위험하다",
+      "example": "そこは危ないです。"
+    },
+    {
+      "word": "安全",
+      "reading": "あんぜん",
+      "meaning": "안전",
+      "example": "ここは安全です。"
+    },
+    {
+      "word": "始まり",
+      "reading": "はじまり",
+      "meaning": "시작",
+      "example": "映画の始まりです。"
+    },
+    {
+      "word": "終わり",
+      "reading": "おわり",
+      "meaning": "끝",
+      "example": "授業の終わりです。"
+    },
+    {
+      "word": "理由",
+      "reading": "りゆう",
+      "meaning": "이유",
+      "example": "理由を話します。"
+    },
+    {
+      "word": "練習",
+      "reading": "れんしゅう",
+      "meaning": "연습",
+      "example": "毎日練習します。"
+    },
+    {
+      "word": "質問",
+      "reading": "しつもん",
+      "meaning": "질문",
+      "example": "質問があります。"
+    },
+    {
+      "word": "説明",
+      "reading": "せつめい",
+      "meaning": "설명",
+      "example": "先生の説明を聞きます。"
+    },
+    {
+      "word": "準備",
+      "reading": "じゅんび",
+      "meaning": "준비",
+      "example": "旅行の準備をします。"
+    },
+    {
+      "word": "決める",
+      "reading": "きめる",
+      "meaning": "정하다",
+      "example": "時間を決めます。"
+    },
+    {
+      "word": "選ぶ",
+      "reading": "えらぶ",
+      "meaning": "고르다",
+      "example": "色を選びます。"
+    },
+    {
+      "word": "運転",
+      "reading": "うんてん",
+      "meaning": "운전",
+      "example": "車を運転します。"
+    },
+    {
+      "word": "止める",
+      "reading": "とめる",
+      "meaning": "세우다/멈추다",
+      "example": "車を止めます。"
+    },
+    {
+      "word": "働く",
+      "reading": "はたらく",
+      "meaning": "일하다",
+      "example": "会社で働きます。"
+    },
+    {
+      "word": "休み",
+      "reading": "やすみ",
+      "meaning": "휴일/쉼",
+      "example": "今日は休みです。"
+    },
+    {
+      "word": "集まる",
+      "reading": "あつまる",
+      "meaning": "모이다",
+      "example": "人が集まります。"
+    },
+    {
+      "word": "別れる",
+      "reading": "わかれる",
+      "meaning": "헤어지다",
+      "example": "駅で別れます。"
+    },
+    {
+      "word": "助ける",
+      "reading": "たすける",
+      "meaning": "돕다",
+      "example": "友だちを助けます。"
+    },
+    {
+      "word": "守る",
+      "reading": "まもる",
+      "meaning": "지키다",
+      "example": "約束を守ります。"
+    },
+    {
+      "word": "考える",
+      "reading": "かんがえる",
+      "meaning": "생각하다",
+      "example": "よく考えます。"
+    },
+    {
+      "word": "天気予報",
+      "reading": "てんきよほう",
+      "meaning": "일기예보",
+      "example": "天気予報を見ます。"
+    },
+    {
+      "word": "雲",
+      "reading": "くも",
+      "meaning": "구름",
+      "example": "雲が多いです。"
+    },
+    {
+      "word": "気温",
+      "reading": "きおん",
+      "meaning": "기온",
+      "example": "今日は気温が高いです。"
+    },
+    {
+      "word": "場所",
+      "reading": "ばしょ",
+      "meaning": "장소",
+      "example": "場所を教えてください。"
+    },
+    {
+      "word": "地図",
+      "reading": "ちず",
+      "meaning": "지도",
+      "example": "地図を見ます。"
+    },
+    {
+      "word": "交差点",
+      "reading": "こうさてん",
+      "meaning": "교차로",
+      "example": "交差点を右に曲がります。"
+    },
+    {
+      "word": "左",
+      "reading": "ひだり",
+      "meaning": "왼쪽",
+      "example": "左へ行きます。"
+    },
+    {
+      "word": "右",
+      "reading": "みぎ",
+      "meaning": "오른쪽",
+      "example": "右に曲がってください。"
+    },
+    {
+      "word": "真っ直ぐ",
+      "reading": "まっすぐ",
+      "meaning": "곧장",
+      "example": "真っ直ぐ進みます。"
+    },
+    {
+      "word": "近く",
+      "reading": "ちかく",
+      "meaning": "근처",
+      "example": "駅の近くです。"
+    },
+    {
+      "word": "遠く",
+      "reading": "とおく",
+      "meaning": "먼 곳",
+      "example": "遠くに山が見えます。"
+    },
+    {
+      "word": "番号札",
+      "reading": "ばんごうふだ",
+      "meaning": "번호표",
+      "example": "番号札を取ります。"
+    },
+    {
+      "word": "受付",
+      "reading": "うけつけ",
+      "meaning": "접수",
+      "example": "受付で聞きます。"
+    },
+    {
+      "word": "会話",
+      "reading": "かいわ",
+      "meaning": "대화",
+      "example": "日本語で会話します。"
+    },
+    {
+      "word": "意味",
+      "reading": "いみ",
+      "meaning": "의미",
+      "example": "意味が分かりません。"
+    },
+    {
+      "word": "練習する",
+      "reading": "れんしゅうする",
+      "meaning": "연습하다",
+      "example": "発音を練習します。"
+    },
+    {
+      "word": "復習する",
+      "reading": "ふくしゅうする",
+      "meaning": "복습하다",
+      "example": "家で復習します。"
+    },
+    {
+      "word": "宿題",
+      "reading": "しゅくだい",
+      "meaning": "숙제",
+      "example": "宿題があります。"
+    },
+    {
+      "word": "試験",
+      "reading": "しけん",
+      "meaning": "시험",
+      "example": "試験は来週です。"
+    },
+    {
+      "word": "答える",
+      "reading": "こたえる",
+      "meaning": "대답하다",
+      "example": "質問に答えます。"
+    },
+    {
+      "word": "教える",
+      "reading": "おしえる",
+      "meaning": "가르치다",
+      "example": "日本語を教えます。"
+    },
+    {
+      "word": "借りる",
+      "reading": "かりる",
+      "meaning": "빌리다",
+      "example": "図書館で本を借ります。"
+    },
+    {
+      "word": "貸す",
+      "reading": "かす",
+      "meaning": "빌려주다",
+      "example": "友だちに貸します。"
+    },
+    {
+      "word": "送る",
+      "reading": "おくる",
+      "meaning": "보내다",
+      "example": "メールを送ります。"
+    },
+    {
+      "word": "受け取る",
+      "reading": "うけとる",
+      "meaning": "받다",
+      "example": "荷物を受け取ります。"
+    },
+    {
+      "word": "開く",
+      "reading": "ひらく",
+      "meaning": "열리다/열다",
+      "example": "店が開きます。"
+    },
+    {
+      "word": "閉まる",
+      "reading": "しまる",
+      "meaning": "닫히다",
+      "example": "店が閉まります。"
+    },
+    {
+      "word": "使い方",
+      "reading": "つかいかた",
+      "meaning": "사용법",
+      "example": "使い方を聞きます。"
+    },
+    {
+      "word": "説明書",
+      "reading": "せつめいしょ",
+      "meaning": "설명서",
+      "example": "説明書を読みます。"
+    },
+    {
+      "word": "便利",
+      "reading": "べんり",
+      "meaning": "편리하다",
+      "example": "このアプリは便利です。"
+    },
+    {
+      "word": "不便",
+      "reading": "ふべん",
+      "meaning": "불편하다",
+      "example": "ここは少し不便です。"
+    },
+    {
+      "word": "必要",
+      "reading": "ひつよう",
+      "meaning": "필요하다",
+      "example": "お金が必要です。"
+    },
+    {
+      "word": "不要",
+      "reading": "ふよう",
+      "meaning": "불필요하다",
+      "example": "予約は不要です。"
+    },
+    {
+      "word": "始まる",
+      "reading": "はじまる",
+      "meaning": "시작되다",
+      "example": "会議が始まります。"
+    },
+    {
+      "word": "終わる",
+      "reading": "おわる",
+      "meaning": "끝나다",
+      "example": "映画が終わりました。"
+    },
+    {
+      "word": "遅れる",
+      "reading": "おくれる",
+      "meaning": "늦다",
+      "example": "電車が遅れます。"
+    },
+    {
+      "word": "間に合う",
+      "reading": "まにあう",
+      "meaning": "시간에 맞다",
+      "example": "試験に間に合いました。"
+    },
+    {
+      "word": "予約",
+      "reading": "よやく",
+      "meaning": "예약",
+      "example": "ホテルを予約します。"
+    },
+    {
+      "word": "予定",
+      "reading": "よてい",
+      "meaning": "예정",
+      "example": "予定があります。"
+    },
+    {
+      "word": "理由",
+      "reading": "りゆう",
+      "meaning": "이유",
+      "example": "理由を説明します。"
+    },
+    {
+      "word": "結果",
+      "reading": "けっか",
+      "meaning": "결과",
+      "example": "結果を聞きました。"
+    },
+    {
+      "word": "安全",
+      "reading": "あんぜん",
+      "meaning": "안전",
+      "example": "安全に帰ります。"
+    },
+    {
+      "word": "危険",
+      "reading": "きけん",
+      "meaning": "위험",
+      "example": "危険ですから入らないでください。"
+    },
+    {
+      "word": "成功",
+      "reading": "せいこう",
+      "meaning": "성공",
+      "example": "試験に成功しました。"
+    },
+    {
+      "word": "失敗",
+      "reading": "しっぱい",
+      "meaning": "실패",
+      "example": "失敗しました。"
+    },
+    {
+      "word": "簡単",
+      "reading": "かんたん",
+      "meaning": "간단하다",
+      "example": "この問題は簡単です。"
+    },
+    {
+      "word": "大変",
+      "reading": "たいへん",
+      "meaning": "힘들다/큰일",
+      "example": "今日は大変です。"
+    },
+    {
+      "word": "必要書類",
+      "reading": "ひつようしょるい",
+      "meaning": "필요 서류",
+      "example": "必要書類を出します。"
+    },
+    {
+      "word": "用意する",
+      "reading": "よういする",
+      "meaning": "준비하다",
+      "example": "資料を用意します。"
+    },
+    {
+      "word": "確認する",
+      "reading": "かくにんする",
+      "meaning": "확인하다",
+      "example": "内容を確認します。"
+    },
+    {
+      "word": "変更する",
+      "reading": "へんこうする",
+      "meaning": "변경하다",
+      "example": "時間を変更します。"
+    },
+    {
+      "word": "同意",
+      "reading": "どうい",
+      "meaning": "동의",
+      "example": "内容に同意します。"
+    },
+    {
+      "word": "反対",
+      "reading": "はんたい",
+      "meaning": "반대",
+      "example": "その意見に反対です。"
+    },
+    {
+      "word": "以上",
+      "reading": "いじょう",
+      "meaning": "이상",
+      "example": "これで以上です。"
+    },
+    {
+      "word": "以下",
+      "reading": "いか",
+      "meaning": "이하",
+      "example": "18歳以下です。"
+    },
+    {
+      "word": "朝",
+      "reading": "あさ",
+      "meaning": "아침",
+      "example": "朝早く起きます。"
+    },
+    {
+      "word": "昼",
+      "reading": "ひる",
+      "meaning": "낮/점심",
+      "example": "昼にごはんを食べます。"
+    },
+    {
+      "word": "夜",
+      "reading": "よる",
+      "meaning": "밤",
+      "example": "夜は家にいます。"
+    },
+    {
+      "word": "今朝",
+      "reading": "けさ",
+      "meaning": "오늘 아침",
+      "example": "今朝は寒かったです。"
+    },
+    {
+      "word": "今夜",
+      "reading": "こんや",
+      "meaning": "오늘 밤",
+      "example": "今夜映画を見ます。"
+    },
+    {
+      "word": "時々",
+      "reading": "ときどき",
+      "meaning": "가끔",
+      "example": "時々コーヒーを飲みます。"
+    },
+    {
+      "word": "いつも",
+      "reading": "いつも",
+      "meaning": "항상",
+      "example": "いつも日本語を使います。"
+    },
+    {
+      "word": "よく",
+      "reading": "よく",
+      "meaning": "자주/잘",
+      "example": "よく運動します。"
+    },
+    {
+      "word": "あまり",
+      "reading": "あまり",
+      "meaning": "별로(부정)",
+      "example": "あまり食べません。"
+    },
+    {
+      "word": "ぜんぜん",
+      "reading": "ぜんぜん",
+      "meaning": "전혀(부정)",
+      "example": "ぜんぜん分かりません。"
+    },
+    {
+      "word": "天気",
+      "reading": "てんき",
+      "meaning": "날씨",
+      "example": "天気が悪いです。"
+    },
+    {
+      "word": "暑さ",
+      "reading": "あつさ",
+      "meaning": "더위",
+      "example": "暑さに弱いです。"
+    },
+    {
+      "word": "寒さ",
+      "reading": "さむさ",
+      "meaning": "추위",
+      "example": "寒さがきびしいです。"
+    },
+    {
+      "word": "雨",
+      "reading": "あめ",
+      "meaning": "비",
+      "example": "雨がやみました。"
+    },
+    {
+      "word": "雪",
+      "reading": "ゆき",
+      "meaning": "눈",
+      "example": "雪が積もっています。"
+    },
+    {
+      "word": "道",
+      "reading": "みち",
+      "meaning": "길",
+      "example": "この道は安全です。"
+    },
+    {
+      "word": "角",
+      "reading": "かど",
+      "meaning": "모퉁이",
+      "example": "次の角を曲がります。"
+    },
+    {
+      "word": "近所",
+      "reading": "きんじょ",
+      "meaning": "근처",
+      "example": "近所に店があります。"
+    },
+    {
+      "word": "場所",
+      "reading": "ばしょ",
+      "meaning": "장소",
+      "example": "場所を確認します。"
+    },
+    {
+      "word": "机",
+      "reading": "つくえ",
+      "meaning": "책상",
+      "example": "机の上です。"
+    },
+    {
+      "word": "棚",
+      "reading": "たな",
+      "meaning": "선반",
+      "example": "棚に置きます。"
+    },
+    {
+      "word": "紙",
+      "reading": "かみ",
+      "meaning": "종이",
+      "example": "紙に書きます。"
+    },
+    {
+      "word": "ペン",
+      "reading": "ぺん",
+      "meaning": "펜",
+      "example": "ペンを貸してください。"
+    },
+    {
+      "word": "財布",
+      "reading": "さいふ",
+      "meaning": "지갑",
+      "example": "財布を忘れました。"
+    },
+    {
+      "word": "荷物",
+      "reading": "にもつ",
+      "meaning": "짐",
+      "example": "荷物が多いです。"
+    },
+    {
+      "word": "服",
+      "reading": "ふく",
+      "meaning": "옷",
+      "example": "服を着替えます。"
+    },
+    {
+      "word": "帽子",
+      "reading": "ぼうし",
+      "meaning": "모자",
+      "example": "帽子をかぶります。"
+    },
+    {
+      "word": "料理",
+      "reading": "りょうり",
+      "meaning": "요리",
+      "example": "料理が上手です。"
+    },
+    {
+      "word": "昼ごはん",
+      "reading": "ひるごはん",
+      "meaning": "점심밥",
+      "example": "昼ごはんを食べました。"
+    },
+    {
+      "word": "始める",
+      "reading": "はじめる",
+      "meaning": "시작하다",
+      "example": "仕事を始めます。"
+    },
+    {
+      "word": "終える",
+      "reading": "おえる",
+      "meaning": "마치다",
+      "example": "作業を終えます。"
+    },
+    {
+      "word": "続く",
+      "reading": "つづく",
+      "meaning": "계속되다",
+      "example": "雨が続きます。"
+    },
+    {
+      "word": "入れる",
+      "reading": "いれる",
+      "meaning": "넣다",
+      "example": "かばんに入れます。"
+    },
+    {
+      "word": "出す",
+      "reading": "だす",
+      "meaning": "꺼내다",
+      "example": "本を出します。"
+    },
+    {
+      "word": "探す",
+      "reading": "さがす",
+      "meaning": "찾다",
+      "example": "鍵を探します。"
+    },
+    {
+      "word": "見つける",
+      "reading": "みつける",
+      "meaning": "발견하다",
+      "example": "答えを見つけました。"
+    },
+    {
+      "word": "始まる",
+      "reading": "はじまる",
+      "meaning": "시작되다",
+      "example": "会議が始まります。"
+    },
+    {
+      "word": "終わる",
+      "reading": "おわる",
+      "meaning": "끝나다",
+      "example": "授業が終わります。"
+    },
+    {
+      "word": "早い",
+      "reading": "はやい",
+      "meaning": "빠르다/이르다",
+      "example": "朝が早いです。"
+    },
+    {
+      "word": "遅い",
+      "reading": "おそい",
+      "meaning": "늦다",
+      "example": "電車が遅いです。"
+    },
+    {
+      "word": "強い",
+      "reading": "つよい",
+      "meaning": "강하다",
+      "example": "風が強いです。"
+    },
+    {
+      "word": "弱い",
+      "reading": "よわい",
+      "meaning": "약하다",
+      "example": "体が弱いです。"
+    },
+    {
+      "word": "安心",
+      "reading": "あんしん",
+      "meaning": "안심",
+      "example": "安心しました。"
+    },
+    {
+      "word": "心配",
+      "reading": "しんぱい",
+      "meaning": "걱정",
+      "example": "心配しないでください。"
+    },
+    {
+      "word": "必要",
+      "reading": "ひつよう",
+      "meaning": "필요",
+      "example": "水が必要です。"
+    },
+    {
+      "word": "十分",
+      "reading": "じゅうぶん",
+      "meaning": "충분",
+      "example": "時間は十分です。"
+    },
+    {
+      "word": "簡単",
+      "reading": "かんたん",
+      "meaning": "간단하다",
+      "example": "操作は簡単です。"
+    },
+    {
+      "word": "便利",
+      "reading": "べんり",
+      "meaning": "편리하다",
+      "example": "駅が近くて便利です。"
+    },
+    {
+      "word": "同じ",
+      "reading": "おなじ",
+      "meaning": "같다",
+      "example": "同じ意見です。"
+    },
+    {
+      "word": "違う",
+      "reading": "ちがう",
+      "meaning": "다르다",
+      "example": "答えが違います。"
+    },
+    {
+      "word": "大切",
+      "reading": "たいせつ",
+      "meaning": "소중하다",
+      "example": "時間は大切です。"
+    },
+    {
+      "word": "特別",
+      "reading": "とくべつ",
+      "meaning": "특별",
+      "example": "今日は特別な日です。"
+    },
+    {
+      "word": "全部",
+      "reading": "ぜんぶ",
+      "meaning": "전부",
+      "example": "全部終わりました。"
+    },
+    {
+      "word": "半分",
+      "reading": "はんぶん",
+      "meaning": "절반",
+      "example": "半分食べました。"
+    },
+    {
+      "word": "朝",
+      "reading": "あさ",
+      "meaning": "아침",
+      "example": "朝ごはんを食べます。"
+    },
+    {
+      "word": "昼",
+      "reading": "ひる",
+      "meaning": "낮/점심",
+      "example": "昼は会社にいます。"
+    },
+    {
+      "word": "夜",
+      "reading": "よる",
+      "meaning": "밤",
+      "example": "夜に勉強します。"
+    },
+    {
+      "word": "今",
+      "reading": "いま",
+      "meaning": "지금",
+      "example": "今何をしていますか。"
+    },
+    {
+      "word": "前",
+      "reading": "まえ",
+      "meaning": "앞",
+      "example": "駅の前です。"
+    },
+    {
+      "word": "後",
+      "reading": "あと",
+      "meaning": "뒤/후",
+      "example": "後で電話します。"
+    },
+    {
+      "word": "外",
+      "reading": "そと",
+      "meaning": "밖",
+      "example": "外は寒いです。"
+    },
+    {
+      "word": "中",
+      "reading": "なか",
+      "meaning": "안",
+      "example": "かばんの中です。"
+    },
+    {
+      "word": "近い",
+      "reading": "ちかい",
+      "meaning": "가깝다",
+      "example": "家は駅から近いです。"
+    },
+    {
+      "word": "遠い",
+      "reading": "とおい",
+      "meaning": "멀다",
+      "example": "学校は遠いです。"
+    },
+    {
+      "word": "多い",
+      "reading": "おおい",
+      "meaning": "많다",
+      "example": "人が多いです。"
+    },
+    {
+      "word": "少ない",
+      "reading": "すくない",
+      "meaning": "적다",
+      "example": "時間が少ないです。"
+    },
+    {
+      "word": "全部",
+      "reading": "ぜんぶ",
+      "meaning": "전부",
+      "example": "全部食べました。"
+    },
+    {
+      "word": "少し",
+      "reading": "すこし",
+      "meaning": "조금",
+      "example": "少し休みます。"
+    },
+    {
+      "word": "同じ",
+      "reading": "おなじ",
+      "meaning": "같다",
+      "example": "同じ本です。"
+    },
+    {
+      "word": "違う",
+      "reading": "ちがう",
+      "meaning": "다르다",
+      "example": "色が違います。"
+    },
+    {
+      "word": "始める",
+      "reading": "はじめる",
+      "meaning": "시작하다",
+      "example": "勉強を始めます。"
+    },
+    {
+      "word": "終わる",
+      "reading": "おわる",
+      "meaning": "끝나다",
+      "example": "仕事が終わります。"
+    },
+    {
+      "word": "入る",
+      "reading": "はいる",
+      "meaning": "들어가다",
+      "example": "部屋に入ります。"
+    },
+    {
+      "word": "出る",
+      "reading": "でる",
+      "meaning": "나가다",
+      "example": "家を出ます。"
+    },
+    {
+      "word": "持つ",
+      "reading": "もつ",
+      "meaning": "가지다/들다",
+      "example": "かばんを持ちます。"
+    },
+    {
+      "word": "置く",
+      "reading": "おく",
+      "meaning": "놓다",
+      "example": "机に置きます。"
+    },
+    {
+      "word": "使う",
+      "reading": "つかう",
+      "meaning": "사용하다",
+      "example": "スマホを使います。"
+    },
+    {
+      "word": "作る",
+      "reading": "つくる",
+      "meaning": "만들다",
+      "example": "夕ごはんを作ります。"
+    },
+    {
+      "word": "売る",
+      "reading": "うる",
+      "meaning": "팔다",
+      "example": "店で売ります。"
+    },
+    {
+      "word": "買う",
+      "reading": "かう",
+      "meaning": "사다",
+      "example": "パンを買います。"
+    },
+    {
+      "word": "知る",
+      "reading": "しる",
+      "meaning": "알다",
+      "example": "その話を知っています。"
+    },
+    {
+      "word": "分かる",
+      "reading": "わかる",
+      "meaning": "이해하다",
+      "example": "意味が分かります。"
+    },
+    {
+      "word": "考える",
+      "reading": "かんがえる",
+      "meaning": "생각하다",
+      "example": "よく考えます。"
+    },
+    {
+      "word": "決める",
+      "reading": "きめる",
+      "meaning": "정하다",
+      "example": "日を決めます。"
+    },
+    {
+      "word": "選ぶ",
+      "reading": "えらぶ",
+      "meaning": "고르다",
+      "example": "色を選びます。"
+    },
+    {
+      "word": "待つ",
+      "reading": "まつ",
+      "meaning": "기다리다",
+      "example": "駅で待ちます。"
+    },
+    {
+      "word": "会う",
+      "reading": "あう",
+      "meaning": "만나다",
+      "example": "友だちに会います。"
+    },
+    {
+      "word": "話す",
+      "reading": "はなす",
+      "meaning": "말하다",
+      "example": "日本語で話します。"
+    },
+    {
+      "word": "聞く",
+      "reading": "きく",
+      "meaning": "듣다/묻다",
+      "example": "先生に聞きます。"
+    },
+    {
+      "word": "見る",
+      "reading": "みる",
+      "meaning": "보다",
+      "example": "映画を見ます。"
+    },
+    {
+      "word": "読む",
+      "reading": "よむ",
+      "meaning": "읽다",
+      "example": "本を読みます。"
+    },
+    {
+      "word": "書く",
+      "reading": "かく",
+      "meaning": "쓰다",
+      "example": "名前を書きます。"
+    },
+    {
+      "word": "歩く",
+      "reading": "あるく",
+      "meaning": "걷다",
+      "example": "駅まで歩きます。"
+    },
+    {
+      "word": "走る",
+      "reading": "はしる",
+      "meaning": "달리다",
+      "example": "公園で走ります。"
+    },
+    {
+      "word": "止まる",
+      "reading": "とまる",
+      "meaning": "멈추다",
+      "example": "電車が止まります。"
+    },
+    {
+      "word": "動く",
+      "reading": "うごく",
+      "meaning": "움직이다",
+      "example": "時計が動きます。"
+    },
+    {
+      "word": "疲れる",
+      "reading": "つかれる",
+      "meaning": "피곤하다",
+      "example": "仕事で疲れました。"
+    },
+    {
+      "word": "休む",
+      "reading": "やすむ",
+      "meaning": "쉬다",
+      "example": "今日は休みます。"
+    },
+    {
+      "word": "元気",
+      "reading": "げんき",
+      "meaning": "건강/기운",
+      "example": "元気ですか。"
+    },
+    {
+      "word": "大丈夫",
+      "reading": "だいじょうぶ",
+      "meaning": "괜찮다",
+      "example": "大丈夫です。"
+    },
+    {
+      "word": "楽しい",
+      "reading": "たのしい",
+      "meaning": "즐겁다",
+      "example": "旅行は楽しいです。"
+    },
+    {
+      "word": "うれしい",
+      "reading": "うれしい",
+      "meaning": "기쁘다",
+      "example": "会えてうれしいです。"
+    },
+    {
+      "word": "悲しい",
+      "reading": "かなしい",
+      "meaning": "슬프다",
+      "example": "悲しい映画です。"
+    },
+    {
+      "word": "怖い",
+      "reading": "こわい",
+      "meaning": "무섭다",
+      "example": "その話は怖いです。"
+    },
+    {
+      "word": "簡単",
+      "reading": "かんたん",
+      "meaning": "간단하다",
+      "example": "この問題は簡単です。"
+    },
+    {
+      "word": "難しい",
+      "reading": "むずかしい",
+      "meaning": "어렵다",
+      "example": "漢字は難しいです。"
+    },
+    {
+      "word": "便利",
+      "reading": "べんり",
+      "meaning": "편리하다",
+      "example": "このアプリは便利です。"
+    },
+    {
+      "word": "不便",
+      "reading": "ふべん",
+      "meaning": "불편하다",
+      "example": "ここは少し不便です。"
+    },
+    {
+      "word": "必要",
+      "reading": "ひつよう",
+      "meaning": "필요",
+      "example": "時間が必要です。"
+    },
+    {
+      "word": "大切",
+      "reading": "たいせつ",
+      "meaning": "소중하다",
+      "example": "家族は大切です。"
+    }
+  ],
+  "N4": [
+    {
+      "word": "勉強",
+      "reading": "べんきょう",
+      "meaning": "공부",
+      "example": "日本語を勉強します。"
+    },
+    {
+      "word": "旅行",
+      "reading": "りょこう",
+      "meaning": "여행",
+      "example": "旅行に行きます。"
+    },
+    {
+      "word": "病気",
+      "reading": "びょうき",
+      "meaning": "병",
+      "example": "病気になりました。"
+    },
+    {
+      "word": "準備",
+      "reading": "じゅんび",
+      "meaning": "준비",
+      "example": "試験の準備をします。"
+    },
+    {
+      "word": "約束",
+      "reading": "やくそく",
+      "meaning": "약속",
+      "example": "友達と約束しました。"
+    },
+    {
+      "word": "経験",
+      "reading": "けいけん",
+      "meaning": "경험",
+      "example": "良い経験になりました。"
+    },
+    {
+      "word": "練習",
+      "reading": "れんしゅう",
+      "meaning": "연습",
+      "example": "毎日練習します。"
+    },
+    {
+      "word": "質問",
+      "reading": "しつもん",
+      "meaning": "질문",
+      "example": "質問があります。"
+    }
+  ],
+  "N3": [
+    {
+      "word": "経験",
+      "reading": "けいけん",
+      "meaning": "경험",
+      "example": "貴重な経験をしました。"
+    },
+    {
+      "word": "影響",
+      "reading": "えいきょう",
+      "meaning": "영향",
+      "example": "環境への影響を考えます。"
+    },
+    {
+      "word": "環境",
+      "reading": "かんきょう",
+      "meaning": "환경",
+      "example": "自然環境を守ります。"
+    },
+    {
+      "word": "開発",
+      "reading": "かいはつ",
+      "meaning": "개발",
+      "example": "新しい技術を開発します。"
+    },
+    {
+      "word": "改善",
+      "reading": "かいぜん",
+      "meaning": "개선",
+      "example": "サービスを改善します。"
+    }
+  ],
+  "N2": [
+    {
+      "word": "改善",
+      "reading": "かいぜん",
+      "meaning": "개선",
+      "example": "品質を改善します。"
+    },
+    {
+      "word": "開発",
+      "reading": "かいはつ",
+      "meaning": "개발",
+      "example": "ソフトウェアを開発します。"
+    },
+    {
+      "word": "複雑",
+      "reading": "ふくざつ",
+      "meaning": "복잡",
+      "example": "複雑な問題です。"
+    },
+    {
+      "word": "具体的",
+      "reading": "ぐたいてき",
+      "meaning": "구체적",
+      "example": "具体的な計画を立てます。"
+    }
+  ],
+  "N1": [
+    {
+      "word": "抽象的",
+      "reading": "ちゅうしょうてき",
+      "meaning": "추상적",
+      "example": "抽象的な概念を理解します。"
+    },
+    {
+      "word": "複雑",
+      "reading": "ふくざつ",
+      "meaning": "복잡",
+      "example": "複雑な状況を分析します。"
+    },
+    {
+      "word": "分析",
+      "reading": "ぶんせき",
+      "meaning": "분석",
+      "example": "データを分析します。"
+    }
+  ]
+}

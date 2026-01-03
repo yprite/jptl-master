@@ -176,7 +176,15 @@ build/
 # Logs
 *.log
 logs/
+.backend.log
+.frontend.log
+
+# Process ID files
+.backend.pid
+.frontend.pid
 
 # Temporary files
 *.tmp
 *.temp
+coverage.json
+coverage/*

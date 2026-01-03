@@ -1,0 +1,487 @@
+{
+  "N5": [
+    {
+      "passage": "田中さんは学生です。毎日学校に行きます。",
+      "question": "田中さんは毎日何をしますか？",
+      "choices": ["仕事をします", "学校に行きます", "家にいます", "旅行をします"],
+      "correct_answer": "学校に行きます",
+      "explanation": "지문에서 田中さん은 학생이고 매일 학교에 간다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は朝6時に起きます。パンを食べます。",
+      "question": "私は朝何を食べますか？",
+      "choices": ["ごはん", "ケーキ", "パン", "りんご"],
+      "correct_answer": "パン",
+      "explanation": "지문에 아침에 빵을 먹는다고 나와 있습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "山本さんは会社員です。電車で会社に行きます。",
+      "question": "山本さんはどうやって会社に行きますか？",
+      "choices": ["バス", "車", "自転車", "電車"],
+      "correct_answer": "電車",
+      "explanation": "본문에 전철로 회사에 간다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "今日は日曜日です。私は家で休みます。",
+      "question": "今日は何曜日ですか？",
+      "choices": ["月曜日", "土曜日", "日曜日", "金曜日"],
+      "correct_answer": "日曜日",
+      "explanation": "지문의 첫 문장에서 오늘은 일요일이라고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "佐藤さんは犬が好きです。毎日散歩します。",
+      "question": "佐藤さんは何が好きですか？",
+      "choices": ["猫", "犬", "鳥", "魚"],
+      "correct_answer": "犬",
+      "explanation": "지문에서 佐藤さん은 개를 좋아한다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私はスーパーでりんごを買います。安いです。",
+      "question": "私はどこでりんごを買いますか？",
+      "choices": ["レストラン", "スーパー", "学校", "会社"],
+      "correct_answer": "スーパー",
+      "explanation": "지문에 슈퍼에서 사과를 산다고 나와 있습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "田村さんは日本人です。日本語を話します。",
+      "question": "田村さんは何語を話しますか？",
+      "choices": ["英語", "中国語", "韓国語", "日本語"],
+      "correct_answer": "日本語",
+      "explanation": "지문에 일본어를 말한다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は夜11時に寝ます。朝は眠いです。",
+      "question": "私は何時に寝ますか？",
+      "choices": ["9時", "10時", "11時", "12時"],
+      "correct_answer": "11時",
+      "explanation": "본문에서 밤 11시에 잔다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "今日は雨です。傘を持ちます。",
+      "question": "今日は天気はどうですか？",
+      "choices": ["晴れ", "雪", "雨", "くもり"],
+      "correct_answer": "雨",
+      "explanation": "지문에 오늘은 비가 온다고 나와 있습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "木村さんは料理が上手です。毎日家で作ります。",
+      "question": "木村さんはどこで料理を作りますか？",
+      "choices": ["会社", "学校", "家", "店"],
+      "correct_answer": "家",
+      "explanation": "지문에 집에서 요리를 만든다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は図書館で本を読みます。静かです。",
+      "question": "私はどこで本を読みますか？",
+      "choices": ["家", "学校", "図書館", "会社"],
+      "correct_answer": "図書館",
+      "explanation": "지문에 도서관에서 책을 읽는다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "中村さんはコーヒーが好きです。毎朝飲みます。",
+      "question": "中村さんは毎朝何を飲みますか？",
+      "choices": ["お茶", "水", "コーヒー", "牛乳"],
+      "correct_answer": "コーヒー",
+      "explanation": "지문에 매일 아침 커피를 마신다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は土曜日に友だちと会います。",
+      "question": "私はいつ友だちと会いますか？",
+      "choices": ["金曜日", "土曜日", "日曜日", "月曜日"],
+      "correct_answer": "土曜日",
+      "explanation": "지문에서 토요일에 친구를 만난다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "山下さんは駅の近くに住んでいます。",
+      "question": "山下さんはどこに住んでいますか？",
+      "choices": ["学校の近く", "会社の近く", "駅の近く", "店の近く"],
+      "correct_answer": "駅の近く",
+      "explanation": "지문에 역 근처에 산다고 나와 있습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は毎晩テレビを見ます。",
+      "question": "私はいつテレビを見ますか？",
+      "choices": ["朝", "昼", "夕方", "夜"],
+      "correct_answer": "夜",
+      "explanation": "지문에서 매일 밤 TV를 본다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "小林さんは走るのが好きです。公園で走ります。",
+      "question": "小林さんはどこで走りますか？",
+      "choices": ["家", "公園", "学校", "会社"],
+      "correct_answer": "公園",
+      "explanation": "지문에 공원에서 달린다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は毎日日本語を勉強します。",
+      "question": "私は何を勉強しますか？",
+      "choices": ["英語", "数学", "日本語", "歴史"],
+      "correct_answer": "日本語",
+      "explanation": "지문에 일본어를 공부한다고 나와 있습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "今日はとても暑いです。水をたくさん飲みます。",
+      "question": "今日はどんな天気ですか？",
+      "choices": ["寒い", "涼しい", "暑い", "雨"],
+      "correct_answer": "暑い",
+      "explanation": "지문에서 오늘은 매우 덥다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は朝ごはんを食べません。",
+      "question": "私は朝ごはんをどうしますか？",
+      "choices": ["食べます", "食べません", "作ります", "買います"],
+      "correct_answer": "食べません",
+      "explanation": "지문에 아침밥을 먹지 않는다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "松本さんはバスで学校に行きます。",
+      "question": "松本さんは何で学校に行きますか？",
+      "choices": ["電車", "車", "バス", "自転車"],
+      "correct_answer": "バス",
+      "explanation": "지문에 버스로 학교에 간다고 나와 있습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は毎週映画を見ます。",
+      "question": "私はどのくらい映画を見ますか？",
+      "choices": ["毎日", "毎週", "毎月", "毎年"],
+      "correct_answer": "毎週",
+      "explanation": "지문에서 매주 영화를 본다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "鈴木さんは早く起きます。朝5時です。",
+      "question": "鈴木さんは何時に起きますか？",
+      "choices": ["4時", "5時", "6時", "7時"],
+      "correct_answer": "5時",
+      "explanation": "지문에 아침 5시에 일어난다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私はコンビニで昼ごはんを買います。",
+      "question": "私はどこで昼ごはんを買いますか？",
+      "choices": ["スーパー", "学校", "コンビニ", "家"],
+      "correct_answer": "コンビニ",
+      "explanation": "지문에 편의점에서 점심을 산다고 나와 있습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "山口さんは写真を撮るのが好きです。",
+      "question": "山口さんの趣味は何ですか？",
+      "choices": ["料理", "写真", "音楽", "運動"],
+      "correct_answer": "写真",
+      "explanation": "지문에 사진 찍는 것을 좋아한다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は日曜日に家族と食事します。",
+      "question": "私は誰と食事しますか？",
+      "choices": ["友だち", "同僚", "家族", "先生"],
+      "correct_answer": "家族",
+      "explanation": "지문에서 가족과 식사한다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "今日はテストがあります。少し緊張します。",
+      "question": "今日は何がありますか？",
+      "choices": ["会議", "テスト", "旅行", "休み"],
+      "correct_answer": "テスト",
+      "explanation": "지문에 오늘 시험이 있다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私は駅で友だちを待ちます。",
+      "question": "私はどこで友だちを待ちますか？",
+      "choices": ["家", "学校", "駅", "店"],
+      "correct_answer": "駅",
+      "explanation": "지문에서 역에서 친구를 기다린다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "木曜日は仕事が忙しいです。",
+      "question": "いつ仕事が忙しいですか？",
+      "choices": ["月曜日", "火曜日", "木曜日", "日曜日"],
+      "correct_answer": "木曜日",
+      "explanation": "지문에 목요일이 바쁘다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私は毎朝シャワーを浴びます。",
+      "question": "私はいつシャワーを浴びますか？",
+      "choices": ["夜", "昼", "夕方", "朝"],
+      "correct_answer": "朝",
+      "explanation": "지문에서 매일 아침 샤워를 한다고 했습니다.",
+      "difficulty": 1
+    },
+    {
+      "passage": "私は毎朝7時に起きます。8時に家を出ます。",
+      "question": "私は何時に家を出ますか？",
+      "choices": ["7時", "7時半", "8時", "9時"],
+      "correct_answer": "8時",
+      "explanation": "지문에 8시에 집을 나간다고 나와 있습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "今日は雨です。私はバスで会社に行きます。",
+      "question": "私はどうやって会社に行きますか？",
+      "choices": ["電車", "バス", "車", "歩いて"],
+      "correct_answer": "バス",
+      "explanation": "비가 와서 버스로 회사에 간다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "田中さんは昨日映画を見ました。とても面白かったです。",
+      "question": "田中さんは昨日何をしましたか？",
+      "choices": ["本を読みました", "映画を見ました", "買い物しました", "運動しました"],
+      "correct_answer": "映画を見ました",
+      "explanation": "지문에서 어제 영화를 봤다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私はりんごとバナナを買いました。全部で300円です。",
+      "question": "私は何を買いましたか？",
+      "choices": ["りんごだけ", "バナナだけ", "りんごとバナナ", "みかんとりんご"],
+      "correct_answer": "りんごとバナナ",
+      "explanation": "지문에 사과와 바나나를 샀다고 나와 있습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "山本さんは料理が好きです。週末によく作ります。",
+      "question": "山本さんはいつ料理をしますか？",
+      "choices": ["毎日", "平日", "週末", "月曜日"],
+      "correct_answer": "週末",
+      "explanation": "지문에서 주말에 자주 요리를 한다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私は日本語が少し分かります。でも、まだ難しいです。",
+      "question": "私は日本語についてどう思っていますか？",
+      "choices": ["とても簡単", "完璧に分かる", "少し分かるが難しい", "全然分からない"],
+      "correct_answer": "少し分かるが難しい",
+      "explanation": "조금 알지만 아직 어렵다고 말하고 있습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "今日は仕事のあと、友だちとごはんを食べます。",
+      "question": "私は仕事のあと何をしますか？",
+      "choices": ["家に帰ります", "勉強します", "友だちと食事します", "寝ます"],
+      "correct_answer": "友だちと食事します",
+      "explanation": "일이 끝난 후 친구와 식사한다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "佐藤さんは毎日30分走ります。健康のためです。",
+      "question": "佐藤さんはなぜ走りますか？",
+      "choices": ["仕事のため", "学校のため", "健康のため", "遊びのため"],
+      "correct_answer": "健康のため",
+      "explanation": "건강을 위해 달린다고 지문에 나와 있습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "私は朝コーヒーを飲みますが、夜は飲みません。",
+      "question": "私はいつコーヒーを飲みますか？",
+      "choices": ["朝", "昼", "夜", "朝と夜"],
+      "correct_answer": "朝",
+      "explanation": "아침에는 마시지만 밤에는 마시지 않는다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "今日は忙しいです。昼ごはんを食べませんでした。",
+      "question": "私は昼ごはんをどうしましたか？",
+      "choices": ["食べました", "作りました", "買いました", "食べませんでした"],
+      "correct_answer": "食べませんでした",
+      "explanation": "바빠서 점심을 먹지 않았다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私は毎週水曜日に日本語のクラスがあります。",
+      "question": "日本語のクラスはいつですか？",
+      "choices": ["月曜日", "水曜日", "金曜日", "日曜日"],
+      "correct_answer": "水曜日",
+      "explanation": "매주 수요일에 일본어 수업이 있다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "山田さんは猫を二匹飼っています。",
+      "question": "山田さんは何匹猫を飼っていますか？",
+      "choices": ["一匹", "二匹", "三匹", "四匹"],
+      "correct_answer": "二匹",
+      "explanation": "고양이 두 마리를 키운다고 나와 있습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "今日は寒いですが、天気はいいです。",
+      "question": "今日の天気はどうですか？",
+      "choices": ["寒くて雨", "暑い", "寒いが天気がいい", "暖かい"],
+      "correct_answer": "寒いが天気がいい",
+      "explanation": "춥지만 날씨는 좋다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "私は昨日早く寝たので、今日は元気です。",
+      "question": "私は今日はどうですか？",
+      "choices": ["眠い", "忙しい", "元気", "疲れている"],
+      "correct_answer": "元気",
+      "explanation": "어제 일찍 자서 오늘은 기운이 있다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "駅まで歩いて10分かかります。",
+      "question": "駅までどのくらいかかりますか？",
+      "choices": ["5分", "10分", "20分", "30分"],
+      "correct_answer": "10分",
+      "explanation": "역까지 걸어서 10분이 걸린다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私は日本に三年住んでいます。",
+      "question": "私は日本にどのくらい住んでいますか？",
+      "choices": ["一年", "二年", "三年", "四年"],
+      "correct_answer": "三年",
+      "explanation": "일본에 3년 살고 있다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "今日は日曜日なので、店は休みです。",
+      "question": "今日はなぜ店が休みですか？",
+      "choices": ["雨だから", "忙しいから", "日曜日だから", "夜だから"],
+      "correct_answer": "日曜日だから",
+      "explanation": "일요일이기 때문에 가게가 쉰다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "私は甘い物が好きですが、ケーキはあまり食べません。",
+      "question": "私はケーキをどうしますか？",
+      "choices": ["よく食べます", "毎日食べます", "あまり食べません", "全然知りません"],
+      "correct_answer": "あまり食べません",
+      "explanation": "단 것을 좋아하지만 케이크는 많이 먹지 않는다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "木村さんは毎朝新聞を読みます。",
+      "question": "木村さんはいつ新聞を読みますか？",
+      "choices": ["朝", "昼", "夜", "週末"],
+      "correct_answer": "朝",
+      "explanation": "매일 아침 신문을 읽는다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私は雨の日は家にいます。",
+      "question": "私はどんな日に家にいますか？",
+      "choices": ["晴れの日", "暑い日", "雨の日", "忙しい日"],
+      "correct_answer": "雨の日",
+      "explanation": "비 오는 날에는 집에 있다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "今日は友だちの誕生日です。プレゼントを買います。",
+      "question": "私は何をしますか？",
+      "choices": ["ケーキを作ります", "手紙を書きます", "プレゼントを買います", "旅行します"],
+      "correct_answer": "プレゼントを買います",
+      "explanation": "친구 생일이라 선물을 산다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私は夜遅くまで勉強しました。",
+      "question": "私は何をしましたか？",
+      "choices": ["早く寝ました", "夜勉強しました", "遊びました", "休みました"],
+      "correct_answer": "夜勉強しました",
+      "explanation": "밤늦게까지 공부했다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "山田さんはコーヒーよりお茶が好きです。",
+      "question": "山田さんは何が好きですか？",
+      "choices": ["コーヒー", "ジュース", "お茶", "水"],
+      "correct_answer": "お茶",
+      "explanation": "커피보다 차를 더 좋아한다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "私は財布を忘れました。何も買えません。",
+      "question": "私はなぜ何も買えませんか？",
+      "choices": ["時間がないから", "お金が高いから", "財布を忘れたから", "店が休みだから"],
+      "correct_answer": "財布を忘れたから",
+      "explanation": "지갑을 잊어버려서 아무것도 살 수 없다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "今日は少し忙しいですが、楽しいです。",
+      "question": "今日はどんな日ですか？",
+      "choices": ["暇でつまらない", "忙しくて楽しい", "忙しくてつらい", "休みで楽しい"],
+      "correct_answer": "忙しくて楽しい",
+      "explanation": "조금 바쁘지만 즐겁다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "私は毎晩音楽を聞いてから寝ます。",
+      "question": "私は寝る前に何をしますか？",
+      "choices": ["本を読みます", "テレビを見ます", "音楽を聞きます", "運動します"],
+      "correct_answer": "音楽を聞きます",
+      "explanation": "자기 전에 음악을 듣는다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "今日は雨なので、洗濯をしません。",
+      "question": "私はなぜ洗濯をしませんか？",
+      "choices": ["忙しいから", "寒いから", "雨だから", "夜だから"],
+      "correct_answer": "雨だから",
+      "explanation": "비가 와서 빨래를 하지 않는다고 했습니다.",
+      "difficulty": 3
+    },
+    {
+      "passage": "私は週に三回ジムに行きます。",
+      "question": "私はどのくらいジムに行きますか？",
+      "choices": ["毎日", "週に一回", "週に三回", "月に三回"],
+      "correct_answer": "週に三回",
+      "explanation": "일주일에 세 번 헬스장에 간다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "今日は仕事が早く終わりました。",
+      "question": "今日は仕事はどうでしたか？",
+      "choices": ["遅く終わった", "休みだった", "早く終わった", "なかった"],
+      "correct_answer": "早く終わった",
+      "explanation": "오늘은 일이 일찍 끝났다고 했습니다.",
+      "difficulty": 2
+    },
+    {
+      "passage": "私は日本の料理が好きですが、辛い物は苦手です。",
+      "question": "私は辛い物についてどうですか？",
+      "choices": ["好きです", "とても好きです", "苦手です", "毎日食べます"],
+      "correct_answer": "苦手です",
+      "explanation": "매운 음식은 잘 못 먹는다고 했습니다.",
+      "difficulty": 3
+    }
+  ],
+  "N4": [
+    {
+      "passage": "昨日、友達と映画を見に行きました。とても面白い映画でした。",
+      "question": "筆者はいつ映画を見ましたか？",
+      "choices": ["今日", "昨日", "一昨日", "来週"],
+      "correct_answer": "昨日",
+      "explanation": "本文によると、筆者は昨日映画を見ました。",
+      "difficulty": 2
+    }
+  ]
+}
+

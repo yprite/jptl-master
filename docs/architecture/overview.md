@@ -1,49 +1,92 @@
-# 아키텍처 개요
+# Architecture Overview
 
-## 시스템 아키텍처
+## Purpose
 
-이 프로젝트는 DDD(Domain-Driven Design)를 기반으로 하는 클린 아키텍처를 채택합니다.
+JLPT Skill Assessment Platform is a web-based learning platform that helps Japanese language learners assess and improve their JLPT (Japanese Language Proficiency Test) skills. The platform provides diagnostic tests, performance analysis, and personalized learning recommendations for levels N1 through N5.
 
-### 레이어 구조
+## High-Level Responsibilities
 
-```
-Presentation Layer (API, Web UI)
-    ↓
-Application Layer (Use Cases, Commands)
-    ↓
-Domain Layer (Business Logic, Entities)
-    ↓
-Infrastructure Layer (Database, External APIs)
-```
+### Core Responsibilities
+- **User Management**: Registration, authentication, profile management, and learning goal tracking
+- **Test Administration**: Create and manage JLPT diagnostic tests (N1-N5) with multiple question types
+- **Performance Analysis**: Collect detailed answer history, learning patterns, and generate performance reports
+- **Learning Support**: Provide study plans, recommendations, and progress tracking
+- **Admin Management**: User administration, question management, and system statistics
 
-### 기술 스택
+### System Boundaries
+- **In Scope**: Test creation, execution, scoring, and analysis; user data collection and aggregation
+- **Out of Scope**: External payment processing, third-party authentication providers, mobile native apps (future consideration)
 
-#### 백엔드
-- **언어**: Python 3.9+
-- **프레임워크**: FastAPI (DDD 구현용)
-- **데이터베이스**: PostgreSQL
-- **ORM**: SQLAlchemy
-- **테스트**: pytest
+## Main Data/Control Flow
 
-#### 프론트엔드
-- **언어**: TypeScript
-- **프레임워크**: React + Next.js
-- **상태관리**: Zustand
-- **테스트**: Jest + React Testing Library
-- **스타일링**: Tailwind CSS
+### Test Taking Flow
+1. User requests test creation → Application Service creates Test entity
+2. User starts test → Test status changes to IN_PROGRESS, timer begins
+3. User submits answers → Test calculates score, creates Result entity
+4. System saves AnswerDetail records for each question
+5. System creates LearningHistory entry
+6. System updates UserPerformance aggregates
+7. User views result with analysis and recommendations
 
-### 개발 방식
-- **TDD**: Test-Driven Development
-- **DDD**: Domain-Driven Design
-- **Git Flow**: 브랜치 전략
+### Data Collection Flow
+1. Test submission triggers AnswerDetail creation (per question)
+2. LearningHistory records study session metadata
+3. UserPerformance aggregates data periodically
+4. Analysis services process aggregates for recommendations
 
-## 도메인 모델
+### Admin Flow
+1. Admin authenticates → Session-based authentication validates admin role
+2. Admin accesses admin endpoints → Middleware checks `is_admin` flag
+3. Admin performs CRUD operations → Controllers delegate to Application Services
+4. Changes persist through Repository layer to SQLite database
 
-(프로젝트 진행에 따라 도메인별로 세부 모델링 문서 추가 예정)
+## Key Modules and Directories
 
-## 인프라 구성
+### Backend Structure (`backend/`)
 
-- **CI/CD**: GitHub Actions
-- **컨테이너화**: Docker
-- **배포**: AWS ECS 또는 Railway
-- **모니터링**: Sentry, CloudWatch
+#### Domain Layer (`domain/`)
+- **Entities** (`entities/`): Core business objects (User, Test, Question, Result, AnswerDetail, LearningHistory, UserPerformance)
+- **Value Objects** (`value_objects/`): Immutable domain concepts (JLPTLevel, QuestionType)
+- **Services** (`services/`): Domain logic that doesn't belong to a single entity
+
+#### Application Layer (`application/`)
+- **Services** (`services/`): Use case orchestration
+- **Commands** (`commands/`): Write operations (create, update, delete)
+- **Queries** (`queries/`): Read operations (get, list, search)
+
+#### Infrastructure Layer (`infrastructure/`)
+- **Repositories** (`repositories/`): Data persistence implementations (SQLite)
+- **Adapters** (`adapters/`): External service integrations
+- **Config** (`config/`): Database configuration and initialization
+
+#### Presentation Layer (`presentation/`)
+- **Controllers** (`controllers/`): FastAPI route handlers
+- **DTOs** (`dto/`): Data transfer objects for API requests/responses
+- **Middleware** (`middleware/`): Authentication, authorization, error handling
+
+### Frontend Structure (`frontend/src/`)
+
+#### Components (`components/`)
+- **Organisms**: Complex UI components (Test UI, Result UI, Admin Dashboard)
+- **Molecules**: Medium complexity components
+- **Atoms**: Basic reusable components
+
+#### Services (`services/`)
+- API client services for backend communication
+- Business logic services
+
+#### Types (`types/`)
+- TypeScript type definitions matching backend DTOs
+
+## Architecture Principles
+
+- **DDD (Domain-Driven Design)**: Business logic isolated in domain layer
+- **Clean Architecture**: Dependency inversion, layers depend inward
+- **TDD (Test-Driven Development)**: Tests written before implementation
+- **KISS/YAGNI**: Simplicity over complexity, implement only what's needed
+
+## Technology Stack
+
+- **Backend**: Python 3.13+, FastAPI, SQLite, pytest
+- **Frontend**: React 19, TypeScript, CSS Modules, React Testing Library, Playwright
+- **Architecture**: DDD-based clean architecture with 4 layers

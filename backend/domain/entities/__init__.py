@@ -3,6 +3,14 @@
 """
 
 from .user import User
-from .post import Post
+from .question import Question
+from .test import Test
+from .result import Result
+from .answer_detail import AnswerDetail
+from .learning_history import LearningHistory
+from .user_performance import UserPerformance
+from .study_session import StudySession
+from .vocabulary import Vocabulary
+from .user_vocabulary import UserVocabulary
 
-__all__ = ["User", "Post"]
+__all__ = ["User", "Question", "Test", "Result", "AnswerDetail", "LearningHistory", "UserPerformance", "StudySession", "Vocabulary", "UserVocabulary"]

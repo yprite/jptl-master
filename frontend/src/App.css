@@ -1,0 +1,218 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+.App-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.App-main {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.test-section,
+.result-section,
+.performance-section {
+  margin-bottom: 40px;
+}
+
+.test-section h2,
+.result-section h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.user-info {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.logout-button {
+  padding: 6px 12px;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.login-section {
+  padding: 20px;
+}
+
+.initial-section,
+.loading-section,
+.error-section {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.initial-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.performance-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.performance-button:hover {
+  background-color: #218838;
+}
+
+.performance-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.back-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+}
+
+.initial-section h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.initial-section p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.start-button,
+.restart-button,
+.retry-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.start-button:hover,
+.restart-button:hover,
+.retry-button:hover {
+  background-color: #0056b3;
+}
+
+.start-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  font-size: 18px;
+  color: #666;
+  padding: 40px;
+}
+
+.error-message {
+  padding: 40px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  color: #721c24;
+}
+
+.error-message h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.error-message p {
+  margin-bottom: 20px;
+}
+
+.result-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.study-plan-section {
+  padding: 20px 0;
+}
+
+.study-plan-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.menu-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.menu-button:hover {
+  background-color: #5a6268;
+}
+
+.study-plan-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.study-plan-button:hover {
+  background-color: #5568d3;
+}
+
+.daily-checklist-section {
+  padding: 20px 0;
+}
