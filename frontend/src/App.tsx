@@ -147,8 +147,26 @@ function App() {
     if (loggedInUser.is_admin) {
       setState('admin-dashboard');
     } else {
-      setState('initial');
+      // 온보딩 완료 여부 확인
+      const onboardingCompleted = localStorage.getItem('onboarding_completed');
+      if (!onboardingCompleted) {
+        setState('onboarding');
+      } else {
+        setState('initial');
+      }
     }
+  };
+
+  // 온보딩 완료
+  const handleOnboardingComplete = (data: OnboardingData) => {
+    // 온보딩 데이터 저장
+    localStorage.setItem('onboarding_completed', 'true');
+    localStorage.setItem('onboarding_data', JSON.stringify(data));
+    
+    // Today Mission으로 이동
+    setSelectedWeek(1);
+    setSelectedDay(1);
+    setState('todays-mission');
   };
 
   // 로그아웃 핸들러
