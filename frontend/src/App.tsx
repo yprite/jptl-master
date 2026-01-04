@@ -106,7 +106,13 @@ function App() {
         if (currentUser.is_admin) {
           setState('admin-dashboard');
         } else {
-          setState('initial');
+          // 온보딩 완료 여부 확인
+          const onboardingCompleted = localStorage.getItem('onboarding_completed');
+          if (!onboardingCompleted) {
+            setState('onboarding');
+          } else {
+            setState('initial');
+          }
         }
       }
     });
@@ -1215,6 +1221,12 @@ function App() {
         {state === 'login' && (
           <section className="login-section">
             <LoginUI onLoginSuccess={handleLoginSuccess} />
+          </section>
+        )}
+
+        {state === 'onboarding' && (
+          <section className="onboarding-section">
+            <OnboardingUI onComplete={handleOnboardingComplete} />
           </section>
         )}
 
