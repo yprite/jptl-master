@@ -12,6 +12,7 @@ export type SortType = 'recent' | 'lowest-accuracy' | 'difficulty';
 export interface WrongAnswersUIProps {
   questions: Question[];
   onStartStudy: (questionCount: number) => void;
+  onViewSRSReview?: () => void;
   onBack: () => void;
   isLoading?: boolean;
 }
