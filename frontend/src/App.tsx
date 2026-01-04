@@ -29,7 +29,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Voca
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'srs-review' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
