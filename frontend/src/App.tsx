@@ -920,6 +920,226 @@ function App() {
     }
   };
 
+  // Helper: Generate sidebar items
+  const getSidebarItems = (): SidebarItem[] => {
+    const iconStyle = { width: 20, height: 20 };
+    return [
+      {
+        id: 'dashboard',
+        label: '대시보드',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z" stroke="currentColor" strokeWidth="2" fill="currentColor" />
+          </svg>
+        ),
+        onClick: () => setState('initial'),
+        active: state === 'initial'
+      },
+      {
+        id: 'study-plan',
+        label: '6주 학습 계획',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 11L12 14L22 4M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: () => setState('study-plan'),
+        active: state === 'study-plan' || state === 'daily-checklist'
+      },
+      {
+        id: 'test',
+        label: '테스트 모드',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5M12 12H15M12 16H15M9 12H9.01M9 16H9.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ),
+        onClick: handleStartTest,
+        active: state === 'test' || state === 'result'
+      },
+      {
+        id: 'study',
+        label: '학습 모드',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M12 6.253V13.5L15.5 15.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleStartStudy,
+        active: state === 'study' || state === 'study-select'
+      },
+      {
+        id: 'vocabulary',
+        label: '단어 학습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.5 2H20V22H6.5A2.5 2.5 0 0 1 4 19.5V4.5A2.5 2.5 0 0 1 6.5 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleStartVocabulary,
+        active: state === 'vocabulary' || state === 'vocabulary-list' || state === 'vocabulary-review'
+      },
+      {
+        id: 'grammar',
+        label: '문법 학습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ),
+        onClick: () => handleStartStudyMode('N5', ['grammar'], 20),
+        active: false
+      },
+      {
+        id: 'wrong-answers',
+        label: '오답 노트',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewWrongAnswers,
+        active: state === 'wrong-answers'
+      },
+      {
+        id: 'analytics',
+        label: '성능 분석',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M3 3V21H21M7 16L12 11L16 15L21 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M21 10H16V15H21V10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewPerformance,
+        active: state === 'performance'
+      },
+      {
+        id: 'profile',
+        label: '프로필/설정',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewProfile,
+        active: state === 'profile' || state === 'daily-goal' || state === 'history'
+      }
+    ];
+  };
+
+  // Helper: Generate dashboard actions
+  const getDashboardActions = (): DashboardAction[] => {
+    const iconStyle = { width: 24, height: 24 };
+    return [
+      {
+        id: 'study-plan',
+        title: '6주 학습 계획',
+        description: '오늘의 미션 시작',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 11L12 14L22 4M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: () => setState('study-plan')
+      },
+      {
+        id: 'test',
+        title: '테스트 모드',
+        description: 'N5 진단 테스트',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ),
+        onClick: handleStartTest
+      },
+      {
+        id: 'study',
+        title: '학습 모드',
+        description: '유형별 문제 학습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M12 6.253V13.5L15.5 15.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleStartStudy
+      },
+      {
+        id: 'analytics',
+        title: '성능 분석 보기',
+        description: '학습 통계 확인',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M3 3V21H21M7 16L12 11L16 15L21 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewPerformance
+      },
+      {
+        id: 'vocabulary',
+        title: '단어 학습',
+        description: '플래시카드 학습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.5 2H20V22H6.5A2.5 2.5 0 0 1 4 19.5V4.5A2.5 2.5 0 0 1 6.5 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleStartVocabulary
+      },
+      {
+        id: 'grammar',
+        title: '문법 학습',
+        description: '문법 패턴 연습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: () => handleStartStudyMode('N5', ['grammar'], 20)
+      },
+      {
+        id: 'history',
+        title: '학습 이력 보기',
+        description: '과거 학습 기록',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewHistory
+      },
+      {
+        id: 'wrong-answers',
+        title: '오답 노트',
+        description: '틀린 문제 복습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewWrongAnswers
+      }
+    ];
+  };
+
+  // Helper: Get KPI data (mock for now, will be replaced with real data)
+  const getKPIData = (): KPIData => {
+    return {
+      recentScore: currentResult?.score,
+      streakDays: user?.study_streak || 0,
+      totalStudyCount: currentHistory.length || 0,
+      weeklyStudyTime: 120, // TODO: Calculate from history
+      weeklyGoalMinutes: 180,
+      weeklyGoalAchievement: 67 // TODO: Calculate from actual data
+    };
+  };
+
   // 초기화 중이면 로딩 표시
   if (isInitializing) {
     return (
@@ -938,6 +1158,9 @@ function App() {
 
   // 어드민 페이지인지 확인
   const isAdminPage = state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions' || state === 'admin-vocabulary';
+  
+  // Pages that should use MainLayout
+  const shouldUseMainLayout = !isAdminPage && state !== 'login' && state !== 'loading' && user && !user.is_admin;
 
   return (
     <div className="App">

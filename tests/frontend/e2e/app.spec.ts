@@ -2248,7 +2248,7 @@ test.describe('JLPT App E2E', () => {
           await page.waitForTimeout(200);
         }
       }
-      await page.getByRole('button', { name: /제출/i }).click();
+      await page.getByTestId('submit-button').click();
       await page.waitForTimeout(2000);
 
       // 4. 백엔드 API로 학습 이력 확인
