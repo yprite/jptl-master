@@ -1,0 +1,112 @@
+.tabs {
+  display: flex;
+  gap: var(--spacing-2);
+  border-bottom: 1px solid var(--color-gray-200);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs__tab {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  position: relative;
+}
+
+.tabs__tab:hover:not(.tabs__tab--disabled) {
+  color: var(--text-primary);
+  background-color: var(--bg-tertiary);
+}
+
+.tabs__tab--active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.tabs__tab--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tabs__tab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabs__tab-label {
+  flex: 1;
+}
+
+.tabs__tab-badge {
+  background-color: var(--color-danger);
+  color: var(--text-inverse);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Variants */
+.tabs--pills .tabs__tab {
+  border-radius: var(--radius-md);
+  border-bottom: none;
+}
+
+.tabs--pills .tabs__tab--active {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  border-bottom-color: transparent;
+}
+
+.tabs--underline .tabs__tab {
+  border-bottom-width: 2px;
+}
+
+.tabs--underline .tabs__tab--active {
+  border-bottom-color: var(--color-primary);
+}
+
+/* Sizes */
+.tabs--sm .tabs__tab {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+}
+
+.tabs--md .tabs__tab {
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--font-size-base);
+}
+
+.tabs--lg .tabs__tab {
+  padding: var(--spacing-4) var(--spacing-6);
+  font-size: var(--font-size-lg);
+}
+
+/* Full Width */
+.tabs--full-width {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+
+.tabs--full-width .tabs__tab {
+  justify-content: center;
+}
+
