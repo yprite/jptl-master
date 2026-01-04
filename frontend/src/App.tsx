@@ -38,7 +38,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Voca
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'onboarding' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'study-mode' | 'wrong-answers' | 'srs-review' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'onboarding' | 'initial' | 'study-plan' | 'todays-mission' | 'daily-checklist' | 'study-select' | 'study' | 'study-mode' | 'wrong-answers' | 'srs-review' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
