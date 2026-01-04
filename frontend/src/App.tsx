@@ -1217,79 +1217,26 @@ function App() {
           </section>
         )}
 
-        {state === 'initial' && (
-          <section className="initial-section" data-testid="initial-ui">
-            <h2>JLPT 학습 플랫폼</h2>
-            <p>테스트 모드와 학습 모드 중 선택하세요.</p>
-            <div className="initial-actions">
-              <button
-                onClick={() => setState('study-plan')}
-                className="study-plan-button"
-              >
-                6주 학습 계획
-              </button>
-              <button
-                onClick={handleStartTest}
-                className="start-button"
-              >
-                테스트 모드
-              </button>
-              <button
-                onClick={handleStartStudy}
-                className="study-button"
-              >
-                학습 모드
-              </button>
-              <button
-                onClick={handleViewPerformance}
-                className="performance-button"
-              >
-                성능 분석 보기
-              </button>
-              <button
-                onClick={handleViewHistory}
-                className="history-button"
-              >
-                학습 이력 보기
-              </button>
-              <button
-                onClick={handleViewProfile}
-                className="profile-button"
-              >
-                프로필 관리
-              </button>
-              <button
-                onClick={handleViewDailyGoal}
-                className="daily-goal-button"
-              >
-                일일 목표
-              </button>
-              <button
-                onClick={handleViewWrongAnswers}
-                className="wrong-answers-button"
-              >
-                오답 노트
-              </button>
-              <button
-                onClick={handleViewRepeatStudy}
-                className="repeat-study-button"
-              >
-                반복 학습
-              </button>
-              <button
-                onClick={handleStartVocabulary}
-                className="vocabulary-button"
-              >
-                단어 학습
-              </button>
-              <button
-                onClick={() => setState('vocabulary-review')}
-                className="vocabulary-review-button"
-              >
-                단어 복습
-              </button>
-            </div>
-          </section>
+        {state === 'initial' && shouldUseMainLayout && (
+          <MainLayout
+            sidebarItems={getSidebarItems()}
+            headerProps={{
+              title: '대시보드',
+              user: user ? { username: user.username } : undefined,
+              onProfileClick: handleViewProfile,
+              onNotificationClick: () => setState('study-plan'),
+              onSearch: (query) => {
+                // TODO: Implement search
+                console.log('Search:', query);
+              }
+            }}
+          >
+            <DashboardUI
+              kpiData={getKPIData()}
+              actions={getDashboardActions()}
+              onStartStudy={() => setState('study-plan')}
+            />
+          </MainLayout>
         )}
 
         {state === 'study-select' && (
