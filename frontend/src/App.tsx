@@ -19,6 +19,7 @@ import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
 import StudyPlanDashboardUI from './components/organisms/StudyPlanDashboardUI';
 import DailyChecklistUI from './components/organisms/DailyChecklistUI';
 import { TodaysMissionUI, TodaysMissionData, DailyMission } from './components/organisms/TodaysMissionUI';
+import { WrongAnswersUI } from './components/organisms/WrongAnswersUI';
 import { n5StudyPlan } from './data/study-plan-data';
 import { MainLayout } from './components/organisms/MainLayout';
 import { DashboardUI, DashboardAction, KPIData } from './components/organisms/DashboardUI';
@@ -1528,7 +1529,27 @@ function App() {
           </section>
         )}
 
-        {state === 'wrong-answers' && (
+        {state === 'wrong-answers' && shouldUseMainLayout && (
+          <MainLayout
+            sidebarItems={getSidebarItems()}
+            headerProps={{
+              title: '오답 노트',
+              user: user ? { username: user.username } : undefined,
+              onProfileClick: handleViewProfile,
+              onNotificationClick: () => setState('study-plan'),
+            }}
+          >
+            <WrongAnswersUI
+              questions={currentStudyQuestions}
+              onStartStudy={handleStartWrongAnswerStudy}
+              onBack={() => setState('initial')}
+              isLoading={state === 'loading'}
+            />
+          </MainLayout>
+        )}
+
+        {/* Fallback for non-layout pages */}
+        {state === 'wrong-answers' && !shouldUseMainLayout && (
           <section className="wrong-answers-section">
             <h2>오답 노트</h2>
             {currentStudyQuestions.length === 0 ? (
