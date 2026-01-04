@@ -7,6 +7,7 @@ import { allStudyConcepts } from './data/study-concepts';
 import ResultUI from './components/organisms/ResultUI';
 import LoginUI from './components/organisms/LoginUI';
 import UserPerformanceUI from './components/organisms/UserPerformanceUI';
+import AnalyticsUI from './components/organisms/AnalyticsUI';
 import UserHistoryUI from './components/organisms/UserHistoryUI';
 import UserProfileUI from './components/organisms/UserProfileUI';
 import DailyGoalUI from './components/organisms/DailyGoalUI';
