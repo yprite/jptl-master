@@ -18,6 +18,8 @@ import AdminDashboardUI from './components/organisms/AdminDashboardUI';
 import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
 import StudyPlanDashboardUI from './components/organisms/StudyPlanDashboardUI';
 import DailyChecklistUI from './components/organisms/DailyChecklistUI';
+import { TodaysMissionUI, TodaysMissionData, DailyMission } from './components/organisms/TodaysMissionUI';
+import { n5StudyPlan } from './data/study-plan-data';
 import { MainLayout } from './components/organisms/MainLayout';
 import { DashboardUI, DashboardAction, KPIData } from './components/organisms/DashboardUI';
 import { SidebarItem } from './components/organisms/Sidebar';

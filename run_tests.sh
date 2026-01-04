@@ -10,8 +10,8 @@ export PYTHONPATH="/Users/yprite/IdeaProjects/Cursor_pro/AI_DRIVEN_DEVELOP/backe
 source backend/venv/bin/activate
 
 # 커버리지 임계값 설정
-BACKEND_COVERAGE_THRESHOLD=80
-FRONTEND_COVERAGE_THRESHOLD=80
+BACKEND_COVERAGE_THRESHOLD=95
+FRONTEND_COVERAGE_THRESHOLD=95
 
 # ============================================================================
 # 함수 정의 섹션
