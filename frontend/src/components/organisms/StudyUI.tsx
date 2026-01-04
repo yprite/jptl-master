@@ -180,6 +180,7 @@ const StudyUI: React.FC<StudyUIProps> = ({
             onClick={handleSubmit}
             disabled={!isAllAnswered}
             className="nav-button submit-button"
+            data-testid="submit-button"
           >
             제출
           </button>
