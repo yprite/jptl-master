@@ -1488,12 +1488,33 @@ function App() {
 
         {state === 'result' && currentResult && (
           <section className="result-section">
-            <ResultUI result={currentResult} />
-            <div className="result-actions">
-              <button onClick={handleRestart} className="restart-button">
-                다시 시작
-              </button>
-            </div>
+            <ResultUI
+              result={currentResult}
+              testQuestions={currentTest?.questions.map(q => ({
+                id: q.id,
+                question_text: q.question_text,
+                choices: q.choices,
+                correct_answer: q.correct_answer || '',
+                explanation: q.explanation,
+                question_type: q.question_type,
+                difficulty: q.difficulty,
+                user_answer: '', // Will be filled from answer details
+                is_correct: false, // Will be filled from answer details
+                time_spent_seconds: 0 // Will be filled from answer details
+              }))}
+              onRetry={() => {
+                if (currentTest) {
+                  handleStartTest();
+                }
+              }}
+              onRetryWrongOnly={() => {
+                // 틀린 문제만 다시 풀기 - 추후 구현
+                handleRestart();
+              }}
+              onViewWrongAnswers={() => {
+                setState('wrong-answers');
+              }}
+            />
           </section>
         )}
 
