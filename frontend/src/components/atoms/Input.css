@@ -1,0 +1,137 @@
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.input-wrapper--full-width {
+  width: 100%;
+}
+
+.input-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+  transition: all var(--transition-base);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input:disabled {
+  background-color: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
+/* Variants */
+.input--default {
+  /* Default styles already applied */
+}
+
+.input--outlined {
+  border-width: 2px;
+}
+
+.input--filled {
+  background-color: var(--bg-secondary);
+  border: none;
+}
+
+.input--filled:focus {
+  background-color: var(--bg-primary);
+}
+
+/* Sizes */
+.input--sm {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  min-height: 32px;
+}
+
+.input--md {
+  padding: var(--spacing-3);
+  font-size: var(--font-size-base);
+  min-height: 40px;
+}
+
+.input--lg {
+  padding: var(--spacing-4);
+  font-size: var(--font-size-lg);
+  min-height: 48px;
+}
+
+/* Icons */
+.input--has-left-icon {
+  padding-left: var(--spacing-10);
+}
+
+.input--has-right-icon {
+  padding-right: var(--spacing-10);
+}
+
+.input-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.input-icon--left {
+  left: var(--spacing-3);
+}
+
+.input-icon--right {
+  right: var(--spacing-3);
+}
+
+/* Error State */
+.input--error {
+  border-color: var(--color-danger);
+}
+
+.input--error:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.input-error {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.input-helper {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.input--full-width {
+  width: 100%;
+}
+

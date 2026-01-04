@@ -296,6 +296,13 @@ export const resultApi = {
   async getResultReport(resultId: number): Promise<any> {
     return fetchApi(`/results/${resultId}/report`, { requireAuth: false });
   },
+
+  /**
+   * 상세 답안 이력 조회
+   */
+  async getResultDetails(resultId: number): Promise<any[]> {
+    return fetchApi(`/results/${resultId}/details`, { requireAuth: false });
+  },
 };
 
 /**

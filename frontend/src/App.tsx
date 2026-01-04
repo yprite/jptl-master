@@ -2,9 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import TestUI from './components/organisms/TestUI';
 import StudyUI from './components/organisms/StudyUI';
+import StudyModeUI, { StudyConcept } from './components/organisms/StudyModeUI';
+import { allStudyConcepts } from './data/study-concepts';
 import ResultUI from './components/organisms/ResultUI';
 import LoginUI from './components/organisms/LoginUI';
 import UserPerformanceUI from './components/organisms/UserPerformanceUI';
+import AnalyticsUI from './components/organisms/AnalyticsUI';
+import BadgeEarnedModal from './components/organisms/BadgeEarnedModal';
+import BadgeCollectionUI from './components/organisms/BadgeCollectionUI';
+import OnboardingUI, { OnboardingData } from './components/organisms/OnboardingUI';
+import { ToastContainer, ToastItem } from './components/atoms/ToastContainer';
+import { badgeService } from './services/badgeService';
+import { Badge } from './types/badges';
 import UserHistoryUI from './components/organisms/UserHistoryUI';
 import UserProfileUI from './components/organisms/UserProfileUI';
 import DailyGoalUI from './components/organisms/DailyGoalUI';
@@ -18,11 +27,18 @@ import AdminDashboardUI from './components/organisms/AdminDashboardUI';
 import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
 import StudyPlanDashboardUI from './components/organisms/StudyPlanDashboardUI';
 import DailyChecklistUI from './components/organisms/DailyChecklistUI';
+import { TodaysMissionUI, TodaysMissionData, DailyMission } from './components/organisms/TodaysMissionUI';
+import { WrongAnswersUI } from './components/organisms/WrongAnswersUI';
+import { SRSReviewListUI } from './components/organisms/SRSReviewListUI';
+import { n5StudyPlan } from './data/study-plan-data';
+import { MainLayout } from './components/organisms/MainLayout';
+import { DashboardUI, DashboardAction, KPIData } from './components/organisms/DashboardUI';
+import { SidebarItem } from './components/organisms/Sidebar';
 import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Vocabulary } from './types/api';
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'onboarding' | 'initial' | 'study-plan' | 'todays-mission' | 'daily-checklist' | 'study-select' | 'study' | 'study-mode' | 'wrong-answers' | 'srs-review' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
@@ -54,6 +70,11 @@ function App() {
   const [isInitializing, setIsInitializing] = useState(true);
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
+  const [earnedBadges, setEarnedBadges] = useState<Badge[]>([]);
+  const [showBadgeModal, setShowBadgeModal] = useState(false);
+  const [currentBadge, setCurrentBadge] = useState<Badge | null>(null);
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [showBadgeCollection, setShowBadgeCollection] = useState(false);
   
   // 최신 상태를 참조하기 위한 ref
   const stateRef = useRef(state);
@@ -85,7 +106,13 @@ function App() {
         if (currentUser.is_admin) {
           setState('admin-dashboard');
         } else {
-          setState('initial');
+          // 온보딩 완료 여부 확인
+          const onboardingCompleted = localStorage.getItem('onboarding_completed');
+          if (!onboardingCompleted) {
+            setState('onboarding');
+          } else {
+            setState('initial');
+          }
         }
       }
     });
@@ -120,8 +147,26 @@ function App() {
     if (loggedInUser.is_admin) {
       setState('admin-dashboard');
     } else {
-      setState('initial');
+      // 온보딩 완료 여부 확인
+      const onboardingCompleted = localStorage.getItem('onboarding_completed');
+      if (!onboardingCompleted) {
+        setState('onboarding');
+      } else {
+        setState('initial');
+      }
     }
+  };
+
+  // 온보딩 완료
+  const handleOnboardingComplete = (data: OnboardingData) => {
+    // 온보딩 데이터 저장
+    localStorage.setItem('onboarding_completed', 'true');
+    localStorage.setItem('onboarding_data', JSON.stringify(data));
+    
+    // Today Mission으로 이동
+    setSelectedWeek(1);
+    setSelectedDay(1);
+    setState('todays-mission');
   };
 
   // 로그아웃 핸들러
@@ -755,6 +800,17 @@ function App() {
     }
   };
 
+  // SRS 복습 리스트로 학습 시작
+  const handleStartSRSReview = async (questions: Question[]) => {
+    setCurrentStudyQuestions(questions);
+    setState('study');
+  };
+
+  // SRS 복습 리스트 조회
+  const handleViewSRSReview = () => {
+    setState('srs-review');
+  };
+
   // 반복 학습 세션 목록 조회
   const handleViewRepeatStudy = async () => {
     // 인증 확인
@@ -917,6 +973,226 @@ function App() {
     }
   };
 
+  // Helper: Generate sidebar items
+  const getSidebarItems = (): SidebarItem[] => {
+    const iconStyle = { width: 20, height: 20 };
+    return [
+      {
+        id: 'dashboard',
+        label: '대시보드',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z" stroke="currentColor" strokeWidth="2" fill="currentColor" />
+          </svg>
+        ),
+        onClick: () => setState('initial'),
+        active: state === 'initial'
+      },
+      {
+        id: 'study-plan',
+        label: '6주 학습 계획',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 11L12 14L22 4M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: () => setState('study-plan'),
+        active: state === 'study-plan' || state === 'daily-checklist'
+      },
+      {
+        id: 'test',
+        label: '테스트 모드',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5M12 12H15M12 16H15M9 12H9.01M9 16H9.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ),
+        onClick: handleStartTest,
+        active: state === 'test' || state === 'result'
+      },
+      {
+        id: 'study',
+        label: '학습 모드',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M12 6.253V13.5L15.5 15.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleStartStudy,
+        active: state === 'study' || state === 'study-select'
+      },
+      {
+        id: 'vocabulary',
+        label: '단어 학습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.5 2H20V22H6.5A2.5 2.5 0 0 1 4 19.5V4.5A2.5 2.5 0 0 1 6.5 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleStartVocabulary,
+        active: state === 'vocabulary' || state === 'vocabulary-list' || state === 'vocabulary-review'
+      },
+      {
+        id: 'grammar',
+        label: '문법 학습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ),
+        onClick: () => handleStartStudyMode('N5', ['grammar'], 20),
+        active: false
+      },
+      {
+        id: 'wrong-answers',
+        label: '오답 노트',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewWrongAnswers,
+        active: state === 'wrong-answers' || state === 'srs-review'
+      },
+      {
+        id: 'analytics',
+        label: '성능 분석',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M3 3V21H21M7 16L12 11L16 15L21 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M21 10H16V15H21V10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewPerformance,
+        active: state === 'performance'
+      },
+      {
+        id: 'profile',
+        label: '프로필/설정',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewProfile,
+        active: state === 'profile' || state === 'daily-goal' || state === 'history'
+      }
+    ];
+  };
+
+  // Helper: Generate dashboard actions
+  const getDashboardActions = (): DashboardAction[] => {
+    const iconStyle = { width: 24, height: 24 };
+    return [
+      {
+        id: 'study-plan',
+        title: '6주 학습 계획',
+        description: '오늘의 미션 시작',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 11L12 14L22 4M21 12V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: () => setState('study-plan')
+      },
+      {
+        id: 'test',
+        title: '테스트 모드',
+        description: 'N5 진단 테스트',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ),
+        onClick: handleStartTest
+      },
+      {
+        id: 'study',
+        title: '학습 모드',
+        description: '유형별 문제 학습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M12 6.253V13.5L15.5 15.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleStartStudy
+      },
+      {
+        id: 'analytics',
+        title: '성능 분석 보기',
+        description: '학습 통계 확인',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M3 3V21H21M7 16L12 11L16 15L21 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewPerformance
+      },
+      {
+        id: 'vocabulary',
+        title: '단어 학습',
+        description: '플래시카드 학습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.5 2H20V22H6.5A2.5 2.5 0 0 1 4 19.5V4.5A2.5 2.5 0 0 1 6.5 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleStartVocabulary
+      },
+      {
+        id: 'grammar',
+        title: '문법 학습',
+        description: '문법 패턴 연습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: () => handleStartStudyMode('N5', ['grammar'], 20)
+      },
+      {
+        id: 'history',
+        title: '학습 이력 보기',
+        description: '과거 학습 기록',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewHistory
+      },
+      {
+        id: 'wrong-answers',
+        title: '오답 노트',
+        description: '틀린 문제 복습',
+        icon: (
+          <svg {...iconStyle} viewBox="0 0 24 24" fill="none">
+            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ),
+        onClick: handleViewWrongAnswers
+      }
+    ];
+  };
+
+  // Helper: Get KPI data (mock for now, will be replaced with real data)
+  const getKPIData = (): KPIData => {
+    return {
+      recentScore: currentResult?.score,
+      streakDays: user?.study_streak || 0,
+      totalStudyCount: currentHistory.length || 0,
+      weeklyStudyTime: 120, // TODO: Calculate from history
+      weeklyGoalMinutes: 180,
+      weeklyGoalAchievement: 67 // TODO: Calculate from actual data
+    };
+  };
+
   // 초기화 중이면 로딩 표시
   if (isInitializing) {
     return (
@@ -935,6 +1211,9 @@ function App() {
 
   // 어드민 페이지인지 확인
   const isAdminPage = state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions' || state === 'admin-vocabulary';
+  
+  // Pages that should use MainLayout
+  const shouldUseMainLayout = !isAdminPage && state !== 'login' && state !== 'loading' && user && !user.is_admin;
 
   return (
     <div className="App">
@@ -963,6 +1242,12 @@ function App() {
           </section>
         )}
 
+        {state === 'onboarding' && (
+          <section className="onboarding-section">
+            <OnboardingUI onComplete={handleOnboardingComplete} />
+          </section>
+        )}
+
         {state === 'study-plan' && !user?.is_admin && (
           <section className="study-plan-section">
             <StudyPlanDashboardUI
@@ -980,7 +1265,153 @@ function App() {
           </section>
         )}
 
-        {state === 'daily-checklist' && !user?.is_admin && (
+        {state === 'daily-checklist' && !user?.is_admin && shouldUseMainLayout && (
+          <MainLayout
+            sidebarItems={getSidebarItems()}
+            headerProps={{
+              title: `${selectedWeek}주차 ${selectedDay}일차 미션`,
+              user: user ? { username: user.username } : undefined,
+              onProfileClick: handleViewProfile,
+              onNotificationClick: () => setState('study-plan'),
+            }}
+          >
+            <TodaysMissionUI
+              data={(() => {
+                const weekPlan = n5StudyPlan.weeks.find(w => w.week === selectedWeek);
+                const dailyTask = weekPlan?.dailyTasks.find(t => t.day === selectedDay);
+                if (!dailyTask) {
+                  return {
+                    week: selectedWeek,
+                    day: selectedDay,
+                    totalMissions: 0,
+                    completedMissions: 0,
+                    missions: [],
+                    recoveryPlanAvailable: false
+                  };
+                }
+
+                // Get completion status from localStorage
+                const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
+                let completedTasks: any = {};
+                if (saved) {
+                  try {
+                    completedTasks = JSON.parse(saved);
+                  } catch (e) {
+                    // Ignore parse errors
+                  }
+                }
+
+                const missions: DailyMission[] = [];
+                
+                // Vocabulary mission
+                if (dailyTask.tasks.vocabulary) {
+                  missions.push({
+                    id: 'vocabulary',
+                    type: 'vocabulary',
+                    title: '단어 학습',
+                    count: dailyTask.tasks.vocabulary,
+                    estimatedMinutes: Math.ceil(dailyTask.tasks.vocabulary / 2),
+                    completed: completedTasks.vocabulary || false,
+                    onClick: () => handleStartDailyStudy('vocabulary', dailyTask.tasks.vocabulary)
+                  });
+                }
+
+                // Grammar mission
+                if (dailyTask.tasks.grammar) {
+                  missions.push({
+                    id: 'grammar',
+                    type: 'grammar',
+                    title: '문법 학습',
+                    count: dailyTask.tasks.grammar,
+                    estimatedMinutes: dailyTask.tasks.grammar * 5,
+                    completed: completedTasks.grammar || false,
+                    onClick: () => handleStartDailyStudy('grammar', dailyTask.tasks.grammar)
+                  });
+                }
+
+                // Reading mission
+                if (dailyTask.tasks.reading) {
+                  missions.push({
+                    id: 'reading',
+                    type: 'reading',
+                    title: '독해 연습',
+                    count: dailyTask.tasks.reading,
+                    estimatedMinutes: dailyTask.tasks.reading * 3,
+                    completed: completedTasks.reading || false,
+                    onClick: () => handleStartDailyStudy('reading', dailyTask.tasks.reading)
+                  });
+                }
+
+                // Listening mission
+                if (dailyTask.tasks.listening) {
+                  missions.push({
+                    id: 'listening',
+                    type: 'listening',
+                    title: '청해 연습',
+                    count: dailyTask.tasks.listening,
+                    estimatedMinutes: dailyTask.tasks.listening * 4,
+                    completed: completedTasks.listening || false,
+                    onClick: () => handleStartDailyStudy('listening', dailyTask.tasks.listening)
+                  });
+                }
+
+                // Mock test mission
+                if (dailyTask.tasks.mockTest) {
+                  missions.push({
+                    id: 'test',
+                    type: 'test',
+                    title: '미니 테스트',
+                    count: 10,
+                    estimatedMinutes: 15,
+                    completed: completedTasks.mockTest || false,
+                    onClick: () => handleStartDailyStudy('mockTest')
+                  });
+                }
+
+                const completedMissions = missions.filter(m => m.completed).length;
+                const totalMissions = missions.length;
+
+                // Check if recovery plan is needed (less than 50% completed and it's past the current day)
+                const currentDay = parseInt(localStorage.getItem('studyPlan_currentDay') || '1', 10);
+                const recoveryPlanAvailable = selectedDay < currentDay && completedMissions < totalMissions / 2;
+
+                return {
+                  week: selectedWeek,
+                  day: selectedDay,
+                  totalMissions,
+                  completedMissions,
+                  missions,
+                  recoveryPlanAvailable
+                };
+              })()}
+              onStartMission={(missionId) => {
+                const weekPlan = n5StudyPlan.weeks.find(w => w.week === selectedWeek);
+                const dailyTask = weekPlan?.dailyTasks.find(t => t.day === selectedDay);
+                if (!dailyTask) return;
+
+                if (missionId === 'vocabulary') {
+                  handleStartDailyStudy('vocabulary', dailyTask.tasks.vocabulary);
+                } else if (missionId === 'grammar') {
+                  handleStartDailyStudy('grammar', dailyTask.tasks.grammar);
+                } else if (missionId === 'reading') {
+                  handleStartDailyStudy('reading', dailyTask.tasks.reading);
+                } else if (missionId === 'listening') {
+                  handleStartDailyStudy('listening', dailyTask.tasks.listening);
+                } else if (missionId === 'test') {
+                  handleStartDailyStudy('mockTest');
+                }
+              }}
+              onStartRecoveryPlan={() => {
+                // Recovery plan: minimal catch-up mission
+                handleStartDailyStudy('vocabulary', 10);
+              }}
+              onBack={() => setState('study-plan')}
+            />
+          </MainLayout>
+        )}
+
+        {/* Fallback to old DailyChecklistUI for non-layout pages */}
+        {state === 'daily-checklist' && !user?.is_admin && !shouldUseMainLayout && (
           <section className="daily-checklist-section">
             <DailyChecklistUI
               day={selectedDay}
@@ -991,79 +1422,26 @@ function App() {
           </section>
         )}
 
-        {state === 'initial' && (
-          <section className="initial-section" data-testid="initial-ui">
-            <h2>JLPT 학습 플랫폼</h2>
-            <p>테스트 모드와 학습 모드 중 선택하세요.</p>
-            <div className="initial-actions">
-              <button
-                onClick={() => setState('study-plan')}
-                className="study-plan-button"
-              >
-                6주 학습 계획
-              </button>
-              <button
-                onClick={handleStartTest}
-                className="start-button"
-              >
-                테스트 모드
-              </button>
-              <button
-                onClick={handleStartStudy}
-                className="study-button"
-              >
-                학습 모드
-              </button>
-              <button
-                onClick={handleViewPerformance}
-                className="performance-button"
-              >
-                성능 분석 보기
-              </button>
-              <button
-                onClick={handleViewHistory}
-                className="history-button"
-              >
-                학습 이력 보기
-              </button>
-              <button
-                onClick={handleViewProfile}
-                className="profile-button"
-              >
-                프로필 관리
-              </button>
-              <button
-                onClick={handleViewDailyGoal}
-                className="daily-goal-button"
-              >
-                일일 목표
-              </button>
-              <button
-                onClick={handleViewWrongAnswers}
-                className="wrong-answers-button"
-              >
-                오답 노트
-              </button>
-              <button
-                onClick={handleViewRepeatStudy}
-                className="repeat-study-button"
-              >
-                반복 학습
-              </button>
-              <button
-                onClick={handleStartVocabulary}
-                className="vocabulary-button"
-              >
-                단어 학습
-              </button>
-              <button
-                onClick={() => setState('vocabulary-review')}
-                className="vocabulary-review-button"
-              >
-                단어 복습
-              </button>
-            </div>
-          </section>
+        {state === 'initial' && shouldUseMainLayout && (
+          <MainLayout
+            sidebarItems={getSidebarItems()}
+            headerProps={{
+              title: '대시보드',
+              user: user ? { username: user.username } : undefined,
+              onProfileClick: handleViewProfile,
+              onNotificationClick: () => setState('study-plan'),
+              onSearch: (query) => {
+                // TODO: Implement search
+                console.log('Search:', query);
+              }
+            }}
+          >
+            <DashboardUI
+              kpiData={getKPIData()}
+              actions={getDashboardActions()}
+              onStartStudy={() => setState('study-plan')}
+            />
+          </MainLayout>
         )}
 
         {state === 'study-select' && (
@@ -1154,18 +1532,48 @@ function App() {
 
         {state === 'result' && currentResult && (
           <section className="result-section">
-            <ResultUI result={currentResult} />
-            <div className="result-actions">
-              <button onClick={handleRestart} className="restart-button">
-                다시 시작
-              </button>
-            </div>
+            <ResultUI
+              result={currentResult}
+              testQuestions={currentTest?.questions.map(q => ({
+                id: q.id,
+                question_text: q.question_text,
+                choices: q.choices,
+                correct_answer: q.correct_answer || '',
+                explanation: q.explanation,
+                question_type: q.question_type,
+                difficulty: q.difficulty,
+                user_answer: '', // Will be filled from answer details
+                is_correct: false, // Will be filled from answer details
+                time_spent_seconds: 0 // Will be filled from answer details
+              }))}
+              onRetry={() => {
+                if (currentTest) {
+                  handleStartTest();
+                }
+              }}
+              onRetryWrongOnly={() => {
+                // 틀린 문제만 다시 풀기 - 추후 구현
+                handleRestart();
+              }}
+              onViewWrongAnswers={() => {
+                setState('wrong-answers');
+              }}
+            />
           </section>
         )}
 
         {state === 'performance' && currentPerformance && (
           <section className="performance-section">
-            <UserPerformanceUI performance={currentPerformance} />
+            <AnalyticsUI
+              performance={currentPerformance}
+              previousPerformance={undefined} // TODO: 이전 주 데이터 가져오기
+              onStartStudy={(type) => {
+                handleStartStudyMode('N5', [type], 20);
+              }}
+              onViewWrongAnswers={() => {
+                setState('wrong-answers');
+              }}
+            />
             <div className="performance-actions">
               <button onClick={handleRestart} className="back-button">
                 돌아가기
@@ -1207,7 +1615,28 @@ function App() {
           </section>
         )}
 
-        {state === 'wrong-answers' && (
+        {state === 'wrong-answers' && shouldUseMainLayout && (
+          <MainLayout
+            sidebarItems={getSidebarItems()}
+            headerProps={{
+              title: '오답 노트',
+              user: user ? { username: user.username } : undefined,
+              onProfileClick: handleViewProfile,
+              onNotificationClick: () => setState('study-plan'),
+            }}
+          >
+            <WrongAnswersUI
+              questions={currentStudyQuestions}
+              onStartStudy={handleStartWrongAnswerStudy}
+              onViewSRSReview={handleViewSRSReview}
+              onBack={() => setState('initial')}
+              isLoading={false}
+            />
+          </MainLayout>
+        )}
+
+        {/* Fallback for non-layout pages */}
+        {state === 'wrong-answers' && !shouldUseMainLayout && (
           <section className="wrong-answers-section">
             <h2>오답 노트</h2>
             {currentStudyQuestions.length === 0 ? (

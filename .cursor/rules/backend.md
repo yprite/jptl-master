@@ -95,8 +95,8 @@ Reference: `docs/architecture/overview.md`, `docs/architecture/repositories.md`
 - Format: `test_*.py` (e.g., `test_user.py`, `test_auth.py`)
 
 ### Coverage
-- Minimum 80% code coverage required
-- Coverage below 80% causes test failure
+- Minimum 95% code coverage required
+- Coverage below 95% causes test failure
 - Write tests for all new features
 
 See `rules/testing.md` for detailed testing rules.

@@ -1,0 +1,189 @@
+.todays-mission {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.todays-mission__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.todays-mission__title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.todays-mission__progress-card {
+  margin-bottom: var(--spacing-6);
+}
+
+.todays-mission__progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-4);
+}
+
+.todays-mission__progress-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-1) 0;
+}
+
+.todays-mission__progress-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.todays-mission__recovery-banner {
+  margin-bottom: var(--spacing-6);
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.todays-mission__recovery-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+}
+
+.todays-mission__recovery-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.todays-mission__recovery-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.todays-mission__missions {
+  margin-bottom: var(--spacing-6);
+}
+
+.todays-mission__section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-6) 0;
+}
+
+.todays-mission__mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.todays-mission__mission-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  min-height: 120px;
+  position: relative;
+  transition: all var(--transition-base);
+}
+
+.todays-mission__mission-card:hover:not(.todays-mission__mission-card--completed) {
+  transform: translateY(-2px);
+}
+
+.todays-mission__mission-card--completed {
+  opacity: 0.7;
+  background-color: var(--bg-tertiary);
+}
+
+.todays-mission__mission-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.todays-mission__mission-card--completed .todays-mission__mission-icon {
+  background-color: var(--color-success);
+}
+
+.todays-mission__mission-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.todays-mission__mission-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+}
+
+.todays-mission__mission-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.todays-mission__mission-details {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.todays-mission__mission-separator {
+  color: var(--text-tertiary);
+}
+
+.todays-mission__mission-check {
+  position: absolute;
+  top: var(--spacing-4);
+  right: var(--spacing-4);
+  color: var(--color-success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.todays-mission__empty {
+  text-align: center;
+  padding: var(--spacing-12) var(--spacing-6);
+}
+
+.todays-mission__empty-text {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .todays-mission__mission-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .todays-mission__recovery-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .todays-mission__title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
