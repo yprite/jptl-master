@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import TestUI from './components/organisms/TestUI';
 import StudyUI from './components/organisms/StudyUI';
+import StudyModeUI, { StudyConcept } from './components/organisms/StudyModeUI';
+import { allStudyConcepts } from './data/study-concepts';
 import ResultUI from './components/organisms/ResultUI';
 import LoginUI from './components/organisms/LoginUI';
 import UserPerformanceUI from './components/organisms/UserPerformanceUI';
@@ -29,7 +31,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Voca
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'srs-review' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'study-mode' | 'wrong-answers' | 'srs-review' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
