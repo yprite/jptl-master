@@ -1556,7 +1556,7 @@ function App() {
               onStartStudy={handleStartWrongAnswerStudy}
               onViewSRSReview={handleViewSRSReview}
               onBack={() => setState('initial')}
-              isLoading={state === 'loading'}
+              isLoading={false}
             />
           </MainLayout>
         )}
