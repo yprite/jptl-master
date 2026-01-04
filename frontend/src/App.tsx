@@ -1208,7 +1208,153 @@ function App() {
           </section>
         )}
 
-        {state === 'daily-checklist' && !user?.is_admin && (
+        {state === 'daily-checklist' && !user?.is_admin && shouldUseMainLayout && (
+          <MainLayout
+            sidebarItems={getSidebarItems()}
+            headerProps={{
+              title: `${selectedWeek}주차 ${selectedDay}일차 미션`,
+              user: user ? { username: user.username } : undefined,
+              onProfileClick: handleViewProfile,
+              onNotificationClick: () => setState('study-plan'),
+            }}
+          >
+            <TodaysMissionUI
+              data={(() => {
+                const weekPlan = n5StudyPlan.weeks.find(w => w.week === selectedWeek);
+                const dailyTask = weekPlan?.dailyTasks.find(t => t.day === selectedDay);
+                if (!dailyTask) {
+                  return {
+                    week: selectedWeek,
+                    day: selectedDay,
+                    totalMissions: 0,
+                    completedMissions: 0,
+                    missions: [],
+                    recoveryPlanAvailable: false
+                  };
+                }
+
+                // Get completion status from localStorage
+                const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
+                let completedTasks: any = {};
+                if (saved) {
+                  try {
+                    completedTasks = JSON.parse(saved);
+                  } catch (e) {
+                    // Ignore parse errors
+                  }
+                }
+
+                const missions: DailyMission[] = [];
+                
+                // Vocabulary mission
+                if (dailyTask.tasks.vocabulary) {
+                  missions.push({
+                    id: 'vocabulary',
+                    type: 'vocabulary',
+                    title: '단어 학습',
+                    count: dailyTask.tasks.vocabulary,
+                    estimatedMinutes: Math.ceil(dailyTask.tasks.vocabulary / 2),
+                    completed: completedTasks.vocabulary || false,
+                    onClick: () => handleStartDailyStudy('vocabulary', dailyTask.tasks.vocabulary)
+                  });
+                }
+
+                // Grammar mission
+                if (dailyTask.tasks.grammar) {
+                  missions.push({
+                    id: 'grammar',
+                    type: 'grammar',
+                    title: '문법 학습',
+                    count: dailyTask.tasks.grammar,
+                    estimatedMinutes: dailyTask.tasks.grammar * 5,
+                    completed: completedTasks.grammar || false,
+                    onClick: () => handleStartDailyStudy('grammar', dailyTask.tasks.grammar)
+                  });
+                }
+
+                // Reading mission
+                if (dailyTask.tasks.reading) {
+                  missions.push({
+                    id: 'reading',
+                    type: 'reading',
+                    title: '독해 연습',
+                    count: dailyTask.tasks.reading,
+                    estimatedMinutes: dailyTask.tasks.reading * 3,
+                    completed: completedTasks.reading || false,
+                    onClick: () => handleStartDailyStudy('reading', dailyTask.tasks.reading)
+                  });
+                }
+
+                // Listening mission
+                if (dailyTask.tasks.listening) {
+                  missions.push({
+                    id: 'listening',
+                    type: 'listening',
+                    title: '청해 연습',
+                    count: dailyTask.tasks.listening,
+                    estimatedMinutes: dailyTask.tasks.listening * 4,
+                    completed: completedTasks.listening || false,
+                    onClick: () => handleStartDailyStudy('listening', dailyTask.tasks.listening)
+                  });
+                }
+
+                // Mock test mission
+                if (dailyTask.tasks.mockTest) {
+                  missions.push({
+                    id: 'test',
+                    type: 'test',
+                    title: '미니 테스트',
+                    count: 10,
+                    estimatedMinutes: 15,
+                    completed: completedTasks.mockTest || false,
+                    onClick: () => handleStartDailyStudy('mockTest')
+                  });
+                }
+
+                const completedMissions = missions.filter(m => m.completed).length;
+                const totalMissions = missions.length;
+
+                // Check if recovery plan is needed (less than 50% completed and it's past the current day)
+                const currentDay = parseInt(localStorage.getItem('studyPlan_currentDay') || '1', 10);
+                const recoveryPlanAvailable = selectedDay < currentDay && completedMissions < totalMissions / 2;
+
+                return {
+                  week: selectedWeek,
+                  day: selectedDay,
+                  totalMissions,
+                  completedMissions,
+                  missions,
+                  recoveryPlanAvailable
+                };
+              })()}
+              onStartMission={(missionId) => {
+                const weekPlan = n5StudyPlan.weeks.find(w => w.week === selectedWeek);
+                const dailyTask = weekPlan?.dailyTasks.find(t => t.day === selectedDay);
+                if (!dailyTask) return;
+
+                if (missionId === 'vocabulary') {
+                  handleStartDailyStudy('vocabulary', dailyTask.tasks.vocabulary);
+                } else if (missionId === 'grammar') {
+                  handleStartDailyStudy('grammar', dailyTask.tasks.grammar);
+                } else if (missionId === 'reading') {
+                  handleStartDailyStudy('reading', dailyTask.tasks.reading);
+                } else if (missionId === 'listening') {
+                  handleStartDailyStudy('listening', dailyTask.tasks.listening);
+                } else if (missionId === 'test') {
+                  handleStartDailyStudy('mockTest');
+                }
+              }}
+              onStartRecoveryPlan={() => {
+                // Recovery plan: minimal catch-up mission
+                handleStartDailyStudy('vocabulary', 10);
+              }}
+              onBack={() => setState('study-plan')}
+            />
+          </MainLayout>
+        )}
+
+        {/* Fallback to old DailyChecklistUI for non-layout pages */}
+        {state === 'daily-checklist' && !user?.is_admin && !shouldUseMainLayout && (
           <section className="daily-checklist-section">
             <DailyChecklistUI
               day={selectedDay}
