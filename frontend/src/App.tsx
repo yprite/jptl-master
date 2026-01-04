@@ -10,6 +10,7 @@ import UserPerformanceUI from './components/organisms/UserPerformanceUI';
 import AnalyticsUI from './components/organisms/AnalyticsUI';
 import BadgeEarnedModal from './components/organisms/BadgeEarnedModal';
 import BadgeCollectionUI from './components/organisms/BadgeCollectionUI';
+import OnboardingUI, { OnboardingData } from './components/organisms/OnboardingUI';
 import { ToastContainer, ToastItem } from './components/atoms/ToastContainer';
 import { badgeService } from './services/badgeService';
 import { Badge } from './types/badges';
@@ -37,7 +38,7 @@ import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Voca
 import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
 import { authService, User } from './services/auth';
 
-type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'study-mode' | 'wrong-answers' | 'srs-review' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+type AppState = 'login' | 'onboarding' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'study-mode' | 'wrong-answers' | 'srs-review' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
 
 function App() {
   const [state, setState] = useState<AppState>('login');
