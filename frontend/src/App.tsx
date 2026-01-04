@@ -762,6 +762,17 @@ function App() {
     }
   };
 
+  // SRS 복습 리스트로 학습 시작
+  const handleStartSRSReview = async (questions: Question[]) => {
+    setCurrentStudyQuestions(questions);
+    setState('study');
+  };
+
+  // SRS 복습 리스트 조회
+  const handleViewSRSReview = () => {
+    setState('srs-review');
+  };
+
   // 반복 학습 세션 목록 조회
   const handleViewRepeatStudy = async () => {
     // 인증 확인
@@ -1006,7 +1017,7 @@ function App() {
           </svg>
         ),
         onClick: handleViewWrongAnswers,
-        active: state === 'wrong-answers'
+        active: state === 'wrong-answers' || state === 'srs-review'
       },
       {
         id: 'analytics',
