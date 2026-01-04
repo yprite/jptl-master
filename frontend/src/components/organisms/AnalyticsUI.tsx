@@ -4,6 +4,7 @@ import { Button } from '../atoms/Button';
 import { Badge } from '../atoms/Badge';
 import { Progress } from '../atoms/Progress';
 import { UserPerformance } from '../../types/api';
+import ShareableReportCard, { ReportCardData } from './ShareableReportCard';
 import './AnalyticsUI.css';
 
 export interface WeeklyDelta {
@@ -46,6 +47,8 @@ const AnalyticsUI: React.FC<AnalyticsUIProps> = ({
   const [weakAreas, setWeakAreas] = useState<WeakArea[]>([]);
   const [weeklyDeltas, setWeeklyDeltas] = useState<WeeklyDelta[]>([]);
   const [recommendations, setRecommendations] = useState<RecommendedStudy[]>([]);
+  const [showShareCard, setShowShareCard] = useState(false);
+  const [reportCardData, setReportCardData] = useState<ReportCardData | null>(null);
 
   useEffect(() => {
     // 약점 TOP3 계산
@@ -184,6 +187,42 @@ const AnalyticsUI: React.FC<AnalyticsUIProps> = ({
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  const handleShareReport = () => {
+    // 리포트 카드 데이터 생성
+    const cardData: ReportCardData = {
+      userName: '사용자', // TODO: 실제 사용자 이름 가져오기
+      level: Object.keys(performance.level_progression || {})[0] || 'N5',
+      score: Object.values(performance.level_progression || {})[0]
+        ? (Object.values(performance.level_progression)[0] as any).average_score || 0
+        : 0,
+      accuracy: Object.values(performance.type_performance || {})[0]?.accuracy || 0,
+      totalQuestions: Object.values(performance.type_performance || {}).reduce(
+        (sum, data) => sum + ((data as any).total || 0),
+        0
+      ),
+      correctAnswers: Math.round(
+        Object.values(performance.type_performance || {}).reduce(
+          (sum, data) => sum + ((data as any).total || 0) * (data.accuracy / 100),
+          0
+        )
+      ),
+      studyStreak: 0, // TODO: 실제 연속 학습일 가져오기
+      totalStudyDays: 0, // TODO: 실제 총 학습일 가져오기
+      weakAreas: weakAreas.map(area => ({
+        type: area.type,
+        accuracy: area.accuracy
+      })),
+      achievements: [], // TODO: 실제 달성 배지 가져오기
+      period: {
+        start: performance.analysis_period_start,
+        end: performance.analysis_period_end
+      }
+    };
+
+    setReportCardData(cardData);
+    setShowShareCard(true);
   };
 
   return (
@@ -351,12 +390,26 @@ const AnalyticsUI: React.FC<AnalyticsUIProps> = ({
 
       {/* 액션 버튼 */}
       <div className="analytics-actions">
+        <Button variant="primary" onClick={handleShareReport}>
+          리포트 카드 공유하기
+        </Button>
         {onViewWrongAnswers && (
           <Button variant="outline" onClick={onViewWrongAnswers}>
             오답 노트 보기
           </Button>
         )}
       </div>
+
+      {/* 공유 가능한 리포트 카드 모달 */}
+      {showShareCard && reportCardData && (
+        <ShareableReportCard
+          data={reportCardData}
+          onClose={() => {
+            setShowShareCard(false);
+            setReportCardData(null);
+          }}
+        />
+      )}
     </div>
   );
 };
