@@ -1523,7 +1523,16 @@ function App() {
 
         {state === 'performance' && currentPerformance && (
           <section className="performance-section">
-            <UserPerformanceUI performance={currentPerformance} />
+            <AnalyticsUI
+              performance={currentPerformance}
+              previousPerformance={undefined} // TODO: 이전 주 데이터 가져오기
+              onStartStudy={(type) => {
+                handleStartStudyMode('N5', [type], 20);
+              }}
+              onViewWrongAnswers={() => {
+                setState('wrong-answers');
+              }}
+            />
             <div className="performance-actions">
               <button onClick={handleRestart} className="back-button">
                 돌아가기
