@@ -42,14 +42,14 @@
 ## Coverage Requirements
 
 ### Backend [CRITICAL]
-- **Minimum 80% code coverage required**
-- Coverage below 80% causes test failure
+- **Minimum 95% code coverage required**
+- Coverage below 95% causes test failure
 - All new features must include tests
 
 ### Frontend [CRITICAL]
-- **Minimum 80% code coverage required**
+- **Minimum 95% code coverage required**
 - **100% coverage for critical user flows**
-- Coverage below 80% causes test failure
+- Coverage below 95% causes test failure
 
 ### Enforcement
 - `run_tests.sh` validates coverage thresholds
