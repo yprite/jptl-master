@@ -336,11 +336,31 @@ function App() {
       }
     } catch (err) {
       if (err instanceof ApiError) {
-        setError(err.message);
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else if (err.status === 400) {
+          setError(err.message || '잘못된 요청입니다.');
+          setState('error');
+        } else if (err.status === 500) {
+          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          setState('error');
+        } else {
+          setError(err.message || '학습 세션 제출 중 오류가 발생했습니다.');
+          setState('error');
+        }
+      } else if (err instanceof Error) {
+        // 네트워크 에러 등
+        if (err.message.includes('fetch') || err.message.includes('network')) {
+          setError('네트워크 연결을 확인해주세요.');
+        } else {
+          setError(err.message || '학습 세션 제출 중 오류가 발생했습니다.');
+        }
+        setState('error');
       } else {
         setError('학습 세션 제출 중 오류가 발생했습니다.');
+        setState('error');
       }
-      setState('error');
     }
   };
 
@@ -624,21 +644,50 @@ function App() {
   // 프로필 업데이트
   const handleProfileUpdate = async (updates: { username?: string; target_level?: string }) => {
     if (!user) {
-      throw new Error('사용자 정보가 없습니다.');
+      setError('사용자 정보가 없습니다.');
+      setState('error');
+      return;
     }
 
-    const updatedProfile = await userApi.updateCurrentUser(updates);
-    setCurrentProfile(updatedProfile);
-    // 사용자 정보도 업데이트
-    setUser({
-      id: updatedProfile.id,
-      email: updatedProfile.email,
-      username: updatedProfile.username,
-      target_level: updatedProfile.target_level,
-      current_level: updatedProfile.current_level,
-      total_tests_taken: updatedProfile.total_tests_taken,
-      study_streak: updatedProfile.study_streak,
-    });
+    setError(null);
+
+    try {
+      const updatedProfile = await userApi.updateCurrentUser(updates);
+      setCurrentProfile(updatedProfile);
+      // 사용자 정보도 업데이트
+      setUser({
+        id: updatedProfile.id,
+        email: updatedProfile.email,
+        username: updatedProfile.username,
+        target_level: updatedProfile.target_level,
+        current_level: updatedProfile.current_level,
+        total_tests_taken: updatedProfile.total_tests_taken,
+        study_streak: updatedProfile.study_streak,
+      });
+    } catch (err) {
+      if (err instanceof ApiError) {
+        // 401 에러인 경우 로그인 화면으로
+        if (err.status === 401) {
+          setState('login');
+        } else if (err.status === 400) {
+          setError(err.message || '잘못된 요청입니다.');
+        } else if (err.status === 500) {
+          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        } else {
+          setError(err.message || '프로필 업데이트 중 오류가 발생했습니다.');
+        }
+      } else if (err instanceof Error) {
+        // 네트워크 에러 등
+        if (err.message.includes('fetch') || err.message.includes('network')) {
+          setError('네트워크 연결을 확인해주세요.');
+        } else {
+          setError(err.message || '프로필 업데이트 중 오류가 발생했습니다.');
+        }
+      } else {
+        setError('프로필 업데이트 중 오류가 발생했습니다.');
+      }
+      setState('error');
+    }
   };
 
   // 오답 노트 조회
@@ -846,10 +895,25 @@ function App() {
       setCurrentVocabularies(updatedVocabularies);
     } catch (err) {
       if (err instanceof ApiError) {
-        setError(err.message);
+        if (err.status === 401) {
+          setState('login');
+        } else if (err.status === 404) {
+          setError('단어를 찾을 수 없습니다.');
+        } else if (err.status === 500) {
+          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        } else {
+          setError(err.message || '암기 상태 업데이트 중 오류가 발생했습니다.');
+        }
+      } else if (err instanceof Error) {
+        if (err.message.includes('fetch') || err.message.includes('network')) {
+          setError('네트워크 연결을 확인해주세요.');
+        } else {
+          setError(err.message || '암기 상태 업데이트 중 오류가 발생했습니다.');
+        }
       } else {
         setError('암기 상태 업데이트 중 오류가 발생했습니다.');
       }
+      setState('error');
     }
   };
 
