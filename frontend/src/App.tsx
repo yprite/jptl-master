@@ -20,6 +20,7 @@ import StudyPlanDashboardUI from './components/organisms/StudyPlanDashboardUI';
 import DailyChecklistUI from './components/organisms/DailyChecklistUI';
 import { TodaysMissionUI, TodaysMissionData, DailyMission } from './components/organisms/TodaysMissionUI';
 import { WrongAnswersUI } from './components/organisms/WrongAnswersUI';
+import { SRSReviewListUI } from './components/organisms/SRSReviewListUI';
 import { n5StudyPlan } from './data/study-plan-data';
 import { MainLayout } from './components/organisms/MainLayout';
 import { DashboardUI, DashboardAction, KPIData } from './components/organisms/DashboardUI';
@@ -1542,6 +1543,7 @@ function App() {
             <WrongAnswersUI
               questions={currentStudyQuestions}
               onStartStudy={handleStartWrongAnswerStudy}
+              onViewSRSReview={handleViewSRSReview}
               onBack={() => setState('initial')}
               isLoading={state === 'loading'}
             />

@@ -19,6 +19,7 @@ export interface WrongAnswersUIProps {
 export const WrongAnswersUI: React.FC<WrongAnswersUIProps> = ({
   questions: initialQuestions,
   onStartStudy,
+  onViewSRSReview,
   onBack,
   isLoading = false
 }) => {
@@ -184,6 +185,14 @@ export const WrongAnswersUI: React.FC<WrongAnswersUIProps> = ({
         </div>
 
         <div className="wrong-answers__actions">
+          {onViewSRSReview && (
+            <Button
+              variant="primary"
+              onClick={onViewSRSReview}
+            >
+              오늘의 복습 리스트
+            </Button>
+          )}
           <Button
             variant="primary"
             onClick={() => onStartStudy(Math.min(filteredQuestions.length, 20))}
