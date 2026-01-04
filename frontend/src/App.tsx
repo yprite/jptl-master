@@ -69,6 +69,11 @@ function App() {
   const [isInitializing, setIsInitializing] = useState(true);
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
+  const [earnedBadges, setEarnedBadges] = useState<Badge[]>([]);
+  const [showBadgeModal, setShowBadgeModal] = useState(false);
+  const [currentBadge, setCurrentBadge] = useState<Badge | null>(null);
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [showBadgeCollection, setShowBadgeCollection] = useState(false);
   
   // 최신 상태를 참조하기 위한 ref
   const stateRef = useRef(state);
