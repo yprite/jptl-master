@@ -289,7 +289,7 @@ const StudyModeUI: React.FC<StudyModeUIProps> = ({
             <Badge variant={getCategoryColor(concept.category)} size="sm">
               {getCategoryLabel(concept.category)}
             </Badge>
-            <Badge variant="outline" size="sm">
+            <Badge variant="primary" size="sm">
               난이도: {currentQuestion.difficulty}
             </Badge>
           </div>

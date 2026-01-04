@@ -15,6 +15,7 @@ export interface BadgeProgress {
   target: number;
   earned: boolean;
   earnedAt?: string;
+  progress: number; // 0-100
 }
 
 class BadgeService {
@@ -27,12 +28,13 @@ class BadgeService {
 
     return Object.values(BADGE_DEFINITIONS).map(def => {
       const saved = savedBadges[def.type];
+      const progress = this.getBadgeProgress(def.type);
       return {
         id: def.type,
         ...def,
         earnedAt: saved?.earnedAt,
-        progress: this.getBadgeProgress(def.type).progress,
-        current: this.getBadgeProgress(def.type).current
+        progress: progress.progress,
+        current: progress.current
       };
     });
   }
@@ -60,10 +62,11 @@ class BadgeService {
       return null;
     }
 
+    const earnedAt = new Date().toISOString();
     const badge: Badge = {
       id: type,
       ...definition,
-      earnedAt: new Date().toISOString(),
+      earnedAt: earnedAt,
       progress: 100,
       current: definition.target,
       target: definition.target
@@ -72,7 +75,7 @@ class BadgeService {
     // 저장
     const saved = localStorage.getItem(STORAGE_KEY);
     const savedBadges: Record<string, { earnedAt: string }> = saved ? JSON.parse(saved) : {};
-    savedBadges[type] = { earnedAt: badge.earnedAt };
+    savedBadges[type] = { earnedAt: earnedAt };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(savedBadges));
 
     return badge;
@@ -84,7 +87,7 @@ class BadgeService {
   getBadgeProgress(type: BadgeType): BadgeProgress {
     const definition = BADGE_DEFINITIONS[type];
     if (!definition) {
-      return { type, current: 0, target: 0, earned: false };
+      return { type, current: 0, target: 0, earned: false, progress: 0 };
     }
 
     const earned = this.hasBadge(type);
@@ -119,14 +122,15 @@ class BadgeService {
         current = 0;
     }
 
-    const progress = definition.target ? Math.min((current / definition.target) * 100, 100) : 0;
+    const progressValue = definition.target ? Math.min((current / definition.target) * 100, 100) : 0;
 
     return {
       type,
       current,
       target: definition.target || 0,
       earned,
-      earnedAt: earned ? this.getEarnedAt(type) : undefined
+      earnedAt: earned ? this.getEarnedAt(type) : undefined,
+      progress: progressValue
     };
   }
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal } from '../atoms/Modal';
-import { Badge } from '../types/badges';
-import { getBadgeRarityColor } from '../types/badges';
+import { Badge, getBadgeRarityColor } from '../../types/badges';
 import './BadgeEarnedModal.css';
 
 interface BadgeEarnedModalProps {

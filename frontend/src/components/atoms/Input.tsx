@@ -4,7 +4,7 @@ import './Input.css';
 export type InputSize = 'sm' | 'md' | 'lg';
 export type InputVariant = 'default' | 'outlined' | 'filled';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   error?: string;
   helperText?: string;

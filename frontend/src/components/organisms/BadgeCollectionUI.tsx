@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../atoms/Card';
-import { Badge, getBadgeRarityColor } from '../types/badges';
+import { Badge, getBadgeRarityColor } from '../../types/badges';
 import { badgeService } from '../../services/badgeService';
 import './BadgeCollectionUI.css';
 
