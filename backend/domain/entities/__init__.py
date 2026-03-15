@@ -12,5 +12,6 @@ from .user_performance import UserPerformance
 from .study_session import StudySession
 from .vocabulary import Vocabulary
 from .user_vocabulary import UserVocabulary
+from .daily_goal import DailyGoal
 
-__all__ = ["User", "Question", "Test", "Result", "AnswerDetail", "LearningHistory", "UserPerformance", "StudySession", "Vocabulary", "UserVocabulary"]
+__all__ = ["User", "Question", "Test", "Result", "AnswerDetail", "LearningHistory", "UserPerformance", "StudySession", "Vocabulary", "UserVocabulary", "DailyGoal"]

@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: '../tests/frontend/e2e',
+  testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 1,
@@ -23,11 +23,18 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: 'npm start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000, // 서버 시작 타임아웃 120초
-  },
+  webServer: [
+    {
+      command: 'cd .. && ./.venv/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8002',
+      url: 'http://127.0.0.1:8002/health',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+    {
+      command: 'BROWSER=none REACT_APP_API_URL=http://localhost:8002 npm start',
+      url: 'http://localhost:3000',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+  ],
 });
-

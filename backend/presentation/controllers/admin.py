@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict
 import os
 import shutil
+import logging
 from pathlib import Path
 
 from backend.domain.entities.user import User
@@ -23,6 +24,7 @@ from backend.infrastructure.config.database import get_database
 from backend.presentation.controllers.auth import get_admin_user
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 # Pydantic 요청/응답 모델
 class UserResponse(BaseModel):
@@ -285,7 +287,7 @@ async def create_admin_question(
             saved_question = repo.save(updated_question)
         except Exception as e:
             # TTS 생성 실패해도 문제 생성은 성공 (오디오는 나중에 수동 생성 가능)
-            print(f"TTS 생성 실패 (문제 ID: {saved_question.id}): {str(e)}")
+            logger.warning(f"TTS 생성 실패 (문제 ID: {saved_question.id}): {str(e)}")
     
     return {
         "success": True,
@@ -415,7 +417,7 @@ async def update_admin_question(
             updated_question.audio_url = audio_url
         except Exception as e:
             # TTS 생성 실패해도 문제 수정은 성공
-            print(f"TTS 생성 실패 (문제 ID: {question_id}): {str(e)}")
+            logger.warning(f"TTS 생성 실패 (문제 ID: {question_id}): {str(e)}")
     
     # 저장
     saved_question = repo.save(updated_question)
@@ -869,7 +871,7 @@ async def import_questions(
             saved_questions.append(saved_question)
         except Exception as e:
             # 개별 문제 저장 실패해도 계속 진행
-            print(f"문제 임포트 실패: {str(e)}")
+            logger.error(f"문제 임포트 실패: {str(e)}", exc_info=True)
             continue
     
     return {
@@ -935,7 +937,7 @@ async def import_questions_from_file(
                 saved_questions.append(saved_question)
             except Exception as e:
                 # 개별 문제 저장 실패해도 계속 진행
-                print(f"문제 임포트 실패: {str(e)}")
+                logger.error(f"문제 임포트 실패: {str(e)}", exc_info=True)
                 continue
         
         return {
@@ -1029,7 +1031,7 @@ async def import_vocabularies(
             saved_vocabularies.append(saved_vocabulary)
         except Exception as e:
             # 개별 단어 저장 실패해도 계속 진행
-            print(f"단어 임포트 실패: {str(e)}")
+            logger.error(f"단어 임포트 실패: {str(e)}", exc_info=True)
             continue
     
     return {
@@ -1093,7 +1095,7 @@ async def import_vocabularies_from_file(
                 saved_vocabularies.append(saved_vocabulary)
             except Exception as e:
                 # 개별 단어 저장 실패해도 계속 진행
-                print(f"단어 임포트 실패: {str(e)}")
+                logger.error(f"단어 임포트 실패: {str(e)}", exc_info=True)
                 continue
         
         return {

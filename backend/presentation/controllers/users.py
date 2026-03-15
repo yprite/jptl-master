@@ -11,8 +11,12 @@ from backend.domain.value_objects.jlpt import JLPTLevel
 from backend.infrastructure.repositories.user_repository import SqliteUserRepository
 from backend.infrastructure.repositories.user_performance_repository import SqliteUserPerformanceRepository
 from backend.infrastructure.repositories.learning_history_repository import SqliteLearningHistoryRepository
+from backend.infrastructure.repositories.daily_goal_repository import SqliteDailyGoalRepository
 from backend.infrastructure.config.database import get_database
 from backend.presentation.controllers.auth import get_current_user
+from backend.domain.services.daily_statistics_service import DailyStatisticsService
+from backend.domain.entities.daily_goal import DailyGoal
+from datetime import date
 
 router = APIRouter()
 
@@ -36,6 +40,14 @@ class UserResponse(BaseModel):
     study_streak: int
     is_admin: bool = False
 
+class DailyGoalRequest(BaseModel):
+    target_questions: Optional[int] = None
+    target_minutes: Optional[int] = None
+
+class DailyGoalResponse(BaseModel):
+    target_questions: int
+    target_minutes: int
+
 # 의존성 주입 함수
 def get_user_repository() -> SqliteUserRepository:
     """사용자 리포지토리 의존성 주입"""
@@ -51,6 +63,11 @@ def get_learning_history_repository() -> SqliteLearningHistoryRepository:
     """학습 이력 리포지토리 의존성 주입"""
     db = get_database()
     return SqliteLearningHistoryRepository(db)
+
+def get_daily_goal_repository() -> SqliteDailyGoalRepository:
+    """일일 목표 리포지토리 의존성 주입"""
+    db = get_database()
+    return SqliteDailyGoalRepository(db)
 
 @router.get("/")
 async def get_users():
@@ -325,3 +342,96 @@ async def get_user_history(user_id: int):
         }
         for history in histories
     ]
+
+@router.get("/{user_id}/daily-goal")
+async def get_user_daily_goal(
+    user_id: int,
+    current_user: User = Depends(get_current_user)
+):
+    """사용자 일일 학습 목표 조회
+    
+    특정 사용자의 일일 학습 목표와 오늘의 학습 통계, 목표 달성률을 조회합니다.
+    """
+    # 권한 확인: 자신의 목표만 조회 가능
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="다른 사용자의 목표를 조회할 수 없습니다")
+    
+    user_repo = get_user_repository()
+    daily_goal_repo = get_daily_goal_repository()
+    learning_history_repo = get_learning_history_repository()
+    
+    # 사용자 존재 확인
+    user = user_repo.find_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다")
+    
+    # 일일 목표 조회
+    daily_goal = daily_goal_repo.find_by_user_id(user_id)
+    
+    # 일일 통계 서비스 생성
+    statistics_service = DailyStatisticsService(learning_history_repo)
+    
+    # 일일 목표와 통계 조회
+    result = statistics_service.get_daily_goal_with_statistics(
+        daily_goal=daily_goal,
+        user_id=user_id,
+        target_date=date.today()
+    )
+    
+    return {
+        "success": True,
+        "data": result,
+        "message": "일일 학습 목표 조회 성공"
+    }
+
+@router.put("/{user_id}/daily-goal")
+async def update_user_daily_goal(
+    user_id: int,
+    request: DailyGoalRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """사용자 일일 학습 목표 설정/업데이트
+    
+    특정 사용자의 일일 학습 목표를 설정하거나 업데이트합니다.
+    """
+    # 권한 확인: 자신의 목표만 수정 가능
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="다른 사용자의 목표를 수정할 수 없습니다")
+    
+    user_repo = get_user_repository()
+    daily_goal_repo = get_daily_goal_repository()
+    
+    # 사용자 존재 확인
+    user = user_repo.find_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다")
+    
+    # 기존 목표 조회 또는 새로 생성
+    daily_goal = daily_goal_repo.find_by_user_id(user_id)
+    
+    if daily_goal is None:
+        # 새 목표 생성 (기본값 사용)
+        daily_goal = DailyGoal(
+            id=None,
+            user_id=user_id,
+            target_questions=request.target_questions or 10,
+            target_minutes=request.target_minutes or 30
+        )
+    else:
+        # 기존 목표 업데이트
+        daily_goal.update_goals(
+            target_questions=request.target_questions,
+            target_minutes=request.target_minutes
+        )
+    
+    # 저장
+    saved_goal = daily_goal_repo.save(daily_goal)
+    
+    return {
+        "success": True,
+        "data": DailyGoalResponse(
+            target_questions=saved_goal.target_questions,
+            target_minutes=saved_goal.target_minutes
+        ),
+        "message": "일일 학습 목표가 성공적으로 설정되었습니다"
+    }

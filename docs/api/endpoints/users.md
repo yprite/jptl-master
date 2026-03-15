@@ -475,10 +475,148 @@ DELETE /api/v1/users/1
 
 ---
 
+### 10. 일일 학습 목표 조회
+
+**GET** `/api/v1/users/{user_id}/daily-goal`
+
+특정 사용자의 일일 학습 목표와 오늘의 학습 통계, 목표 달성률을 조회합니다.
+
+**경로 파라미터:**
+- `user_id` (int, required): 사용자 ID
+
+**요청:**
+- 인증: 세션 기반 인증 필요
+- 권한: 자신의 목표만 조회 가능
+
+**응답:**
+```json
+{
+  "success": true,
+  "data": {
+    "goal": {
+      "target_questions": 10,
+      "target_minutes": 30
+    },
+    "statistics": {
+      "date": "2025-01-05",
+      "total_questions": 8,
+      "total_minutes": 25,
+      "study_sessions": 2
+    },
+    "achievement": {
+      "questions_achievement_rate": 80.0,
+      "minutes_achievement_rate": 83.33,
+      "overall_achievement_rate": 81.67,
+      "is_questions_achieved": false,
+      "is_minutes_achieved": false,
+      "is_fully_achieved": false,
+      "has_goal": true
+    }
+  },
+  "message": "일일 학습 목표 조회 성공"
+}
+```
+
+**응답 스키마:**
+- `goal` (object): 일일 목표
+  - `target_questions` (int): 목표 문제 수
+  - `target_minutes` (int): 목표 학습 시간 (분)
+- `statistics` (object): 일일 학습 통계
+  - `date` (string): 조회 날짜 (ISO 형식)
+  - `total_questions` (int): 오늘 푼 문제 수
+  - `total_minutes` (int): 오늘 학습 시간 (분)
+  - `study_sessions` (int): 학습 세션 수
+- `achievement` (object): 목표 달성률
+  - `questions_achievement_rate` (float): 문제 수 달성률 (0.0 ~ 100.0)
+  - `minutes_achievement_rate` (float): 학습 시간 달성률 (0.0 ~ 100.0)
+  - `overall_achievement_rate` (float): 전체 달성률 (평균)
+  - `is_questions_achieved` (boolean): 문제 수 목표 달성 여부
+  - `is_minutes_achieved` (boolean): 학습 시간 목표 달성 여부
+  - `is_fully_achieved` (boolean): 모든 목표 달성 여부
+  - `has_goal` (boolean): 목표 설정 여부
+
+**상태 코드:**
+- `200 OK`: 성공
+- `403 Forbidden`: 다른 사용자의 목표 조회 시도
+- `404 Not Found`: 사용자를 찾을 수 없음
+
+**에러 응답:**
+```json
+{
+  "detail": "다른 사용자의 목표를 조회할 수 없습니다"
+}
+```
+
+---
+
+### 11. 일일 학습 목표 설정/업데이트
+
+**PUT** `/api/v1/users/{user_id}/daily-goal`
+
+특정 사용자의 일일 학습 목표를 설정하거나 업데이트합니다.
+
+**경로 파라미터:**
+- `user_id` (int, required): 사용자 ID
+
+**요청 본문:**
+```json
+{
+  "target_questions": 20,
+  "target_minutes": 60
+}
+```
+
+**요청 스키마:**
+- `target_questions` (int, optional): 목표 문제 수
+- `target_minutes` (int, optional): 목표 학습 시간 (분)
+
+**요청:**
+- 인증: 세션 기반 인증 필요
+- 권한: 자신의 목표만 수정 가능
+
+**응답:**
+```json
+{
+  "success": true,
+  "data": {
+    "target_questions": 20,
+    "target_minutes": 60
+  },
+  "message": "일일 학습 목표가 성공적으로 설정되었습니다"
+}
+```
+
+**응답 스키마:**
+- `success` (boolean): 요청 성공 여부
+- `data` (DailyGoalResponse): 설정된 일일 목표
+  - `target_questions` (int): 목표 문제 수
+  - `target_minutes` (int): 목표 학습 시간 (분)
+- `message` (string): 응답 메시지
+
+**상태 코드:**
+- `200 OK`: 성공
+- `403 Forbidden`: 다른 사용자의 목표 수정 시도
+- `404 Not Found`: 사용자를 찾을 수 없음
+
+**에러 응답:**
+```json
+{
+  "detail": "다른 사용자의 목표를 수정할 수 없습니다"
+}
+```
+
+**참고:**
+- 목표가 없는 경우 새로 생성됩니다.
+- 일부 필드만 제공하면 해당 필드만 업데이트됩니다.
+- 목표가 없는 경우 기본값(문제 수: 10, 학습 시간: 30분)이 사용됩니다.
+
+---
+
 ## 인증
 
 일부 엔드포인트는 세션 기반 인증이 필요합니다:
 - `/api/v1/users/me` (GET, PUT)
+- `/api/v1/users/{user_id}/daily-goal` (GET, PUT)
 
 인증이 필요한 엔드포인트는 세션 쿠키를 통해 인증됩니다.
 

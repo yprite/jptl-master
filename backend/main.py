@@ -10,15 +10,30 @@ from starlette.middleware.sessions import SessionMiddleware
 from datetime import datetime
 import secrets
 import os
+import logging
 
 from backend.presentation.controllers import router as api_router
 from backend.infrastructure.config.database import get_database
+from backend.presentation.middleware.error_handler import (
+    validation_exception_handler,
+    http_exception_handler,
+    general_exception_handler
+)
+from fastapi.exceptions import RequestValidationError
+from fastapi import HTTPException
+
+# 로깅 설정
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # FastAPI 애플리케이션 생성
 app = FastAPI(
-    title="JLPT Skill Assessment Platform API",
-    description="JLPT 자격 검증 및 실력 향상 지원 플랫폼",
-    version="1.0.0",
+    title="JLPT 100-Day Roadmap API",
+    description="Anki 학습법 기반 JLPT 단어/문법 100일 완주 서비스",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -46,6 +61,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 전역 예외 핸들러 등록
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(Exception, general_exception_handler)
+
 # API 라우터 등록
 app.include_router(api_router, prefix="/api/v1")
 
@@ -64,17 +84,17 @@ async def startup_event():
     with db.get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT 1")
-    print("Database connection established")
+    logger.info("Database connection established")
 
 @app.get("/")
 async def root():
     """기본 헬스 체크 엔드포인트"""
-    return {"message": "JLPT Skill Assessment Platform API", "status": "running"}
+    return {"message": "JLPT 100-Day Roadmap API", "status": "running"}
 
 @app.get("/health")
 async def health_check():
     """상세 헬스 체크"""
-    return {"status": "healthy", "version": "1.0.0"}
+    return {"status": "healthy", "version": "2.0.0"}
 
 if __name__ == "__main__":
     import uvicorn

@@ -5,11 +5,14 @@ CSV, JSON 파일에서 기출문제를 임포트하는 기능
 
 import csv
 import json
+import logging
 from typing import List, Dict, Optional
 from pathlib import Path
 from backend.domain.entities.question import Question
 from backend.domain.entities.vocabulary import Vocabulary
 from backend.domain.value_objects.jlpt import JLPTLevel, QuestionType
+
+logger = logging.getLogger(__name__)
 
 
 class JLPTQuestionImporter:
@@ -61,7 +64,7 @@ class JLPTQuestionImporter:
                 questions.append(question)
             except Exception as e:
                 # 개별 문제 파싱 실패해도 계속 진행
-                print(f"문제 파싱 실패: {str(e)}")
+                logger.warning(f"문제 파싱 실패: {str(e)}")
                 continue
         
         return questions
@@ -112,7 +115,7 @@ class JLPTQuestionImporter:
                     questions.append(question)
                 except Exception as e:
                     # 개별 문제 파싱 실패해도 계속 진행
-                    print(f"문제 파싱 실패: {str(e)}")
+                    logger.warning(f"문제 파싱 실패: {str(e)}")
                     continue
         
         return questions
@@ -156,7 +159,7 @@ class JLPTQuestionImporter:
                 vocabularies.append(vocabulary)
             except Exception as e:
                 # 개별 단어 파싱 실패해도 계속 진행
-                print(f"단어 파싱 실패: {str(e)}")
+                logger.warning(f"단어 파싱 실패: {str(e)}")
                 continue
         
         return vocabularies
@@ -200,7 +203,7 @@ class JLPTQuestionImporter:
                     vocabularies.append(vocabulary)
                 except Exception as e:
                     # 개별 단어 파싱 실패해도 계속 진행
-                    print(f"단어 파싱 실패: {str(e)}")
+                    logger.warning(f"단어 파싱 실패: {str(e)}")
                     continue
         
         return vocabularies

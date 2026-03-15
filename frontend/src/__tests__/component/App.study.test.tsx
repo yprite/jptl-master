@@ -1,784 +1,514 @@
-/**
- * App 컴포넌트 - 학습 모드 관련 테스트
- * 실제 환경에서 발생할 수 있는 에러 시나리오를 커버
- */
-
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from '../../App';
 
-// authService 모킹
-jest.mock('../../services/auth', () => {
-  const mockSubscribeFn = jest.fn((listener) => {
-    listener(null);
-    return jest.fn();
-  });
-  const mockInitializeFn = jest.fn().mockResolvedValue(undefined);
-  const mockGetCurrentUserFn = jest.fn().mockReturnValue(null);
-  const mockIsAuthenticatedFn = jest.fn().mockReturnValue(false);
-  const mockLogoutFn = jest.fn().mockResolvedValue(undefined);
-  
-  return {
-    authService: {
-      subscribe: mockSubscribeFn,
-      initialize: mockInitializeFn,
-      getCurrentUser: mockGetCurrentUserFn,
-      isAuthenticated: mockIsAuthenticatedFn,
-      logout: mockLogoutFn,
-    },
-  };
-});
+const mockSubscribe = jest.fn();
+const mockInitialize = jest.fn();
+const mockLogout = jest.fn();
 
-// 모킹된 함수에 접근하기 위한 타입 정의
-import { authService } from '../../services/auth';
-const mockAuthService = authService as jest.Mocked<typeof authService>;
+jest.mock('../../services/roadmap', () => ({
+  roadmapApi: {
+    getLevels: jest.fn(),
+    previewPlan: jest.fn(),
+    previewDay: jest.fn(),
+    getProfile: jest.fn(),
+    getDashboard: jest.fn(),
+    getDueReviews: jest.fn(),
+    saveProfile: jest.fn(),
+    submitReview: jest.fn(),
+    importApkg: jest.fn(),
+  },
+  RoadmapApiError: class RoadmapApiError extends Error {
+    status: number;
 
-// LoginUI 모킹
+    constructor(statusCode: number, message: string) {
+      super(message);
+      this.status = statusCode;
+      this.name = 'RoadmapApiError';
+    }
+  },
+}));
+
+jest.mock('../../services/auth', () => ({
+  authService: {
+    subscribe: (...args: any[]) => mockSubscribe(...args),
+    initialize: (...args: any[]) => mockInitialize(...args),
+    logout: (...args: any[]) => mockLogout(...args),
+  },
+}));
+
 jest.mock('../../components/organisms/LoginUI', () => {
-  return function MockLoginUI({ onLoginSuccess }: any) {
-    return (
-      <div data-testid="login-ui">
-        <button onClick={() => onLoginSuccess && onLoginSuccess({
-          id: 1,
-          email: 'user@example.com',
-          username: '학습자1',
-          target_level: 'N5',
-          current_level: null,
-          total_tests_taken: 0,
-          study_streak: 0,
-        })}>로그인</button>
-      </div>
-    );
+  return function MockLoginUI() {
+    return <div data-testid="login-ui" />;
   };
 });
 
-// StudyPlanDashboardUI 모킹
-jest.mock('../../components/organisms/StudyPlanDashboardUI', () => {
-  return function MockStudyPlanDashboardUI({ onStartStudy, onViewDayDetail }: any) {
-    return (
-      <div data-testid="study-plan-dashboard">
-        <button onClick={() => onStartStudy(1, 1)}>오늘 학습 시작하기</button>
-        <button onClick={() => onViewDayDetail(1, 1)}>Day 1 상세보기</button>
-      </div>
-    );
-  };
-});
+import { roadmapApi, RoadmapApiError } from '../../services/roadmap';
 
-// DailyChecklistUI 모킹
-jest.mock('../../components/organisms/DailyChecklistUI', () => {
-  return function MockDailyChecklistUI({ onStartStudy, onBack }: any) {
-    return (
-      <div data-testid="daily-checklist">
-        <button onClick={() => onStartStudy('vocabulary', 20)}>단어 학습 시작</button>
-        <button onClick={() => onStartStudy('grammar', 2)}>문법 학습 시작</button>
-        <button onClick={() => onStartStudy('reading', 5)}>독해 연습 시작</button>
-        <button onClick={() => onStartStudy('listening', 5)}>청해 연습 시작</button>
-        <button onClick={() => onStartStudy('mockTest')}>모의고사 시작</button>
-        <button onClick={onBack}>돌아가기</button>
-      </div>
-    );
-  };
-});
+const mockedRoadmapApi = roadmapApi as jest.Mocked<typeof roadmapApi>;
 
-// StudyUI 모킹
-jest.mock('../../components/organisms/StudyUI', () => {
-  return function MockStudyUI({ onSubmit }: any) {
-    return (
-      <div data-testid="study-ui">
-        <button onClick={() => onSubmit({ 1: 'A' })}>제출</button>
-      </div>
-    );
-  };
-});
+const levelOverview = {
+  level: 'N5',
+  vocabulary_count: 744,
+  grammar_count: 1207,
+  total_count: 1951,
+  recommended_daily_new_cards: 22,
+  recommended_daily_review_cards: 53,
+};
 
-// FlashcardUI 모킹
-jest.mock('../../components/organisms/FlashcardUI', () => {
-  return function MockFlashcardUI({ onBack }: any) {
-    return (
-      <div data-testid="flashcard-ui">
-        <button onClick={onBack}>돌아가기</button>
-      </div>
-    );
-  };
-});
+const planPreview = {
+  level: 'N5',
+  start_date: '2026-03-15',
+  target_days: 100,
+  required_active_days: 90,
+  buffer_days: 10,
+  recommended_daily_new_cards: 22,
+  chosen_daily_new_cards: 22,
+  recommended_daily_review_cards: 53,
+  totals: {
+    vocabulary: 744,
+    grammar: 1207,
+    total: 1951,
+  },
+  srs_model: {
+    name: 'Anki-inspired staged review',
+    review_offsets_days: [1, 3, 7, 14, 30],
+    description: 'description',
+  },
+  milestones: [
+    {
+      day_number: 1,
+      label: 'Day 1',
+      progress_percent: 1,
+      remaining_cards: 1928,
+      focus: '시작 가속',
+    },
+  ],
+  days: Array.from({ length: 100 }, (_, index) => ({
+    day_number: index + 1,
+    date: `2026-03-${String(index + 1).padStart(2, '0')}`,
+    phase: index < 90 ? 'learn' as const : 'buffer' as const,
+    focus: index === 0 ? '시작 가속' : '신규 + 복습 균형',
+    vocabulary_new: 8,
+    grammar_new: 14,
+    new_cards: 22,
+    review_estimate: index === 0 ? 0 : 18,
+    remaining_cards: Math.max(0, 1951 - (index + 1) * 22),
+    progress_percent: Math.min(100, index + 1),
+  })),
+};
 
-// fetch 모킹
+const dayAssignment = {
+  summary: {
+    day_number: 1,
+    date: '2026-03-18',
+    phase: 'learn' as const,
+    focus: '시작 가속',
+    vocabulary_new: 8,
+    grammar_new: 14,
+    new_cards: 22,
+    review_estimate: 0,
+    remaining_cards: 1928,
+    progress_percent: 1,
+  },
+  vocabulary: [
+    {
+      id: 11,
+      title: '13日',
+      prompt: '13日',
+      answer: '13일',
+      reading: 'じゅうさんにち',
+      meaning: '13일',
+      example_jp: null,
+      example_kr: null,
+      extra_text: '조수사',
+      source_reference: '13',
+      progress: {
+        learning_item_id: 11,
+        state: 'new' as const,
+        due_date: '2026-03-18',
+        interval_days: 0,
+        ease_factor: 2.5,
+        review_count: 0,
+        successful_reviews: 0,
+        lapse_count: 0,
+        last_rating: null,
+        last_reviewed_at: null,
+      },
+    },
+  ],
+  grammar: [
+    {
+      id: 12,
+      title: '〜たい',
+      prompt: '〜たい',
+      answer: '~하고 싶다',
+      reading: null,
+      meaning: '~하고 싶다',
+      example_jp: '日本へ行きたいです。',
+      example_kr: '일본에 가고 싶습니다.',
+      extra_text: null,
+      source_reference: '5001',
+      progress: {
+        learning_item_id: 12,
+        state: 'new' as const,
+        due_date: '2026-03-18',
+        interval_days: 0,
+        ease_factor: 2.5,
+        review_count: 0,
+        successful_reviews: 0,
+        lapse_count: 0,
+        last_rating: null,
+        last_reviewed_at: null,
+      },
+    },
+  ],
+};
+
+const dashboardSnapshot = {
+  profile: {
+    user_id: 1,
+    level: 'N5',
+    start_date: '2026-03-18',
+    target_days: 100,
+    daily_new_cards: 22,
+    recommended_daily_review_cards: 53,
+  },
+  reference_date: '2026-03-18',
+  status: 'active' as const,
+  current_day_number: 1,
+  days_until_start: 0,
+  due_review_count: 1,
+  reviewed_today_count: 0,
+  new_items_started_today: 1,
+  plan: {
+    level: 'N5',
+    start_date: '2026-03-18',
+    target_days: 100,
+    required_active_days: 90,
+    buffer_days: 10,
+    recommended_daily_new_cards: 22,
+    recommended_daily_review_cards: 53,
+    totals: {
+      vocabulary: 744,
+      grammar: 1207,
+      total: 1951,
+    },
+  },
+  today_assignment: dayAssignment,
+};
+
+const dueReviewItem = {
+  id: 1,
+  level: 'N5',
+  item_type: 'vocabulary',
+  title: '12日',
+  prompt: '12日',
+  answer: '12일',
+  reading: 'じゅうににち',
+  meaning: '12일',
+  example_jp: null,
+  example_kr: null,
+  extra_text: '조수사',
+  source_reference: '12',
+  progress: {
+    learning_item_id: 1,
+    state: 'learning' as const,
+    due_date: '2026-03-18',
+    interval_days: 1,
+    ease_factor: 2.5,
+    review_count: 1,
+    successful_reviews: 1,
+    lapse_count: 0,
+    last_rating: 'good',
+    last_reviewed_at: '2026-03-17T09:00:00',
+  },
+};
+
 beforeEach(() => {
-  (global.fetch as jest.Mock).mockClear();
   jest.clearAllMocks();
-  (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
+  mockSubscribe.mockImplementation((listener) => {
     listener(null);
     return jest.fn();
   });
-  (mockAuthService.initialize as jest.Mock).mockResolvedValue(undefined);
-  (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(null);
-  (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(false);
-  (mockAuthService.logout as jest.Mock).mockResolvedValue(undefined);
+  mockInitialize.mockResolvedValue(undefined);
+  mockLogout.mockResolvedValue(undefined);
+  mockedRoadmapApi.getLevels.mockResolvedValue([]);
+  mockedRoadmapApi.previewPlan.mockResolvedValue(planPreview);
+  mockedRoadmapApi.previewDay.mockResolvedValue(dayAssignment);
+  mockedRoadmapApi.getProfile.mockResolvedValue(null);
+  mockedRoadmapApi.getDashboard.mockResolvedValue(dashboardSnapshot);
+  mockedRoadmapApi.getDueReviews.mockResolvedValue([]);
+  mockedRoadmapApi.saveProfile.mockResolvedValue({
+    user_id: 1,
+    level: 'N5',
+    start_date: '2026-03-20',
+    target_days: 100,
+    daily_new_cards: 22,
+    recommended_daily_review_cards: 53,
+  });
+  mockedRoadmapApi.submitReview.mockResolvedValue({
+    item: dueReviewItem,
+    progress: {
+      ...dueReviewItem.progress,
+      state: 'review',
+      due_date: '2026-03-21',
+      interval_days: 3,
+      review_count: 2,
+      successful_reviews: 2,
+      last_rating: 'good',
+      last_reviewed_at: '2026-03-18T09:00:00',
+    },
+    rating: 'good',
+  });
+  mockedRoadmapApi.importApkg.mockResolvedValue({
+    import_id: 1,
+    source_name: 'deck.apkg',
+    source_path: '/tmp/deck.apkg',
+    item_count: 1951,
+  });
 });
 
-describe('App - Study Mode Error Handling', () => {
-  const mockUser = {
-    id: 1,
-    email: 'user@example.com',
-    username: '학습자1',
-    target_level: 'N5',
-    current_level: null,
-    total_tests_taken: 0,
-    study_streak: 0,
-  };
+describe('App roadmap error handling', () => {
+  it('renders the empty import state when no levels are available', async () => {
+    render(<App />);
 
-  beforeEach(() => {
-    (mockAuthService.subscribe as jest.Mock).mockImplementation((listener) => {
-      listener(mockUser);
+    expect(await screen.findByText('아직 import된 JLPT 카드가 없습니다.')).toBeInTheDocument();
+    expect(mockedRoadmapApi.previewPlan).not.toHaveBeenCalled();
+    expect(mockedRoadmapApi.previewDay).not.toHaveBeenCalled();
+  });
+
+  it('shows a validation error when import is requested without a path', async () => {
+    render(<App />);
+
+    await screen.findByText('아직 import된 JLPT 카드가 없습니다.');
+    fireEvent.click(screen.getByRole('button', { name: /APKG import/i }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('APKG 경로를 입력하세요.');
+    expect(mockedRoadmapApi.importApkg).not.toHaveBeenCalled();
+  });
+
+  it('imports an APKG and reloads the roadmap dashboard', async () => {
+    mockedRoadmapApi.getLevels
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([levelOverview]);
+
+    render(<App />);
+
+    await screen.findByText('아직 import된 JLPT 카드가 없습니다.');
+
+    fireEvent.change(screen.getByLabelText('apkg-path'), {
+      target: { value: '/tmp/deck.apkg' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /APKG import/i }));
+
+    await waitFor(() => {
+      expect(mockedRoadmapApi.importApkg).toHaveBeenCalledWith({
+        file_path: '/tmp/deck.apkg',
+        overwrite: true,
+      });
+    });
+
+    expect(await screen.findByText(/deck\.apkg에서 1,951개 카드를 불러왔습니다\./i)).toBeInTheDocument();
+    expect(await screen.findByText('레벨별 완주 코스')).toBeInTheDocument();
+    expect(mockedRoadmapApi.previewPlan).toHaveBeenCalledWith({
+      level: 'N5',
+      target_days: 100,
+      daily_new_cards: 22,
+    });
+  });
+
+  it('shows roadmap API errors from the plan preview request', async () => {
+    mockedRoadmapApi.getLevels.mockResolvedValue([levelOverview]);
+    mockedRoadmapApi.previewPlan.mockRejectedValue(
+      new RoadmapApiError(400, '플랜 생성 실패')
+    );
+
+    render(<App />);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('플랜 생성 실패');
+    expect(mockedRoadmapApi.previewDay).not.toHaveBeenCalled();
+  });
+
+  it('loads a saved roadmap profile for authenticated users', async () => {
+    mockSubscribe.mockImplementation((listener) => {
+      listener({
+        id: 1,
+        email: 'roadmap@example.com',
+        username: '로드맵사용자',
+        target_level: 'N5',
+        current_level: null,
+        total_tests_taken: 0,
+        study_streak: 0,
+      });
       return jest.fn();
     });
-    (mockAuthService.getCurrentUser as jest.Mock).mockReturnValue(mockUser);
-    (mockAuthService.isAuthenticated as jest.Mock).mockReturnValue(true);
-    (mockAuthService.initialize as jest.Mock).mockResolvedValue(mockUser);
-  });
-
-  describe('handleStartDailyStudy - Success Cases', () => {
-    it('should start vocabulary study successfully', async () => {
-      const mockVocabularies = [
-        {
-          id: 1,
-          word: 'テスト',
-          reading: 'てすと',
-          meaning: '테스트',
-          level: 'N5',
-        },
-      ];
-
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => mockVocabularies,
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const vocabularyButton = screen.getByText('단어 학습 시작');
-        fireEvent.click(vocabularyButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('flashcard-ui')).toBeInTheDocument();
-      });
+    mockedRoadmapApi.getLevels.mockResolvedValue([levelOverview]);
+    mockedRoadmapApi.getProfile.mockResolvedValue({
+      user_id: 1,
+      level: 'N5',
+      start_date: '2026-03-18',
+      target_days: 100,
+      daily_new_cards: 22,
+      recommended_daily_review_cards: 53,
     });
 
-    it('should start grammar study successfully', async () => {
-      const mockQuestions = [
-        {
-          id: 1,
-          level: 'N5',
-          question_type: 'GRAMMAR',
-          question_text: 'Test question',
-          choices: ['A', 'B', 'C', 'D'],
-          correct_answer: 'A',
-          explanation: 'Test explanation',
-          difficulty: 1,
-        },
-      ];
+    render(<App />);
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => mockQuestions,
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const grammarButton = screen.getByText('문법 학습 시작');
-        fireEvent.click(grammarButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-ui')).toBeInTheDocument();
-      });
+    expect(await screen.findByText(/저장된 로드맵을 불러왔습니다\./i)).toBeInTheDocument();
+    expect(mockedRoadmapApi.getProfile).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockedRoadmapApi.getDashboard).toHaveBeenCalled();
+      expect(mockedRoadmapApi.getDueReviews).toHaveBeenCalled();
     });
-  });
-
-  describe('handleStartDailyStudy - Error Cases', () => {
-    it('should handle empty questions array', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => [],
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const grammarButton = screen.getByText('문법 학습 시작');
-        fireEvent.click(grammarButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText(/해당 유형의 문제가 없습니다/i)).toBeInTheDocument();
-      });
-    });
-
-    it('should handle 404 error (questions not found)', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-        headers: { get: () => 'application/json' },
-        json: async () => ({ detail: 'Questions not found' }),
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const grammarButton = screen.getByText('문법 학습 시작');
-        fireEvent.click(grammarButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText(/해당 유형의 문제를 찾을 수 없습니다/i)).toBeInTheDocument();
-      });
-    });
-
-    it('should handle 401 error (unauthorized)', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-        headers: { get: () => 'application/json' },
-        json: async () => ({ detail: 'Unauthorized' }),
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const grammarButton = screen.getByText('문법 학습 시작');
-        fireEvent.click(grammarButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('login-ui')).toBeInTheDocument();
-      });
-    });
-
-    it('should handle 500 error (server error)', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        headers: { get: () => 'application/json' },
-        json: async () => ({ detail: 'Internal Server Error' }),
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const grammarButton = screen.getByText('문법 학습 시작');
-        fireEvent.click(grammarButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText(/서버 오류가 발생했습니다/i)).toBeInTheDocument();
-      });
-    });
-
-    it('should handle network error', async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
-        new Error('network error')
-      );
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const grammarButton = screen.getByText('문법 학습 시작');
-        fireEvent.click(grammarButton);
-      });
-
-      await waitFor(() => {
-        // 네트워크 에러는 ApiError(500)로 처리되어 "서버 오류가 발생했습니다" 메시지가 표시됨
-        expect(screen.getByText(/서버 오류가 발생했습니다/i)).toBeInTheDocument();
-      }, { timeout: 3000 });
-    });
-
-    it('should handle JSON parsing error', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => {
-          throw new Error('JSON parse error');
-        },
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const grammarButton = screen.getByText('문법 학습 시작');
-        fireEvent.click(grammarButton);
-      });
-
-      await waitFor(() => {
-        // JSON 파싱 에러는 ApiError(500)로 처리되어 "서버 오류가 발생했습니다" 메시지가 표시됨
-        expect(screen.getByText(/서버 오류가 발생했습니다/i)).toBeInTheDocument();
-      });
-    });
-
-    it('should handle null questions response', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => null,
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const grammarButton = screen.getByText('문법 학습 시작');
-        fireEvent.click(grammarButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText(/해당 유형의 문제가 없습니다/i)).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('handleStartDailyStudy - Different Task Types', () => {
-    it('should handle reading task type', async () => {
-      const mockQuestions = [
-        {
-          id: 1,
-          level: 'N5',
-          question_type: 'READING',
-          question_text: 'Test question',
-          choices: ['A', 'B', 'C', 'D'],
-          correct_answer: 'A',
-          explanation: 'Test explanation',
-          difficulty: 1,
-        },
-      ];
-
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => mockQuestions,
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const readingButton = screen.getByText('독해 연습 시작');
-        fireEvent.click(readingButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-ui')).toBeInTheDocument();
-      });
-    });
-
-    it('should handle listening task type', async () => {
-      const mockQuestions = [
-        {
-          id: 1,
-          level: 'N5',
-          question_type: 'LISTENING',
-          question_text: 'Test question',
-          choices: ['A', 'B', 'C', 'D'],
-          correct_answer: 'A',
-          explanation: 'Test explanation',
-          difficulty: 1,
-          audio_url: 'http://example.com/audio.mp3',
-        },
-      ];
-
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => mockQuestions,
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const listeningButton = screen.getByText('청해 연습 시작');
-        fireEvent.click(listeningButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-ui')).toBeInTheDocument();
-      });
-    });
-
-    it('should handle mockTest task type', async () => {
-      const mockTest = {
-        id: 1,
-        title: 'N5 진단 테스트',
+    await waitFor(() => {
+      expect(mockedRoadmapApi.previewPlan).toHaveBeenCalledWith({
         level: 'N5',
-        status: 'in_progress',
-        time_limit_minutes: 30,
-        questions: [
-          {
-            id: 1,
-            level: 'N5',
-            question_type: 'VOCABULARY',
-            question_text: 'Test question',
-            choices: ['A', 'B', 'C', 'D'],
-            difficulty: 1,
-          },
-        ],
-      };
-
-      (global.fetch as jest.Mock)
-        .mockResolvedValueOnce({
-          ok: true,
-          headers: { get: () => 'application/json' },
-          json: async () => ({ success: true, data: mockTest }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          headers: { get: () => 'application/json' },
-          json: async () => ({ success: true, data: mockTest }),
-        });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      // 사용자가 로그인하면 initial 상태로 이동
-      await waitFor(() => {
-        expect(screen.getByText(/JLPT 학습 플랫폼/i)).toBeInTheDocument();
-      });
-
-      // 6주 학습 계획 버튼 클릭하여 study-plan으로 이동
-      await act(async () => {
-        const studyPlanButton = screen.getByRole('button', { name: /6주 학습 계획/i });
-        fireEvent.click(studyPlanButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('study-plan-dashboard')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const dayDetailButton = screen.getByText('Day 1 상세보기');
-        fireEvent.click(dayDetailButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId('daily-checklist')).toBeInTheDocument();
-      });
-
-      await act(async () => {
-        const mockTestButton = screen.getByText('모의고사 시작');
-        fireEvent.click(mockTestButton);
-      });
-
-      // 모의고사는 테스트 모드로 시작되므로 StudyUI가 아닌 TestUI가 표시되어야 함
-      // (TestUI 모킹이 필요하지만 여기서는 기본 동작 확인)
-      await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalled();
+        target_days: 100,
+        daily_new_cards: 22,
+        start_date: '2026-03-18',
       });
     });
   });
 
-  describe('handleStartStudyMode - Error Cases', () => {
-    it('should handle empty questions in study mode', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        headers: { get: () => 'application/json' },
-        json: async () => [],
+  it('saves the current roadmap profile for authenticated users', async () => {
+    mockSubscribe.mockImplementation((listener) => {
+      listener({
+        id: 1,
+        email: 'roadmap@example.com',
+        username: '로드맵사용자',
+        target_level: 'N5',
+        current_level: null,
+        total_tests_taken: 0,
+        study_streak: 0,
       });
-
-      render(<App />);
-
-      // 학습 모드 선택 화면으로 이동하는 로직이 필요
-      // 여기서는 직접 handleStartStudyMode를 호출하는 대신
-      // 실제 사용자 플로우를 시뮬레이션해야 함
+      return jest.fn();
     });
+    mockedRoadmapApi.getLevels.mockResolvedValue([levelOverview]);
+
+    render(<App />);
+
+    await screen.findByText('레벨별 완주 코스');
+    fireEvent.change(screen.getByLabelText('시작일'), {
+      target: { value: '2026-03-20' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /현재 플랜 저장/i }));
+
+    await waitFor(() => {
+      expect(mockedRoadmapApi.saveProfile).toHaveBeenCalledWith({
+        level: 'N5',
+        start_date: '2026-03-20',
+        target_days: 100,
+        daily_new_cards: 22,
+      });
+    });
+
+    await waitFor(() => {
+      expect(mockedRoadmapApi.getDashboard).toHaveBeenCalled();
+      expect(mockedRoadmapApi.getDueReviews).toHaveBeenCalled();
+    });
+
+    expect(await screen.findByText(/로드맵사용자님의 로드맵을 저장했습니다\./i)).toBeInTheDocument();
+  });
+
+  it('records a review rating for due cards', async () => {
+    mockSubscribe.mockImplementation((listener) => {
+      listener({
+        id: 1,
+        email: 'roadmap@example.com',
+        username: '로드맵사용자',
+        target_level: 'N5',
+        current_level: null,
+        total_tests_taken: 0,
+        study_streak: 0,
+      });
+      return jest.fn();
+    });
+    mockedRoadmapApi.getLevels.mockResolvedValue([levelOverview]);
+    mockedRoadmapApi.getProfile.mockResolvedValue({
+      user_id: 1,
+      level: 'N5',
+      start_date: '2026-03-18',
+      target_days: 100,
+      daily_new_cards: 22,
+      recommended_daily_review_cards: 53,
+    });
+    mockedRoadmapApi.getDueReviews
+      .mockResolvedValueOnce([dueReviewItem])
+      .mockResolvedValueOnce([]);
+
+    render(<App />);
+
+    expect(await screen.findByText('오늘 복습 큐')).toBeInTheDocument();
+    expect(await screen.findByText('12일')).toBeInTheDocument();
+
+    fireEvent.click(await screen.findByLabelText('due-review-1-good'));
+
+    await waitFor(() => {
+      expect(mockedRoadmapApi.submitReview).toHaveBeenCalledWith({
+        learning_item_id: 1,
+        rating: 'good',
+      });
+    });
+
+    expect(await screen.findByText(/12日 카드를 Good 평가로 기록했습니다\./i)).toBeInTheDocument();
+  });
+
+  it('records a review rating for current day assignment cards', async () => {
+    mockSubscribe.mockImplementation((listener) => {
+      listener({
+        id: 1,
+        email: 'roadmap@example.com',
+        username: '로드맵사용자',
+        target_level: 'N5',
+        current_level: null,
+        total_tests_taken: 0,
+        study_streak: 0,
+      });
+      return jest.fn();
+    });
+    mockedRoadmapApi.getLevels.mockResolvedValue([levelOverview]);
+    mockedRoadmapApi.getProfile.mockResolvedValue(null);
+    mockedRoadmapApi.getDueReviews.mockResolvedValue([]);
+    mockedRoadmapApi.submitReview.mockResolvedValue({
+      item: dayAssignment.vocabulary[0],
+      progress: {
+        ...dayAssignment.vocabulary[0].progress,
+        state: 'learning',
+        due_date: '2026-03-19',
+        interval_days: 1,
+        review_count: 1,
+        successful_reviews: 1,
+        last_rating: 'good',
+        last_reviewed_at: '2026-03-18T10:00:00',
+      },
+      rating: 'good',
+    });
+
+    render(<App />);
+
+    await screen.findByText('레벨별 완주 코스');
+    fireEvent.change(screen.getByLabelText('시작일'), {
+      target: { value: '2026-03-18' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /현재 플랜 저장/i }));
+
+    await waitFor(() => {
+      expect(mockedRoadmapApi.getDashboard).toHaveBeenCalled();
+    });
+    await waitFor(() => {
+      expect(screen.getByLabelText('day-review-11-good')).toBeEnabled();
+    });
+
+    fireEvent.click(screen.getByLabelText('day-review-11-good'));
+
+    await waitFor(() => {
+      expect(mockedRoadmapApi.submitReview).toHaveBeenCalledWith({
+        learning_item_id: 11,
+        rating: 'good',
+      });
+    });
+
+    expect(await screen.findByText(/13日 카드를 Good 평가로 기록했습니다\./i)).toBeInTheDocument();
   });
 });
-

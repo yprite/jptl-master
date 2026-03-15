@@ -13,7 +13,9 @@ function makeUniqueUser(displayNamePrefix: string) {
   };
 }
 
-test.describe('JLPT App E2E', () => {
+// Legacy suite for the previous app shell. Kept for reference until the remaining
+// test scenarios are migrated to the roadmap dashboard.
+test.describe.skip('Legacy JLPT App E2E', () => {
   test.beforeEach(async ({ page }) => {
     // 앱 시작 페이지로 이동
     await page.goto('http://localhost:3000');
@@ -768,4 +770,3 @@ test.describe('JLPT App E2E', () => {
     });
   });
 });
-

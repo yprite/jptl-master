@@ -8,6 +8,19 @@
 ## Unreleased
 
 ### Added
+일일_학습_목표_기능: 일일 학습 목표 설정 및 추적 기능 구현 (2025-01-05)
+- DailyGoal 엔티티 생성 (문제 수, 학습 시간 목표)
+- DailyGoalRepository 및 DailyGoalMapper 구현
+- DailyStatisticsService 도메인 서비스 구현 (일일 학습 통계 집계, 목표 달성률 계산)
+- 백엔드 API 엔드포인트 구현 (GET /api/v1/users/{id}/daily-goal, PUT /api/v1/users/{id}/daily-goal)
+- 프론트엔드 DailyGoalUI 컴포넌트 구현 (목표 설정, 달성률 시각화)
+- 목표 달성률 시각화 (프로그레스 바, 문제 수/학습 시간별 달성률)
+- 일일 학습 통계 집계 (오늘 푼 문제 수, 학습 시간, 학습 세션 수)
+- 목표 달성 알림 기능
+- App.tsx에 일일 목표 화면 통합
+- 일일 목표 관련 단위 테스트 작성 (엔티티, 리포지토리, 서비스, 컨트롤러)
+- API 문서 업데이트 (users.md에 일일 목표 엔드포인트 추가)
+
 6주_학습_계획_기능: JLPT N5 합격을 위한 6주 학습 계획 기능 구현 (2025-01-04)
 - StudyPlan 타입 정의 및 6주 학습 계획 데이터 구조 생성
 - StudyPlanDashboardUI 컴포넌트 구현 (주차별 학습 목표, 방법, 진행률 표시)
