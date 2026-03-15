@@ -101,7 +101,7 @@ const planPreview = {
 const dayAssignment = {
   summary: {
     day_number: 1,
-    date: '2026-03-15',
+    date: '2026-03-18',
     phase: 'learn' as const,
     focus: '시작 가속',
     vocabulary_new: 8,
@@ -111,8 +111,58 @@ const dayAssignment = {
     remaining_cards: 1928,
     progress_percent: 1,
   },
-  vocabulary: [],
-  grammar: [],
+  vocabulary: [
+    {
+      id: 11,
+      title: '13日',
+      prompt: '13日',
+      answer: '13일',
+      reading: 'じゅうさんにち',
+      meaning: '13일',
+      example_jp: null,
+      example_kr: null,
+      extra_text: '조수사',
+      source_reference: '13',
+      progress: {
+        learning_item_id: 11,
+        state: 'new' as const,
+        due_date: '2026-03-18',
+        interval_days: 0,
+        ease_factor: 2.5,
+        review_count: 0,
+        successful_reviews: 0,
+        lapse_count: 0,
+        last_rating: null,
+        last_reviewed_at: null,
+      },
+    },
+  ],
+  grammar: [
+    {
+      id: 12,
+      title: '〜たい',
+      prompt: '〜たい',
+      answer: '~하고 싶다',
+      reading: null,
+      meaning: '~하고 싶다',
+      example_jp: '日本へ行きたいです。',
+      example_kr: '일본에 가고 싶습니다.',
+      extra_text: null,
+      source_reference: '5001',
+      progress: {
+        learning_item_id: 12,
+        state: 'new' as const,
+        due_date: '2026-03-18',
+        interval_days: 0,
+        ease_factor: 2.5,
+        review_count: 0,
+        successful_reviews: 0,
+        lapse_count: 0,
+        last_rating: null,
+        last_reviewed_at: null,
+      },
+    },
+  ],
 };
 
 const dashboardSnapshot = {
@@ -392,7 +442,7 @@ describe('App roadmap error handling', () => {
     expect(await screen.findByText('오늘 복습 큐')).toBeInTheDocument();
     expect(await screen.findByText('12일')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Good' }));
+    fireEvent.click(await screen.findByLabelText('due-review-1-good'));
 
     await waitFor(() => {
       expect(mockedRoadmapApi.submitReview).toHaveBeenCalledWith({
@@ -402,5 +452,63 @@ describe('App roadmap error handling', () => {
     });
 
     expect(await screen.findByText(/12日 카드를 Good 평가로 기록했습니다\./i)).toBeInTheDocument();
+  });
+
+  it('records a review rating for current day assignment cards', async () => {
+    mockSubscribe.mockImplementation((listener) => {
+      listener({
+        id: 1,
+        email: 'roadmap@example.com',
+        username: '로드맵사용자',
+        target_level: 'N5',
+        current_level: null,
+        total_tests_taken: 0,
+        study_streak: 0,
+      });
+      return jest.fn();
+    });
+    mockedRoadmapApi.getLevels.mockResolvedValue([levelOverview]);
+    mockedRoadmapApi.getProfile.mockResolvedValue(null);
+    mockedRoadmapApi.getDueReviews.mockResolvedValue([]);
+    mockedRoadmapApi.submitReview.mockResolvedValue({
+      item: dayAssignment.vocabulary[0],
+      progress: {
+        ...dayAssignment.vocabulary[0].progress,
+        state: 'learning',
+        due_date: '2026-03-19',
+        interval_days: 1,
+        review_count: 1,
+        successful_reviews: 1,
+        last_rating: 'good',
+        last_reviewed_at: '2026-03-18T10:00:00',
+      },
+      rating: 'good',
+    });
+
+    render(<App />);
+
+    await screen.findByText('레벨별 완주 코스');
+    fireEvent.change(screen.getByLabelText('시작일'), {
+      target: { value: '2026-03-18' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /현재 플랜 저장/i }));
+
+    await waitFor(() => {
+      expect(mockedRoadmapApi.getDashboard).toHaveBeenCalled();
+    });
+    await waitFor(() => {
+      expect(screen.getByLabelText('day-review-11-good')).toBeEnabled();
+    });
+
+    fireEvent.click(screen.getByLabelText('day-review-11-good'));
+
+    await waitFor(() => {
+      expect(mockedRoadmapApi.submitReview).toHaveBeenCalledWith({
+        learning_item_id: 11,
+        rating: 'good',
+      });
+    });
+
+    expect(await screen.findByText(/13日 카드를 Good 평가로 기록했습니다\./i)).toBeInTheDocument();
   });
 });

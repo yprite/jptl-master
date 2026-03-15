@@ -371,6 +371,17 @@ function App() {
   const highlightedDays = plan
     ? Array.from(new Set([1, 7, 14, 30, 60, 100, selectedDay].filter((day) => day <= plan.target_days))).sort((left, right) => left - right)
     : [];
+  const dayAssignmentSnapshot = dashboardSnapshot?.today_assignment
+    && dashboardSnapshot.current_day_number === selectedDay
+    ? dashboardSnapshot.today_assignment
+    : assignment;
+  const canReviewSelectedDay = Boolean(
+    currentUser
+      && hasSavedProfile
+      && dashboardSnapshot?.status === 'active'
+      && dashboardSnapshot.current_day_number === selectedDay
+      && dashboardSnapshot.today_assignment
+  );
 
   return (
     <div className="app-shell">
@@ -614,22 +625,22 @@ function App() {
               ))}
             </div>
 
-            {loadingDay || !assignment ? (
+            {loadingDay || !dayAssignmentSnapshot ? (
               <div className="planner-placeholder">Day 배정을 계산하는 중입니다...</div>
             ) : (
               <>
                 <div className="day-summary">
                   <div>
                     <span>오늘 포커스</span>
-                    <strong>{assignment.summary.focus}</strong>
+                    <strong>{dayAssignmentSnapshot.summary.focus}</strong>
                   </div>
                   <div>
                     <span>신규 카드</span>
-                    <strong>{assignment.summary.new_cards}장</strong>
+                    <strong>{dayAssignmentSnapshot.summary.new_cards}장</strong>
                   </div>
                   <div>
                     <span>예상 복습량</span>
-                    <strong>{assignment.summary.review_estimate}장</strong>
+                    <strong>{dayAssignmentSnapshot.summary.review_estimate}장</strong>
                   </div>
                 </div>
 
@@ -637,10 +648,10 @@ function App() {
                   <article className="study-column">
                     <div className="column-head">
                       <h3>어휘</h3>
-                      <span>{assignment.vocabulary.length}장</span>
+                      <span>{dayAssignmentSnapshot.vocabulary.length}장</span>
                     </div>
                     <div className="study-stack">
-                      {assignment.vocabulary.map((item) => (
+                      {dayAssignmentSnapshot.vocabulary.map((item) => (
                         <div key={item.id} className="study-card">
                           <div className="study-card-head">
                             <strong>{item.title}</strong>
@@ -648,6 +659,24 @@ function App() {
                           </div>
                           <p>{item.answer}</p>
                           {item.extra_text && <small>{item.extra_text}</small>}
+                          {item.progress && (
+                            <small>{getProgressBadgeLabel(item.progress.state)} · due {item.progress.due_date ?? 'today'}</small>
+                          )}
+                          {canReviewSelectedDay && (
+                            <div className="review-actions study-review-actions">
+                              {REVIEW_RATINGS.map((rating) => (
+                                <button
+                                  key={`${item.id}-${rating}`}
+                                  aria-label={`day-review-${item.id}-${rating}`}
+                                  className={`review-button ${rating}`}
+                                  disabled={reviewingItemId === item.id}
+                                  onClick={() => void handleReview(item.id, rating)}
+                                >
+                                  {getReviewRatingLabel(rating)}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -656,10 +685,10 @@ function App() {
                   <article className="study-column">
                     <div className="column-head">
                       <h3>문법</h3>
-                      <span>{assignment.grammar.length}장</span>
+                      <span>{dayAssignmentSnapshot.grammar.length}장</span>
                     </div>
                     <div className="study-stack">
-                      {assignment.grammar.map((item) => (
+                      {dayAssignmentSnapshot.grammar.map((item) => (
                         <div key={item.id} className="study-card">
                           <div className="study-card-head">
                             <strong>{item.title}</strong>
@@ -668,6 +697,24 @@ function App() {
                           <p>{item.answer}</p>
                           {item.example_jp && <small>JP: {item.example_jp}</small>}
                           {item.example_kr && <small>KR: {item.example_kr}</small>}
+                          {item.progress && (
+                            <small>{getProgressBadgeLabel(item.progress.state)} · due {item.progress.due_date ?? 'today'}</small>
+                          )}
+                          {canReviewSelectedDay && (
+                            <div className="review-actions study-review-actions">
+                              {REVIEW_RATINGS.map((rating) => (
+                                <button
+                                  key={`${item.id}-${rating}`}
+                                  aria-label={`day-review-${item.id}-${rating}`}
+                                  className={`review-button ${rating}`}
+                                  disabled={reviewingItemId === item.id}
+                                  onClick={() => void handleReview(item.id, rating)}
+                                >
+                                  {getReviewRatingLabel(rating)}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -771,6 +818,7 @@ function App() {
                       {REVIEW_RATINGS.map((rating) => (
                         <button
                           key={`${item.id}-${rating}`}
+                          aria-label={`due-review-${item.id}-${rating}`}
                           className={`review-button ${rating}`}
                           disabled={reviewingItemId === item.id}
                           onClick={() => void handleReview(item.id, rating)}
