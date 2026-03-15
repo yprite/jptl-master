@@ -1834,7 +1834,7 @@ class TestMainApp:
         response = client.get("/")
         assert response.status_code == 200
         data = response.json()
-        assert data["message"] == "JLPT Skill Assessment Platform API"
+        assert data["message"] == "JLPT 100-Day Roadmap API"
         assert data["status"] == "running"
 
     def test_api_health_endpoint(self):
@@ -2215,4 +2215,3 @@ class TestVocabularyController:
                 assert data["memorization_status"] == "memorized"
             finally:
                 app.dependency_overrides.clear()
-

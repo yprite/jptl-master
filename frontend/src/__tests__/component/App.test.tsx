@@ -10,8 +10,11 @@ jest.mock('../../services/roadmap', () => ({
     importApkg: jest.fn(),
   },
   RoadmapApiError: class RoadmapApiError extends Error {
-    constructor(public status: number, message: string) {
+    status: number;
+
+    constructor(statusCode: number, message: string) {
       super(message);
+      this.status = statusCode;
       this.name = 'RoadmapApiError';
     }
   },
@@ -131,13 +134,11 @@ describe('App', () => {
   it('renders roadmap dashboard with level summary', async () => {
     render(<App />);
 
-    await waitFor(() => {
-      expect(screen.getByText(/JLPT 100-Day Roadmap/i)).toBeInTheDocument();
-    });
+    expect(await screen.findByText('레벨별 완주 코스')).toBeInTheDocument();
 
-    expect(screen.getByText('N5')).toBeInTheDocument();
+    expect(screen.getAllByText('N5').length).toBeGreaterThan(0);
     expect(screen.getByText(/1,951 cards/i)).toBeInTheDocument();
-    expect(screen.getByText(/사역수동형/i)).toBeInTheDocument();
+    expect(await screen.findByText(/사역수동형/i)).toBeInTheDocument();
     expect(mockedRoadmapApi.previewPlan).toHaveBeenCalled();
     expect(mockedRoadmapApi.previewDay).toHaveBeenCalled();
   });
@@ -145,11 +146,9 @@ describe('App', () => {
   it('updates the selected day from the day switcher', async () => {
     render(<App />);
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Day 7/i })).toBeInTheDocument();
-    });
+    const dayButtons = await screen.findAllByRole('button', { name: 'Day 7' });
 
-    fireEvent.click(screen.getByRole('button', { name: /Day 7/i }));
+    fireEvent.click(dayButtons[0]);
 
     await waitFor(() => {
       expect(mockedRoadmapApi.previewDay).toHaveBeenLastCalledWith(
