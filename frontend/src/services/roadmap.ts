@@ -1,4 +1,13 @@
-import { DayAssignment, LevelOverview, PlanPreview } from '../types/roadmap';
+import {
+  DayAssignment,
+  LevelOverview,
+  PlanPreview,
+  RoadmapDashboard,
+  RoadmapItem,
+  RoadmapProfile,
+  RoadmapReviewRating,
+  RoadmapReviewResult,
+} from '../types/roadmap';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const API_PREFIX = '/api/v1/roadmap';
@@ -19,6 +28,7 @@ export class RoadmapApiError extends Error {
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${API_PREFIX}${endpoint}`, {
     ...options,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       ...(options.headers || {}),
@@ -60,6 +70,41 @@ export const roadmapApi = {
     start_date?: string;
   }): Promise<DayAssignment> {
     return request<DayAssignment>('/plans/day', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+    });
+  },
+
+  getProfile(): Promise<RoadmapProfile | null> {
+    return request<RoadmapProfile | null>('/profile');
+  },
+
+  getDashboard(): Promise<RoadmapDashboard> {
+    return request<RoadmapDashboard>('/dashboard');
+  },
+
+  getDueReviews(): Promise<RoadmapItem[]> {
+    return request<RoadmapItem[]>('/reviews/due');
+  },
+
+  saveProfile(requestBody: {
+    level: string;
+    start_date: string;
+    target_days: number;
+    daily_new_cards: number;
+  }): Promise<RoadmapProfile> {
+    return request<RoadmapProfile>('/profile', {
+      method: 'PUT',
+      body: JSON.stringify(requestBody),
+    });
+  },
+
+  submitReview(requestBody: {
+    learning_item_id: number;
+    rating: RoadmapReviewRating;
+    reviewed_at?: string;
+  }): Promise<RoadmapReviewResult> {
+    return request<RoadmapReviewResult>('/reviews', {
       method: 'POST',
       body: JSON.stringify(requestBody),
     });

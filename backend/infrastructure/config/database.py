@@ -273,6 +273,71 @@ class Database:
                 ON learning_items (source_note_id, source_card_id)
             """)
 
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS roadmap_profiles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL UNIQUE,
+                    level TEXT NOT NULL,
+                    start_date DATE NOT NULL,
+                    target_days INTEGER NOT NULL DEFAULT 100,
+                    daily_new_cards INTEGER NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            """)
+
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS roadmap_item_progress (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    learning_item_id INTEGER NOT NULL,
+                    state TEXT NOT NULL DEFAULT 'new',
+                    due_date DATE,
+                    interval_days INTEGER NOT NULL DEFAULT 0,
+                    ease_factor REAL NOT NULL DEFAULT 2.5,
+                    review_count INTEGER NOT NULL DEFAULT 0,
+                    successful_reviews INTEGER NOT NULL DEFAULT 0,
+                    lapse_count INTEGER NOT NULL DEFAULT 0,
+                    last_rating TEXT,
+                    last_reviewed_at TIMESTAMP,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(user_id, learning_item_id),
+                    FOREIGN KEY (user_id) REFERENCES users(id),
+                    FOREIGN KEY (learning_item_id) REFERENCES learning_items(id)
+                )
+            """)
+
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_roadmap_item_progress_due
+                ON roadmap_item_progress (user_id, due_date, state)
+            """)
+
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS roadmap_review_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    learning_item_id INTEGER NOT NULL,
+                    rating TEXT NOT NULL,
+                    reviewed_at TIMESTAMP NOT NULL,
+                    previous_state TEXT NOT NULL,
+                    next_state TEXT NOT NULL,
+                    previous_due_date DATE,
+                    next_due_date DATE,
+                    previous_interval_days INTEGER NOT NULL DEFAULT 0,
+                    next_interval_days INTEGER NOT NULL DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id),
+                    FOREIGN KEY (learning_item_id) REFERENCES learning_items(id)
+                )
+            """)
+
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_roadmap_review_logs_user_date
+                ON roadmap_review_logs (user_id, reviewed_at)
+            """)
+
             conn.commit()
 
 

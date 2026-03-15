@@ -53,6 +53,48 @@
   gap: 24px;
 }
 
+.session-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(255, 250, 244, 0.94), rgba(244, 238, 229, 0.78));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.session-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.session-copy strong,
+.session-copy span {
+  display: block;
+}
+
+.session-copy span {
+  color: var(--muted);
+}
+
+.session-eyebrow {
+  margin: 0;
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.session-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .hero-copy h1 {
   max-width: 12ch;
   margin: 12px 0;
@@ -144,7 +186,9 @@
 }
 
 .level-panel,
-.planner-panel {
+.planner-panel,
+.progress-panel,
+.review-panel {
   grid-column: span 6;
 }
 
@@ -315,6 +359,15 @@
   background: linear-gradient(90deg, var(--accent), var(--plum));
 }
 
+.ghost-button {
+  border: 1px solid rgba(24, 22, 31, 0.12);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font: inherit;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.82);
+}
+
 .day-switcher button.selected {
   box-shadow: 0 0 0 2px rgba(24, 22, 31, 0.15);
 }
@@ -375,6 +428,134 @@
   gap: 12px;
 }
 
+.status-strip,
+.review-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.status-strip {
+  margin-bottom: 18px;
+  color: var(--muted);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.status-badge.scheduled {
+  background: rgba(74, 50, 79, 0.14);
+  color: var(--plum);
+}
+
+.status-badge.active {
+  background: rgba(35, 100, 93, 0.16);
+  color: var(--leaf);
+}
+
+.status-badge.completed {
+  background: rgba(215, 106, 41, 0.14);
+  color: var(--accent);
+}
+
+.progress-grid {
+  margin-bottom: 0;
+}
+
+.mini-assignment {
+  display: grid;
+  gap: 6px;
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(24, 22, 31, 0.08);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.mini-assignment span,
+.mini-assignment small,
+.review-card small {
+  color: var(--muted);
+}
+
+.review-list {
+  display: grid;
+  gap: 14px;
+}
+
+.review-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(24, 22, 31, 0.08);
+  background: var(--surface-strong);
+  box-shadow: var(--shadow);
+}
+
+.review-head strong,
+.review-head span,
+.review-head small,
+.review-answer {
+  display: block;
+}
+
+.review-head span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.review-answer {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.review-actions {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.review-button {
+  border: 0;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font: inherit;
+  color: #fff;
+}
+
+.review-button.again {
+  background: linear-gradient(135deg, #c94747, #d76a29);
+}
+
+.review-button.hard {
+  background: linear-gradient(135deg, #8e5d31, #c9822e);
+}
+
+.review-button.good {
+  background: linear-gradient(135deg, #23645d, #3c8d79);
+}
+
+.review-button.easy {
+  background: linear-gradient(135deg, #3a5ac8, #4a324f);
+}
+
+.review-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .day-list {
   display: grid;
   gap: 10px;
@@ -407,9 +588,39 @@
   text-align: left;
 }
 
+.auth-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+}
+
+.auth-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(24, 22, 31, 0.3);
+}
+
+.login-modal {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 560px);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+}
+
 @media (max-width: 960px) {
   .level-panel,
   .planner-panel,
+  .progress-panel,
+  .review-panel,
   .today-panel,
   .cadence-panel {
     grid-column: span 12;
@@ -421,6 +632,14 @@
 
   .timeline-strip {
     grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .session-card {
+    align-items: stretch;
+  }
+
+  .review-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -436,5 +655,14 @@
 
   .hero-copy h1 {
     max-width: none;
+  }
+
+  .session-actions {
+    width: 100%;
+  }
+
+  .session-actions .primary-button,
+  .session-actions .ghost-button {
+    width: 100%;
   }
 }

@@ -1,9 +1,21 @@
 import React, { startTransition, useEffect, useState } from 'react';
 import './App.css';
+import LoginUI from './components/organisms/LoginUI';
+import { authService, User as AuthenticatedUser } from './services/auth';
 import { roadmapApi, RoadmapApiError } from './services/roadmap';
-import { DayAssignment, LevelOverview, PlanPreview } from './types/roadmap';
+import {
+  DayAssignment,
+  LevelOverview,
+  PlanPreview,
+  RoadmapDashboard,
+  RoadmapItem,
+  RoadmapItemProgress,
+  RoadmapProfile,
+  RoadmapReviewRating,
+} from './types/roadmap';
 
 const DEFAULT_TARGET_DAYS = 100;
+const REVIEW_RATINGS: RoadmapReviewRating[] = ['again', 'hard', 'good', 'easy'];
 
 function App() {
   const [levels, setLevels] = useState<LevelOverview[]>([]);
@@ -19,6 +31,28 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [importPath, setImportPath] = useState<string>('');
   const [importMessage, setImportMessage] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<string>('');
+  const [profileMessage, setProfileMessage] = useState<string | null>(null);
+  const [reviewMessage, setReviewMessage] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<AuthenticatedUser | null>(null);
+  const [authReady, setAuthReady] = useState<boolean>(false);
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [hasSavedProfile, setHasSavedProfile] = useState<boolean>(false);
+  const [dashboardSnapshot, setDashboardSnapshot] = useState<RoadmapDashboard | null>(null);
+  const [dueReviews, setDueReviews] = useState<RoadmapItem[]>([]);
+  const [loadingProgress, setLoadingProgress] = useState<boolean>(false);
+  const [reviewingItemId, setReviewingItemId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = authService.subscribe((user) => {
+      setCurrentUser(user);
+    });
+
+    Promise.resolve(authService.initialize())
+      .finally(() => setAuthReady(true));
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     const loadLevels = async () => {
@@ -45,6 +79,93 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!currentUser) {
+      setHasSavedProfile(false);
+      setDashboardSnapshot(null);
+      setDueReviews([]);
+      setLoadingProgress(false);
+      return;
+    }
+
+    let active = true;
+
+    roadmapApi.getProfile()
+      .then((profile) => {
+        if (!active || !profile) {
+          if (active) {
+            setHasSavedProfile(false);
+            setDashboardSnapshot(null);
+            setDueReviews([]);
+          }
+          return;
+        }
+
+        applyProfile(profile);
+        setHasSavedProfile(true);
+        setProfileMessage(`${currentUser.username}님의 저장된 로드맵을 불러왔습니다.`);
+      })
+      .catch((err) => {
+        if (!active) {
+          return;
+        }
+
+        if (err instanceof RoadmapApiError && err.status === 401) {
+          return;
+        }
+        setError(getErrorMessage(err, '저장된 로드맵 프로필을 불러오지 못했습니다.'));
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentUser || !hasSavedProfile) {
+      return;
+    }
+
+    let active = true;
+    setLoadingProgress(true);
+
+    Promise.all([
+      roadmapApi.getDashboard(),
+      roadmapApi.getDueReviews(),
+    ]).then(([dashboard, reviews]) => {
+      if (!active) {
+        return;
+      }
+      setDashboardSnapshot(dashboard);
+      setDueReviews(reviews);
+    }).catch((err) => {
+      if (!active) {
+        return;
+      }
+
+      if (err instanceof RoadmapApiError && err.status === 404) {
+        setHasSavedProfile(false);
+        setDashboardSnapshot(null);
+        setDueReviews([]);
+        return;
+      }
+
+      if (err instanceof RoadmapApiError && err.status === 401) {
+        return;
+      }
+
+      setError(getErrorMessage(err, '저장된 로드맵 진행 현황을 불러오지 못했습니다.'));
+    }).finally(() => {
+      if (active) {
+        setLoadingProgress(false);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [currentUser, hasSavedProfile]);
+
+  useEffect(() => {
     if (!selectedLevel) {
       return;
     }
@@ -57,6 +178,7 @@ function App() {
       level: selectedLevel,
       target_days: targetDays,
       daily_new_cards: dailyNewCards,
+      start_date: startDate || undefined,
     }).then((response) => {
       if (!active) {
         return;
@@ -78,7 +200,7 @@ function App() {
     return () => {
       active = false;
     };
-  }, [selectedLevel, targetDays, dailyNewCards]);
+  }, [selectedLevel, targetDays, dailyNewCards, startDate]);
 
   useEffect(() => {
     if (!selectedLevel || !plan) {
@@ -93,6 +215,7 @@ function App() {
       day_number: selectedDay,
       target_days: targetDays,
       daily_new_cards: dailyNewCards,
+      start_date: startDate || undefined,
     }).then((response) => {
       if (active) {
         setAssignment(response);
@@ -111,7 +234,7 @@ function App() {
     return () => {
       active = false;
     };
-  }, [selectedLevel, plan, selectedDay, targetDays, dailyNewCards]);
+  }, [selectedLevel, plan, selectedDay, targetDays, dailyNewCards, startDate]);
 
   const handleLevelSelect = (level: LevelOverview) => {
     startTransition(() => {
@@ -149,6 +272,102 @@ function App() {
     }
   };
 
+  const applyProfile = (profile: RoadmapProfile) => {
+    startTransition(() => {
+      setSelectedLevel(profile.level);
+      setTargetDays(profile.target_days);
+      setDailyNewCards(profile.daily_new_cards);
+      setStartDate(profile.start_date);
+      setSelectedDay(1);
+    });
+  };
+
+  const handleSaveProfile = async () => {
+    if (!selectedLevel) {
+      setError('저장할 레벨을 먼저 선택하세요.');
+      return;
+    }
+
+    if (!currentUser) {
+      setError('로그인 후 로드맵을 저장할 수 있습니다.');
+      setShowLogin(true);
+      return;
+    }
+
+    const resolvedStartDate = startDate || getTodayDateString();
+
+    setError(null);
+    setImportMessage(null);
+    setProfileMessage(null);
+    setReviewMessage(null);
+
+    try {
+      const profile = await roadmapApi.saveProfile({
+        level: selectedLevel,
+        start_date: resolvedStartDate,
+        target_days: targetDays,
+        daily_new_cards: dailyNewCards,
+      });
+      applyProfile(profile);
+      setHasSavedProfile(true);
+      const [dashboard, reviews] = await Promise.all([
+        roadmapApi.getDashboard(),
+        roadmapApi.getDueReviews(),
+      ]);
+      setDashboardSnapshot(dashboard);
+      setDueReviews(reviews);
+      setProfileMessage(`${currentUser.username}님의 로드맵을 저장했습니다.`);
+    } catch (err) {
+      setError(getErrorMessage(err, '로드맵 저장에 실패했습니다.'));
+    }
+  };
+
+  const handleReview = async (learningItemId: number, rating: RoadmapReviewRating) => {
+    if (!currentUser) {
+      setError('로그인 후 복습을 기록할 수 있습니다.');
+      setShowLogin(true);
+      return;
+    }
+
+    setError(null);
+    setProfileMessage(null);
+    setReviewMessage(null);
+    setReviewingItemId(learningItemId);
+
+    try {
+      const result = await roadmapApi.submitReview({
+        learning_item_id: learningItemId,
+        rating,
+      });
+      setReviewMessage(`${result.item.title} 카드를 ${getReviewRatingLabel(rating)} 평가로 기록했습니다.`);
+
+      const [dashboard, reviews] = await Promise.all([
+        roadmapApi.getDashboard(),
+        roadmapApi.getDueReviews(),
+      ]);
+      setDashboardSnapshot(dashboard);
+      setDueReviews(reviews);
+    } catch (err) {
+      setError(getErrorMessage(err, '복습 결과를 저장하지 못했습니다.'));
+    } finally {
+      setReviewingItemId(null);
+    }
+  };
+
+  const handleLogout = async () => {
+    setError(null);
+    try {
+      await authService.logout();
+      setHasSavedProfile(false);
+      setDashboardSnapshot(null);
+      setDueReviews([]);
+      setReviewMessage(null);
+      setProfileMessage('로드맵 세션에서 로그아웃했습니다.');
+    } catch (err) {
+      setError(getErrorMessage(err, '로그아웃에 실패했습니다.'));
+    }
+  };
+
   const highlightedDays = plan
     ? Array.from(new Set([1, 7, 14, 30, 60, 100, selectedDay].filter((day) => day <= plan.target_days))).sort((left, right) => left - right)
     : [];
@@ -181,6 +400,44 @@ function App() {
             <span className="metric-label">목표 기간</span>
             <strong>{targetDays}일</strong>
           </div>
+          <div className="metric-card">
+            <span className="metric-label">시작일</span>
+            <strong>{startDate || '오늘부터'}</strong>
+          </div>
+        </div>
+
+        <div className="session-card">
+          <div className="session-copy">
+            <p className="session-eyebrow">Roadmap Sync</p>
+            {currentUser ? (
+              <>
+                <strong>{currentUser.username}님의 학습 세션</strong>
+                <span>{currentUser.email}</span>
+              </>
+            ) : (
+              <>
+                <strong>로그인하면 시작일과 진행률을 사용자별로 저장할 수 있습니다.</strong>
+                <span>{authReady ? '세션이 연결되어 있지 않습니다.' : '세션을 확인하는 중입니다.'}</span>
+              </>
+            )}
+          </div>
+
+          <div className="session-actions">
+            {currentUser ? (
+              <>
+                <button className="ghost-button" onClick={handleLogout}>
+                  로그아웃
+                </button>
+                <button className="primary-button" onClick={handleSaveProfile}>
+                  현재 플랜 저장
+                </button>
+              </>
+            ) : (
+              <button className="primary-button" onClick={() => setShowLogin(true)}>
+                로그인 / 회원가입
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -193,6 +450,18 @@ function App() {
       {importMessage && (
         <section className="alert success-alert">
           {importMessage}
+        </section>
+      )}
+
+      {profileMessage && (
+        <section className="alert success-alert">
+          {profileMessage}
+        </section>
+      )}
+
+      {reviewMessage && (
+        <section className="alert success-alert">
+          {reviewMessage}
         </section>
       )}
 
@@ -267,6 +536,15 @@ function App() {
                   max={180}
                   value={targetDays}
                   onChange={(event) => setTargetDays(Number(event.target.value))}
+                />
+              </label>
+
+              <label>
+                시작일
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(event) => setStartDate(event.target.value)}
                 />
               </label>
             </div>
@@ -399,6 +677,114 @@ function App() {
             )}
           </section>
 
+          <section className="panel progress-panel">
+            <div className="section-head">
+              <h2>개인 로드맵 현황</h2>
+              <p>저장된 시작일을 기준으로 오늘 Day와 누적 복습량을 추적합니다.</p>
+            </div>
+
+            {!currentUser ? (
+              <div className="planner-placeholder">로그인하면 사용자별 로드맵 진행률을 볼 수 있습니다.</div>
+            ) : !hasSavedProfile ? (
+              <div className="planner-placeholder">현재 플랜 저장을 누르면 시작일과 속도를 개인 로드맵으로 고정합니다.</div>
+            ) : loadingProgress && !dashboardSnapshot ? (
+              <div className="planner-placeholder">개인 로드맵 현황을 불러오는 중입니다...</div>
+            ) : dashboardSnapshot ? (
+              <>
+                <div className="status-strip">
+                  <div className={`status-badge ${dashboardSnapshot.status}`}>
+                    {getRoadmapStatusLabel(dashboardSnapshot.status)}
+                  </div>
+                  <span>기준일 {dashboardSnapshot.reference_date}</span>
+                </div>
+
+                <div className="summary-grid progress-grid">
+                  <div className="summary-card">
+                    <span>현재 Day</span>
+                    <strong>
+                      {dashboardSnapshot.current_day_number > 0
+                        ? `Day ${dashboardSnapshot.current_day_number}`
+                        : `시작 ${dashboardSnapshot.days_until_start}일 전`}
+                    </strong>
+                  </div>
+                  <div className="summary-card">
+                    <span>오늘 도래 복습</span>
+                    <strong>{dashboardSnapshot.due_review_count}장</strong>
+                  </div>
+                  <div className="summary-card">
+                    <span>오늘 완료 복습</span>
+                    <strong>{dashboardSnapshot.reviewed_today_count}장</strong>
+                  </div>
+                  <div className="summary-card">
+                    <span>오늘 신규 착수</span>
+                    <strong>{dashboardSnapshot.new_items_started_today}장</strong>
+                  </div>
+                </div>
+
+                {dashboardSnapshot.today_assignment && (
+                  <div className="mini-assignment">
+                    <strong>오늘 학습 포커스</strong>
+                    <span>{dashboardSnapshot.today_assignment.summary.focus}</span>
+                    <small>
+                      신규 {dashboardSnapshot.today_assignment.summary.new_cards}장 · 예상 복습 {dashboardSnapshot.today_assignment.summary.review_estimate}장
+                    </small>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="planner-placeholder">저장된 진행 현황이 아직 없습니다.</div>
+            )}
+          </section>
+
+          <section className="panel review-panel">
+            <div className="section-head">
+              <h2>오늘 복습 큐</h2>
+              <p>Again / Hard / Good / Easy를 기록하면 다음 due date와 SRS 상태가 저장됩니다.</p>
+            </div>
+
+            {!currentUser ? (
+              <div className="planner-placeholder">로그인하면 개인 복습 큐가 열립니다.</div>
+            ) : !hasSavedProfile ? (
+              <div className="planner-placeholder">로드맵을 저장한 뒤부터 복습 상태를 누적할 수 있습니다.</div>
+            ) : loadingProgress && dueReviews.length === 0 ? (
+              <div className="planner-placeholder">도래한 복습 카드를 불러오는 중입니다...</div>
+            ) : dueReviews.length === 0 ? (
+              <div className="planner-placeholder">오늘 처리할 복습 카드가 없습니다.</div>
+            ) : (
+              <div className="review-list">
+                {dueReviews.map((item) => (
+                  <article key={item.id} className="review-card">
+                    <div className="review-head">
+                      <div>
+                        <strong>{item.title}</strong>
+                        <span>{getProgressBadgeLabel(item.progress?.state)} · due {item.progress?.due_date ?? 'today'}</span>
+                      </div>
+                      <small>{item.item_type === 'grammar' ? '문법' : '어휘'}</small>
+                    </div>
+
+                    <p className="review-answer">{item.answer}</p>
+                    {item.reading && <small>{item.reading}</small>}
+                    {item.example_jp && <small>JP: {item.example_jp}</small>}
+                    {item.example_kr && <small>KR: {item.example_kr}</small>}
+
+                    <div className="review-actions">
+                      {REVIEW_RATINGS.map((rating) => (
+                        <button
+                          key={`${item.id}-${rating}`}
+                          className={`review-button ${rating}`}
+                          disabled={reviewingItemId === item.id}
+                          onClick={() => void handleReview(item.id, rating)}
+                        >
+                          {getReviewRatingLabel(rating)}
+                        </button>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+
           <section className="panel cadence-panel">
             <div className="section-head">
               <h2>첫 14일 러닝 페이스</h2>
@@ -424,6 +810,27 @@ function App() {
           </section>
         </main>
       )}
+
+      {showLogin && (
+        <div className="auth-modal" role="dialog" aria-modal="true">
+          <button className="auth-backdrop" aria-label="close-login-modal" onClick={() => setShowLogin(false)} />
+          <div className="login-modal">
+            <button className="ghost-button modal-close" onClick={() => setShowLogin(false)}>
+              닫기
+            </button>
+            <LoginUI
+              onLoginSuccess={() => {
+                setShowLogin(false);
+                setProfileMessage('로그인에 성공했습니다.');
+              }}
+              onRegisterSuccess={() => {
+                setShowLogin(false);
+                setProfileMessage('회원가입과 로그인에 성공했습니다.');
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -436,6 +843,52 @@ function getErrorMessage(error: unknown, fallback: string): string {
     return error.message;
   }
   return fallback;
+}
+
+function getTodayDateString(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getReviewRatingLabel(rating: RoadmapReviewRating): string {
+  switch (rating) {
+    case 'again':
+      return 'Again';
+    case 'hard':
+      return 'Hard';
+    case 'good':
+      return 'Good';
+    case 'easy':
+      return 'Easy';
+    default:
+      return rating;
+  }
+}
+
+function getRoadmapStatusLabel(status: RoadmapDashboard['status']): string {
+  switch (status) {
+    case 'scheduled':
+      return '시작 대기';
+    case 'active':
+      return '진행 중';
+    case 'completed':
+      return '완주 완료';
+    default:
+      return status;
+  }
+}
+
+function getProgressBadgeLabel(state: RoadmapItemProgress['state'] | undefined): string {
+  switch (state) {
+    case 'learning':
+      return '학습 중';
+    case 'review':
+      return '리뷰';
+    case 'relearning':
+      return '재학습';
+    case 'new':
+    default:
+      return '신규';
+  }
 }
 
 export default App;
