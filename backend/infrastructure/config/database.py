@@ -223,6 +223,56 @@ class Database:
                 )
             """)
 
+            # Anki 덱 원본 임포트 이력
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS content_imports (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    source_name TEXT NOT NULL,
+                    source_path TEXT NOT NULL,
+                    imported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    item_count INTEGER NOT NULL DEFAULT 0,
+                    metadata_json TEXT
+                )
+            """)
+
+            # Anki 노트를 정규화한 학습 아이템 저장소
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS learning_items (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    import_id INTEGER NOT NULL,
+                    source_note_id INTEGER NOT NULL,
+                    source_card_id INTEGER NOT NULL,
+                    level TEXT NOT NULL,
+                    item_type TEXT NOT NULL,
+                    deck_name TEXT NOT NULL,
+                    note_type_name TEXT NOT NULL,
+                    title TEXT NOT NULL,
+                    prompt TEXT NOT NULL,
+                    answer TEXT NOT NULL,
+                    reading TEXT,
+                    meaning TEXT,
+                    example_jp TEXT,
+                    example_kr TEXT,
+                    extra_text TEXT,
+                    source_reference TEXT,
+                    source_order INTEGER,
+                    raw_fields_json TEXT NOT NULL,
+                    tags_json TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (import_id) REFERENCES content_imports(id)
+                )
+            """)
+
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_learning_items_level_type
+                ON learning_items (level, item_type)
+            """)
+
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_learning_items_source
+                ON learning_items (source_note_id, source_card_id)
+            """)
+
             conn.commit()
 
 

@@ -1,1390 +1,441 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { startTransition, useEffect, useState } from 'react';
 import './App.css';
-import TestUI from './components/organisms/TestUI';
-import StudyUI from './components/organisms/StudyUI';
-import ResultUI from './components/organisms/ResultUI';
-import LoginUI from './components/organisms/LoginUI';
-import UserPerformanceUI from './components/organisms/UserPerformanceUI';
-import UserHistoryUI from './components/organisms/UserHistoryUI';
-import UserProfileUI from './components/organisms/UserProfileUI';
-import DailyGoalUI from './components/organisms/DailyGoalUI';
-import FlashcardUI from './components/organisms/FlashcardUI';
-import VocabularyListUI from './components/organisms/VocabularyListUI';
-import VocabularyReviewUI from './components/organisms/VocabularyReviewUI';
-import AdminUserManagementUI from './components/organisms/AdminUserManagementUI';
-import AdminQuestionManagementUI from './components/organisms/AdminQuestionManagementUI';
-import AdminVocabularyManagementUI from './components/organisms/AdminVocabularyManagementUI';
-import AdminDashboardUI from './components/organisms/AdminDashboardUI';
-import AdminLayout, { AdminPage } from './components/organisms/AdminLayout';
-import StudyPlanDashboardUI from './components/organisms/StudyPlanDashboardUI';
-import DailyChecklistUI from './components/organisms/DailyChecklistUI';
-import { Test, Result, UserPerformance, UserHistory, UserProfile, Question, Vocabulary } from './types/api';
-import { testApi, resultApi, userApi, studyApi, vocabularyApi, ApiError } from './services/api';
-import { authService, User } from './services/auth';
+import { roadmapApi, RoadmapApiError } from './services/roadmap';
+import { DayAssignment, LevelOverview, PlanPreview } from './types/roadmap';
 
-type AppState = 'login' | 'initial' | 'study-plan' | 'daily-checklist' | 'study-select' | 'study' | 'wrong-answers' | 'repeat-study' | 'loading' | 'test' | 'submitting' | 'result' | 'performance' | 'history' | 'profile' | 'daily-goal' | 'vocabulary' | 'vocabulary-list' | 'vocabulary-review' | 'admin-dashboard' | 'admin-users' | 'admin-questions' | 'admin-vocabulary' | 'error';
+const DEFAULT_TARGET_DAYS = 100;
 
 function App() {
-  const [state, setState] = useState<AppState>('login');
-  const [currentTest, setCurrentTest] = useState<Test | null>(null);
-  const [currentStudyQuestions, setCurrentStudyQuestions] = useState<Question[]>([]);
-  const [studyLevel, setStudyLevel] = useState<string>('N5');
-  const [studyQuestionTypes, setStudyQuestionTypes] = useState<string[]>([]);
-  const [studySessions, setStudySessions] = useState<Array<{
-    id: number;
-    study_date: string;
-    study_hour: number;
-    total_questions: number;
-    correct_count: number;
-    accuracy: number;
-    time_spent_minutes: number;
-    level: string | null;
-    question_types: string[] | null;
-    question_count: number;
-    created_at: string;
-  }>>([]);
-  const [currentResult, setCurrentResult] = useState<Result | null>(null);
-  const [currentPerformance, setCurrentPerformance] = useState<UserPerformance | null>(null);
-  const [currentHistory, setCurrentHistory] = useState<UserHistory[]>([]);
-  const [currentProfile, setCurrentProfile] = useState<UserProfile | null>(null);
-  const [currentVocabularies, setCurrentVocabularies] = useState<Vocabulary[]>([]);
-  const [vocabularyLevel, setVocabularyLevel] = useState<string>('N5');
+  const [levels, setLevels] = useState<LevelOverview[]>([]);
+  const [selectedLevel, setSelectedLevel] = useState<string>('');
+  const [targetDays, setTargetDays] = useState<number>(DEFAULT_TARGET_DAYS);
+  const [dailyNewCards, setDailyNewCards] = useState<number>(12);
+  const [selectedDay, setSelectedDay] = useState<number>(1);
+  const [plan, setPlan] = useState<PlanPreview | null>(null);
+  const [assignment, setAssignment] = useState<DayAssignment | null>(null);
+  const [loadingLevels, setLoadingLevels] = useState<boolean>(true);
+  const [loadingPlan, setLoadingPlan] = useState<boolean>(false);
+  const [loadingDay, setLoadingDay] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [isInitializing, setIsInitializing] = useState(true);
-  const [selectedDay, setSelectedDay] = useState<number>(0);
-  const [selectedWeek, setSelectedWeek] = useState<number>(1);
-  
-  // 최신 상태를 참조하기 위한 ref
-  const stateRef = useRef(state);
-  const isInitializingRef = useRef(isInitializing);
-  
-  // ref 업데이트
-  useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
-  
-  useEffect(() => {
-    isInitializingRef.current = isInitializing;
-  }, [isInitializing]);
+  const [importPath, setImportPath] = useState<string>('');
+  const [importMessage, setImportMessage] = useState<string | null>(null);
 
-  // 인증 상태 구독
   useEffect(() => {
-    let isMounted = true;
+    const loadLevels = async () => {
+      setLoadingLevels(true);
+      setError(null);
 
-    const unsubscribe = authService.subscribe((currentUser) => {
-      if (!isMounted) return;
-      
-      setUser(currentUser);
-      // 초기화 중이 아니고 사용자가 없으면 로그인 화면으로
-      if (!isInitializingRef.current && !currentUser && stateRef.current !== 'login') {
-        setState('login');
-      }
-      // 사용자가 있으면 초기 화면으로 (admin 사용자는 admin-dashboard로)
-      if (!isInitializingRef.current && currentUser && stateRef.current === 'login') {
-        if (currentUser.is_admin) {
-          setState('admin-dashboard');
-        } else {
-          setState('initial');
+      try {
+        const response = await roadmapApi.getLevels();
+        setLevels(response);
+
+        if (response.length > 0) {
+          const initialLevel = response[0];
+          setSelectedLevel(initialLevel.level);
+          setDailyNewCards(initialLevel.recommended_daily_new_cards);
         }
+      } catch (err) {
+        setError(getErrorMessage(err, '레벨 현황을 불러오지 못했습니다.'));
+      } finally {
+        setLoadingLevels(false);
       }
-    });
+    };
 
-    // 초기화 시 사용자 정보 확인
-    authService.initialize().finally(() => {
-      if (!isMounted) return;
-      
-      setIsInitializing(false);
-      // 초기화 후 사용자 상태에 따라 화면 설정
-      const currentUser = authService.getCurrentUser();
-      if (currentUser) {
-        if (currentUser.is_admin) {
-          setState('admin-dashboard');
-        } else {
-          setState('initial');
-        }
-      } else {
-        setState('login');
+    loadLevels();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedLevel) {
+      return;
+    }
+
+    let active = true;
+    setLoadingPlan(true);
+    setError(null);
+
+    roadmapApi.previewPlan({
+      level: selectedLevel,
+      target_days: targetDays,
+      daily_new_cards: dailyNewCards,
+    }).then((response) => {
+      if (!active) {
+        return;
+      }
+      setPlan(response);
+      setSelectedDay((current) => Math.min(current, response.target_days));
+    }).catch((err) => {
+      if (!active) {
+        return;
+      }
+      setError(getErrorMessage(err, '플랜을 생성하지 못했습니다.'));
+      setPlan(null);
+    }).finally(() => {
+      if (active) {
+        setLoadingPlan(false);
       }
     });
 
     return () => {
-      isMounted = false;
-      unsubscribe();
+      active = false;
     };
-  }, []);
+  }, [selectedLevel, targetDays, dailyNewCards]);
 
-  // 로그인 성공 핸들러
-  const handleLoginSuccess = (loggedInUser: User) => {
-    setUser(loggedInUser);
-    if (loggedInUser.is_admin) {
-      setState('admin-dashboard');
-    } else {
-      setState('initial');
-    }
-  };
-
-  // 로그아웃 핸들러
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-      setUser(null);
-      setCurrentTest(null);
-      setCurrentResult(null);
-      setError(null);
-      setState('login');
-    } catch (err) {
-      // 로그아웃 실패해도 로그인 화면으로 이동
-      setUser(null);
-      setState('login');
-    }
-  };
-
-  // N5 진단 테스트 생성 및 시작
-  const handleStartTest = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
+  useEffect(() => {
+    if (!selectedLevel || !plan) {
       return;
     }
 
-    setState('loading');
-    setError(null);
+    let active = true;
+    setLoadingDay(true);
 
-    try {
-      // N5 진단 테스트 생성
-      const test = await testApi.createN5DiagnosticTest();
-      
-      // 테스트 시작
-      const startedTest = await testApi.startTest(test.id);
-      
-      setCurrentTest(startedTest);
-      setState('test');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('테스트를 시작하는 중 오류가 발생했습니다.');
-        setState('error');
+    roadmapApi.previewDay({
+      level: selectedLevel,
+      day_number: selectedDay,
+      target_days: targetDays,
+      daily_new_cards: dailyNewCards,
+    }).then((response) => {
+      if (active) {
+        setAssignment(response);
       }
-    }
-  };
-
-  // 테스트 제출
-  const handleSubmitTest = async (answers: Record<number, string>) => {
-    if (!currentTest) return;
-
-    setState('submitting');
-    setError(null);
-
-    try {
-      // 테스트 제출
-      const submitResult = await testApi.submitTest(currentTest.id, answers);
-      
-      // 결과 조회
-      const result = await resultApi.getResult(submitResult.result_id);
-      
-      setCurrentResult(result);
-      setState('result');
-      
-      // 일일 체크리스트에서 모의고사를 시작한 경우, 결과 확인 후 체크리스트로 복귀
-      // (handleRestart에서 처리됨)
-    } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError('테스트 제출 중 오류가 발생했습니다.');
+    }).catch((err) => {
+      if (active) {
+        setError(getErrorMessage(err, 'Day 배정을 불러오지 못했습니다.'));
+        setAssignment(null);
       }
-      setState('error');
-    }
+    }).finally(() => {
+      if (active) {
+        setLoadingDay(false);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [selectedLevel, plan, selectedDay, targetDays, dailyNewCards]);
+
+  const handleLevelSelect = (level: LevelOverview) => {
+    startTransition(() => {
+      setSelectedLevel(level.level);
+      setDailyNewCards(level.recommended_daily_new_cards);
+      setSelectedDay(1);
+    });
   };
 
-  // 학습 모드 선택 화면으로 이동
-  const handleStartStudy = () => {
-    setState('study-select');
-  };
-
-  // 학습 모드 시작
-  const handleStartStudyMode = async (level: string, questionTypes: string[], questionCount: number = 20) => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
+  const handleImport = async () => {
+    if (!importPath.trim()) {
+      setError('APKG 경로를 입력하세요.');
       return;
     }
 
-    setState('loading');
+    setImportMessage(null);
     setError(null);
 
     try {
-      const questions = await studyApi.getStudyQuestions({
-        level,
-        question_types: questionTypes.length > 0 ? questionTypes : undefined,
-        question_count: questionCount,
+      const result = await roadmapApi.importApkg({
+        file_path: importPath.trim(),
+        overwrite: true,
       });
-      
-      // 문제가 없는 경우 에러 처리
-      if (!questions || questions.length === 0) {
-        setError('해당 유형의 문제가 없습니다. 관리자에게 문의해주세요.');
-        setState('error');
-        return;
-      }
-      
-      setCurrentStudyQuestions(questions);
-      setStudyLevel(level);
-      setStudyQuestionTypes(questionTypes);
-      setState('study');
-    } catch (err) {
-      // 에러 발생 시 로딩 상태 해제
-      setState('error');
-      
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else if (err.status === 404) {
-          setError('해당 유형의 문제를 찾을 수 없습니다.');
-        } else if (err.status === 500) {
-          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-        } else {
-          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
-        }
-      } else if (err instanceof Error) {
-        // 네트워크 에러 등
-        if (err.message.includes('fetch') || err.message.includes('network')) {
-          setError('네트워크 연결을 확인해주세요.');
-        } else {
-          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
-        }
-      } else {
-        setError('학습 모드를 시작하는 중 오류가 발생했습니다.');
-      }
-    }
-  };
+      setImportMessage(`${result.source_name}에서 ${result.item_count.toLocaleString()}개 카드를 불러왔습니다.`);
 
-  // 학습 모드 제출
-  const handleSubmitStudy = async (answers: Record<number, string>) => {
-    if (!currentStudyQuestions.length) return;
-
-    setState('submitting');
-    setError(null);
-
-    try {
-      const timeSpentMinutes = Math.max(1, Math.floor((Date.now() - Date.now()) / 60000) + 1);
-      await studyApi.submitStudySession({
-        answers,
-        level: studyLevel,
-        question_types: studyQuestionTypes.length > 0 ? studyQuestionTypes : undefined,
-        time_spent_minutes: timeSpentMinutes,
-      });
-      
-      // 학습 완료 후 이전 화면으로
-      setCurrentStudyQuestions([]);
-      
-      // 일일 체크리스트에서 온 경우 체크리스트 상태 업데이트
-      if (state === 'study' && selectedDay > 0) {
-        // 학습한 문제 유형에 따라 체크리스트 상태 업데이트
-        if (studyQuestionTypes.includes('grammar')) {
-          const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
-          if (saved) {
-            try {
-              const parsed = JSON.parse(saved);
-              parsed.grammar = true;
-              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify(parsed));
-            } catch (e) {
-              // 파싱 실패 시 새로 생성
-              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ grammar: true }));
-            }
-          } else {
-            localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ grammar: true }));
-          }
-        } else if (studyQuestionTypes.includes('reading')) {
-          const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
-          if (saved) {
-            try {
-              const parsed = JSON.parse(saved);
-              parsed.reading = true;
-              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify(parsed));
-            } catch (e) {
-              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ reading: true }));
-            }
-          } else {
-            localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ reading: true }));
-          }
-        } else if (studyQuestionTypes.includes('listening')) {
-          const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
-          if (saved) {
-            try {
-              const parsed = JSON.parse(saved);
-              parsed.listening = true;
-              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify(parsed));
-            } catch (e) {
-              localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ listening: true }));
-            }
-          } else {
-            localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ listening: true }));
-          }
-        }
-        setState('daily-checklist');
-      } else {
-        setState('study-plan');
+      const refreshedLevels = await roadmapApi.getLevels();
+      setLevels(refreshedLevels);
+      if (refreshedLevels.length > 0) {
+        setSelectedLevel(refreshedLevels[0].level);
+        setDailyNewCards(refreshedLevels[0].recommended_daily_new_cards);
+        setSelectedDay(1);
       }
     } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else if (err.status === 400) {
-          setError(err.message || '잘못된 요청입니다.');
-          setState('error');
-        } else if (err.status === 500) {
-          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-          setState('error');
-        } else {
-          setError(err.message || '학습 세션 제출 중 오류가 발생했습니다.');
-          setState('error');
-        }
-      } else if (err instanceof Error) {
-        // 네트워크 에러 등
-        if (err.message.includes('fetch') || err.message.includes('network')) {
-          setError('네트워크 연결을 확인해주세요.');
-        } else {
-          setError(err.message || '학습 세션 제출 중 오류가 발생했습니다.');
-        }
-        setState('error');
-      } else {
-        setError('학습 세션 제출 중 오류가 발생했습니다.');
-        setState('error');
-      }
+      setError(getErrorMessage(err, 'APKG import에 실패했습니다.'));
     }
   };
 
-  // 다시 시작
-  const handleRestart = () => {
-    const wasFromDailyChecklist = selectedDay > 0 && state === 'result';
-    
-    setCurrentTest(null);
-    setCurrentStudyQuestions([]);
-    setCurrentResult(null);
-    setCurrentPerformance(null);
-    setCurrentHistory([]);
-    setCurrentProfile(null);
-    setError(null);
-    setSelectedDay(0);
-    setSelectedWeek(1);
-    
-    // 일일 체크리스트에서 모의고사를 시작한 경우 체크리스트로 복귀
-    if (wasFromDailyChecklist) {
-      setState('daily-checklist');
-    } else if (user?.is_admin) {
-      setState('admin-dashboard');
-    } else {
-      setState('initial');
-    }
-  };
-
-  // 학습 계획에서 일일 체크리스트로 이동
-  const handleViewDayDetail = (day: number, week: number) => {
-    setSelectedDay(day);
-    setSelectedWeek(week);
-    setState('daily-checklist');
-  };
-
-  // 일일 체크리스트에서 학습 시작
-  const handleStartDailyStudy = async (taskType: 'vocabulary' | 'grammar' | 'reading' | 'listening' | 'mockTest', taskCount?: number) => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
-      return;
-    }
-
-    // 모의고사인 경우 테스트 모드로 시작
-    if (taskType === 'mockTest') {
-      try {
-        await handleStartTest();
-      } catch (err) {
-        // handleStartTest에서 이미 에러 처리를 하므로 여기서는 추가 처리 불필요
-        console.error('모의고사 시작 중 오류:', err);
-      }
-      return;
-    }
-
-    // 단어 학습인 경우 FlashcardUI로 이동
-    if (taskType === 'vocabulary') {
-      setState('loading');
-      setError(null);
-
-      try {
-        const vocabularies = await vocabularyApi.getVocabularies({ level: 'N5' });
-        if (vocabularies.length === 0) {
-          setError('해당 레벨의 단어가 없습니다.');
-          setState('error');
-          return;
-        }
-        // taskCount만큼만 단어 가져오기
-        const limitedVocabularies = taskCount ? vocabularies.slice(0, taskCount) : vocabularies;
-        setCurrentVocabularies(limitedVocabularies);
-        setVocabularyLevel('N5');
-        setState('vocabulary');
-      } catch (err) {
-        if (err instanceof ApiError) {
-          if (err.status === 401) {
-            setState('login');
-          } else {
-            setError(err.message);
-          }
-        } else {
-          setError('단어 학습을 시작하는 중 오류가 발생했습니다.');
-        }
-        setState('error');
-      }
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const level = 'N5';
-      let questionTypes: string[] = [];
-      
-      if (taskType === 'grammar') {
-        questionTypes = ['grammar'];
-      } else if (taskType === 'reading') {
-        questionTypes = ['reading'];
-      } else if (taskType === 'listening') {
-        questionTypes = ['listening'];
-      }
-
-      // taskCount가 있으면 그만큼만, 없으면 기본값 20개
-      const questionCount = taskCount || 20;
-
-      const questions = await studyApi.getStudyQuestions({
-        level,
-        question_types: questionTypes.length > 0 ? questionTypes : undefined,
-        question_count: questionCount,
-      });
-      
-      // 문제가 없는 경우 에러 처리
-      if (!questions || questions.length === 0) {
-        setError('해당 유형의 문제가 없습니다. 관리자에게 문의해주세요.');
-        setState('error');
-        return;
-      }
-      
-      setCurrentStudyQuestions(questions);
-      setStudyLevel(level);
-      setStudyQuestionTypes(questionTypes);
-      setState('study');
-    } catch (err) {
-      // 에러 발생 시 로딩 상태 해제
-      setState('error');
-      
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else if (err.status === 404) {
-          setError('해당 유형의 문제를 찾을 수 없습니다.');
-        } else if (err.status === 500) {
-          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-        } else {
-          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
-        }
-      } else if (err instanceof Error) {
-        // 네트워크 에러 등
-        if (err.message.includes('fetch') || err.message.includes('network')) {
-          setError('네트워크 연결을 확인해주세요.');
-        } else {
-          setError(err.message || '학습 모드를 시작하는 중 오류가 발생했습니다.');
-        }
-      } else {
-        setError('학습 모드를 시작하는 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  // 학습 계획에서 오늘 학습 시작
-  const handleStartTodayStudy = async (day: number, week: number) => {
-    setSelectedDay(day);
-    setSelectedWeek(week);
-    setState('daily-checklist');
-  };
-
-  // 어드민 페이지 네비게이션
-  const handleAdminNavigate = (page: AdminPage) => {
-    setState(page);
-  };
-
-  // 성능 분석 조회
-  const handleViewPerformance = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated() || !user) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const performance = await userApi.getUserPerformance(user.id);
-      setCurrentPerformance(performance);
-      setState('performance');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else if (err.status === 404) {
-          const nowIso = new Date().toISOString();
-          setCurrentPerformance({
-            id: 0,
-            user_id: user.id,
-            analysis_period_start: nowIso,
-            analysis_period_end: nowIso,
-            type_performance: {},
-            difficulty_performance: {},
-            level_progression: {},
-            repeated_mistakes: [],
-            weaknesses: {},
-            created_at: nowIso,
-            updated_at: nowIso,
-          });
-          setState('performance');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('성능 분석 데이터를 불러오는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 학습 이력 조회
-  const handleViewHistory = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated() || !user) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const history = await userApi.getUserHistory(user.id);
-      setCurrentHistory(history);
-      setState('history');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('학습 이력을 불러오는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 프로필 조회
-  const handleViewProfile = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated() || !user) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const profile = await userApi.getCurrentUser();
-      setCurrentProfile(profile);
-      setState('profile');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('프로필을 불러오는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 일일 목표 조회
-  const handleViewDailyGoal = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated() || !user) {
-      setState('login');
-      return;
-    }
-
-    setState('daily-goal');
-  };
-
-  // 프로필 업데이트
-  const handleProfileUpdate = async (updates: { username?: string; target_level?: string }) => {
-    if (!user) {
-      setError('사용자 정보가 없습니다.');
-      setState('error');
-      return;
-    }
-
-    setError(null);
-
-    try {
-      const updatedProfile = await userApi.updateCurrentUser(updates);
-      setCurrentProfile(updatedProfile);
-      // 사용자 정보도 업데이트
-      setUser({
-        id: updatedProfile.id,
-        email: updatedProfile.email,
-        username: updatedProfile.username,
-        target_level: updatedProfile.target_level,
-        current_level: updatedProfile.current_level,
-        total_tests_taken: updatedProfile.total_tests_taken,
-        study_streak: updatedProfile.study_streak,
-      });
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else if (err.status === 400) {
-          setError(err.message || '잘못된 요청입니다.');
-        } else if (err.status === 500) {
-          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-        } else {
-          setError(err.message || '프로필 업데이트 중 오류가 발생했습니다.');
-        }
-      } else if (err instanceof Error) {
-        // 네트워크 에러 등
-        if (err.message.includes('fetch') || err.message.includes('network')) {
-          setError('네트워크 연결을 확인해주세요.');
-        } else {
-          setError(err.message || '프로필 업데이트 중 오류가 발생했습니다.');
-        }
-      } else {
-        setError('프로필 업데이트 중 오류가 발생했습니다.');
-      }
-      setState('error');
-    }
-  };
-
-  // 오답 노트 조회
-  const handleViewWrongAnswers = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const questions = await studyApi.getWrongAnswerQuestions();
-      setCurrentStudyQuestions(questions);
-      setState('wrong-answers');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('오답 노트를 불러오는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 오답 노트로 학습 시작
-  const handleStartWrongAnswerStudy = async (questionCount: number = 20) => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const questions = await studyApi.getWrongAnswerQuestionsForStudy(questionCount);
-      setCurrentStudyQuestions(questions);
-      setState('study');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else if (err.status === 404) {
-          setError('틀린 문제가 없습니다. 먼저 테스트를 응시해주세요.');
-          setState('error');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('오답 노트 학습을 시작하는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 반복 학습 세션 목록 조회
-  const handleViewRepeatStudy = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const sessions = await studyApi.getStudySessions();
-      setStudySessions(sessions);
-      setState('repeat-study');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('학습 세션 목록을 불러오는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 반복 학습 시작
-  const handleStartRepeatStudy = async (sessionId: number) => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const questions = await studyApi.getStudySessionQuestions(sessionId);
-      setCurrentStudyQuestions(questions);
-      setState('study');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('반복 학습을 시작하는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 단어 학습 시작
-  const handleStartVocabulary = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const vocabularies = await vocabularyApi.getVocabularies({ level: vocabularyLevel });
-      if (vocabularies.length === 0) {
-        setError('해당 레벨의 단어가 없습니다.');
-        setState('error');
-        return;
-      }
-      setCurrentVocabularies(vocabularies);
-      setState('vocabulary');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('단어 학습을 시작하는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 단어 목록 보기
-  const handleViewVocabularyList = async () => {
-    // 인증 확인
-    if (!authService.isAuthenticated()) {
-      setState('login');
-      return;
-    }
-
-    setState('loading');
-    setError(null);
-
-    try {
-      const vocabularies = await vocabularyApi.getVocabularies();
-      setCurrentVocabularies(vocabularies);
-      setState('vocabulary-list');
-    } catch (err) {
-      if (err instanceof ApiError) {
-        // 401 에러인 경우 로그인 화면으로
-        if (err.status === 401) {
-          setState('login');
-        } else {
-          setError(err.message);
-          setState('error');
-        }
-      } else {
-        setError('단어 목록을 불러오는 중 오류가 발생했습니다.');
-        setState('error');
-      }
-    }
-  };
-
-  // 단어 암기 상태 업데이트
-  const handleVocabularyStatusUpdate = async (vocabularyId: number, status: string) => {
-    try {
-      await vocabularyApi.studyVocabulary(vocabularyId, status);
-      // 목록 업데이트
-      const updatedVocabularies = currentVocabularies.map(v =>
-        v.id === vocabularyId ? { ...v, memorization_status: status } : v
-      );
-      setCurrentVocabularies(updatedVocabularies);
-    } catch (err) {
-      if (err instanceof ApiError) {
-        if (err.status === 401) {
-          setState('login');
-        } else if (err.status === 404) {
-          setError('단어를 찾을 수 없습니다.');
-        } else if (err.status === 500) {
-          setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-        } else {
-          setError(err.message || '암기 상태 업데이트 중 오류가 발생했습니다.');
-        }
-      } else if (err instanceof Error) {
-        if (err.message.includes('fetch') || err.message.includes('network')) {
-          setError('네트워크 연결을 확인해주세요.');
-        } else {
-          setError(err.message || '암기 상태 업데이트 중 오류가 발생했습니다.');
-        }
-      } else {
-        setError('암기 상태 업데이트 중 오류가 발생했습니다.');
-      }
-      setState('error');
-    }
-  };
-
-  // 초기화 중이면 로딩 표시
-  if (isInitializing) {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1>JLPT 자격 검증 프로그램</h1>
-        </header>
-        <main className="App-main">
-          <section className="loading-section">
-            <div className="loading-spinner">로딩 중...</div>
-          </section>
-        </main>
-      </div>
-    );
-  }
-
-  // 어드민 페이지인지 확인
-  const isAdminPage = state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions' || state === 'admin-vocabulary';
+  const highlightedDays = plan
+    ? Array.from(new Set([1, 7, 14, 30, 60, 100, selectedDay].filter((day) => day <= plan.target_days))).sort((left, right) => left - right)
+    : [];
 
   return (
-    <div className="App">
-      {/* 어드민 페이지가 아닐 때만 일반 헤더 표시 */}
-      {!isAdminPage && (
-        <header className="App-header">
-          <h1>JLPT 자격 검증 프로그램</h1>
-          {user && (
-            <div className="user-info">
-              <span>안녕하세요, {user.username}님</span>
-              <button
-                onClick={handleLogout}
-                className="logout-button"
-                aria-label="로그아웃"
-              >
-                로그아웃
-              </button>
-            </div>
-          )}
-        </header>
+    <div className="app-shell">
+      <div className="ambient ambient-left" />
+      <div className="ambient ambient-right" />
+
+      <header className="hero">
+        <div className="hero-copy">
+          <p className="eyebrow">JLPT 100-Day Roadmap</p>
+          <h1>단어와 문법을 100일 안에 끝내는 Anki 학습 대시보드</h1>
+          <p className="hero-description">
+            레벨별 덱 수량을 기준으로 하루 신규 카드와 복습량을 자동 분배합니다.
+            초반에는 신규 카드, 후반에는 버퍼 리뷰에 집중하도록 설계했습니다.
+          </p>
+        </div>
+
+        <div className="hero-metrics">
+          <div className="metric-card">
+            <span className="metric-label">선택 레벨</span>
+            <strong>{selectedLevel || '미선택'}</strong>
+          </div>
+          <div className="metric-card">
+            <span className="metric-label">하루 신규</span>
+            <strong>{dailyNewCards}장</strong>
+          </div>
+          <div className="metric-card">
+            <span className="metric-label">목표 기간</span>
+            <strong>{targetDays}일</strong>
+          </div>
+        </div>
+      </header>
+
+      {error && (
+        <section className="alert error-alert" role="alert">
+          {error}
+        </section>
       )}
-      <main className="App-main">
-        {state === 'login' && (
-          <section className="login-section">
-            <LoginUI onLoginSuccess={handleLoginSuccess} />
-          </section>
-        )}
 
-        {state === 'study-plan' && !user?.is_admin && (
-          <section className="study-plan-section">
-            <StudyPlanDashboardUI
-              onStartStudy={handleStartTodayStudy}
-              onViewDayDetail={handleViewDayDetail}
+      {importMessage && (
+        <section className="alert success-alert">
+          {importMessage}
+        </section>
+      )}
+
+      {loadingLevels ? (
+        <main className="panel loading-panel">
+          <p>레벨 데이터를 불러오는 중입니다...</p>
+        </main>
+      ) : levels.length === 0 ? (
+        <main className="panel empty-panel">
+          <h2>아직 import된 JLPT 카드가 없습니다.</h2>
+          <p>로컬 APKG 경로를 입력하면 어휘/문법 덱을 바로 가져와 100일 플랜을 계산합니다.</p>
+          <div className="import-form">
+            <input
+              aria-label="apkg-path"
+              className="path-input"
+              value={importPath}
+              onChange={(event) => setImportPath(event.target.value)}
+              placeholder="/absolute/path/to/deck.apkg"
             />
-            <div className="study-plan-actions">
-              <button
-                onClick={() => setState('initial')}
-                className="menu-button"
-              >
-                메뉴
-              </button>
+            <button className="primary-button" onClick={handleImport}>
+              APKG import
+            </button>
+          </div>
+        </main>
+      ) : (
+        <main className="dashboard">
+          <section className="panel level-panel">
+            <div className="section-head">
+              <h2>레벨별 완주 코스</h2>
+              <p>현재 import된 카드 수를 기반으로 권장 속도를 제시합니다.</p>
             </div>
-          </section>
-        )}
 
-        {state === 'daily-checklist' && !user?.is_admin && (
-          <section className="daily-checklist-section">
-            <DailyChecklistUI
-              day={selectedDay}
-              week={selectedWeek}
-              onStartStudy={handleStartDailyStudy}
-              onBack={() => setState('study-plan')}
-            />
-          </section>
-        )}
-
-        {state === 'initial' && (
-          <section className="initial-section" data-testid="initial-ui">
-            <h2>JLPT 학습 플랫폼</h2>
-            <p>테스트 모드와 학습 모드 중 선택하세요.</p>
-            <div className="initial-actions">
-              <button
-                onClick={() => setState('study-plan')}
-                className="study-plan-button"
-              >
-                6주 학습 계획
-              </button>
-              <button
-                onClick={handleStartTest}
-                className="start-button"
-              >
-                테스트 모드
-              </button>
-              <button
-                onClick={handleStartStudy}
-                className="study-button"
-              >
-                학습 모드
-              </button>
-              <button
-                onClick={handleViewPerformance}
-                className="performance-button"
-              >
-                성능 분석 보기
-              </button>
-              <button
-                onClick={handleViewHistory}
-                className="history-button"
-              >
-                학습 이력 보기
-              </button>
-              <button
-                onClick={handleViewProfile}
-                className="profile-button"
-              >
-                프로필 관리
-              </button>
-              <button
-                onClick={handleViewDailyGoal}
-                className="daily-goal-button"
-              >
-                일일 목표
-              </button>
-              <button
-                onClick={handleViewWrongAnswers}
-                className="wrong-answers-button"
-              >
-                오답 노트
-              </button>
-              <button
-                onClick={handleViewRepeatStudy}
-                className="repeat-study-button"
-              >
-                반복 학습
-              </button>
-              <button
-                onClick={handleStartVocabulary}
-                className="vocabulary-button"
-              >
-                단어 학습
-              </button>
-              <button
-                onClick={() => setState('vocabulary-review')}
-                className="vocabulary-review-button"
-              >
-                단어 복습
-              </button>
-            </div>
-          </section>
-        )}
-
-        {state === 'study-select' && (
-          <section className="study-select-section">
-            <h2>학습 모드 설정</h2>
-            <div className="study-select-form">
-              <div className="form-group">
-                <label>레벨 선택:</label>
-                <select
-                  value={studyLevel}
-                  onChange={(e) => setStudyLevel(e.target.value)}
-                  className="form-select"
+            <div className="level-grid">
+              {levels.map((level) => (
+                <button
+                  key={level.level}
+                  className={`level-card ${selectedLevel === level.level ? 'active' : ''}`}
+                  onClick={() => handleLevelSelect(level)}
                 >
-                  <option value="N5">N5</option>
-                  <option value="N4">N4</option>
-                  <option value="N3">N3</option>
-                  <option value="N2">N2</option>
-                  <option value="N1">N1</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>문제 유형 선택 (복수 선택 가능):</label>
-                <div className="checkbox-group">
-                  {['vocabulary', 'grammar', 'reading', 'listening'].map((type) => (
-                    <label key={type} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={studyQuestionTypes.includes(type)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setStudyQuestionTypes([...studyQuestionTypes, type]);
-                          } else {
-                            setStudyQuestionTypes(studyQuestionTypes.filter(t => t !== type));
-                          }
-                        }}
-                      />
-                      {type === 'vocabulary' ? '어휘' : 
-                       type === 'grammar' ? '문법' : 
-                       type === 'reading' ? '독해' : '청해'}
-                    </label>
+                  <span className="level-name">{level.level}</span>
+                  <strong>{level.total_count.toLocaleString()} cards</strong>
+                  <span>어휘 {level.vocabulary_count.toLocaleString()} · 문법 {level.grammar_count.toLocaleString()}</span>
+                  <span>권장 신규 {level.recommended_daily_new_cards}장</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="panel planner-panel">
+            <div className="section-head">
+              <h2>플랜 빌더</h2>
+              <p>속도를 조정하면 100일 안에 신규 카드가 끝나는지 바로 확인합니다.</p>
+            </div>
+
+            <div className="planner-controls">
+              <label>
+                하루 신규 카드
+                <input
+                  type="number"
+                  min={1}
+                  max={200}
+                  value={dailyNewCards}
+                  onChange={(event) => setDailyNewCards(Number(event.target.value))}
+                />
+              </label>
+
+              <label>
+                목표 일수
+                <input
+                  type="number"
+                  min={14}
+                  max={180}
+                  value={targetDays}
+                  onChange={(event) => setTargetDays(Number(event.target.value))}
+                />
+              </label>
+            </div>
+
+            {loadingPlan || !plan ? (
+              <div className="planner-placeholder">플랜을 계산하는 중입니다...</div>
+            ) : (
+              <>
+                <div className="summary-grid">
+                  <div className="summary-card">
+                    <span>실제 신규 투입 기간</span>
+                    <strong>{plan.required_active_days}일</strong>
+                  </div>
+                  <div className="summary-card">
+                    <span>버퍼 리뷰 기간</span>
+                    <strong>{plan.buffer_days}일</strong>
+                  </div>
+                  <div className="summary-card">
+                    <span>권장 복습량</span>
+                    <strong>{plan.recommended_daily_review_cards}장</strong>
+                  </div>
+                </div>
+
+                <div className="timeline-strip" aria-label="100-day timeline">
+                  {plan.days.map((day) => (
+                    <button
+                      key={day.day_number}
+                      className={`timeline-cell ${day.phase} ${selectedDay === day.day_number ? 'selected' : ''}`}
+                      title={`Day ${day.day_number}: 신규 ${day.new_cards}, 복습 ${day.review_estimate}`}
+                      onClick={() => startTransition(() => setSelectedDay(day.day_number))}
+                    />
                   ))}
                 </div>
-              </div>
-              <div className="form-actions">
-                <button
-                  onClick={() => handleStartStudyMode(studyLevel, studyQuestionTypes, 20)}
-                  className="start-button"
-                >
-                  학습 시작
-                </button>
-                <button
-                  onClick={() => setState('initial')}
-                  className="back-button"
-                >
-                  돌아가기
-                </button>
-              </div>
-            </div>
-          </section>
-        )}
 
-        {state === 'loading' && (
-          <section className="loading-section">
-            <div className="loading-spinner">테스트를 준비하는 중...</div>
-          </section>
-        )}
-
-        {state === 'study' && currentStudyQuestions.length > 0 && (
-          <section className="study-section">
-            <StudyUI 
-              questions={currentStudyQuestions} 
-              onSubmit={handleSubmitStudy} 
-            />
-          </section>
-        )}
-
-        {state === 'test' && currentTest && (
-          <section className="test-section">
-            <TestUI test={currentTest} onSubmit={handleSubmitTest} />
-          </section>
-        )}
-
-        {state === 'submitting' && (
-          <section className="loading-section">
-            <div className="loading-spinner">결과를 처리하는 중...</div>
-          </section>
-        )}
-
-        {state === 'result' && currentResult && (
-          <section className="result-section">
-            <ResultUI result={currentResult} />
-            <div className="result-actions">
-              <button onClick={handleRestart} className="restart-button">
-                다시 시작
-              </button>
-            </div>
-          </section>
-        )}
-
-        {state === 'performance' && currentPerformance && (
-          <section className="performance-section">
-            <UserPerformanceUI performance={currentPerformance} />
-            <div className="performance-actions">
-              <button onClick={handleRestart} className="back-button">
-                돌아가기
-              </button>
-            </div>
-          </section>
-        )}
-
-        {state === 'history' && (
-          <section className="history-section">
-            <UserHistoryUI history={currentHistory} />
-            <div className="history-actions">
-              <button onClick={handleRestart} className="back-button">
-                돌아가기
-              </button>
-            </div>
-          </section>
-        )}
-
-        {state === 'profile' && currentProfile && (
-          <section className="profile-section">
-            <UserProfileUI profile={currentProfile} onUpdate={handleProfileUpdate} />
-            <div className="profile-actions">
-              <button onClick={handleRestart} className="back-button">
-                돌아가기
-              </button>
-            </div>
-          </section>
-        )}
-
-        {state === 'daily-goal' && user && (
-          <section className="daily-goal-section">
-            <DailyGoalUI userId={user.id} />
-            <div className="daily-goal-actions">
-              <button onClick={handleRestart} className="back-button">
-                돌아가기
-              </button>
-            </div>
-          </section>
-        )}
-
-        {state === 'wrong-answers' && (
-          <section className="wrong-answers-section">
-            <h2>오답 노트</h2>
-            {currentStudyQuestions.length === 0 ? (
-              <div className="empty-state">
-                <p>틀린 문제가 없습니다. 먼저 테스트를 응시해주세요.</p>
-                <button onClick={handleRestart} className="back-button">
-                  돌아가기
-                </button>
-              </div>
-            ) : (
-              <div className="wrong-answers-content">
-                <p>총 {currentStudyQuestions.length}개의 틀린 문제가 있습니다.</p>
-                <div className="wrong-answers-actions">
-                  <button
-                    onClick={() => handleStartWrongAnswerStudy(20)}
-                    className="start-button"
-                  >
-                    틀린 문제 20개로 학습 시작
-                  </button>
-                  <button
-                    onClick={() => handleStartWrongAnswerStudy(Math.min(currentStudyQuestions.length, 50))}
-                    className="start-button"
-                  >
-                    틀린 문제 전체로 학습 시작
-                  </button>
-                  <button onClick={handleRestart} className="back-button">
-                    돌아가기
-                  </button>
+                <div className="milestone-list">
+                  {plan.milestones.map((milestone) => (
+                    <button
+                      key={milestone.day_number}
+                      className={`milestone-card ${selectedDay === milestone.day_number ? 'active' : ''}`}
+                      onClick={() => startTransition(() => setSelectedDay(milestone.day_number))}
+                    >
+                      <span>{milestone.label}</span>
+                      <strong>{milestone.progress_percent}%</strong>
+                      <small>{milestone.focus}</small>
+                    </button>
+                  ))}
                 </div>
-              </div>
+              </>
             )}
           </section>
-        )}
 
-        {state === 'repeat-study' && (
-          <section className="repeat-study-section">
-            <h2>반복 학습</h2>
-            {studySessions.length === 0 ? (
-              <div className="empty-state">
-                <p>저장된 학습 세션이 없습니다. 먼저 학습 모드로 문제를 풀어주세요.</p>
-                <button onClick={handleRestart} className="back-button">
-                  돌아가기
+          <section className="panel today-panel">
+            <div className="section-head">
+              <h2>Day {selectedDay} 배정</h2>
+              <p>Anki식 초기 복습 리듬을 고려한 신규 카드 샘플입니다.</p>
+            </div>
+
+            <div className="day-switcher">
+              {highlightedDays.map((day) => (
+                <button
+                  key={day}
+                  className={selectedDay === day ? 'selected' : ''}
+                  onClick={() => startTransition(() => setSelectedDay(day))}
+                >
+                  Day {day}
                 </button>
-              </div>
+              ))}
+            </div>
+
+            {loadingDay || !assignment ? (
+              <div className="planner-placeholder">Day 배정을 계산하는 중입니다...</div>
             ) : (
-              <div className="repeat-study-content">
-                <p>총 {studySessions.length}개의 학습 세션이 있습니다.</p>
-                <div className="study-sessions-list">
-                  {studySessions.map((session) => (
-                    <div key={session.id} className="study-session-item">
-                      <div className="session-info">
-                        <p><strong>날짜:</strong> {new Date(session.study_date).toLocaleDateString()}</p>
-                        <p><strong>문제 수:</strong> {session.total_questions}개</p>
-                        <p><strong>정답:</strong> {session.correct_count}개</p>
-                        <p><strong>정확도:</strong> {session.accuracy.toFixed(1)}%</p>
-                        <p><strong>소요 시간:</strong> {session.time_spent_minutes}분</p>
-                        {session.level && <p><strong>레벨:</strong> {session.level}</p>}
-                      </div>
-                      <button
-                        onClick={() => handleStartRepeatStudy(session.id)}
-                        className="start-button"
-                        disabled={session.question_count === 0}
-                      >
-                        다시 학습하기
-                      </button>
+              <>
+                <div className="day-summary">
+                  <div>
+                    <span>오늘 포커스</span>
+                    <strong>{assignment.summary.focus}</strong>
+                  </div>
+                  <div>
+                    <span>신규 카드</span>
+                    <strong>{assignment.summary.new_cards}장</strong>
+                  </div>
+                  <div>
+                    <span>예상 복습량</span>
+                    <strong>{assignment.summary.review_estimate}장</strong>
+                  </div>
+                </div>
+
+                <div className="card-columns">
+                  <article className="study-column">
+                    <div className="column-head">
+                      <h3>어휘</h3>
+                      <span>{assignment.vocabulary.length}장</span>
                     </div>
-                  ))}
+                    <div className="study-stack">
+                      {assignment.vocabulary.map((item) => (
+                        <div key={item.id} className="study-card">
+                          <div className="study-card-head">
+                            <strong>{item.title}</strong>
+                            {item.reading && <span>{item.reading}</span>}
+                          </div>
+                          <p>{item.answer}</p>
+                          {item.extra_text && <small>{item.extra_text}</small>}
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="study-column">
+                    <div className="column-head">
+                      <h3>문법</h3>
+                      <span>{assignment.grammar.length}장</span>
+                    </div>
+                    <div className="study-stack">
+                      {assignment.grammar.map((item) => (
+                        <div key={item.id} className="study-card">
+                          <div className="study-card-head">
+                            <strong>{item.title}</strong>
+                            {item.source_reference && <span>No. {item.source_reference}</span>}
+                          </div>
+                          <p>{item.answer}</p>
+                          {item.example_jp && <small>JP: {item.example_jp}</small>}
+                          {item.example_kr && <small>KR: {item.example_kr}</small>}
+                        </div>
+                      ))}
+                    </div>
+                  </article>
                 </div>
-                <button onClick={handleRestart} className="back-button">
-                  돌아가기
-                </button>
+              </>
+            )}
+          </section>
+
+          <section className="panel cadence-panel">
+            <div className="section-head">
+              <h2>첫 14일 러닝 페이스</h2>
+              <p>초반 2주가 Anki 습관 형성 구간입니다. 여기서 무너지지 않도록 복습량을 같이 봅니다.</p>
+            </div>
+
+            {plan && (
+              <div className="day-list">
+                {plan.days.slice(0, 14).map((day) => (
+                  <button
+                    key={day.day_number}
+                    className={`day-row ${selectedDay === day.day_number ? 'active' : ''}`}
+                    onClick={() => startTransition(() => setSelectedDay(day.day_number))}
+                  >
+                    <span>Day {day.day_number}</span>
+                    <span>신규 {day.new_cards}</span>
+                    <span>복습 {day.review_estimate}</span>
+                    <strong>{day.focus}</strong>
+                  </button>
+                ))}
               </div>
             )}
           </section>
-        )}
-
-        {state === 'vocabulary' && currentVocabularies.length > 0 && (
-          <section className="vocabulary-section">
-            <div className="vocabulary-controls">
-              <button
-                onClick={() => {
-                  // 일일 체크리스트에서 온 경우 체크리스트 상태 업데이트
-                  if (selectedDay > 0) {
-                    const saved = localStorage.getItem(`studyPlan_day${selectedDay}_completed`);
-                    if (saved) {
-                      try {
-                        const parsed = JSON.parse(saved);
-                        parsed.vocabulary = true;
-                        localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify(parsed));
-                      } catch (e) {
-                        localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ vocabulary: true }));
-                      }
-                    } else {
-                      localStorage.setItem(`studyPlan_day${selectedDay}_completed`, JSON.stringify({ vocabulary: true }));
-                    }
-                    setState('daily-checklist');
-                  } else {
-                    setState('initial');
-                  }
-                }}
-                className="back-button"
-              >
-                뒤로 가기
-              </button>
-              <button
-                onClick={handleViewVocabularyList}
-                className="list-button"
-              >
-                단어 목록 보기
-              </button>
-            </div>
-            <FlashcardUI
-              vocabularies={currentVocabularies}
-              onStatusUpdate={handleVocabularyStatusUpdate}
-            />
-          </section>
-        )}
-
-        {state === 'vocabulary-list' && (
-          <section className="vocabulary-list-section">
-            <div className="vocabulary-controls">
-              <button
-                onClick={() => setState('initial')}
-                className="back-button"
-              >
-                뒤로 가기
-              </button>
-              <button
-                onClick={handleStartVocabulary}
-                className="flashcard-button"
-              >
-                플래시카드 학습
-              </button>
-            </div>
-            <VocabularyListUI
-              vocabularies={currentVocabularies}
-              onStatusUpdate={handleVocabularyStatusUpdate}
-            />
-          </section>
-        )}
-
-        {state === 'vocabulary-review' && (
-          <section className="vocabulary-review-section">
-            <VocabularyReviewUI
-              onBack={() => setState('initial')}
-            />
-          </section>
-        )}
-
-        {(state === 'admin-dashboard' || state === 'admin-users' || state === 'admin-questions' || state === 'admin-vocabulary') && (
-          <AdminLayout
-            currentPage={state as AdminPage}
-            onNavigate={handleAdminNavigate}
-            onBack={handleRestart}
-            onLogout={handleLogout}
-          >
-            {state === 'admin-dashboard' && <AdminDashboardUI />}
-            {state === 'admin-users' && <AdminUserManagementUI />}
-            {state === 'admin-questions' && <AdminQuestionManagementUI />}
-            {state === 'admin-vocabulary' && <AdminVocabularyManagementUI />}
-          </AdminLayout>
-        )}
-
-        {state === 'error' && (
-          <section className="error-section">
-            <div className="error-message">
-              <h2>오류가 발생했습니다</h2>
-              <p>{error || '알 수 없는 오류가 발생했습니다.'}</p>
-              <button onClick={handleRestart} className="retry-button">
-                다시 시도
-              </button>
-            </div>
-          </section>
-        )}
-      </main>
+        </main>
+      )}
     </div>
   );
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof RoadmapApiError) {
+    return error.message;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return fallback;
 }
 
 export default App;

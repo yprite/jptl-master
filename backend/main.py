@@ -31,9 +31,9 @@ logger = logging.getLogger(__name__)
 
 # FastAPI 애플리케이션 생성
 app = FastAPI(
-    title="JLPT Skill Assessment Platform API",
-    description="JLPT 자격 검증 및 실력 향상 지원 플랫폼",
-    version="1.0.0",
+    title="JLPT 100-Day Roadmap API",
+    description="Anki 학습법 기반 JLPT 단어/문법 100일 완주 서비스",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -89,12 +89,12 @@ async def startup_event():
 @app.get("/")
 async def root():
     """기본 헬스 체크 엔드포인트"""
-    return {"message": "JLPT Skill Assessment Platform API", "status": "running"}
+    return {"message": "JLPT 100-Day Roadmap API", "status": "running"}
 
 @app.get("/health")
 async def health_check():
     """상세 헬스 체크"""
-    return {"status": "healthy", "version": "1.0.0"}
+    return {"status": "healthy", "version": "2.0.0"}
 
 if __name__ == "__main__":
     import uvicorn
