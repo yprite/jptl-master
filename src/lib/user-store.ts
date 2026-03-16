@@ -3,7 +3,7 @@
  * 유저는 "me"와 "wife" 둘뿐. 인증 없이 simple text ID.
  */
 
-import { supabase } from "./supabase";
+import { getSupabase } from "./supabase";
 import type { User, DailyQuest } from "./database.types";
 
 export type UserId = "me" | "wife";
@@ -42,10 +42,12 @@ export function setCurrentUserId(id: UserId): void {
 // --- 유저 프로필 (Supabase) ---
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
+function db(): any {
+  return getSupabase();
+}
 
 export async function getUser(id: UserId): Promise<User | null> {
-  const { data } = await db
+  const { data } = await db()
     .from("users")
     .select("*")
     .eq("id", id)
@@ -57,7 +59,7 @@ export async function upsertUser(
   id: UserId,
   profile: { name: string; level: "N3" | "N4" | "N5" } & Partial<UserGoals>
 ): Promise<User> {
-  const { data, error } = await db
+  const { data, error } = await db()
     .from("users")
     .upsert({
       id,
@@ -77,7 +79,7 @@ export async function upsertUser(
 // --- 오늘의 퀘스트 (Supabase) ---
 
 export async function getDailyQuests(userId: UserId): Promise<DailyQuests> {
-  const { data } = await db
+  const { data } = await db()
     .from("daily_quests")
     .select("*")
     .eq("user_id", userId)
@@ -103,7 +105,7 @@ export async function completeDailyQuest(
   const existing = await getDailyQuests(userId);
   const updated = { ...existing, [quest]: true };
 
-  await db.from("daily_quests").upsert({
+  await db().from("daily_quests").upsert({
     user_id: userId,
     date: today(),
     flashcard: updated.flashcard,
@@ -126,7 +128,7 @@ export interface UserProgress {
 }
 
 export async function getProgress(userId: UserId): Promise<UserProgress> {
-  const { data } = await db
+  const { data } = await db()
     .from("daily_quests")
     .select("*")
     .eq("user_id", userId);
