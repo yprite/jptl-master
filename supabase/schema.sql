@@ -1,5 +1,31 @@
 -- JPTL MVP: Supabase Schema
 
+-- 유저 프로필 (2인용, 인증 없이 간단한 ID 기반)
+CREATE TABLE users (
+  id TEXT PRIMARY KEY,           -- 'me' | 'wife'
+  name TEXT NOT NULL,
+  level TEXT NOT NULL CHECK (level IN ('N3', 'N4', 'N5')),
+  daily_flashcard INTEGER NOT NULL DEFAULT 10,
+  daily_vocab INTEGER NOT NULL DEFAULT 5,
+  daily_grammar INTEGER NOT NULL DEFAULT 5,
+  daily_reading INTEGER NOT NULL DEFAULT 2,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 일별 퀘스트 완료 기록
+CREATE TABLE daily_quests (
+  id SERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id),
+  date DATE NOT NULL DEFAULT CURRENT_DATE,
+  flashcard BOOLEAN DEFAULT FALSE,
+  vocabulary BOOLEAN DEFAULT FALSE,
+  grammar BOOLEAN DEFAULT FALSE,
+  reading BOOLEAN DEFAULT FALSE,
+  UNIQUE (user_id, date)
+);
+
+CREATE INDEX idx_daily_quests_user_date ON daily_quests(user_id, date);
+
 -- 단어 테이블
 CREATE TABLE vocabularies (
   id SERIAL PRIMARY KEY,

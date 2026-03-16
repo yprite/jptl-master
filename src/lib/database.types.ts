@@ -1,6 +1,63 @@
 export interface Database {
   public: {
     Tables: {
+      users: {
+        Row: {
+          id: string;
+          name: string;
+          level: "N3" | "N4" | "N5";
+          daily_flashcard: number;
+          daily_vocab: number;
+          daily_grammar: number;
+          daily_reading: number;
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          name: string;
+          level: "N3" | "N4" | "N5";
+          daily_flashcard?: number;
+          daily_vocab?: number;
+          daily_grammar?: number;
+          daily_reading?: number;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          level?: "N3" | "N4" | "N5";
+          daily_flashcard?: number;
+          daily_vocab?: number;
+          daily_grammar?: number;
+          daily_reading?: number;
+        };
+      };
+      daily_quests: {
+        Row: {
+          id: number;
+          user_id: string;
+          date: string;
+          flashcard: boolean;
+          vocabulary: boolean;
+          grammar: boolean;
+          reading: boolean;
+        };
+        Insert: {
+          user_id: string;
+          date: string;
+          flashcard?: boolean;
+          vocabulary?: boolean;
+          grammar?: boolean;
+          reading?: boolean;
+        };
+        Update: {
+          user_id?: string;
+          date?: string;
+          flashcard?: boolean;
+          vocabulary?: boolean;
+          grammar?: boolean;
+          reading?: boolean;
+        };
+      };
       vocabularies: {
         Row: {
           id: number;
@@ -104,6 +161,8 @@ export interface Database {
   };
 }
 
+export type User = Database["public"]["Tables"]["users"]["Row"];
+export type DailyQuest = Database["public"]["Tables"]["daily_quests"]["Row"];
 export type Vocabulary =
   Database["public"]["Tables"]["vocabularies"]["Row"];
 export type ReadingQuestion =

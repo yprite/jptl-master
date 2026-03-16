@@ -1,22 +1,13 @@
 /**
- * 간단한 2인 유저 시스템 (localStorage 기반)
- * 유저는 "나"와 "와이프" 둘뿐.
+ * 2인 유저 시스템 (Supabase 기반)
+ * 유저는 "me"와 "wife" 둘뿐. 인증 없이 simple text ID.
  */
+
+import { supabase } from "./supabase";
+import type { User, DailyQuest } from "./database.types";
 
 export type UserId = "me" | "wife";
 
-export interface UserProfile {
-  id: UserId;
-  name: string;
-  level: "N4" | "N3";
-}
-
-export const USERS: Record<UserId, UserProfile> = {
-  me: { id: "me", name: "나", level: "N3" },
-  wife: { id: "wife", name: "와이프", level: "N4" },
-};
-
-// 오늘의 퀘스트 완료 상태
 export interface DailyQuests {
   flashcard: boolean;
   vocabulary: boolean;
@@ -24,78 +15,140 @@ export interface DailyQuests {
   reading: boolean;
 }
 
+export interface UserGoals {
+  daily_flashcard: number;
+  daily_vocab: number;
+  daily_grammar: number;
+  daily_reading: number;
+}
+
 const STORAGE_KEY_USER = "jptl-current-user";
-const STORAGE_KEY_QUESTS = "jptl-daily-quests";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-function questKey(userId: UserId): string {
-  return `${STORAGE_KEY_QUESTS}-${userId}-${today()}`;
+// --- 현재 유저 (localStorage로 빠른 전환) ---
+
+export function getCurrentUserId(): UserId {
+  if (typeof window === "undefined") return "me";
+  return (localStorage.getItem(STORAGE_KEY_USER) as UserId) || "me";
 }
 
-// 누적 진도 키
-function progressKey(userId: UserId): string {
-  return `jptl-progress-${userId}`;
+export function setCurrentUserId(id: UserId): void {
+  localStorage.setItem(STORAGE_KEY_USER, id);
 }
+
+// --- 유저 프로필 (Supabase) ---
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
+
+export async function getUser(id: UserId): Promise<User | null> {
+  const { data } = await db
+    .from("users")
+    .select("*")
+    .eq("id", id)
+    .single();
+  return data as User | null;
+}
+
+export async function upsertUser(
+  id: UserId,
+  profile: { name: string; level: "N3" | "N4" | "N5" } & Partial<UserGoals>
+): Promise<User> {
+  const { data, error } = await db
+    .from("users")
+    .upsert({
+      id,
+      name: profile.name,
+      level: profile.level,
+      daily_flashcard: profile.daily_flashcard ?? 10,
+      daily_vocab: profile.daily_vocab ?? 5,
+      daily_grammar: profile.daily_grammar ?? 5,
+      daily_reading: profile.daily_reading ?? 2,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as User;
+}
+
+// --- 오늘의 퀘스트 (Supabase) ---
+
+export async function getDailyQuests(userId: UserId): Promise<DailyQuests> {
+  const { data } = await db
+    .from("daily_quests")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("date", today())
+    .single();
+
+  const row = data as DailyQuest | null;
+  if (!row) {
+    return { flashcard: false, vocabulary: false, grammar: false, reading: false };
+  }
+  return {
+    flashcard: row.flashcard,
+    vocabulary: row.vocabulary,
+    grammar: row.grammar,
+    reading: row.reading,
+  };
+}
+
+export async function completeDailyQuest(
+  userId: UserId,
+  quest: keyof DailyQuests
+): Promise<DailyQuests> {
+  const existing = await getDailyQuests(userId);
+  const updated = { ...existing, [quest]: true };
+
+  await db.from("daily_quests").upsert({
+    user_id: userId,
+    date: today(),
+    flashcard: updated.flashcard,
+    vocabulary: updated.vocabulary,
+    grammar: updated.grammar,
+    reading: updated.reading,
+  });
+
+  return updated;
+}
+
+// --- 누적 통계 (Supabase에서 집계) ---
 
 export interface UserProgress {
-  totalDays: number; // 총 학습일수
+  totalDays: number;
   flashcardCount: number;
   vocabCount: number;
   grammarCount: number;
   readingCount: number;
 }
 
-export function getCurrentUser(): UserId {
-  if (typeof window === "undefined") return "me";
-  return (localStorage.getItem(STORAGE_KEY_USER) as UserId) || "me";
-}
+export async function getProgress(userId: UserId): Promise<UserProgress> {
+  const { data } = await db
+    .from("daily_quests")
+    .select("*")
+    .eq("user_id", userId);
 
-export function setCurrentUser(id: UserId): void {
-  localStorage.setItem(STORAGE_KEY_USER, id);
-}
-
-export function getDailyQuests(userId: UserId): DailyQuests {
-  if (typeof window === "undefined")
-    return { flashcard: false, vocabulary: false, grammar: false, reading: false };
-  const raw = localStorage.getItem(questKey(userId));
-  if (!raw) return { flashcard: false, vocabulary: false, grammar: false, reading: false };
-  return JSON.parse(raw);
-}
-
-export function completeDailyQuest(
-  userId: UserId,
-  quest: keyof DailyQuests
-): DailyQuests {
-  const quests = getDailyQuests(userId);
-  const wasAllDone = Object.values(quests).every(Boolean);
-  quests[quest] = true;
-  localStorage.setItem(questKey(userId), JSON.stringify(quests));
-
-  // 누적 진도 업데이트
-  const prog = getProgress(userId);
-  const countKey = quest === "flashcard" ? "flashcardCount"
-    : quest === "vocabulary" ? "vocabCount"
-    : quest === "grammar" ? "grammarCount"
-    : "readingCount";
-  prog[countKey]++;
-
-  // 오늘 전부 완료하면 학습일수 +1
-  const allDone = Object.values(quests).every(Boolean);
-  if (allDone && !wasAllDone) {
-    prog.totalDays++;
-  }
-  localStorage.setItem(progressKey(userId), JSON.stringify(prog));
-
-  return quests;
-}
-
-export function getProgress(userId: UserId): UserProgress {
-  if (typeof window === "undefined")
+  const rows = (data as DailyQuest[] | null) || [];
+  if (rows.length === 0) {
     return { totalDays: 0, flashcardCount: 0, vocabCount: 0, grammarCount: 0, readingCount: 0 };
-  const raw = localStorage.getItem(progressKey(userId));
-  if (!raw) return { totalDays: 0, flashcardCount: 0, vocabCount: 0, grammarCount: 0, readingCount: 0 };
-  return JSON.parse(raw);
+  }
+
+  let totalDays = 0;
+  let flashcardCount = 0;
+  let vocabCount = 0;
+  let grammarCount = 0;
+  let readingCount = 0;
+
+  for (const row of rows) {
+    if (row.flashcard) flashcardCount++;
+    if (row.vocabulary) vocabCount++;
+    if (row.grammar) grammarCount++;
+    if (row.reading) readingCount++;
+    if (row.flashcard && row.vocabulary && row.grammar && row.reading) totalDays++;
+  }
+
+  return { totalDays, flashcardCount, vocabCount, grammarCount, readingCount };
 }
