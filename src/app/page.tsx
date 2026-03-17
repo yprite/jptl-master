@@ -19,8 +19,8 @@ import {
 
 const USER_IDS: UserId[] = ["me", "wife"];
 const USER_LABELS: Record<UserId, string> = {
-  me: "유저 1",
-  wife: "유저 2",
+  me: "나",
+  wife: "와이프",
 };
 type TargetRange = {
   min: number;
@@ -328,7 +328,6 @@ export default function Home() {
 
         <div className="mt-5 flex flex-wrap gap-2">
           {USER_IDS.map((id) => {
-            const state = states[id];
             const isActive = id === userId;
 
             return (
@@ -341,7 +340,7 @@ export default function Home() {
                     : "bg-white/10 text-white/80 hover:bg-white/20"
                 }`}
               >
-                {getDisplayName(id, state)}
+                {USER_LABELS[id]}
               </button>
             );
           })}
@@ -450,7 +449,7 @@ export default function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
               Step 1
             </p>
-            <h2 className="text-2xl font-black text-stone-900">프로필 설정</h2>
+            <h2 className="text-2xl font-black text-stone-900">{USER_LABELS[userId]} 프로필 설정</h2>
             <p className="text-sm text-stone-500">
               이 단계는 처음 한 번만 필요합니다. 이름과 목표 레벨만 정하면 학습 일수에 맞춰 하루 루틴은 다음 단계에서 자동으로 잡힙니다.
             </p>
@@ -518,7 +517,7 @@ export default function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
               Step 2
             </p>
-            <h2 className="text-2xl font-black text-stone-900">학습 계획 세우기</h2>
+            <h2 className="text-2xl font-black text-stone-900">{USER_LABELS[userId]} 학습 계획</h2>
             <p className="text-sm text-stone-500">
               학습 일수만 정하면 하루 목표는 자동으로 맞춰집니다. 슬라이더를 움직이면 루틴 강도가 바로 바뀝니다.
             </p>
