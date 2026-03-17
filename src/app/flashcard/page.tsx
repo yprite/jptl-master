@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { sampleVocabularies } from "@/lib/sample-data";
 import {
   calculateNextReview,
+  formatReviewInterval,
   type Difficulty,
 } from "@/lib/spaced-repetition";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
@@ -26,44 +27,50 @@ export default function FlashcardPage() {
 
   const vocabs = sampleVocabularies.filter((v) => v.level === supportedLevel);
   const current = vocabs[currentIndex];
+  const currentCardState = cardStates.get(currentIndex) || {
+    vocabIndex: currentIndex,
+    easeFactor: 2.5,
+    interval: 0,
+    repetitions: 0,
+  };
 
-  const handleDifficulty = useCallback(
-    (difficulty: Difficulty) => {
-      const state = cardStates.get(currentIndex) || {
-        vocabIndex: currentIndex,
-        easeFactor: 2.5,
-        interval: 0,
-        repetitions: 0,
-      };
-
-      const result = calculateNextReview(
-        state.easeFactor,
-        state.interval,
-        state.repetitions,
+  const previewInterval = (difficulty: Difficulty) =>
+    formatReviewInterval(
+      calculateNextReview(
+        currentCardState.easeFactor,
+        currentCardState.interval,
+        currentCardState.repetitions,
         difficulty
-      );
+      ).intervalDays
+    );
 
-      setCardStates((prev) => {
-        const next = new Map(prev);
-        next.set(currentIndex, {
-          vocabIndex: currentIndex,
-          easeFactor: result.easeFactor,
-          interval: result.intervalDays,
-          repetitions: result.repetitions,
-        });
-        return next;
+  function handleDifficulty(difficulty: Difficulty) {
+    const result = calculateNextReview(
+      currentCardState.easeFactor,
+      currentCardState.interval,
+      currentCardState.repetitions,
+      difficulty
+    );
+
+    setCardStates((prev) => {
+      const next = new Map(prev);
+      next.set(currentIndex, {
+        vocabIndex: currentIndex,
+        easeFactor: result.easeFactor,
+        interval: result.intervalDays,
+        repetitions: result.repetitions,
       });
+      return next;
+    });
 
-      setStats((prev) => ({
-        reviewed: prev.reviewed + 1,
-        correct: difficulty !== "again" ? prev.correct + 1 : prev.correct,
-      }));
+    setStats((prev) => ({
+      reviewed: prev.reviewed + 1,
+      correct: difficulty !== "again" ? prev.correct + 1 : prev.correct,
+    }));
 
-      setFlipped(false);
-      setCurrentIndex((prev) => (prev + 1) % vocabs.length);
-    },
-    [currentIndex, cardStates, vocabs.length]
-  );
+    setFlipped(false);
+    setCurrentIndex((prev) => (prev + 1) % vocabs.length);
+  }
 
   if (isLoading) {
     return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
@@ -135,6 +142,7 @@ export default function FlashcardPage() {
         <span>
           {currentIndex + 1} / {vocabs.length}
         </span>
+        <span>초기 학습 단계는 분 단위로 진행됩니다.</span>
       </div>
 
       {/* Flashcard */}
@@ -180,28 +188,28 @@ export default function FlashcardPage() {
             className="py-3 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
           >
             다시
-            <span className="block text-xs opacity-70">1일</span>
+            <span className="block text-xs opacity-70">{previewInterval("again")}</span>
           </button>
           <button
             onClick={() => handleDifficulty("hard")}
             className="py-3 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 font-medium hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors"
           >
             어려움
-            <span className="block text-xs opacity-70">~3일</span>
+            <span className="block text-xs opacity-70">{previewInterval("hard")}</span>
           </button>
           <button
             onClick={() => handleDifficulty("good")}
             className="py-3 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
           >
             보통
-            <span className="block text-xs opacity-70">~7일</span>
+            <span className="block text-xs opacity-70">{previewInterval("good")}</span>
           </button>
           <button
             onClick={() => handleDifficulty("easy")}
             className="py-3 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
           >
             쉬움
-            <span className="block text-xs opacity-70">~14일</span>
+            <span className="block text-xs opacity-70">{previewInterval("easy")}</span>
           </button>
         </div>
       )}
