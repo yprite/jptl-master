@@ -100,8 +100,8 @@ function getLeader(states: Record<UserId, HomeState>): UserId | null {
   return meScore > wifeScore ? "me" : "wife";
 }
 
-function getDisplayName(id: UserId, state: HomeState): string {
-  return state.user?.name || USER_LABELS[id];
+function getDisplayName(id: UserId): string {
+  return USER_LABELS[id];
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -139,17 +139,14 @@ export default function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [resetting, setResetting] = useState(false);
 
-  const [formName, setFormName] = useState("");
   const [formLevel, setFormLevel] = useState<"N5" | "N4" | "N3">("N4");
 
   const [planDays, setPlanDays] = useState(84);
 
   const hydrateForms = useCallback((state: HomeState) => {
     if (state.user) {
-      setFormName(state.user.name);
       setFormLevel(state.user.level);
     } else {
-      setFormName("");
       setFormLevel("N4");
     }
 
@@ -198,11 +195,10 @@ export default function Home() {
   };
 
   const saveProfile = async () => {
-    if (!formName.trim()) return;
     const baselineTargets = deriveDailyTargets(activePlan?.totalDays ?? 84, formLevel);
 
     await upsertUser(userId, {
-      name: formName.trim(),
+      name: USER_LABELS[userId],
       level: formLevel,
       daily_flashcard: baselineTargets.dailyFlashcard,
       daily_vocab: baselineTargets.dailyVocabulary,
@@ -243,7 +239,7 @@ export default function Home() {
   };
 
   const resetCurrentUser = async () => {
-    if (!window.confirm(`${getDisplayName(userId, activeState)}의 프로필과 진도를 초기화할까요?`)) {
+    if (!window.confirm(`${getDisplayName(userId)}의 프로필과 진도를 초기화할까요?`)) {
       return;
     }
 
@@ -364,9 +360,9 @@ export default function Home() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-xs uppercase tracking-[0.18em] text-white/50">
-                      {USER_LABELS[id]}
+                      지정 사용자
                     </p>
-                    <p className="text-xl font-bold">{getDisplayName(id, state)}</p>
+                    <p className="text-xl font-bold">{getDisplayName(id)}</p>
                   </div>
                   <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
                     {state.user ? `${completed}/4 완료` : "미설정"}
@@ -403,7 +399,7 @@ export default function Home() {
             <div>
               <h2 className="text-xl font-black text-stone-900">설정</h2>
               <p className="text-sm text-stone-500">
-                {activeUser.name}의 학습 루틴을 관리합니다.
+                {getDisplayName(userId)} 학습 루틴을 관리합니다.
               </p>
             </div>
             <button
@@ -451,20 +447,14 @@ export default function Home() {
             </p>
             <h2 className="text-2xl font-black text-stone-900">{USER_LABELS[userId]} 프로필 설정</h2>
             <p className="text-sm text-stone-500">
-              이 단계는 처음 한 번만 필요합니다. 이름과 목표 레벨만 정하면 학습 일수에 맞춰 하루 루틴은 다음 단계에서 자동으로 잡힙니다.
+              이 단계는 처음 한 번만 필요합니다. 사용자는 이미 {USER_LABELS[userId]}로 고정되어 있고, 목표 레벨만 정하면 학습 일수에 맞춰 하루 루틴은 다음 단계에서 자동으로 잡힙니다.
             </p>
           </div>
 
           <div className="mt-6 space-y-4">
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-stone-700">이름</label>
-              <input
-                type="text"
-                value={formName}
-                onChange={(event) => setFormName(event.target.value)}
-                placeholder="이름을 입력하세요"
-                className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-stone-400 focus:bg-white"
-              />
+            <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4">
+              <div className="text-sm font-semibold text-stone-700">지정된 사용자</div>
+              <div className="mt-2 text-xl font-black text-stone-900">{USER_LABELS[userId]}</div>
             </div>
 
             <div>
@@ -493,8 +483,7 @@ export default function Home() {
             <div className="flex gap-3">
               <button
                 onClick={() => void saveProfile()}
-                disabled={!formName.trim()}
-                className="flex-1 rounded-2xl bg-stone-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-stone-800 disabled:opacity-40"
+                className="flex-1 rounded-2xl bg-stone-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-stone-800"
               >
                 저장하고 계속하기
               </button>
@@ -615,7 +604,7 @@ export default function Home() {
                   Day {currentDay} 루틴
                 </h2>
                 <p className="mt-1 text-sm text-stone-500">
-                  {activeUser.name}님은 오늘{" "}
+                  {getDisplayName(userId)}는 오늘{" "}
                   <span className="font-semibold text-stone-900">암기 → 어휘 → 문법 → 독해</span>{" "}
                   순서로 진행합니다.
                 </p>
