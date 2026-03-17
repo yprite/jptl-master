@@ -18,6 +18,7 @@ const DEFAULT_PROGRESS: UserProgress = {
   grammarCount: 0,
   readingCount: 0,
 };
+const LIST_LIMIT = 100;
 
 let adminClient: SupabaseClient | null = null;
 let bucketReady: Promise<void> | null = null;
@@ -66,22 +67,60 @@ async function ensureBucket(): Promise<void> {
   return bucketReady;
 }
 
+function timestampedName(prefix: string): string {
+  return `${prefix}-${Date.now()}.json`;
+}
+
+function profilePrefix(userId: UserId): string {
+  return `users/${userId}`;
+}
+
 function profilePath(userId: UserId): string {
-  return `users/${userId}.json`;
+  return `${profilePrefix(userId)}/${timestampedName("profile")}`;
+}
+
+function questsPrefix(userId: UserId, date: string): string {
+  return `quests/${userId}/${date}`;
 }
 
 function questsPath(userId: UserId, date: string): string {
-  return `quests/${userId}/${date}.json`;
+  return `${questsPrefix(userId, date)}/${timestampedName("quests")}`;
+}
+
+function progressPrefix(userId: UserId): string {
+  return `progress/${userId}`;
 }
 
 function progressPath(userId: UserId): string {
-  return `progress/${userId}.json`;
+  return `${progressPrefix(userId)}/${timestampedName("progress")}`;
+}
+
+async function resolveLatestPath(prefix: string): Promise<string | null> {
+  await ensureBucket();
+
+  const segments = prefix.split("/");
+  const search = segments.pop();
+  const folder = segments.join("/");
+  const { data, error } = await getAdminClient().storage.from(BUCKET_NAME).list(folder, {
+    search,
+    limit: LIST_LIMIT,
+    sortBy: { column: "name", order: "desc" },
+  });
+
+  if (error) throw error;
+  const latest = (data || []).find((entry) => entry.name.endsWith(".json"));
+  return latest ? `${folder}/${latest.name}` : null;
 }
 
 async function readJson<T>(path: string): Promise<T | null> {
   await ensureBucket();
 
-  const { data, error } = await getAdminClient().storage.from(BUCKET_NAME).download(path);
+  const resolvedPath = await resolveLatestPath(path);
+  if (!resolvedPath) {
+    return null;
+  }
+
+  const { data, error } = await getAdminClient().storage.from(BUCKET_NAME).download(resolvedPath);
   if (error) {
     const message = error.message.toLowerCase();
     if (
@@ -136,9 +175,9 @@ export async function getRemoteState(userId: UserId): Promise<{
 }> {
   const date = getToday();
   const [user, quests, progress] = await Promise.all([
-    readJson<User>(profilePath(userId)),
-    readJson<DailyQuests>(questsPath(userId, date)),
-    readJson<UserProgress>(progressPath(userId)),
+    readJson<User>(profilePrefix(userId)),
+    readJson<DailyQuests>(questsPrefix(userId, date)),
+    readJson<UserProgress>(progressPrefix(userId)),
   ]);
 
   return {
@@ -152,7 +191,7 @@ export async function saveUserProfile(
   userId: UserId,
   profile: { name: string; level: "N3" | "N4" | "N5" } & Partial<UserGoals>
 ): Promise<User> {
-  const existing = await readJson<User>(profilePath(userId));
+  const existing = await readJson<User>(profilePrefix(userId));
   const user = toUser(userId, profile, existing);
   await writeJson(profilePath(userId), user);
   return user;
@@ -164,9 +203,9 @@ export async function completeRemoteQuest(
 ): Promise<{ quests: DailyQuests; progress: UserProgress }> {
   const date = getToday();
   const currentQuests =
-    (await readJson<DailyQuests>(questsPath(userId, date))) ?? { ...DEFAULT_DAILY_QUESTS };
+    (await readJson<DailyQuests>(questsPrefix(userId, date))) ?? { ...DEFAULT_DAILY_QUESTS };
   const currentProgress =
-    (await readJson<UserProgress>(progressPath(userId))) ?? { ...DEFAULT_PROGRESS };
+    (await readJson<UserProgress>(progressPrefix(userId))) ?? { ...DEFAULT_PROGRESS };
 
   if (currentQuests[quest]) {
     return { quests: currentQuests, progress: currentProgress };
