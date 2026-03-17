@@ -130,7 +130,17 @@ async function readJson<T>(folder: string): Promise<T | null> {
     return null;
   }
 
-  const { data, error } = await getAdminClient().storage.from(BUCKET_NAME).download(resolvedPath);
+  return readJsonAtPath<T>(resolvedPath);
+}
+
+export async function readLatestJsonInFolder<T>(folder: string): Promise<T | null> {
+  return readJson<T>(folder);
+}
+
+export async function readJsonAtPath<T>(path: string): Promise<T | null> {
+  await ensureBucket();
+
+  const { data, error } = await getAdminClient().storage.from(BUCKET_NAME).download(path);
   if (error) {
     const message = error.message.toLowerCase();
     if (
@@ -159,6 +169,10 @@ async function writeJson(path: string, payload: unknown): Promise<void> {
     }
   );
   if (error) throw error;
+}
+
+export async function writeJsonAtPath(path: string, payload: unknown): Promise<void> {
+  await writeJson(path, payload);
 }
 
 function toUser(

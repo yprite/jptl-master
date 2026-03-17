@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { resetRemoteFlashcardSrs } from "@/lib/flashcard-srs-server";
 import { resetRemoteState } from "@/lib/home-state-server";
 import type { UserId } from "@/lib/user-store";
 
@@ -17,7 +18,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = (await request.json()) as { userId?: unknown };
     const userId = parseUserId(body.userId);
-    const state = await resetRemoteState(userId);
+    const [state] = await Promise.all([
+      resetRemoteState(userId),
+      resetRemoteFlashcardSrs(userId),
+    ]);
     return NextResponse.json(state);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

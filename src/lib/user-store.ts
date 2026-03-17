@@ -3,6 +3,7 @@
  * Uses same-origin API routes for remote persistence and falls back to localStorage.
  */
 
+import { resetLocalFlashcardSrs } from "./flashcard-srs-store";
 import type { User } from "./database.types";
 
 export type UserId = "me" | "wife";
@@ -261,6 +262,8 @@ function syncLocalProgress(userId: UserId, progress: UserProgress): void {
 }
 
 function resetLocalState(userId: UserId): HomeState {
+  resetLocalFlashcardSrs(userId);
+
   const users = getLocalUsers();
   delete users[userId];
   setLocalUsers(users);
@@ -569,6 +572,7 @@ export async function resetUserState(userId: UserId): Promise<HomeState> {
       method: "POST",
       body: JSON.stringify({ userId }),
     });
+    resetLocalFlashcardSrs(userId);
     return syncLocalState(userId, state);
   } catch (error) {
     if (shouldUseLocalFallback(error)) {

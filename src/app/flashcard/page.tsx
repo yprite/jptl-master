@@ -1,6 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  buildFlashcardId,
+  getFlashcardSrsState,
+  saveFlashcardSrsState,
+  type FlashcardReviewRecord,
+  type FlashcardSrsState,
+} from "@/lib/flashcard-srs-store";
 import {
   calculateNextReview,
   formatReviewInterval,
@@ -10,24 +17,109 @@ import type { StudyFlashcard } from "@/lib/study-data-types";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
 
-interface CardState {
-  vocabIndex: number;
-  easeFactor: number;
-  interval: number;
-  repetitions: number;
+interface FlashcardWithId extends StudyFlashcard {
+  cardId: string;
+  sourceIndex: number;
 }
 
 const EMPTY_FLASHCARDS: StudyFlashcard[] = [];
+const EMPTY_SRS_STATE: FlashcardSrsState = {
+  updatedAt: "",
+  reviews: {},
+};
+
+function formatNextReviewLabel(iso: string | null): string | null {
+  if (!iso) return null;
+
+  const timestamp = Date.parse(iso);
+  if (Number.isNaN(timestamp)) return null;
+
+  const diffMs = timestamp - Date.now();
+  if (diffMs <= 0) return "지금";
+
+  const diffMinutes = Math.ceil(diffMs / 60_000);
+  if (diffMinutes < 60) {
+    return `${diffMinutes}분 뒤`;
+  }
+
+  const diffHours = Math.ceil(diffMinutes / 60);
+  if (diffHours < 24) {
+    return `${diffHours}시간 뒤`;
+  }
+
+  const diffDays = Math.ceil(diffHours / 24);
+  return `${diffDays}일 뒤`;
+}
+
+function getReviewQueue(
+  cards: FlashcardWithId[],
+  reviews: Record<string, FlashcardReviewRecord>,
+  nowMs: number
+): FlashcardWithId[] {
+  const queue = cards.filter((card) => {
+    const review = reviews[card.cardId];
+    if (!review) {
+      return true;
+    }
+
+    const nextReviewAt = Date.parse(review.nextReviewAt);
+    return Number.isNaN(nextReviewAt) || nextReviewAt <= nowMs;
+  });
+
+  queue.sort((left, right) => {
+    const leftReview = reviews[left.cardId];
+    const rightReview = reviews[right.cardId];
+
+    if (leftReview && !rightReview) return -1;
+    if (!leftReview && rightReview) return 1;
+    if (!leftReview && !rightReview) return left.sourceIndex - right.sourceIndex;
+
+    const leftTime = Date.parse(leftReview.nextReviewAt);
+    const rightTime = Date.parse(rightReview.nextReviewAt);
+    if (leftTime !== rightTime) {
+      return leftTime - rightTime;
+    }
+
+    return left.sourceIndex - right.sourceIndex;
+  });
+
+  return queue;
+}
+
+function getEarliestFutureReview(
+  cards: FlashcardWithId[],
+  reviews: Record<string, FlashcardReviewRecord>,
+  nowMs: number
+): string | null {
+  let earliest: number | null = null;
+
+  for (const card of cards) {
+    const review = reviews[card.cardId];
+    if (!review) continue;
+
+    const nextReviewAt = Date.parse(review.nextReviewAt);
+    if (Number.isNaN(nextReviewAt) || nextReviewAt <= nowMs) {
+      continue;
+    }
+
+    if (earliest === null || nextReviewAt < earliest) {
+      earliest = nextReviewAt;
+    }
+  }
+
+  return earliest ? new Date(earliest).toISOString() : null;
+}
 
 export default function FlashcardPage() {
-  const { isLoading: isProfileLoading, supportedLevel, userLabel } =
+  const { isLoading: isProfileLoading, supportedLevel, userId, userLabel } =
     useActiveStudyProfile();
   const [flipped, setFlipped] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [stats, setStats] = useState({ reviewed: 0, correct: 0 });
-  const [cardStates, setCardStates] = useState<Map<number, CardState>>(
-    new Map()
-  );
+  const [clock, setClock] = useState(() => Date.now());
+  const [srsState, setSrsState] = useState<FlashcardSrsState>(EMPTY_SRS_STATE);
+  const [isSrsLoading, setIsSrsLoading] = useState(true);
+  const [srsError, setSrsError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const { data: vocabs, error, isLoading: isStudyLoading } = useStudyData<
     StudyFlashcard[]
   >(
@@ -35,61 +127,149 @@ export default function FlashcardPage() {
     EMPTY_FLASHCARDS
   );
 
-  const current = vocabs[currentIndex];
-  const currentCardState = cardStates.get(currentIndex) || {
-    vocabIndex: currentIndex,
-    easeFactor: 2.5,
-    interval: 0,
-    repetitions: 0,
-  };
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setClock(Date.now());
+    }, 30_000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (isProfileLoading) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadSrs() {
+      setIsSrsLoading(true);
+      setSrsError(null);
+
+      try {
+        const state = await getFlashcardSrsState(userId, supportedLevel);
+        if (!cancelled) {
+          setSrsState(state);
+          setIsSrsLoading(false);
+        }
+      } catch (loadError) {
+        if (!cancelled) {
+          setSrsState(EMPTY_SRS_STATE);
+          setSrsError(
+            loadError instanceof Error
+              ? loadError.message
+              : "SRS 상태를 불러오지 못했습니다."
+          );
+          setIsSrsLoading(false);
+        }
+      }
+    }
+
+    void loadSrs();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isProfileLoading, supportedLevel, userId]);
+
+  useEffect(() => {
+    setFlipped(false);
+    setStats({ reviewed: 0, correct: 0 });
+  }, [supportedLevel, userId]);
+
+  const cards: FlashcardWithId[] = vocabs.map((card, index) => ({
+    ...card,
+    cardId: buildFlashcardId(card, index),
+    sourceIndex: index,
+  }));
+
+  const reviews = srsState.reviews;
+  const queue = getReviewQueue(cards, reviews, clock);
+  const current = queue[0];
+  const currentReview = current ? reviews[current.cardId] : null;
+  const nextScheduledReview = formatNextReviewLabel(
+    getEarliestFutureReview(cards, reviews, clock)
+  );
+  const dueReviewCount = queue.filter((card) => Boolean(reviews[card.cardId])).length;
+  const newCardCount = queue.filter((card) => !reviews[card.cardId]).length;
+  const reviewedCardCount = Object.keys(reviews).length;
+
+  useEffect(() => {
+    setFlipped(false);
+  }, [current?.cardId]);
 
   const previewInterval = (difficulty: Difficulty) =>
     formatReviewInterval(
       calculateNextReview(
-        currentCardState.easeFactor,
-        currentCardState.interval,
-        currentCardState.repetitions,
+        currentReview?.easeFactor ?? 2.5,
+        currentReview?.intervalDays ?? 0,
+        currentReview?.repetitions ?? 0,
         difficulty
       ).intervalDays
     );
 
-  function handleDifficulty(difficulty: Difficulty) {
-    if (!current || vocabs.length === 0) {
+  async function handleDifficulty(difficulty: Difficulty) {
+    if (!current || isSaving) {
       return;
     }
 
     const result = calculateNextReview(
-      currentCardState.easeFactor,
-      currentCardState.interval,
-      currentCardState.repetitions,
+      currentReview?.easeFactor ?? 2.5,
+      currentReview?.intervalDays ?? 0,
+      currentReview?.repetitions ?? 0,
       difficulty
     );
+    const reviewedAt = new Date().toISOString();
 
-    setCardStates((prev) => {
-      const next = new Map(prev);
-      next.set(currentIndex, {
-        vocabIndex: currentIndex,
-        easeFactor: result.easeFactor,
-        interval: result.intervalDays,
-        repetitions: result.repetitions,
-      });
-      return next;
-    });
+    const nextState: FlashcardSrsState = {
+      updatedAt: reviewedAt,
+      reviews: {
+        ...reviews,
+        [current.cardId]: {
+          cardId: current.cardId,
+          easeFactor: result.easeFactor,
+          intervalDays: result.intervalDays,
+          repetitions: result.repetitions,
+          nextReviewAt: result.nextReview.toISOString(),
+          lastReviewedAt: reviewedAt,
+          lastDifficulty: difficulty,
+          reviewCount: (currentReview?.reviewCount ?? 0) + 1,
+        },
+      },
+    };
 
+    setSrsState(nextState);
+    setSrsError(null);
     setStats((prev) => ({
       reviewed: prev.reviewed + 1,
       correct: difficulty !== "again" ? prev.correct + 1 : prev.correct,
     }));
-
     setFlipped(false);
-    setCurrentIndex((prev) => (prev + 1) % vocabs.length);
+    setClock(Date.now());
+    setIsSaving(true);
+
+    try {
+      const persisted = await saveFlashcardSrsState(userId, supportedLevel, nextState);
+      setSrsState(persisted);
+    } catch (saveError) {
+      setSrsError(
+        saveError instanceof Error
+          ? saveError.message
+          : "SRS 상태를 저장하지 못했습니다."
+      );
+    } finally {
+      setIsSaving(false);
+      setClock(Date.now());
+    }
   }
 
-  if (isProfileLoading || isStudyLoading) {
+  if (isProfileLoading || isStudyLoading || isSrsLoading) {
     return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
   }
 
-  if (!current) {
+  const errorMessage = srsError ?? error;
+
+  if (!cards.length) {
     return (
       <div className="space-y-6">
         <div className="space-y-3">
@@ -103,9 +283,9 @@ export default function FlashcardPage() {
             </span>
           </div>
         </div>
-        {error && (
+        {errorMessage && (
           <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
+            {errorMessage}
           </p>
         )}
         <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
@@ -129,98 +309,149 @@ export default function FlashcardPage() {
         </div>
       </div>
 
-      {error && (
+      {errorMessage && (
         <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-          {error}
+          {errorMessage}
         </p>
       )}
 
-      {/* Stats */}
-      <div className="flex gap-4 text-sm text-gray-500">
-        <span>
-          학습: {stats.reviewed}장 | 정답률:{" "}
-          {stats.reviewed > 0
-            ? Math.round((stats.correct / stats.reviewed) * 100)
-            : 0}
-          %
-        </span>
-        <span>
-          {currentIndex + 1} / {vocabs.length}
-        </span>
-        <span>초기 학습 단계는 분 단위로 진행됩니다.</span>
-      </div>
-
-      {/* Flashcard */}
-      <div
-        className="flashcard cursor-pointer"
-        onClick={() => setFlipped(!flipped)}
-      >
-        <div
-          className={`flashcard-inner relative w-full min-h-[280px] ${
-            flipped ? "flipped" : ""
-          }`}
-        >
-          {/* Front */}
-          <div className="flashcard-front absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-8">
-            <p className="text-5xl font-bold mb-4">{current.word}</p>
-            {current.reading && (
-              <p className="text-xl text-gray-400">{current.reading}</p>
-            )}
-            <p className="mt-6 text-sm text-gray-400">
-              탭하여 뜻 확인
-            </p>
-          </div>
-
-          {/* Back */}
-          <div className="flashcard-back absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-8">
-            <p className="text-3xl font-bold mb-2">{current.word}</p>
-            {current.reading && (
-              <p className="text-lg text-gray-400 mb-4">{current.reading}</p>
-            )}
-            <p className="text-2xl text-blue-600 dark:text-blue-400 font-semibold mb-4">
-              {current.meaning}
-            </p>
-            {current.example && (
-              <p className="text-sm text-gray-500 bg-gray-50 dark:bg-gray-900 rounded-lg px-4 py-2">
-                {current.example}
-              </p>
-            )}
-          </div>
+      <div className="grid gap-3 text-sm md:grid-cols-4">
+        <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+            세션
+          </p>
+          <p className="mt-1 font-semibold text-gray-900">
+            {stats.reviewed}장 / 정답률{" "}
+            {stats.reviewed > 0
+              ? Math.round((stats.correct / stats.reviewed) * 100)
+              : 0}
+            %
+          </p>
+        </div>
+        <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+            복습 대기
+          </p>
+          <p className="mt-1 font-semibold text-gray-900">{dueReviewCount}장</p>
+        </div>
+        <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+            새 카드
+          </p>
+          <p className="mt-1 font-semibold text-gray-900">{newCardCount}장</p>
+        </div>
+        <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+            누적 학습
+          </p>
+          <p className="mt-1 font-semibold text-gray-900">
+            {reviewedCardCount}/{cards.length}장
+          </p>
         </div>
       </div>
 
-      {/* Difficulty buttons */}
-      {flipped && (
-        <div className="grid grid-cols-4 gap-2">
-          <button
-            onClick={() => handleDifficulty("again")}
-            className="py-3 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
-          >
-            다시
-            <span className="block text-xs opacity-70">{previewInterval("again")}</span>
-          </button>
-          <button
-            onClick={() => handleDifficulty("hard")}
-            className="py-3 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 font-medium hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors"
-          >
-            어려움
-            <span className="block text-xs opacity-70">{previewInterval("hard")}</span>
-          </button>
-          <button
-            onClick={() => handleDifficulty("good")}
-            className="py-3 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
-          >
-            보통
-            <span className="block text-xs opacity-70">{previewInterval("good")}</span>
-          </button>
-          <button
-            onClick={() => handleDifficulty("easy")}
-            className="py-3 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
-          >
-            쉬움
-            <span className="block text-xs opacity-70">{previewInterval("easy")}</span>
-          </button>
+      {!current ? (
+        <div className="rounded-3xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center">
+          <p className="text-lg font-semibold text-gray-900">
+            지금 복습할 카드가 없습니다.
+          </p>
+          <p className="mt-3 text-sm text-gray-600">
+            {nextScheduledReview
+              ? `다음 복습은 ${nextScheduledReview} 예정입니다.`
+              : "현재 레벨의 카드 복습이 모두 끝났습니다."}
+          </p>
         </div>
+      ) : (
+        <>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
+            <span>남은 카드 {queue.length}장</span>
+            <span>•</span>
+            <span>{currentReview ? "복습 카드" : "새 카드"}</span>
+            {currentReview?.nextReviewAt && (
+              <>
+                <span>•</span>
+                <span>직전 예약 간격 {formatReviewInterval(currentReview.intervalDays)}</span>
+              </>
+            )}
+          </div>
+
+          <div
+            className="flashcard cursor-pointer"
+            onClick={() => setFlipped((prev) => !prev)}
+          >
+            <div
+              className={`flashcard-inner relative w-full min-h-[280px] ${
+                flipped ? "flipped" : ""
+              }`}
+            >
+              <div className="flashcard-front absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-8">
+                <p className="text-5xl font-bold mb-4">{current.word}</p>
+                {current.reading && (
+                  <p className="text-xl text-gray-400">{current.reading}</p>
+                )}
+                <p className="mt-6 text-sm text-gray-400">탭하여 뜻 확인</p>
+              </div>
+
+              <div className="flashcard-back absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-8">
+                <p className="text-3xl font-bold mb-2">{current.word}</p>
+                {current.reading && (
+                  <p className="text-lg text-gray-400 mb-4">{current.reading}</p>
+                )}
+                <p className="text-2xl text-blue-600 font-semibold mb-4">
+                  {current.meaning}
+                </p>
+                {current.example && (
+                  <p className="text-sm text-gray-500 bg-gray-50 rounded-lg px-4 py-2">
+                    {current.example}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {flipped && (
+            <div className="grid grid-cols-4 gap-2">
+              <button
+                onClick={() => void handleDifficulty("again")}
+                disabled={isSaving}
+                className="py-3 rounded-xl bg-red-100 text-red-700 font-medium hover:bg-red-200 transition-colors disabled:opacity-60"
+              >
+                다시
+                <span className="block text-xs opacity-70">{previewInterval("again")}</span>
+              </button>
+              <button
+                onClick={() => void handleDifficulty("hard")}
+                disabled={isSaving}
+                className="py-3 rounded-xl bg-orange-100 text-orange-700 font-medium hover:bg-orange-200 transition-colors disabled:opacity-60"
+              >
+                어려움
+                <span className="block text-xs opacity-70">{previewInterval("hard")}</span>
+              </button>
+              <button
+                onClick={() => void handleDifficulty("good")}
+                disabled={isSaving}
+                className="py-3 rounded-xl bg-green-100 text-green-700 font-medium hover:bg-green-200 transition-colors disabled:opacity-60"
+              >
+                보통
+                <span className="block text-xs opacity-70">{previewInterval("good")}</span>
+              </button>
+              <button
+                onClick={() => void handleDifficulty("easy")}
+                disabled={isSaving}
+                className="py-3 rounded-xl bg-blue-100 text-blue-700 font-medium hover:bg-blue-200 transition-colors disabled:opacity-60"
+              >
+                쉬움
+                <span className="block text-xs opacity-70">{previewInterval("easy")}</span>
+              </button>
+            </div>
+          )}
+
+          {isSaving && (
+            <p className="text-center text-sm text-gray-500">
+              복습 상태를 저장하는 중입니다.
+            </p>
+          )}
+        </>
       )}
     </div>
   );
