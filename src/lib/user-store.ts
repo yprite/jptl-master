@@ -1,10 +1,9 @@
 /**
  * 2-user storage for the personalized home screen.
- * Defaults to localStorage so the app still works before Supabase tables exist.
+ * Uses same-origin API routes for remote persistence and falls back to localStorage.
  */
 
-import { getSupabase } from "./supabase";
-import type { DailyQuest, User } from "./database.types";
+import type { User } from "./database.types";
 
 export type UserId = "me" | "wife";
 
@@ -30,23 +29,41 @@ export interface UserProgress {
   readingCount: number;
 }
 
-type PersistenceMode = "local" | "supabase";
-type LocalQuestRow = Pick<
-  DailyQuest,
-  "user_id" | "date" | "flashcard" | "vocabulary" | "grammar" | "reading"
->;
+export interface HomeState {
+  user: User | null;
+  quests: DailyQuests;
+  progress: UserProgress;
+}
+
+type PersistenceMode = "local" | "remote";
+type LocalQuestRow = {
+  user_id: UserId;
+  date: string;
+  flashcard: boolean;
+  vocabulary: boolean;
+  grammar: boolean;
+  reading: boolean;
+};
 
 const STORAGE_KEY_USER = "jptl-current-user";
 const STORAGE_KEY_USERS = "jptl-users";
 const STORAGE_KEY_QUESTS = "jptl-daily-quests";
+const STORAGE_KEY_PROGRESS = "jptl-progress-cache";
 const DEFAULT_DAILY_QUESTS: DailyQuests = {
   flashcard: false,
   vocabulary: false,
   grammar: false,
   reading: false,
 };
+const DEFAULT_PROGRESS: UserProgress = {
+  totalDays: 0,
+  flashcardCount: 0,
+  vocabCount: 0,
+  grammarCount: 0,
+  readingCount: 0,
+};
 const CONFIGURED_MODE: PersistenceMode =
-  process.env.NEXT_PUBLIC_PERSISTENCE_MODE === "supabase" ? "supabase" : "local";
+  process.env.NEXT_PUBLIC_PERSISTENCE_MODE === "local" ? "local" : "remote";
 
 let runtimeMode: PersistenceMode = CONFIGURED_MODE;
 let loggedFallback = false;
@@ -96,6 +113,14 @@ function setLocalQuestRows(rows: LocalQuestRow[]): void {
   writeJson(STORAGE_KEY_QUESTS, rows);
 }
 
+function getLocalProgressCache(): Partial<Record<UserId, UserProgress>> {
+  return readJson<Partial<Record<UserId, UserProgress>>>(STORAGE_KEY_PROGRESS, {});
+}
+
+function setLocalProgressCache(progress: Partial<Record<UserId, UserProgress>>): void {
+  writeJson(STORAGE_KEY_PROGRESS, progress);
+}
+
 function toLocalUser(
   id: UserId,
   profile: { name: string; level: "N3" | "N4" | "N5" } & Partial<UserGoals>,
@@ -115,6 +140,13 @@ function toLocalUser(
 
 function getLocalUser(id: UserId): User | null {
   return getLocalUsers()[id] ?? null;
+}
+
+function setLocalUser(user: User): User {
+  const users = getLocalUsers();
+  users[user.id as UserId] = user;
+  setLocalUsers(users);
+  return user;
 }
 
 function upsertLocalUser(
@@ -142,7 +174,30 @@ function getLocalDailyQuests(userId: UserId): DailyQuests {
     : { ...DEFAULT_DAILY_QUESTS };
 }
 
-function upsertLocalDailyQuest(userId: UserId, quest: keyof DailyQuests): DailyQuests {
+function syncLocalQuest(userId: UserId, quests: DailyQuests): void {
+  const rows = getLocalQuestRows();
+  const date = today();
+  const nextRow: LocalQuestRow = { user_id: userId, date, ...quests };
+  const existingIndex = rows.findIndex(
+    (entry) => entry.user_id === userId && entry.date === date
+  );
+
+  if (existingIndex >= 0) {
+    rows[existingIndex] = nextRow;
+  } else {
+    rows.push(nextRow);
+  }
+
+  setLocalQuestRows(rows);
+}
+
+function syncLocalProgress(userId: UserId, progress: UserProgress): void {
+  const cache = getLocalProgressCache();
+  cache[userId] = progress;
+  setLocalProgressCache(cache);
+}
+
+function upsertLocalDailyQuest(userId: UserId, quest: keyof DailyQuests): HomeState {
   const rows = getLocalQuestRows();
   const date = today();
   const existingIndex = rows.findIndex(
@@ -152,26 +207,54 @@ function upsertLocalDailyQuest(userId: UserId, quest: keyof DailyQuests): DailyQ
     existingIndex >= 0
       ? rows[existingIndex]
       : { user_id: userId, date, ...DEFAULT_DAILY_QUESTS };
-  const updated = { ...existing, [quest]: true };
 
+  if (existing[quest]) {
+    return {
+      user: getLocalUser(userId),
+      quests: getLocalDailyQuests(userId),
+      progress: getLocalProgress(userId),
+    };
+  }
+
+  const updated = { ...existing, [quest]: true };
   if (existingIndex >= 0) {
     rows[existingIndex] = updated;
   } else {
     rows.push(updated);
   }
-
   setLocalQuestRows(rows);
+
+  const progress = getLocalProgress(userId);
+  const updatedProgress: UserProgress = { ...progress };
+  if (quest === "flashcard") updatedProgress.flashcardCount += 1;
+  if (quest === "vocabulary") updatedProgress.vocabCount += 1;
+  if (quest === "grammar") updatedProgress.grammarCount += 1;
+  if (quest === "reading") updatedProgress.readingCount += 1;
+
+  const beforeComplete =
+    existing.flashcard && existing.vocabulary && existing.grammar && existing.reading;
+  const afterComplete =
+    updated.flashcard && updated.vocabulary && updated.grammar && updated.reading;
+  if (!beforeComplete && afterComplete) {
+    updatedProgress.totalDays += 1;
+  }
+
+  syncLocalProgress(userId, updatedProgress);
   return {
-    flashcard: updated.flashcard,
-    vocabulary: updated.vocabulary,
-    grammar: updated.grammar,
-    reading: updated.reading,
+    user: getLocalUser(userId),
+    quests: {
+      flashcard: updated.flashcard,
+      vocabulary: updated.vocabulary,
+      grammar: updated.grammar,
+      reading: updated.reading,
+    },
+    progress: updatedProgress,
   };
 }
 
 function summarizeProgress(rows: LocalQuestRow[]): UserProgress {
   if (rows.length === 0) {
-    return { totalDays: 0, flashcardCount: 0, vocabCount: 0, grammarCount: 0, readingCount: 0 };
+    return { ...DEFAULT_PROGRESS };
   }
 
   let totalDays = 0;
@@ -194,7 +277,41 @@ function summarizeProgress(rows: LocalQuestRow[]): UserProgress {
 }
 
 function getLocalProgress(userId: UserId): UserProgress {
+  const cached = getLocalProgressCache()[userId];
+  if (cached) return cached;
   return summarizeProgress(getLocalQuestRows().filter((row) => row.user_id === userId));
+}
+
+function getLocalState(userId: UserId): HomeState {
+  return {
+    user: getLocalUser(userId),
+    quests: getLocalDailyQuests(userId),
+    progress: getLocalProgress(userId),
+  };
+}
+
+function hasMeaningfulState(state: HomeState): boolean {
+  return (
+    state.user !== null ||
+    state.quests.flashcard ||
+    state.quests.vocabulary ||
+    state.quests.grammar ||
+    state.quests.reading ||
+    state.progress.totalDays > 0 ||
+    state.progress.flashcardCount > 0 ||
+    state.progress.vocabCount > 0 ||
+    state.progress.grammarCount > 0 ||
+    state.progress.readingCount > 0
+  );
+}
+
+function syncLocalState(userId: UserId, state: HomeState): HomeState {
+  if (state.user) {
+    setLocalUser(state.user);
+  }
+  syncLocalQuest(userId, state.quests);
+  syncLocalProgress(userId, state.progress);
+  return state;
 }
 
 function shouldUseLocalFallback(error: unknown): boolean {
@@ -207,8 +324,9 @@ function shouldUseLocalFallback(error: unknown): boolean {
     code === "42P01" ||
     message.includes("schema cache") ||
     message.includes("Could not find the table") ||
-    message.includes("relation") ||
-    message.includes("Failed to fetch")
+    message.includes("Failed to fetch") ||
+    message.includes("Missing SUPABASE") ||
+    message.includes("Unexpected token <")
   );
 }
 
@@ -226,28 +344,43 @@ function isLocalMode(): boolean {
   return runtimeMode === "local";
 }
 
-function syncLocalUser(user: User): User {
-  const users = getLocalUsers();
-  users[user.id as UserId] = user;
-  setLocalUsers(users);
-  return user;
-}
+async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(path, {
+    ...init,
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+      ...(init?.headers ?? {}),
+    },
+  });
 
-function syncLocalQuest(userId: UserId, quests: DailyQuests): void {
-  const rows = getLocalQuestRows();
-  const date = today();
-  const nextRow: LocalQuestRow = { user_id: userId, date, ...quests };
-  const existingIndex = rows.findIndex(
-    (entry) => entry.user_id === userId && entry.date === date
-  );
-
-  if (existingIndex >= 0) {
-    rows[existingIndex] = nextRow;
-  } else {
-    rows.push(nextRow);
+  const text = await response.text();
+  const payload = text ? (JSON.parse(text) as T | { message?: string; code?: string }) : null;
+  if (!response.ok) {
+    const error = new Error(
+      payload && typeof payload === "object" && payload && "message" in payload
+        ? String(payload.message)
+        : `Request failed: ${response.status}`
+    ) as Error & { code?: string; status?: number };
+    if (payload && typeof payload === "object" && "code" in payload) {
+      error.code = String(payload.code);
+    }
+    error.status = response.status;
+    throw error;
   }
 
-  setLocalQuestRows(rows);
+  return payload as T;
+}
+
+async function fetchRemoteState(userId: UserId): Promise<HomeState> {
+  return requestJson<HomeState>(`/api/home/state?user_id=${userId}`);
+}
+
+async function seedRemoteState(userId: UserId, state: HomeState): Promise<HomeState> {
+  return requestJson<HomeState>("/api/home/state", {
+    method: "POST",
+    body: JSON.stringify({ userId, state }),
+  });
 }
 
 export function getCurrentUserId(): UserId {
@@ -260,25 +393,29 @@ export function setCurrentUserId(id: UserId): void {
   window.localStorage.setItem(STORAGE_KEY_USER, id);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function db(): any {
-  return getSupabase();
-}
-
-export async function getUser(id: UserId): Promise<User | null> {
-  if (isLocalMode()) return getLocalUser(id);
+export async function getHomeState(userId: UserId): Promise<HomeState> {
+  if (isLocalMode()) return getLocalState(userId);
 
   try {
-    const { data, error } = await db().from("users").select("*").eq("id", id).maybeSingle();
-    if (error) throw error;
-    return data ? syncLocalUser(data as User) : null;
+    const remoteState = await fetchRemoteState(userId);
+    if (remoteState.user || !hasMeaningfulState(getLocalState(userId))) {
+      return syncLocalState(userId, remoteState);
+    }
+
+    const seeded = await seedRemoteState(userId, getLocalState(userId));
+    return syncLocalState(userId, seeded);
   } catch (error) {
     if (shouldUseLocalFallback(error)) {
       activateLocalFallback(error);
-      return getLocalUser(id);
+      return getLocalState(userId);
     }
     throw error;
   }
+}
+
+export async function getUser(id: UserId): Promise<User | null> {
+  const state = await getHomeState(id);
+  return state.user;
 }
 
 export async function upsertUser(
@@ -288,19 +425,11 @@ export async function upsertUser(
   if (isLocalMode()) return upsertLocalUser(id, profile);
 
   try {
-    const payload = {
-      id,
-      name: profile.name,
-      level: profile.level,
-      daily_flashcard: profile.daily_flashcard ?? 10,
-      daily_vocab: profile.daily_vocab ?? 5,
-      daily_grammar: profile.daily_grammar ?? 5,
-      daily_reading: profile.daily_reading ?? 2,
-    };
-
-    const { data, error } = await db().from("users").upsert(payload).select().single();
-    if (error) throw error;
-    return syncLocalUser(data as User);
+    const user = await requestJson<User>("/api/home/profile", {
+      method: "PUT",
+      body: JSON.stringify({ userId: id, profile }),
+    });
+    return setLocalUser(user);
   } catch (error) {
     if (shouldUseLocalFallback(error)) {
       activateLocalFallback(error);
@@ -311,60 +440,26 @@ export async function upsertUser(
 }
 
 export async function getDailyQuests(userId: UserId): Promise<DailyQuests> {
-  if (isLocalMode()) return getLocalDailyQuests(userId);
-
-  try {
-    const { data, error } = await db()
-      .from("daily_quests")
-      .select("*")
-      .eq("user_id", userId)
-      .eq("date", today())
-      .maybeSingle();
-    if (error) throw error;
-
-    const row = data as DailyQuest | null;
-    const quests = row
-      ? {
-          flashcard: row.flashcard,
-          vocabulary: row.vocabulary,
-          grammar: row.grammar,
-          reading: row.reading,
-        }
-      : { ...DEFAULT_DAILY_QUESTS };
-
-    syncLocalQuest(userId, quests);
-    return quests;
-  } catch (error) {
-    if (shouldUseLocalFallback(error)) {
-      activateLocalFallback(error);
-      return getLocalDailyQuests(userId);
-    }
-    throw error;
-  }
+  const state = await getHomeState(userId);
+  return state.quests;
 }
 
 export async function completeDailyQuest(
   userId: UserId,
   quest: keyof DailyQuests
-): Promise<DailyQuests> {
+): Promise<HomeState> {
   if (isLocalMode()) return upsertLocalDailyQuest(userId, quest);
 
-  const existing = await getDailyQuests(userId);
-  const updated = { ...existing, [quest]: true };
-
   try {
-    const { error } = await db().from("daily_quests").upsert({
-      user_id: userId,
-      date: today(),
-      flashcard: updated.flashcard,
-      vocabulary: updated.vocabulary,
-      grammar: updated.grammar,
-      reading: updated.reading,
+    const payload = await requestJson<Pick<HomeState, "quests" | "progress">>("/api/home/quest", {
+      method: "POST",
+      body: JSON.stringify({ userId, quest }),
     });
-    if (error) throw error;
-
-    syncLocalQuest(userId, updated);
-    return updated;
+    return syncLocalState(userId, {
+      user: getLocalUser(userId),
+      quests: payload.quests,
+      progress: payload.progress,
+    });
   } catch (error) {
     if (shouldUseLocalFallback(error)) {
       activateLocalFallback(error);
@@ -375,30 +470,6 @@ export async function completeDailyQuest(
 }
 
 export async function getProgress(userId: UserId): Promise<UserProgress> {
-  if (isLocalMode()) return getLocalProgress(userId);
-
-  try {
-    const { data, error } = await db().from("daily_quests").select("*").eq("user_id", userId);
-    if (error) throw error;
-
-    const rows = (data as DailyQuest[] | null) || [];
-    writeJson(
-      STORAGE_KEY_QUESTS,
-      rows.map((row) => ({
-        user_id: row.user_id,
-        date: row.date,
-        flashcard: row.flashcard,
-        vocabulary: row.vocabulary,
-        grammar: row.grammar,
-        reading: row.reading,
-      }))
-    );
-    return summarizeProgress(rows);
-  } catch (error) {
-    if (shouldUseLocalFallback(error)) {
-      activateLocalFallback(error);
-      return getLocalProgress(userId);
-    }
-    throw error;
-  }
+  const state = await getHomeState(userId);
+  return state.progress;
 }

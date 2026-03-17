@@ -7,13 +7,11 @@ import {
   type UserId,
   type DailyQuests,
   type UserProgress,
+  getHomeState,
   getCurrentUserId,
   setCurrentUserId,
-  getUser,
   upsertUser,
-  getDailyQuests,
   completeDailyQuest,
-  getProgress,
 } from "@/lib/user-store";
 
 const USER_IDS: UserId[] = ["me", "wife"];
@@ -36,17 +34,13 @@ export default function Home() {
 
   const loadUser = useCallback(async (id: UserId) => {
     setLoading(true);
-    const [u, q, p] = await Promise.all([
-      getUser(id),
-      getDailyQuests(id),
-      getProgress(id),
-    ]);
-    setUser(u);
-    setQuests(q);
-    setProgressState(p);
+    const state = await getHomeState(id);
+    setUser(state.user);
+    setQuests(state.quests);
+    setProgressState(state.progress);
 
     // 유저가 없으면 셋업 모드
-    if (!u) {
+    if (!state.user) {
       setFormName(id === "me" ? "" : "");
       setFormLevel("N4");
       setFormFlashcard(10);
@@ -94,15 +88,17 @@ export default function Home() {
       daily_grammar: formGrammar,
       daily_reading: formReading,
     });
+    const state = await getHomeState(userId);
     setUser(saved);
+    setQuests(state.quests);
+    setProgressState(state.progress);
     setShowSetup(false);
   };
 
   const markComplete = async (quest: keyof DailyQuests) => {
     const updated = await completeDailyQuest(userId, quest);
-    setQuests(updated);
-    const p = await getProgress(userId);
-    setProgressState(p);
+    setQuests(updated.quests);
+    setProgressState(updated.progress);
   };
 
   if (loading) {
