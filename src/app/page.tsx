@@ -298,6 +298,7 @@ export default function Home() {
     ? Math.min(100, Math.round((activeProgress.totalDays / activePlan.totalDays) * 100))
     : 0;
   const derivedPlanTargets = deriveDailyTargets(planDays, activeUser?.level ?? formLevel);
+  const isOnboarding = showProfileSetup || showPlanSetup;
 
   return (
     <div className="space-y-6">
@@ -305,14 +306,18 @@ export default function Home() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/60">
-              Daily Rivalry
+              {isOnboarding ? "Setup" : "Daily Rivalry"}
             </p>
-            <h1 className="text-3xl font-black tracking-tight">오늘의 학습 레이스</h1>
+            <h1 className="text-3xl font-black tracking-tight">
+              {isOnboarding ? "JPTL 시작 설정" : "오늘의 학습 레이스"}
+            </h1>
             <p className="text-sm text-white/70">
-              프로필 설정은 한 번만, 이후엔 계획대로 하루 루틴만 진행합니다.
+              {isOnboarding
+                ? "먼저 사용자별 프로필과 학습 계획을 정한 뒤 하루 루틴으로 들어갑니다."
+                : "프로필 설정은 한 번만, 이후엔 계획대로 하루 루틴만 진행합니다."}
             </p>
           </div>
-          {activeUser && (
+          {!isOnboarding && activeUser && (
             <button
               onClick={() => setShowSettings(true)}
               className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
@@ -342,55 +347,57 @@ export default function Home() {
           })}
         </div>
 
-        <div className="mt-6 grid gap-3 md:grid-cols-2">
-          {USER_IDS.map((id) => {
-            const state = states[id];
-            const completed = getCompletedCount(state.quests);
-            const isLeader = leader === id;
+        {!isOnboarding && (
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
+            {USER_IDS.map((id) => {
+              const state = states[id];
+              const completed = getCompletedCount(state.quests);
+              const isLeader = leader === id;
 
-            return (
-              <div
-                key={id}
-                className={`rounded-3xl border px-5 py-4 ${
-                  id === userId
-                    ? "border-white/40 bg-white/14"
-                    : "border-white/10 bg-black/10"
-                }`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-white/50">
-                      지정 사용자
-                    </p>
-                    <p className="text-xl font-bold">{getDisplayName(id)}</p>
+              return (
+                <div
+                  key={id}
+                  className={`rounded-3xl border px-5 py-4 ${
+                    id === userId
+                      ? "border-white/40 bg-white/14"
+                      : "border-white/10 bg-black/10"
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.18em] text-white/50">
+                        지정 사용자
+                      </p>
+                      <p className="text-xl font-bold">{getDisplayName(id)}</p>
+                    </div>
+                    <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
+                      {state.user ? `${completed}/4 완료` : "미설정"}
+                    </span>
                   </div>
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
-                    {state.user ? `${completed}/4 완료` : "미설정"}
-                  </span>
+
+                  <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                    <div className="rounded-2xl bg-white/10 px-4 py-3">
+                      <div className="text-xs text-white/55">완주 일수</div>
+                      <div className="mt-1 text-2xl font-black">{state.progress.totalDays}</div>
+                    </div>
+                    <div className="rounded-2xl bg-white/10 px-4 py-3">
+                      <div className="text-xs text-white/55">오늘 진행</div>
+                      <div className="mt-1 text-2xl font-black">{completed}</div>
+                    </div>
+                  </div>
+
+                  <p className="mt-4 text-sm text-white/70">
+                    {isLeader
+                      ? "현재 선두입니다."
+                      : leader === null
+                      ? "현재 동률입니다."
+                      : "조금만 더 하면 따라잡을 수 있습니다."}
+                  </p>
                 </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  <div className="rounded-2xl bg-white/10 px-4 py-3">
-                    <div className="text-xs text-white/55">완주 일수</div>
-                    <div className="mt-1 text-2xl font-black">{state.progress.totalDays}</div>
-                  </div>
-                  <div className="rounded-2xl bg-white/10 px-4 py-3">
-                    <div className="text-xs text-white/55">오늘 진행</div>
-                    <div className="mt-1 text-2xl font-black">{completed}</div>
-                  </div>
-                </div>
-
-                <p className="mt-4 text-sm text-white/70">
-                  {isLeader
-                    ? "현재 선두입니다."
-                    : leader === null
-                    ? "현재 동률입니다."
-                    : "조금만 더 하면 따라잡을 수 있습니다."}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {showSettings && activeUser && (
@@ -416,7 +423,7 @@ export default function Home() {
               className="rounded-2xl border border-stone-200 px-4 py-4 text-left transition hover:border-stone-300 hover:bg-stone-50"
             >
               <div className="text-sm font-bold text-stone-900">프로필 수정</div>
-              <div className="mt-1 text-sm text-stone-500">이름과 기본 목표량을 바꿉니다.</div>
+              <div className="mt-1 text-sm text-stone-500">목표 레벨을 다시 고릅니다.</div>
             </button>
             <button
               onClick={openPlanEditor}
