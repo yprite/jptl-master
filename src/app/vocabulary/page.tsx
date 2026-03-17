@@ -2,40 +2,45 @@
 
 import { useState } from "react";
 import {
-  vocabQuestions,
-  vocabQuestionTypeLabels,
-  type VocabQuestionType,
-  type VocabQuestion,
-} from "@/lib/vocab-questions";
+  type GeneratedVocabularyQuestion,
+  type GeneratedVocabularyQuestionType,
+} from "@/lib/study-data-types";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
+import { useStudyData } from "@/lib/use-study-data";
 
-const allTypes: VocabQuestionType[] = [
-  "kanji_reading",
-  "notation",
-  "context",
-  "synonym",
-  "usage",
-];
+const EMPTY_QUESTIONS: GeneratedVocabularyQuestion[] = [];
+const allTypes: GeneratedVocabularyQuestionType[] = ["meaning", "reading"];
+const vocabQuestionTypeLabels: Record<GeneratedVocabularyQuestionType, string> = {
+  meaning: "뜻 맞히기",
+  reading: "읽기",
+};
 
 export default function VocabularyPage() {
-  const { isLoading, level, supportedLevel, userLabel } = useActiveStudyProfile();
-  const [selectedType, setSelectedType] = useState<VocabQuestionType | "all">(
-    "all"
-  );
+  const { isLoading: isProfileLoading, supportedLevel, userLabel } =
+    useActiveStudyProfile();
+  const [selectedType, setSelectedType] = useState<
+    GeneratedVocabularyQuestionType | "all"
+  >("all");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [stats, setStats] = useState({ total: 0, correct: 0 });
+  const { data: vocabQuestions, error, isLoading: isStudyLoading } = useStudyData<
+    GeneratedVocabularyQuestion[]
+  >(
+    isProfileLoading ? null : `vocabulary-questions-${supportedLevel}.json`,
+    EMPTY_QUESTIONS
+  );
 
   const filtered = vocabQuestions.filter(
     (q) =>
       q.level === supportedLevel &&
       (selectedType === "all" || q.type === selectedType)
   );
-  const current: VocabQuestion | undefined = filtered[currentIndex];
+  const current = filtered[currentIndex];
 
   const handleAnswer = (choice: string) => {
-    if (showResult) return;
+    if (showResult || !current) return;
     setSelectedAnswer(choice);
     setShowResult(true);
     setStats((prev) => ({
@@ -46,41 +51,21 @@ export default function VocabularyPage() {
   };
 
   const handleNext = () => {
+    if (filtered.length === 0) return;
     setSelectedAnswer(null);
     setShowResult(false);
     setCurrentIndex((prev) => (prev + 1) % filtered.length);
   };
 
-  const resetWith = (newType?: VocabQuestionType | "all") => {
+  const resetWith = (newType?: GeneratedVocabularyQuestionType | "all") => {
     if (newType !== undefined) setSelectedType(newType);
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setShowResult(false);
   };
 
-  if (isLoading) {
+  if (isProfileLoading || isStudyLoading) {
     return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
-  }
-
-  if (!supportedLevel) {
-    return (
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <h1 className="text-2xl font-bold">어휘 문제</h1>
-          <div className="flex flex-wrap gap-2 text-sm">
-            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
-              현재 사용자 {userLabel}
-            </span>
-            <span className="rounded-full bg-indigo-100 px-3 py-1 font-medium text-indigo-700">
-              설정 레벨 {level}
-            </span>
-          </div>
-        </div>
-        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
-          {level} 어휘 문제 데이터는 아직 준비되지 않았습니다.
-        </p>
-      </div>
-    );
   }
 
   return (
@@ -96,6 +81,12 @@ export default function VocabularyPage() {
           </span>
         </div>
       </div>
+
+      {error && (
+        <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+          {error}
+        </p>
+      )}
 
       {/* Question type filter */}
       <div className="flex flex-wrap gap-2">
@@ -125,8 +116,8 @@ export default function VocabularyPage() {
       </div>
 
       {!current ? (
-        <p className="text-center text-gray-500 py-8">
-          해당 유형의 문제가 없습니다.
+        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+          해당 유형의 어휘 문제가 없습니다.
         </p>
       ) : (
         <>
@@ -147,6 +138,9 @@ export default function VocabularyPage() {
 
           {/* Question */}
           <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500">
+              {current.prompt}
+            </p>
             <p className="text-lg leading-relaxed whitespace-pre-wrap">
               {current.question}
             </p>

@@ -1,39 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import {
-  grammarQuestions,
-  grammarQuestionTypeLabels,
-  type GrammarQuestionType,
-  type GrammarQuestion,
-} from "@/lib/grammar-questions";
+import type { GeneratedGrammarQuestion } from "@/lib/study-data-types";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
+import { useStudyData } from "@/lib/use-study-data";
 
-const allTypes: GrammarQuestionType[] = [
-  "sentence_grammar",
-  "sentence_order",
-  "passage_grammar",
-];
+const EMPTY_QUESTIONS: GeneratedGrammarQuestion[] = [];
 
 export default function GrammarPage() {
-  const { isLoading, level, supportedLevel, userLabel } = useActiveStudyProfile();
-  const [selectedType, setSelectedType] = useState<
-    GrammarQuestionType | "all"
-  >("all");
+  const { isLoading: isProfileLoading, supportedLevel, userLabel } =
+    useActiveStudyProfile();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [stats, setStats] = useState({ total: 0, correct: 0 });
-
-  const filtered = grammarQuestions.filter(
-    (q) =>
-      q.level === supportedLevel &&
-      (selectedType === "all" || q.type === selectedType)
+  const { data: grammarQuestions, error, isLoading: isStudyLoading } = useStudyData<
+    GeneratedGrammarQuestion[]
+  >(
+    isProfileLoading ? null : `grammar-questions-${supportedLevel}.json`,
+    EMPTY_QUESTIONS
   );
-  const current: GrammarQuestion | undefined = filtered[currentIndex];
+
+  const current = grammarQuestions[currentIndex];
 
   const handleAnswer = (choice: string) => {
-    if (showResult) return;
+    if (showResult || !current) return;
     setSelectedAnswer(choice);
     setShowResult(true);
     setStats((prev) => ({
@@ -44,43 +35,14 @@ export default function GrammarPage() {
   };
 
   const handleNext = () => {
+    if (grammarQuestions.length === 0) return;
     setSelectedAnswer(null);
     setShowResult(false);
-    setCurrentIndex((prev) => (prev + 1) % filtered.length);
+    setCurrentIndex((prev) => (prev + 1) % grammarQuestions.length);
   };
 
-  const resetWith = (
-    newType?: GrammarQuestionType | "all"
-  ) => {
-    if (newType !== undefined) setSelectedType(newType);
-    setCurrentIndex(0);
-    setSelectedAnswer(null);
-    setShowResult(false);
-  };
-
-  if (isLoading) {
+  if (isProfileLoading || isStudyLoading) {
     return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
-  }
-
-  if (!supportedLevel) {
-    return (
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <h1 className="text-2xl font-bold">문법 문제</h1>
-          <div className="flex flex-wrap gap-2 text-sm">
-            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
-              현재 사용자 {userLabel}
-            </span>
-            <span className="rounded-full bg-amber-100 px-3 py-1 font-medium text-amber-700">
-              설정 레벨 {level}
-            </span>
-          </div>
-        </div>
-        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
-          {level} 문법 문제 데이터는 아직 준비되지 않았습니다.
-        </p>
-      </div>
-    );
   }
 
   return (
@@ -97,44 +59,22 @@ export default function GrammarPage() {
         </div>
       </div>
 
-      {/* Question type filter */}
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => resetWith("all")}
-          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-            selectedType === "all"
-              ? "bg-amber-600 text-white"
-              : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-          }`}
-        >
-          전체
-        </button>
-        {allTypes.map((t) => (
-          <button
-            key={t}
-            onClick={() => resetWith(t)}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-              selectedType === t
-                ? "bg-amber-600 text-white"
-                : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            {grammarQuestionTypeLabels[t]}
-          </button>
-        ))}
-      </div>
+      {error && (
+        <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+          {error}
+        </p>
+      )}
 
       {!current ? (
-        <p className="text-center text-gray-500 py-8">
-          해당 유형의 문제가 없습니다.
+        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+          {supportedLevel} 문법 데이터가 없습니다. 현재 연결된 JLPT 통합덱 원본에는 이 레벨의 문법 항목이 비어 있습니다.
         </p>
       ) : (
         <>
           {/* Stats */}
           <div className="flex justify-between text-sm text-gray-500">
             <span>
-              {grammarQuestionTypeLabels[current.type]} |{" "}
-              {currentIndex + 1}/{filtered.length}
+              문형 의미 | {currentIndex + 1}/{grammarQuestions.length}
             </span>
             <span>
               정답률:{" "}
@@ -147,19 +87,22 @@ export default function GrammarPage() {
 
           {/* Question */}
           <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
+              {current.pattern}
+            </p>
             <p className="text-lg leading-relaxed whitespace-pre-wrap">
               {current.question}
             </p>
-            {current.type === "sentence_order" && current.order_parts && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {current.order_parts.map((part, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm font-medium"
-                  >
-                    {part}
-                  </span>
-                ))}
+            {(current.example_jp || current.example_kr) && (
+              <div className="mt-4 space-y-2 rounded-xl bg-white/70 px-4 py-3 text-sm text-gray-600 dark:bg-gray-950/40 dark:text-gray-300">
+                {current.example_jp && (
+                  <p className="whitespace-pre-wrap">{current.example_jp}</p>
+                )}
+                {current.example_kr && (
+                  <p className="whitespace-pre-wrap text-gray-500 dark:text-gray-400">
+                    {current.example_kr}
+                  </p>
+                )}
               </div>
             )}
           </div>

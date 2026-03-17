@@ -64,7 +64,7 @@ export interface Database {
           word: string;
           reading: string;
           meaning: string;
-          level: "N3" | "N4";
+          level: "N3" | "N4" | "N5";
           example: string | null;
           created_at: string;
         };
@@ -79,7 +79,7 @@ export interface Database {
       reading_questions: {
         Row: {
           id: number;
-          level: "N3" | "N4";
+          level: "N3" | "N4" | "N5";
           passage: string;
           question: string;
           choices: string[];

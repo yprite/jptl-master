@@ -1,0 +1,7254 @@
+[
+  {
+    "word": "~員",
+    "reading": "~いん",
+    "meaning": "…원",
+    "level": "N4",
+    "example": "調査員"
+  },
+  {
+    "word": "~置き",
+    "reading": "~おき",
+    "meaning": "1. 간격 2. 걸러",
+    "level": "N4",
+    "example": "一日置き"
+  },
+  {
+    "word": "~ヶ月",
+    "reading": "~かげつ",
+    "meaning": "…개월",
+    "level": "N4",
+    "example": "5か月間"
+  },
+  {
+    "word": "~月",
+    "reading": "~がつ",
+    "meaning": "…월",
+    "level": "N4",
+    "example": "二月二日"
+  },
+  {
+    "word": "~がる",
+    "reading": null,
+    "meaning": "1. …하게 여기다 2. …체하다",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "~君",
+    "reading": "~くん",
+    "meaning": "1. 동년배 또는 손아랫사람 이름 밑에 붙여 가벼운 존경의 뜻을 나타내는 말： …군 2. 국회 의원끼리 경칭으로 쓰는 말",
+    "level": "N4",
+    "example": "山田君"
+  },
+  {
+    "word": "~軒",
+    "reading": "~けん",
+    "meaning": "1. 채 2. 옥호·아호 등의 끝에 붙이는 말",
+    "level": "N4",
+    "example": "一軒"
+  },
+  {
+    "word": "~頃",
+    "reading": "~ごろ",
+    "meaning": "1. 경 2. 그렇게 하기에 썩 알맞은 상태임 3. 웬만함",
+    "level": "N4",
+    "example": "昼頃"
+  },
+  {
+    "word": "~時",
+    "reading": "~じ",
+    "meaning": "1. …시 2. 때 3. 시간・시각",
+    "level": "N4",
+    "example": "空腹時"
+  },
+  {
+    "word": "~製",
+    "reading": "~せい",
+    "meaning": "…제, 만든 재료·회사명·국명을 나타내는 말",
+    "level": "N4",
+    "example": "金属製"
+  },
+  {
+    "word": "~たち",
+    "reading": null,
+    "meaning": "1. …들 2. 복수의 뜻과 함께 가벼운 존경의 뜻을 나타냄",
+    "level": "N4",
+    "example": "君達"
+  },
+  {
+    "word": "~建て",
+    "reading": "~だて",
+    "meaning": "1. 건물의 양식‧소재나 층수를 나타내는 말 2. 통화명에 붙여 그 통화로 지불되는 것을 나타내는 말",
+    "level": "N4",
+    "example": "一戸建て"
+  },
+  {
+    "word": "~ちゃん",
+    "reading": null,
+    "meaning": "친근감을 주는 호칭",
+    "level": "N4",
+    "example": "太郎ちゃん"
+  },
+  {
+    "word": "~匹",
+    "reading": "~ひき",
+    "meaning": "1. 마리 2. 필 3. 10푼 또는 25푼을 단위로 한 수",
+    "level": "N4",
+    "example": "牛五匹"
+  },
+  {
+    "word": "~枚",
+    "reading": "~まい",
+    "meaning": "1. …매 2. 자리",
+    "level": "N4",
+    "example": "紙一枚"
+  },
+  {
+    "word": "ああ",
+    "reading": null,
+    "meaning": "1. 저렇게 2. 말하거나 생각하는 내용을 막연히 가리키는 말",
+    "level": "N4",
+    "example": "ああまで言わなくてもいいのに"
+  },
+  {
+    "word": "挨拶",
+    "reading": "あいさつ",
+    "meaning": "1. 인사 2. 서로 만나거나 헤어질 때 예를 표하는 말이나 행동 3. 상대에 대해 예의를 차린 말이나 행동",
+    "level": "N4",
+    "example": "時候の挨拶"
+  },
+  {
+    "word": "間",
+    "reading": "あいだ",
+    "meaning": "1. 사이 2. 간격 3. 틈",
+    "level": "N4",
+    "example": "陸地と島との間の海面"
+  },
+  {
+    "word": "合う",
+    "reading": "あう",
+    "meaning": "1. 합쳐지다 2. 결합하다",
+    "level": "N4",
+    "example": "いくつもの川が合って大河となる"
+  },
+  {
+    "word": "赤ちゃん",
+    "reading": "あかちゃん",
+    "meaning": "1. 아기 2. 새끼 3. 세상 물정을 모르는 사람",
+    "level": "N4",
+    "example": "赤ちゃんが生まれる"
+  },
+  {
+    "word": "空く",
+    "reading": "あく",
+    "meaning": "1. 비다 2. 들어 있지 않다 3. 결원이 생기다",
+    "level": "N4",
+    "example": "空いた席がない"
+  },
+  {
+    "word": "顎",
+    "reading": "あご",
+    "meaning": "1. 턱 2. 아래턱 3. 수다",
+    "level": "N4",
+    "example": "上顎"
+  },
+  {
+    "word": "浅い",
+    "reading": "あさい",
+    "meaning": "1. 얕다 2. 깊지 않다 3. 덜하다",
+    "level": "N4",
+    "example": "浅い海"
+  },
+  {
+    "word": "足音",
+    "reading": "あしおと",
+    "meaning": "발소리",
+    "level": "N4",
+    "example": "新時代の足音がする"
+  },
+  {
+    "word": "味",
+    "reading": "あじ",
+    "meaning": "1. 맛 2. 어떠함 3. 멋",
+    "level": "N4",
+    "example": "味加減"
+  },
+  {
+    "word": "明日",
+    "reading": "あす",
+    "meaning": "1. 내일 2. 명일 3. 장래",
+    "level": "N4",
+    "example": "明日伺います"
+  },
+  {
+    "word": "汗",
+    "reading": "あせ",
+    "meaning": "1. 땀 2. 노력이나 수고를 비유적으로 이르는 말 3. 물방울",
+    "level": "N4",
+    "example": "手に汗を握る接戦"
+  },
+  {
+    "word": "遊び",
+    "reading": "あそび",
+    "meaning": "1. 놀이 2. 심심풀이 3. 유흥",
+    "level": "N4",
+    "example": "遊び場"
+  },
+  {
+    "word": "熱い",
+    "reading": "あつい",
+    "meaning": "1. 뜨겁다 2. 열도가 높다 3. 열렬하다",
+    "level": "N4",
+    "example": "熱いお茶"
+  },
+  {
+    "word": "厚い",
+    "reading": "あつい",
+    "meaning": "1. 두껍다 2. 두텁다 3. 많다",
+    "level": "N4",
+    "example": "厚い板"
+  },
+  {
+    "word": "暑さ",
+    "reading": "あつさ",
+    "meaning": "1. 더위 2. 여름철",
+    "level": "N4",
+    "example": "蒸されるような暑さ"
+  },
+  {
+    "word": "集まる",
+    "reading": "あつまる",
+    "meaning": "1. 모이다 2. 집합하다 3. 집중하다",
+    "level": "N4",
+    "example": "広場に集まる"
+  },
+  {
+    "word": "集める",
+    "reading": "あつめる",
+    "meaning": "1. 모으다 2. 그러모으다 3. 집중시키다",
+    "level": "N4",
+    "example": "聴衆を集める"
+  },
+  {
+    "word": "あの",
+    "reading": null,
+    "meaning": "저",
+    "level": "N4",
+    "example": "あの、実は"
+  },
+  {
+    "word": "飴",
+    "reading": "あめ",
+    "meaning": "1. 엿 2. 조청",
+    "level": "N4",
+    "example": "棒状の飴"
+  },
+  {
+    "word": "謝る",
+    "reading": "あやまる",
+    "meaning": "1. 사죄하다 2. 손들다 3. 사양하다",
+    "level": "N4",
+    "example": "素直に謝る"
+  },
+  {
+    "word": "あれ",
+    "reading": null,
+    "meaning": "1. 먼 것을 가리키는 말 2. 저것 3. 저기",
+    "level": "N4",
+    "example": "あれは何だろうね"
+  },
+  {
+    "word": "安心",
+    "reading": "あんしん",
+    "meaning": "안심, →あんじん",
+    "level": "N4",
+    "example": "もう安心だ"
+  },
+  {
+    "word": "安全",
+    "reading": "あんぜん",
+    "meaning": "안전",
+    "level": "N4",
+    "example": "安全色"
+  },
+  {
+    "word": "案内",
+    "reading": "あんない",
+    "meaning": "1. 안내 2. 통지 3. 말을 전달함",
+    "level": "N4",
+    "example": "鉄道案内"
+  },
+  {
+    "word": "あんなに",
+    "reading": null,
+    "meaning": "그렇게",
+    "level": "N4",
+    "example": "あんなにいい人はいない"
+  },
+  {
+    "word": "以下",
+    "reading": "いか",
+    "meaning": "1. 이하 2. 일정한 기준보다 적거나 모자람 3. 그것보다 나중에 진술하는 것",
+    "level": "N4",
+    "example": "五歳以下は無料"
+  },
+  {
+    "word": "いかが",
+    "reading": null,
+    "meaning": "1. 어떻게 2. 어떻습니까 3. 어째서 …일까",
+    "level": "N4",
+    "example": "いかがいたしましょうか"
+  },
+  {
+    "word": "以外",
+    "reading": "いがい",
+    "meaning": "1. 이외 2. 일정한 범위의 바깥쪽",
+    "level": "N4",
+    "example": "学生以外の者"
+  },
+  {
+    "word": "医学",
+    "reading": "いがく",
+    "meaning": "의학",
+    "level": "N4",
+    "example": "医学博士"
+  },
+  {
+    "word": "生き方",
+    "reading": "いきかた",
+    "meaning": "1. 삶・생활 2. 생활 방식",
+    "level": "N4",
+    "example": "イージーな生き方"
+  },
+  {
+    "word": "行き方",
+    "reading": "いきかた",
+    "meaning": "1. 도정・노정 2. 하는 방법・방식.",
+    "level": "N4",
+    "example": "駅[銀行]への行き方を教えて下さい"
+  },
+  {
+    "word": "生きる",
+    "reading": "いきる",
+    "meaning": "1. 살다 2. 생명을 유지하다 3. 생계를 유지하다",
+    "level": "N4",
+    "example": "百歳まで生きる"
+  },
+  {
+    "word": "意見",
+    "reading": "いけん",
+    "meaning": "1. 의견 2. 훈계함",
+    "level": "N4",
+    "example": "人と意見が違う"
+  },
+  {
+    "word": "石",
+    "reading": "いし",
+    "meaning": "1. 돌 2. 석재 3. 가공한 돌",
+    "level": "N4",
+    "example": "石のように固い"
+  },
+  {
+    "word": "いじめる",
+    "reading": null,
+    "meaning": "1. 괴롭히다 2. 혹독하게 다루다",
+    "level": "N4",
+    "example": "動物を苛めてはいけない"
+  },
+  {
+    "word": "以上",
+    "reading": "いじょう",
+    "meaning": "1. 이상 2. …보다 많음 3. 이제까지",
+    "level": "N4",
+    "example": "五歳以上は有料"
+  },
+  {
+    "word": "急ぐ",
+    "reading": "いそぐ",
+    "meaning": "1. 서두르다 2. 빨리 목적을 달성하려고 하다 3. 빨리 도착하려고 하다",
+    "level": "N4",
+    "example": "急いで書く"
+  },
+  {
+    "word": "いたす",
+    "reading": null,
+    "meaning": "1. 가져오다 2. 보내다 3. ‘する’의 겸사말",
+    "level": "N4",
+    "example": "不徳の致すところ"
+  },
+  {
+    "word": "いただく",
+    "reading": null,
+    "meaning": "1. 이다 2. 받들다 3. ‘もらう’의 공손한 말씨",
+    "level": "N4",
+    "example": "雪を頂く山山"
+  },
+  {
+    "word": "いちいち",
+    "reading": null,
+    "meaning": "1. 하나하나 2. 일일이",
+    "level": "N4",
+    "example": "一一について説明する"
+  },
+  {
+    "word": "一度",
+    "reading": "いちど",
+    "meaning": "1. 한 번 2. 한번",
+    "level": "N4",
+    "example": "一度行った"
+  },
+  {
+    "word": "一日中",
+    "reading": "いちにちじゅう",
+    "meaning": "하루 종일",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "一緒",
+    "reading": "いっしょ",
+    "meaning": "1. 두 사람 이상이 행동을 같이함 2. 함께함 3. 동반함",
+    "level": "N4",
+    "example": "一緒にする"
+  },
+  {
+    "word": "一生懸命",
+    "reading": "いっしょうけんめい",
+    "meaning": "1. 목숨 걸고 일을 함 2. 매우 열심히 함",
+    "level": "N4",
+    "example": "一生懸命働いて稼いだお金"
+  },
+  {
+    "word": "一体",
+    "reading": "いったい",
+    "meaning": "1. 전반적으로 2. 도대체",
+    "level": "N4",
+    "example": "今年は一体に寒い"
+  },
+  {
+    "word": "行ってまいります",
+    "reading": "いってまいります",
+    "meaning": "다녀오겠습니다",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "いってらっしゃい",
+    "reading": null,
+    "meaning": "다녀오세요",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "いっぱい",
+    "reading": null,
+    "meaning": "1. 가득 2. 있는 한도를 다하는 모양 3. …껏",
+    "level": "N4",
+    "example": "袋一杯に"
+  },
+  {
+    "word": "いつか",
+    "reading": null,
+    "meaning": "1. 언젠가 2. 이전에 3. 어느 사이에",
+    "level": "N4",
+    "example": "何時か会えるだろう"
+  },
+  {
+    "word": "糸",
+    "reading": "いと",
+    "meaning": "1. 실 2. 실 모양의 것 3. 거문고·三味線 등의 줄",
+    "level": "N4",
+    "example": "絹糸"
+  },
+  {
+    "word": "以内",
+    "reading": "いない",
+    "meaning": "1. 이내 2. 기준의 안쪽 3. 일정한 범위나 한도의 안",
+    "level": "N4",
+    "example": "境界線以内にとどまる"
+  },
+  {
+    "word": "田舎",
+    "reading": "いなか",
+    "meaning": "1. 시골 2. 지방 3. 한적한 곳",
+    "level": "N4",
+    "example": "田舎の風景"
+  },
+  {
+    "word": "命",
+    "reading": "いのち",
+    "meaning": "1. 목숨 2. 생애 3. 수명",
+    "level": "N4",
+    "example": "命の露"
+  },
+  {
+    "word": "祈る",
+    "reading": "いのる",
+    "meaning": "1. 빌다 2. 신불에 기도하다 3. 진심으로 바라다",
+    "level": "N4",
+    "example": "幸福を神に祈る"
+  },
+  {
+    "word": "居間",
+    "reading": "いま",
+    "meaning": "1. 거실 2. 거처방",
+    "level": "N4",
+    "example": "寝室兼居間"
+  },
+  {
+    "word": "いらっしゃる",
+    "reading": null,
+    "meaning": "1. ‘来る’ ‘行く’ ‘居る ’의 공대말 2. …하고 계시다 3. …이시다",
+    "level": "N4",
+    "example": "父上はいらっしゃいますか"
+  },
+  {
+    "word": "色紙",
+    "reading": "いろがみ",
+    "meaning": "색종이, 색지",
+    "level": "N4",
+    "example": "色紙でつるを折る"
+  },
+  {
+    "word": "祝う",
+    "reading": "いわう",
+    "meaning": "1. 축하하다 2. 축하 선물을 하다 3. 행운을 기원하다",
+    "level": "N4",
+    "example": "正月を祝う"
+  },
+  {
+    "word": "飲酒",
+    "reading": "いんしゅ",
+    "meaning": "음주",
+    "level": "N4",
+    "example": "飲酒家"
+  },
+  {
+    "word": "植える",
+    "reading": "うえる",
+    "meaning": "1. 심다 2. 키우려고 땅속에 묻다 3. 불어넣다",
+    "level": "N4",
+    "example": "庭に木を植える"
+  },
+  {
+    "word": "窺う",
+    "reading": "うかがう",
+    "meaning": "1. 엿보다 2. 살피다 3. 노리다",
+    "level": "N4",
+    "example": "戸のすきまから中を窺う"
+  },
+  {
+    "word": "伺う",
+    "reading": "うかがう",
+    "meaning": "1. ‘묻다·듣다'의 겸사말 2. ‘찾다·방문하다'의 겸사말",
+    "level": "N4",
+    "example": "ちょっとお伺いしたいことがあるのですが"
+  },
+  {
+    "word": "受(け)付(け)",
+    "reading": "うけつけ",
+    "meaning": "1. 접수 2. 접수처",
+    "level": "N4",
+    "example": "受付番号[窓口]"
+  },
+  {
+    "word": "受ける",
+    "reading": "うける",
+    "meaning": "1. 받다 2. 호평을 받다",
+    "level": "N4",
+    "example": "ボールを受ける"
+  },
+  {
+    "word": "動く",
+    "reading": "うごく",
+    "meaning": "1. 움직이다 2. 옮아가다 3. 작동하다",
+    "level": "N4",
+    "example": "そこ動くな"
+  },
+  {
+    "word": "嘘",
+    "reading": "うそ",
+    "meaning": "1. 거짓말 2. 틀림 3. …하는 것은 적당하지 않다",
+    "level": "N4",
+    "example": "真っ赤な嘘"
+  },
+  {
+    "word": "うち",
+    "reading": null,
+    "meaning": "1. 안 2. 옥내 3. 마음속",
+    "level": "N4",
+    "example": "寒いから内で遊ぶ"
+  },
+  {
+    "word": "内側",
+    "reading": "うちがわ",
+    "meaning": "1. 내측 2. 안쪽 3. 내면",
+    "level": "N4",
+    "example": "門の内側"
+  },
+  {
+    "word": "打つ",
+    "reading": "うつ",
+    "meaning": "1. 치다 2. 안에서 유동하는 것이 느껴지다",
+    "level": "N4",
+    "example": "鞭で打つ"
+  },
+  {
+    "word": "美しい",
+    "reading": "うつくしい",
+    "meaning": "1. 아름답다 2. 곱다 3. 훌륭하다",
+    "level": "N4",
+    "example": "美しい花"
+  },
+  {
+    "word": "写す",
+    "reading": "うつす",
+    "meaning": "1. 베끼다 2. 본뜨다 3. 그리다",
+    "level": "N4",
+    "example": "ノートを写す"
+  },
+  {
+    "word": "腕",
+    "reading": "うで",
+    "meaning": "1. 팔 2. 완력 3. 솜씨",
+    "level": "N4",
+    "example": "腕を組む"
+  },
+  {
+    "word": "うまい",
+    "reading": null,
+    "meaning": "1. 맛있다 2. 일이 자신의 뜻대로 되다 3. 능란하다",
+    "level": "N4",
+    "example": "旨い料理[肉]"
+  },
+  {
+    "word": "裏",
+    "reading": "うら",
+    "meaning": "1. 뒤 2. 안 3. 겉과 반대되는 일",
+    "level": "N4",
+    "example": "裏に回る"
+  },
+  {
+    "word": "売り場",
+    "reading": "うりば",
+    "meaning": "1. 파는 곳 2. 팔 시기",
+    "level": "N4",
+    "example": "文房具売り場"
+  },
+  {
+    "word": "嬉しい",
+    "reading": "うれしい",
+    "meaning": "1. 기쁘다 2. 고맙다",
+    "level": "N4",
+    "example": "嬉しくてたまらない"
+  },
+  {
+    "word": "運",
+    "reading": "うん",
+    "meaning": "1. 운 2. 운명 3. 행운",
+    "level": "N4",
+    "example": "運の良い人"
+  },
+  {
+    "word": "運転",
+    "reading": "うんてん",
+    "meaning": "1. 운전 2. 움직여 조종함 3. 운용",
+    "level": "N4",
+    "example": "運転台"
+  },
+  {
+    "word": "運転手",
+    "reading": "うんてんしゅ",
+    "meaning": "운전 기사",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "運動",
+    "reading": "うんどう",
+    "meaning": "1. 운동 2. 물체의 운동 3. 몸을 움직임",
+    "level": "N4",
+    "example": "天体運動"
+  },
+  {
+    "word": "運動会",
+    "reading": "うんどうかい",
+    "meaning": "운동회",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "英会話",
+    "reading": "えいかいわ",
+    "meaning": "영어 회화",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "映画",
+    "reading": "えいが",
+    "meaning": "영화",
+    "level": "N4",
+    "example": "映画の試写会"
+  },
+  {
+    "word": "営業",
+    "reading": "えいぎょう",
+    "meaning": "1. 영업 2. 영리를 목적으로 사업을 경영하는 것 3. 또, 그 행위",
+    "level": "N4",
+    "example": "営業案内"
+  },
+  {
+    "word": "ええ",
+    "reading": null,
+    "meaning": "1. 네 2. 에에 3. 어",
+    "level": "N4",
+    "example": "ええ、 そうです"
+  },
+  {
+    "word": "駅員",
+    "reading": "えきいん",
+    "meaning": "역원, 역무원",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "枝",
+    "reading": "えだ",
+    "meaning": "1. 가지 2. 근본에서 갈라져 나온 것",
+    "level": "N4",
+    "example": "枝が茂る"
+  },
+  {
+    "word": "選ぶ",
+    "reading": "えらぶ",
+    "meaning": "1. 고르다 2. 뽑다 3. 택하다",
+    "level": "N4",
+    "example": "パソコンを上手に選ぶ方法"
+  },
+  {
+    "word": "遠慮",
+    "reading": "えんりょ",
+    "meaning": "1. 원려 2. 사양 3. 겸손",
+    "level": "N4",
+    "example": "深謀遠慮"
+  },
+  {
+    "word": "お",
+    "reading": null,
+    "meaning": "1. 엇 2. 응・어",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "お~",
+    "reading": null,
+    "meaning": "1. 존경·공손·친숙의 기분을 나타내는 말 2. 명령을 나타내는 말 3. 존경·친근의 뜻을 나타내는 말",
+    "level": "N4",
+    "example": "御宅"
+  },
+  {
+    "word": "おいでになる",
+    "reading": null,
+    "meaning": "오시다, 가시다, 계시다",
+    "level": "N4",
+    "example": "どちらへおいでになりますか."
+  },
+  {
+    "word": "お祝い",
+    "reading": "おいわい",
+    "meaning": "축하",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "横断歩道",
+    "reading": "おうだんほどう",
+    "meaning": "횡단 보도",
+    "level": "N4",
+    "example": "立体横断歩道"
+  },
+  {
+    "word": "大雨",
+    "reading": "おおあめ",
+    "meaning": "큰비",
+    "level": "N4",
+    "example": "大雨注意報"
+  },
+  {
+    "word": "大雪",
+    "reading": "おおゆき",
+    "meaning": "대설, 큰눈",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "おかえりなさい",
+    "reading": null,
+    "meaning": "잘 다녀왔어요. 어서와요",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "おかげ",
+    "reading": null,
+    "meaning": "1. 가호 2. 덕택 3. 탓",
+    "level": "N4",
+    "example": "神のお陰をこうむる"
+  },
+  {
+    "word": "おかげさまで",
+    "reading": null,
+    "meaning": "덕분에",
+    "level": "N4",
+    "example": "お蔭様で息子も卒業できました"
+  },
+  {
+    "word": "おかしい",
+    "reading": null,
+    "meaning": "1. 우습다 2. 이상하다 3. 비정상적이다",
+    "level": "N4",
+    "example": "おかしくてたまらない"
+  },
+  {
+    "word": "億",
+    "reading": "おく",
+    "meaning": "1. 억 2. 수가 많음",
+    "level": "N4",
+    "example": "億を数える"
+  },
+  {
+    "word": "奥様",
+    "reading": "おくさま",
+    "meaning": "1. 남의 아내의 높임말・부인 2. 안주인・마님",
+    "level": "N4",
+    "example": "奥様はお元気ですか"
+  },
+  {
+    "word": "屋上",
+    "reading": "おくじょう",
+    "meaning": "1. 옥상 2. 지붕의 위 3. 지붕 위에 사람들이 이용할 수 있도록 만든 편평한 장소",
+    "level": "N4",
+    "example": "屋上屋を架す"
+  },
+  {
+    "word": "贈り物",
+    "reading": "おくりもの",
+    "meaning": "선물",
+    "level": "N4",
+    "example": "お返しの贈り物"
+  },
+  {
+    "word": "送る",
+    "reading": "おくる",
+    "meaning": "1. 보내다 2. 부치다 3. 송금하다",
+    "level": "N4",
+    "example": "荷を送る"
+  },
+  {
+    "word": "遅れる",
+    "reading": "おくれる",
+    "meaning": "1. 늦다 2. 시각을 지나다 3. 더디다",
+    "level": "N4",
+    "example": "学校に遅れる"
+  },
+  {
+    "word": "お元気ですか",
+    "reading": "おげんきですか",
+    "meaning": "1. 안녕하세요 2. 건강하십니까 3. 잘 지내시죠",
+    "level": "N4",
+    "example": "皆さんお元気ですか?"
+  },
+  {
+    "word": "お子さん",
+    "reading": "おこさん",
+    "meaning": "자녀분",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "起こす",
+    "reading": "おこす",
+    "meaning": "1. 일으키다 2. 일으켜 세우다 3. 벌이다",
+    "level": "N4",
+    "example": "体を起こす"
+  },
+  {
+    "word": "怒る",
+    "reading": "おこる",
+    "meaning": "1. 성내다 2. 꾸짖다",
+    "level": "N4",
+    "example": "真っ赤になって怒る"
+  },
+  {
+    "word": "押し入れ",
+    "reading": "おしいれ",
+    "meaning": "1. 반침 2. 벽장",
+    "level": "N4",
+    "example": "布団を押し入れにしまう"
+  },
+  {
+    "word": "おしまい",
+    "reading": null,
+    "meaning": "1. 끝 2. 끝나는 것 3. 절망적인 상태가 되는 것",
+    "level": "N4",
+    "example": "仕事を御仕舞いにする"
+  },
+  {
+    "word": "叔父",
+    "reading": "おじ",
+    "meaning": "1. 삼촌 2. 부모와 같은 연배의 남자",
+    "level": "N4",
+    "example": "母方の伯父"
+  },
+  {
+    "word": "お嬢さん",
+    "reading": "おじょうさん",
+    "meaning": "아가씨, 따님",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "お宅",
+    "reading": "おたく",
+    "meaning": "1. 댁 2. 당신",
+    "level": "N4",
+    "example": "お宅には被害はありませんでしたか"
+  },
+  {
+    "word": "お大事に",
+    "reading": "おだいじに",
+    "meaning": "1. 몸조심해 2. 몸조심하세요 3. 몸조리 잘하세요",
+    "level": "N4",
+    "example": "くれぐれも[どうぞ]、お大事に"
+  },
+  {
+    "word": "落ちる",
+    "reading": "おちる",
+    "meaning": "1. 떨어지다 2. 낙하하다 3. 내리다",
+    "level": "N4",
+    "example": "木の葉が落ちる"
+  },
+  {
+    "word": "おっしゃる",
+    "reading": null,
+    "meaning": "1. 말씀하시다 2. …라는 이름이시다",
+    "level": "N4",
+    "example": "先生がおっしゃいました"
+  },
+  {
+    "word": "夫",
+    "reading": "おっと",
+    "meaning": "남편",
+    "level": "N4",
+    "example": "愛する夫"
+  },
+  {
+    "word": "お釣り",
+    "reading": "おつり",
+    "meaning": "거스름돈",
+    "level": "N4",
+    "example": "レシートとお釣りを受け取る"
+  },
+  {
+    "word": "お手洗い",
+    "reading": "おてあらい",
+    "meaning": "화장실",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "お出かけ",
+    "reading": "おでかけ",
+    "meaning": "외출",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "音",
+    "reading": "おと",
+    "meaning": "1. 소리 2. 소문 3. 소식",
+    "level": "N4",
+    "example": "非常ベルの音"
+  },
+  {
+    "word": "落とし物",
+    "reading": "おとしもの",
+    "meaning": "1. 분실물 2. 빠뜨린 물건 3. 유실물",
+    "level": "N4",
+    "example": "落とし物をする"
+  },
+  {
+    "word": "お年寄り",
+    "reading": "おとしより",
+    "meaning": "노인",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "落とす",
+    "reading": "おとす",
+    "meaning": "1. 떨어뜨리다 2. 이동시키다 3. 놓치다",
+    "level": "N4",
+    "example": "橋の上から石を落とす"
+  },
+  {
+    "word": "大人しい",
+    "reading": "おとなしい",
+    "meaning": "1. 온순하다 2. 떠들거나 장난하지 않고 조용하다 3. 수수하다",
+    "level": "N4",
+    "example": "内気で大人しい"
+  },
+  {
+    "word": "踊り",
+    "reading": "おどり",
+    "meaning": "1. 춤 2. 뛰어오름 3. ‘踊り歩'의 준말",
+    "level": "N4",
+    "example": "優雅な踊り"
+  },
+  {
+    "word": "踊る",
+    "reading": "おどる",
+    "meaning": "1. 춤추다 2. 남의 앞잡이가 되어 행동하다",
+    "level": "N4",
+    "example": "バレーを踊る"
+  },
+  {
+    "word": "驚く",
+    "reading": "おどろく",
+    "meaning": "1. 놀라다 2. 문득 깨닫다",
+    "level": "N4",
+    "example": "大きな音に驚く"
+  },
+  {
+    "word": "小母",
+    "reading": "おば",
+    "meaning": "아주머니, 남의 어른 여자",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "お待たせしました",
+    "reading": "おまたせしました",
+    "meaning": "오래 기다렸습니다",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "お祭り",
+    "reading": "おまつり",
+    "meaning": "1. 축제 2. 낚싯줄이 서로 엉키는 일",
+    "level": "N4",
+    "example": "お祭り期間中の交通規制のお知らせ"
+  },
+  {
+    "word": "お見舞い",
+    "reading": "おみまい",
+    "meaning": "문병",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "おめでとうございます",
+    "reading": null,
+    "meaning": "축하합니다",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "思い出す",
+    "reading": "おもいだす",
+    "meaning": "1. 생각해 내다 2. 생각하기 시작하다",
+    "level": "N4",
+    "example": "思い出したくない記憶"
+  },
+  {
+    "word": "思う",
+    "reading": "おもう",
+    "meaning": "1. 생각하다 2. 헤아려 판단하다 3. 예상하다",
+    "level": "N4",
+    "example": "これぞと思う相手"
+  },
+  {
+    "word": "玩具",
+    "reading": "おもちゃ",
+    "meaning": "1. 장난감 2. 노리개",
+    "level": "N4",
+    "example": "玩具で遊ぶ子供"
+  },
+  {
+    "word": "表",
+    "reading": "おもて",
+    "meaning": "1. 표면 2. 거죽 3. 보이는 곳",
+    "level": "N4",
+    "example": "貨幣の表"
+  },
+  {
+    "word": "おや",
+    "reading": null,
+    "meaning": "1. 아니 2. 어 3. 어머나",
+    "level": "N4",
+    "example": "おや、道を間違えたかな"
+  },
+  {
+    "word": "お休みになる",
+    "reading": "おやすみになる",
+    "meaning": "주무시다",
+    "level": "N4",
+    "example": "よくお休みになれましたか."
+  },
+  {
+    "word": "おりる",
+    "reading": null,
+    "meaning": "1. 내리다 2. 내려오다 3. 결정·지시가 나오다",
+    "level": "N4",
+    "example": "山を下りる"
+  },
+  {
+    "word": "おる",
+    "reading": null,
+    "meaning": "1. 있다 2. …하고 있다",
+    "level": "N4",
+    "example": "誰か居るか?"
+  },
+  {
+    "word": "折れる",
+    "reading": "おれる",
+    "meaning": "1. 접히다 2. 꺾어지다 3. 부러지다",
+    "level": "N4",
+    "example": "紙の端が折れる"
+  },
+  {
+    "word": "終わり",
+    "reading": "おわり",
+    "meaning": "1. 끝 2. 인생의 최후",
+    "level": "N4",
+    "example": "夏の終わり"
+  },
+  {
+    "word": "回",
+    "reading": "かい",
+    "meaning": "1. 회 2. …회",
+    "level": "N4",
+    "example": "回を重ねる"
+  },
+  {
+    "word": "会",
+    "reading": "かい",
+    "meaning": "1. 회 2. 사람들이 모여서 하는 행사 3. 조직",
+    "level": "N4",
+    "example": "お祝いの会"
+  },
+  {
+    "word": "階",
+    "reading": "かい",
+    "meaning": "1. 계단 2. …층",
+    "level": "N4",
+    "example": "階をのぼる"
+  },
+  {
+    "word": "海岸",
+    "reading": "かいがん",
+    "meaning": "1. 해안 2. 바닷가",
+    "level": "N4",
+    "example": "海岸気候[平野]"
+  },
+  {
+    "word": "会議",
+    "reading": "かいぎ",
+    "meaning": "1. 회의 2. 모여서 의논함 3. 평의하는 기관",
+    "level": "N4",
+    "example": "会議の持ち方"
+  },
+  {
+    "word": "会議室",
+    "reading": "かいぎしつ",
+    "meaning": "회의실",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "会場",
+    "reading": "かいじょう",
+    "meaning": "1. 회장 2. 회합·행사·집회 등을 여는 곳.",
+    "level": "N4",
+    "example": "ビーチの特設会場で行われる公演"
+  },
+  {
+    "word": "会話",
+    "reading": "かいわ",
+    "meaning": "1. 회화 2. 만나서 이야기를 나누는 것 3. 또, 그 이야기",
+    "level": "N4",
+    "example": "会話を交わす"
+  },
+  {
+    "word": "飼う",
+    "reading": "かう",
+    "meaning": "1. 기르다 2. 동물에게 먹이를 주다",
+    "level": "N4",
+    "example": "家で飼うペット"
+  },
+  {
+    "word": "帰り",
+    "reading": "かえり",
+    "meaning": "1. 돌아옴 2. 돌아오는 길",
+    "level": "N4",
+    "example": "外国帰り"
+  },
+  {
+    "word": "変える",
+    "reading": "かえる",
+    "meaning": "1. 바꾸다 2. 변하다 3. 고치다",
+    "level": "N4",
+    "example": "顔色を変える"
+  },
+  {
+    "word": "係る",
+    "reading": "かかる",
+    "meaning": "1. 관계되다 2. 손으로 되다 3. 다음 말에 걸리다",
+    "level": "N4",
+    "example": "本件に係る訴訟"
+  },
+  {
+    "word": "科学",
+    "reading": "かがく",
+    "meaning": "과학",
+    "level": "N4",
+    "example": "科学戦"
+  },
+  {
+    "word": "鏡",
+    "reading": "かがみ",
+    "meaning": "1. 거울 2. 모범 3. 술통 뚜껑",
+    "level": "N4",
+    "example": "鏡に映った姿"
+  },
+  {
+    "word": "書き方",
+    "reading": "かきかた",
+    "meaning": "1. 쓰기 2. 쓰는 법・서식 3. 붓 놀리는 법・글씨 쓰는 순서",
+    "level": "N4",
+    "example": "論文の書き方"
+  },
+  {
+    "word": "鉤",
+    "reading": "かぎ",
+    "meaning": "1. 갈고랑이 2. 갈고리 형태의 것 3. 갈고랑쇠를 나무 자루에 박은 무기",
+    "level": "N4",
+    "example": "鉤で引っ掛ける"
+  },
+  {
+    "word": "係ける",
+    "reading": "かける",
+    "meaning": "그 말을 문법적으로 딴말과 연관시키다",
+    "level": "N4",
+    "example": "修飾語をこちらの名詞に係けて解する"
+  },
+  {
+    "word": "かける",
+    "reading": null,
+    "meaning": "1. 걸다 2. 늘어뜨리다 3. 채우다",
+    "level": "N4",
+    "example": "すだれを掛ける"
+  },
+  {
+    "word": "かける",
+    "reading": null,
+    "meaning": "1. 걸다2. 늘어뜨리다 3. 내던지다",
+    "level": "N4",
+    "example": "命に懸けても"
+  },
+  {
+    "word": "飾り",
+    "reading": "かざり",
+    "meaning": "1. 꾸밈 2. 장식 3. 허식",
+    "level": "N4",
+    "example": "飾りボタン"
+  },
+  {
+    "word": "飾る",
+    "reading": "かざる",
+    "meaning": "1. 장식하다 2. 꾸미다 3. 겉바르다",
+    "level": "N4",
+    "example": "外壁を飾る"
+  },
+  {
+    "word": "かしこまりました",
+    "reading": null,
+    "meaning": "잘 알겠습니다, 분부대로 하겠습니다",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "歌手",
+    "reading": "かしゅ",
+    "meaning": "가수",
+    "level": "N4",
+    "example": "オペラ歌手"
+  },
+  {
+    "word": "火事",
+    "reading": "かじ",
+    "meaning": "1. 화재 2. 불",
+    "level": "N4",
+    "example": "船火事"
+  },
+  {
+    "word": "方",
+    "reading": "かた",
+    "meaning": "1. 쪽 2. 방식",
+    "level": "N4",
+    "example": "東の方"
+  },
+  {
+    "word": "肩",
+    "reading": "かた",
+    "meaning": "1. 어깨 2. 어깨와 비슷한 부분의 위쪽",
+    "level": "N4",
+    "example": "肩を叩く"
+  },
+  {
+    "word": "硬い",
+    "reading": "かたい",
+    "meaning": "1. 단단하다 2. 굽히지 않다 3. 엄하다",
+    "level": "N4",
+    "example": "堅い鉛筆"
+  },
+  {
+    "word": "カタカナ",
+    "reading": null,
+    "meaning": "‘かな’의 하나",
+    "level": "N4",
+    "example": "片仮名語"
+  },
+  {
+    "word": "形",
+    "reading": "かたち",
+    "meaning": "1. 모양 2. 형상 3. 자세",
+    "level": "N4",
+    "example": "形が崩れる"
+  },
+  {
+    "word": "片付ける",
+    "reading": "かたづける",
+    "meaning": "1. 치우다 2. 정돈하다 3. 결말을 내다",
+    "level": "N4",
+    "example": "机の上を片付ける"
+  },
+  {
+    "word": "課長",
+    "reading": "かちょう",
+    "meaning": "과장",
+    "level": "N4",
+    "example": "人事課長"
+  },
+  {
+    "word": "かっこいい",
+    "reading": null,
+    "meaning": "1. 근사하다 2. 멋있다",
+    "level": "N4",
+    "example": "かっこいい新人俳優"
+  },
+  {
+    "word": "格好",
+    "reading": "かっこう",
+    "meaning": "1. 모양 2. 알맞음 3. 쯤",
+    "level": "N4",
+    "example": "髪の格好を直す"
+  },
+  {
+    "word": "かっこ悪い",
+    "reading": "かっこわるい",
+    "meaning": "꼴사납다, 멋이 없다",
+    "level": "N4",
+    "example": "階段で転んでかっこ悪かった"
+  },
+  {
+    "word": "勝つ",
+    "reading": "かつ",
+    "meaning": "1. 이기다 2. 승리하다 3. 극복하다",
+    "level": "N4",
+    "example": "試合に勝った選手"
+  },
+  {
+    "word": "家庭",
+    "reading": "かてい",
+    "meaning": "가정",
+    "level": "N4",
+    "example": "家庭環境"
+  },
+  {
+    "word": "家内",
+    "reading": "かない",
+    "meaning": "1. 가내 2. 아내",
+    "level": "N4",
+    "example": "家内安全"
+  },
+  {
+    "word": "悲しい",
+    "reading": "かなしい",
+    "meaning": "1. 슬프다 2. 애처롭다",
+    "level": "N4",
+    "example": "悲しい出来事"
+  },
+  {
+    "word": "必ず",
+    "reading": "かならず",
+    "meaning": "1. 반드시 2. 꼭",
+    "level": "N4",
+    "example": "約束したことは必ず守る"
+  },
+  {
+    "word": "かなり",
+    "reading": null,
+    "meaning": "1. 꽤 2. 제법 3. 상당히",
+    "level": "N4",
+    "example": "かなり難しい問題"
+  },
+  {
+    "word": "金持ち",
+    "reading": "かねもち",
+    "meaning": "1. 부자 2. 재산가",
+    "level": "N4",
+    "example": "大金持ち"
+  },
+  {
+    "word": "彼女",
+    "reading": "かのじょ",
+    "meaning": "1. 그녀 2. 애인",
+    "level": "N4",
+    "example": "これは彼女の本だ"
+  },
+  {
+    "word": "壁",
+    "reading": "かべ",
+    "meaning": "1. 벽 2. 건물 외부를 두르거나 내부를 칸막이하는 것 3. 장벽",
+    "level": "N4",
+    "example": "壁に寄りかかる"
+  },
+  {
+    "word": "髪",
+    "reading": "かみ",
+    "meaning": "1. 머리 2. 머리 모양",
+    "level": "N4",
+    "example": "髪が薄い"
+  },
+  {
+    "word": "嚙む",
+    "reading": "かむ",
+    "meaning": "1. 물다 2. 씹다 3. 서로 맞물다",
+    "level": "N4",
+    "example": "舌を噛む"
+  },
+  {
+    "word": "通う",
+    "reading": "かよう",
+    "meaning": "1. 다니다 2. 통하다 3. 마음이 상통하다",
+    "level": "N4",
+    "example": "広告会社に通う"
+  },
+  {
+    "word": "彼",
+    "reading": "かれ",
+    "meaning": "1. 그 2. 그이",
+    "level": "N4",
+    "example": "彼はなかなかの紳士です"
+  },
+  {
+    "word": "彼ら",
+    "reading": "かれら",
+    "meaning": "1. 그들 2. 그 사람들",
+    "level": "N4",
+    "example": "彼らは兄弟だ"
+  },
+  {
+    "word": "乾く",
+    "reading": "かわく",
+    "meaning": "1. 마르다 2. 인간미가 없고 냉담한 느낌을 주다",
+    "level": "N4",
+    "example": "乾いた空気"
+  },
+  {
+    "word": "代わり",
+    "reading": "かわり",
+    "meaning": "1. 대리 2. 교대 3. 한 그릇 다 먹고 다시 한 그릇을 더 먹음",
+    "level": "N4",
+    "example": "代わりの品物"
+  },
+  {
+    "word": "変わる",
+    "reading": "かわる",
+    "meaning": "1. 변하다 2. 지금까지와는 다른 상태가 되다 3. 연월이 새로워지다",
+    "level": "N4",
+    "example": "顔色[声]が変わる"
+  },
+  {
+    "word": "考え方",
+    "reading": "かんがえかた",
+    "meaning": "사고방식",
+    "level": "N4",
+    "example": "それは危険な考え方だ"
+  },
+  {
+    "word": "考える",
+    "reading": "かんがえる",
+    "meaning": "1. 생각하다 2. 고안하다",
+    "level": "N4",
+    "example": "考えることもできない大事件"
+  },
+  {
+    "word": "関係",
+    "reading": "かんけい",
+    "meaning": "1. 관계 2. 서로 관련이 있음 3. 영향을 미침",
+    "level": "N4",
+    "example": "鶏と卵の関係"
+  },
+  {
+    "word": "観光",
+    "reading": "かんこう",
+    "meaning": "1. 관광 2. ‘観光繻子'의 준말",
+    "level": "N4",
+    "example": "観光産業のグローバル化戦略"
+  },
+  {
+    "word": "看護士",
+    "reading": "かんごし",
+    "meaning": "남성 간호사",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "簡単",
+    "reading": "かんたん",
+    "meaning": "1. 간단 2. 사물이 단순하여 이해나 취급이 쉬운 것 3. 시간이나 수고가 들지 않는 것",
+    "level": "N4",
+    "example": "割と簡単な問題"
+  },
+  {
+    "word": "外国",
+    "reading": "がいこく",
+    "meaning": "외국",
+    "level": "N4",
+    "example": "外国為替"
+  },
+  {
+    "word": "外食",
+    "reading": "がいしょく",
+    "meaning": "외식",
+    "level": "N4",
+    "example": "間借りして外食する"
+  },
+  {
+    "word": "外部",
+    "reading": "がいぶ",
+    "meaning": "외부",
+    "level": "N4",
+    "example": "建物の外部"
+  },
+  {
+    "word": "がまんする",
+    "reading": null,
+    "meaning": "참다",
+    "level": "N4",
+    "example": "飲みたい酒をがまんする"
+  },
+  {
+    "word": "側",
+    "reading": "がわ",
+    "meaning": "1. 쪽 2. 둘러싸는 것 3. 옆",
+    "level": "N4",
+    "example": "反対の側"
+  },
+  {
+    "word": "頑張る",
+    "reading": "がんばる",
+    "meaning": "1. 분발하다 2. 강경히 버티다 3. 버티다",
+    "level": "N4",
+    "example": "成功するまで頑張る"
+  },
+  {
+    "word": "気",
+    "reading": "き",
+    "meaning": "1. 기운 2. 기 3. 기염",
+    "level": "N4",
+    "example": "陰惨の気"
+  },
+  {
+    "word": "機械",
+    "reading": "きかい",
+    "meaning": "1. 기계 2. 동력을 써서 움직이거나 일을 하는 장치 3. 실험∙측정∙운동 경기 등에 사용하는 장치나 도구",
+    "level": "N4",
+    "example": "機械工学"
+  },
+  {
+    "word": "期間",
+    "reading": "きかん",
+    "meaning": "기간",
+    "level": "N4",
+    "example": "特売期間"
+  },
+  {
+    "word": "気がある",
+    "reading": "きがある",
+    "meaning": "마음이 있다, 관심이 있다",
+    "level": "N4",
+    "example": "彼女に気がある"
+  },
+  {
+    "word": "聞き取り",
+    "reading": "ききとり",
+    "meaning": "1. 조사하기 위해 사정을 들음 2. 듣고 이해하기",
+    "level": "N4",
+    "example": "聞き取り調査"
+  },
+  {
+    "word": "危険",
+    "reading": "きけん",
+    "meaning": "위험",
+    "level": "N4",
+    "example": "危険な仕事"
+  },
+  {
+    "word": "聞こえる",
+    "reading": "きこえる",
+    "meaning": "1. 들리다 2. 귀로 느껴지다 3. 해석되다",
+    "level": "N4",
+    "example": "歓声が聞こえる"
+  },
+  {
+    "word": "汽車",
+    "reading": "きしゃ",
+    "meaning": "기차",
+    "level": "N4",
+    "example": "汽車旅行"
+  },
+  {
+    "word": "記者",
+    "reading": "きしゃ",
+    "meaning": "1. 기자 2. 기사를 취재·집필·편집하는 사람 3. 문서를 쓰는 사람",
+    "level": "N4",
+    "example": "新聞記者"
+  },
+  {
+    "word": "季節",
+    "reading": "きせつ",
+    "meaning": "1. 계절 2. 절기 3. 철",
+    "level": "N4",
+    "example": "季節の変わり目"
+  },
+  {
+    "word": "規則",
+    "reading": "きそく",
+    "meaning": "1. 규칙 2. 행위∙절차 등의 표준이 되는 사항 3. 질서",
+    "level": "N4",
+    "example": "規則書"
+  },
+  {
+    "word": "きっと",
+    "reading": null,
+    "meaning": "1. 꼭 2. 엄한 기색을 띠는 모양",
+    "level": "N4",
+    "example": "きっとそうだ"
+  },
+  {
+    "word": "気に入る",
+    "reading": "きにいる",
+    "meaning": "1. 마음에 들다 2. 만족하다",
+    "level": "N4",
+    "example": "気に入るデザイン"
+  },
+  {
+    "word": "絹",
+    "reading": "きぬ",
+    "meaning": "1. 명주 2. 비단",
+    "level": "N4",
+    "example": "絹張りの洋傘"
+  },
+  {
+    "word": "厳しい",
+    "reading": "きびしい",
+    "meaning": "1. 엄하다 2. 냉엄하다",
+    "level": "N4",
+    "example": "厳しい寒さ"
+  },
+  {
+    "word": "気分",
+    "reading": "きぶん",
+    "meaning": "1. 기분 2. 유쾌함이나 불쾌함 등의 감정 3. 몸의 상태에 따라 느끼는 감정",
+    "level": "N4",
+    "example": "気分屋"
+  },
+  {
+    "word": "決まる",
+    "reading": "きまる",
+    "meaning": "1. 정해지다 2. 쓴 기술이 먹혀 들어가다 3. 틀이 잡히다",
+    "level": "N4",
+    "example": "方針が決まる"
+  },
+  {
+    "word": "君",
+    "reading": "きみ",
+    "meaning": "1. 그대 2. 자네 3. 너",
+    "level": "N4",
+    "example": "君も一緒に行こう"
+  },
+  {
+    "word": "決める",
+    "reading": "きめる",
+    "meaning": "1. 정하다 2. 약속하다 3. …으로 생각하고 있다",
+    "level": "N4",
+    "example": "方針を決める"
+  },
+  {
+    "word": "気持ち",
+    "reading": "きもち",
+    "meaning": "1. 마음 2. 마음의 표현을 겸손하게 이르는 말 3. 조금",
+    "level": "N4",
+    "example": "気持ちのたっぷりこもったプレゼント"
+  },
+  {
+    "word": "着物",
+    "reading": "きもの",
+    "meaning": "1. 옷 2. 일본 옷",
+    "level": "N4",
+    "example": "着物を着る"
+  },
+  {
+    "word": "客",
+    "reading": "きゃく",
+    "meaning": "1. 손 2. 그릇·도구 등을 세는 말",
+    "level": "N4",
+    "example": "招かれざる客"
+  },
+  {
+    "word": "急行",
+    "reading": "きゅうこう",
+    "meaning": "1. 급행 2. ‘急行列車’의 준말",
+    "level": "N4",
+    "example": "災害地に急行する"
+  },
+  {
+    "word": "急に",
+    "reading": "きゅうに",
+    "meaning": "갑자기",
+    "level": "N4",
+    "example": "急に車が止まる"
+  },
+  {
+    "word": "教育",
+    "reading": "きょういく",
+    "meaning": "1. 교육 2. 교양",
+    "level": "N4",
+    "example": "教育家"
+  },
+  {
+    "word": "教会",
+    "reading": "きょうかい",
+    "meaning": "교회",
+    "level": "N4",
+    "example": "教会音楽"
+  },
+  {
+    "word": "興味",
+    "reading": "きょうみ",
+    "meaning": "1. 흥미 2. 어떤 대상에 대하여 관심을 기울이는 경향",
+    "level": "N4",
+    "example": "興味の的"
+  },
+  {
+    "word": "切る",
+    "reading": "きる",
+    "meaning": "1. 치다 2. ‘切れる’의 문어형",
+    "level": "N4",
+    "example": "人を切る"
+  },
+  {
+    "word": "着る",
+    "reading": "きる",
+    "meaning": "1. 입다 2. 뒤집어쓰다",
+    "level": "N4",
+    "example": "青い外套を着た人"
+  },
+  {
+    "word": "金魚",
+    "reading": "きんぎょ",
+    "meaning": "금붕어",
+    "level": "N4",
+    "example": "金魚売り"
+  },
+  {
+    "word": "近所",
+    "reading": "きんじょ",
+    "meaning": "1. 근처 2. 이웃집",
+    "level": "N4",
+    "example": "近所どなり"
+  },
+  {
+    "word": "技術",
+    "reading": "ぎじゅつ",
+    "meaning": "1. 기술 2. 사물을 잘 다루거나 처리하는 재주 3. 과학 이론을 적용하여 인간 생활에 유용하도록 변화시키는 방법",
+    "level": "N4",
+    "example": "表現技術"
+  },
+  {
+    "word": "空気",
+    "reading": "くうき",
+    "meaning": "1. 공기 2. 대기 3. 분위기",
+    "level": "N4",
+    "example": "空気圧縮機"
+  },
+  {
+    "word": "空港",
+    "reading": "くうこう",
+    "meaning": "1. 공항 2. 비행장",
+    "level": "N4",
+    "example": "都心と空港を結ぶ道路"
+  },
+  {
+    "word": "草",
+    "reading": "くさ",
+    "meaning": "1. 풀 2. 본격적인 것이 아닌 것",
+    "level": "N4",
+    "example": "草花"
+  },
+  {
+    "word": "ください",
+    "reading": null,
+    "meaning": "1. 주세요 2. 동사의 연용형이나 한자어에 붙어 희망∙간청하는 뜻을 나타냄 3. …해 주세요",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "下さる",
+    "reading": "くださる",
+    "meaning": "1. 주시다 2. …하여 주시다",
+    "level": "N4",
+    "example": "先生が下さった本"
+  },
+  {
+    "word": "首",
+    "reading": "くび",
+    "meaning": "1. 목 2. 머리와 몸통을 잇는 잘록한 부분 3. 목에서부터 위의 부분",
+    "level": "N4",
+    "example": "首の長い人"
+  },
+  {
+    "word": "雲",
+    "reading": "くも",
+    "meaning": "1. 구름 2. 매우 높은 곳이나 높은 지위의 비유 3. 일대에 깔리거나 뻗쳐 있는 것",
+    "level": "N4",
+    "example": "白雲"
+  },
+  {
+    "word": "曇り",
+    "reading": "くもり",
+    "meaning": "1. 흐림 2. 흐린 상태 3. 개운치 않음",
+    "level": "N4",
+    "example": "曇り空"
+  },
+  {
+    "word": "曇る",
+    "reading": "くもる",
+    "meaning": "1. 흐리다 2. 부예지다 3. 어두워지다",
+    "level": "N4",
+    "example": "空が曇る"
+  },
+  {
+    "word": "区役所",
+    "reading": "くやくしょ",
+    "meaning": "구청",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "比べる",
+    "reading": "くらべる",
+    "meaning": "1. 비교하다 2. 경쟁하다 3. 친하게 사귀다",
+    "level": "N4",
+    "example": "翻訳を原文と比べる"
+  },
+  {
+    "word": "苦しい",
+    "reading": "くるしい",
+    "meaning": "1. 괴롭다 2. 고통스럽다 3. 고되다",
+    "level": "N4",
+    "example": "苦しい気持ち"
+  },
+  {
+    "word": "暮れる",
+    "reading": "くれる",
+    "meaning": "1. 저물다 2. 세월이 지나가다 3. 같은 일을 반복하며 시간이 지나다",
+    "level": "N4",
+    "example": "帰りに日が暮れた"
+  },
+  {
+    "word": "くれる",
+    "reading": null,
+    "meaning": "1. 주다 2. 동작을 가하다 3. 호의를 갖고 …하다",
+    "level": "N4",
+    "example": "金をくれる"
+  },
+  {
+    "word": "具合",
+    "reading": "ぐあい",
+    "meaning": "1. 형편 2. 몸 상태 3. 식",
+    "level": "N4",
+    "example": "仕事の進み具合"
+  },
+  {
+    "word": "軍人",
+    "reading": "ぐんじん",
+    "meaning": "군인",
+    "level": "N4",
+    "example": "職業軍人"
+  },
+  {
+    "word": "毛",
+    "reading": "け",
+    "meaning": "1. 털 2. 체모 3. 머리털",
+    "level": "N4",
+    "example": "太い毛が生える"
+  },
+  {
+    "word": "計画",
+    "reading": "けいかく",
+    "meaning": "계획",
+    "level": "N4",
+    "example": "計画性のある[ない]人"
+  },
+  {
+    "word": "経験",
+    "reading": "けいけん",
+    "meaning": "1. 경험 2. 실제로 보거나 듣거나 해 보는 것 3. 감각이나 지각 작용에 의하여 깨닫게 되는 것",
+    "level": "N4",
+    "example": "人生経験の豊富な人"
+  },
+  {
+    "word": "警察",
+    "reading": "けいさつ",
+    "meaning": "1. 경찰 2. 사회의 질서를 지키고 국민의 안전과 재산을 보호하는 일 3. ‘警察署'·‘警察官'의 준말",
+    "level": "N4",
+    "example": "警察に届ける"
+  },
+  {
+    "word": "経済",
+    "reading": "けいざい",
+    "meaning": "1. 경제 2. 인간의 생활에 필요한 재화·서비스를 생산·분배·소비하는 모든 활동 및 사회적 관계 3. 검약",
+    "level": "N4",
+    "example": "経済観念のない人"
+  },
+  {
+    "word": "怪我",
+    "reading": "けが",
+    "meaning": "1. 상처 2. 잘못",
+    "level": "N4",
+    "example": "怪我人が出る"
+  },
+  {
+    "word": "景色",
+    "reading": "けしき",
+    "meaning": "1. 경치 2. 풍경 3. 풍광",
+    "level": "N4",
+    "example": "田舎の景色"
+  },
+  {
+    "word": "消しゴム",
+    "reading": "けしゴム",
+    "meaning": "고무 지우개",
+    "level": "N4",
+    "example": "消しゴムのかす"
+  },
+  {
+    "word": "結構",
+    "reading": "けっこう",
+    "meaning": "1. 훌륭함 2. 그런대로 3. 구성",
+    "level": "N4",
+    "example": "結構な出来ばえ"
+  },
+  {
+    "word": "決して",
+    "reading": "けっして",
+    "meaning": "1. 결코 2. 반드시",
+    "level": "N4",
+    "example": "彼は決して大きいほうではない"
+  },
+  {
+    "word": "欠席",
+    "reading": "けっせき",
+    "meaning": "1. 결석 2. 나가야 할 자리에 나가지 않음",
+    "level": "N4",
+    "example": "遅刻や無断欠席を繰り返す生徒"
+  },
+  {
+    "word": "けれども",
+    "reading": null,
+    "meaning": "1. …지만, 그러나 2. …ㄹ텐데 3. 그러나",
+    "level": "N4",
+    "example": "頭はいいけれども、軽はずみだ"
+  },
+  {
+    "word": "喧嘩",
+    "reading": "けんか",
+    "meaning": "1. 다툼 2. 소란",
+    "level": "N4",
+    "example": "喧嘩口論"
+  },
+  {
+    "word": "研究室",
+    "reading": "けんきゅうしつ",
+    "meaning": "연구실",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "見物",
+    "reading": "けんぶつ",
+    "meaning": "1. 구경 2. 구경꾼 3. 구경할 만한 가치가 있는 것",
+    "level": "N4",
+    "example": "見物席"
+  },
+  {
+    "word": "下宿",
+    "reading": "げしゅく",
+    "meaning": "1. 하숙 2. 하급 여관",
+    "level": "N4",
+    "example": "下宿人"
+  },
+  {
+    "word": "原因",
+    "reading": "げんいん",
+    "meaning": "1. 원인 2. 어떤 사물이나 상태를 변화시키거나 일으키게 하는 근본이 된 일이나 사건 3. 어떤 사물을 성립시키는 근본이 된 사물∙이유",
+    "level": "N4",
+    "example": "不注意に原因する事故"
+  },
+  {
+    "word": "玄関",
+    "reading": "げんかん",
+    "meaning": "1. 현관 2. 건물의 정면 입구 3. 선사의 문",
+    "level": "N4",
+    "example": "玄関子"
+  },
+  {
+    "word": "子",
+    "reading": "こ",
+    "meaning": "1. 자식 2. 그 일을 하는 사람이나 사물을 나타냄",
+    "level": "N4",
+    "example": "腹を痛めた子"
+  },
+  {
+    "word": "個",
+    "reading": "こ",
+    "meaning": "1. 개인 2. …개",
+    "level": "N4",
+    "example": "個の問題"
+  },
+  {
+    "word": "子犬",
+    "reading": "こいぬ",
+    "meaning": "1. 작은 개 2. 강아지",
+    "level": "N4",
+    "example": "生後3カ月の小犬"
+  },
+  {
+    "word": "功",
+    "reading": "こう",
+    "meaning": "1. 공 2. 공적 3. 경험을 쌓음・연공",
+    "level": "N4",
+    "example": "功を急ぐ"
+  },
+  {
+    "word": "公開",
+    "reading": "こうかい",
+    "meaning": "공개",
+    "level": "N4",
+    "example": "公開録音[放送]"
+  },
+  {
+    "word": "郊外",
+    "reading": "こうがい",
+    "meaning": "교외",
+    "level": "N4",
+    "example": "ソウル郊外"
+  },
+  {
+    "word": "講義",
+    "reading": "こうぎ",
+    "meaning": "강의",
+    "level": "N4",
+    "example": "講義所"
+  },
+  {
+    "word": "工業",
+    "reading": "こうぎょう",
+    "meaning": "공업",
+    "level": "N4",
+    "example": "工業製品"
+  },
+  {
+    "word": "高校",
+    "reading": "こうこう",
+    "meaning": "1. ‘高等学校’의 준말 2. 고교",
+    "level": "N4",
+    "example": "高校生"
+  },
+  {
+    "word": "高校生",
+    "reading": "こうこうせい",
+    "meaning": "고교생",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "交差点",
+    "reading": "こうさてん",
+    "meaning": "교차점, 두 개 이상의 길이 교차하는 하는 곳, 교차로",
+    "level": "N4",
+    "example": "交差点で玉突き事故が起こる"
+  },
+  {
+    "word": "工事",
+    "reading": "こうじ",
+    "meaning": "공사",
+    "level": "N4",
+    "example": "水道工事"
+  },
+  {
+    "word": "工場",
+    "reading": "こうじょう",
+    "meaning": "공장",
+    "level": "N4",
+    "example": "工場長"
+  },
+  {
+    "word": "校長",
+    "reading": "こうちょう",
+    "meaning": "교장",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "交通",
+    "reading": "こうつう",
+    "meaning": "1. 교통 2. 통행 3. 운수·통신 기관을 통해 사람이나 물자 등을 수송하는 것",
+    "level": "N4",
+    "example": "交通止め"
+  },
+  {
+    "word": "講堂",
+    "reading": "こうどう",
+    "meaning": "강당",
+    "level": "N4",
+    "example": "講堂に集合して下さい"
+  },
+  {
+    "word": "工場",
+    "reading": "こうば",
+    "meaning": "공장",
+    "level": "N4",
+    "example": "下請け工場"
+  },
+  {
+    "word": "公務員",
+    "reading": "こうむいん",
+    "meaning": "1. 공무원 2. 국가 또는 지방 공공 단체의 사무를 맡아보는 사람",
+    "level": "N4",
+    "example": "地方公務員"
+  },
+  {
+    "word": "氷",
+    "reading": "こおり",
+    "meaning": "1. 얼음 2. 차가운 것이나 예리한 것의 비유 3. 氷水의 준말",
+    "level": "N4",
+    "example": "池に氷が張る"
+  },
+  {
+    "word": "国際",
+    "reading": "こくさい",
+    "meaning": "국제",
+    "level": "N4",
+    "example": "国際連合"
+  },
+  {
+    "word": "国産",
+    "reading": "こくさん",
+    "meaning": "국산",
+    "level": "N4",
+    "example": "国産品"
+  },
+  {
+    "word": "国内",
+    "reading": "こくない",
+    "meaning": "1. 국내 2. 나라의 영토 안 3. 나라 안에만 관계됨",
+    "level": "N4",
+    "example": "国内販売"
+  },
+  {
+    "word": "国民",
+    "reading": "こくみん",
+    "meaning": "국민",
+    "level": "N4",
+    "example": "国民精神"
+  },
+  {
+    "word": "国立",
+    "reading": "こくりつ",
+    "meaning": "국립",
+    "level": "N4",
+    "example": "国立大学"
+  },
+  {
+    "word": "九つ",
+    "reading": "ここのつ",
+    "meaning": "1. 아홉 2. 아홉 살 3. 옛 시각의 이름",
+    "level": "N4",
+    "example": "九つになる子"
+  },
+  {
+    "word": "心",
+    "reading": "こころ",
+    "meaning": "1. 마음 2. 할 마음 3. 생각",
+    "level": "N4",
+    "example": "重い心"
+  },
+  {
+    "word": "故障",
+    "reading": "こしょう",
+    "meaning": "1. 고장 2. 진행을 방해하는 것 3. 반대",
+    "level": "N4",
+    "example": "機械の故障による事故"
+  },
+  {
+    "word": "個人",
+    "reading": "こじん",
+    "meaning": "개인",
+    "level": "N4",
+    "example": "個人タクシー"
+  },
+  {
+    "word": "答え",
+    "reading": "こたえ",
+    "meaning": "1. 대답 2. 답",
+    "level": "N4",
+    "example": "口答え"
+  },
+  {
+    "word": "こと",
+    "reading": null,
+    "meaning": "1. 일 2. 사항 3. 특히 중요한 일",
+    "level": "N4",
+    "example": "この事があって後"
+  },
+  {
+    "word": "言葉",
+    "reading": "ことば",
+    "meaning": "1. 말 2. 이야기 3. 언어",
+    "level": "N4",
+    "example": "言葉争い"
+  },
+  {
+    "word": "小鳥",
+    "reading": "ことり",
+    "meaning": "1. 작은 새 2. 새장에 넣어 기르는 관상용 새",
+    "level": "N4",
+    "example": "小鳥の巣"
+  },
+  {
+    "word": "子猫",
+    "reading": "こねこ",
+    "meaning": "작은 고양이, 또, 새끼 고양이",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "この間",
+    "reading": "このあいだ",
+    "meaning": "1. 요전 2. 일전 3. 지난번",
+    "level": "N4",
+    "example": "ついこの間まで"
+  },
+  {
+    "word": "この頃",
+    "reading": "このごろ",
+    "meaning": "1. 요즈음 2. 요즘 3. 요사이",
+    "level": "N4",
+    "example": "この頃の天候"
+  },
+  {
+    "word": "木の葉",
+    "reading": "このは",
+    "meaning": "1. 나뭇잎 2. 낙엽 3. 작은 것",
+    "level": "N4",
+    "example": "木の葉が舞い落ちる"
+  },
+  {
+    "word": "この辺",
+    "reading": "このへん",
+    "meaning": "1. 이 근처・이 일대 2. 이 정도・이쯤",
+    "level": "N4",
+    "example": "この辺は静かですね"
+  },
+  {
+    "word": "細かい",
+    "reading": "こまかい",
+    "meaning": "1. 잘다 2. 작다 3. 대범하지 않다",
+    "level": "N4",
+    "example": "細かい字"
+  },
+  {
+    "word": "込む",
+    "reading": "こむ",
+    "meaning": "1. 붐비다 2. 안에 넣다 3. ‘込める’의 문어형",
+    "level": "N4",
+    "example": "込んだ電車"
+  },
+  {
+    "word": "米",
+    "reading": "こめ",
+    "meaning": "쌀",
+    "level": "N4",
+    "example": "米粒よりも小さい"
+  },
+  {
+    "word": "これから",
+    "reading": null,
+    "meaning": "1. 이제부터 2. 앞으로 3. 여기서",
+    "level": "N4",
+    "example": "これから行く"
+  },
+  {
+    "word": "転",
+    "reading": "ころ",
+    "meaning": "1. 산륜 2. 가늘고 짧은 장작 3. 주사위",
+    "level": "N4",
+    "example": "ころを入れて動かす"
+  },
+  {
+    "word": "転ぶ",
+    "reading": "ころぶ",
+    "meaning": "1. 쓰러지다 2. 구르다 3. 탄압을 받아서 개종하다",
+    "level": "N4",
+    "example": "石につまずいて転ぶ"
+  },
+  {
+    "word": "怖い",
+    "reading": "こわい",
+    "meaning": "1. 무섭다 2. 겁나다 3. 걱정스럽다",
+    "level": "N4",
+    "example": "怖い先生"
+  },
+  {
+    "word": "壊す",
+    "reading": "こわす",
+    "meaning": "1. 파괴하다 2. 고장 내다 3. 망치다",
+    "level": "N4",
+    "example": "家を壊す"
+  },
+  {
+    "word": "壊れる",
+    "reading": "こわれる",
+    "meaning": "1. 깨지다 2. 틀어지다 3. 고장 나다",
+    "level": "N4",
+    "example": "壊れた皿"
+  },
+  {
+    "word": "今回",
+    "reading": "こんかい",
+    "meaning": "1. 금번 2. 이번",
+    "level": "N4",
+    "example": "今回はじめて出席した"
+  },
+  {
+    "word": "今度",
+    "reading": "こんど",
+    "meaning": "1. 이번 2. 이다음",
+    "level": "N4",
+    "example": "今度の大戦"
+  },
+  {
+    "word": "こんなに",
+    "reading": null,
+    "meaning": "이토록, 이렇게",
+    "level": "N4",
+    "example": "こんなに込むとは思わなかった"
+  },
+  {
+    "word": "今夜",
+    "reading": "こんや",
+    "meaning": "1. 금야 2. 오늘 밤",
+    "level": "N4",
+    "example": "今夜は満月だ"
+  },
+  {
+    "word": "御",
+    "reading": "ご",
+    "meaning": "1. 옛날, 여성을 높여 부르던 말 2. 존경의 뜻 또는 자기 쪽의 것이 아닌 뜻을 덧붙이는 말 3. 상대의 친족을 높여 부를 때 첨가하는 말",
+    "level": "N4",
+    "example": "伊勢の御"
+  },
+  {
+    "word": "語",
+    "reading": "ご",
+    "meaning": "1. 말 2. …어",
+    "level": "N4",
+    "example": "語を継ぐ"
+  },
+  {
+    "word": "ござる",
+    "reading": null,
+    "meaning": "1. 계시다 2. 오시다",
+    "level": "N4",
+    "example": "御座った洋服"
+  },
+  {
+    "word": "ご存じ",
+    "reading": "ごぞんじ",
+    "meaning": "1. ‘存じ’의 높임말 2. 아는 사람",
+    "level": "N4",
+    "example": "御存じの通り"
+  },
+  {
+    "word": "ご馳走",
+    "reading": "ごちそう",
+    "meaning": "1. 손님을 향응함 2. 맛있는 요리",
+    "level": "N4",
+    "example": "山海の珍味をご馳走になる"
+  },
+  {
+    "word": "ゴミ",
+    "reading": null,
+    "meaning": "1. 쓰레기 2. 더러운 물에 녹아 섞여 있는 진흙",
+    "level": "N4",
+    "example": "ごみ分別収集"
+  },
+  {
+    "word": "ご覧になる",
+    "reading": "ごらんになる",
+    "meaning": "보시다",
+    "level": "N4",
+    "example": "今朝のニュースをご覧になりましたか."
+  },
+  {
+    "word": "さあ",
+    "reading": null,
+    "meaning": "1. 자 2. 아아 3. 글쎄",
+    "level": "N4",
+    "example": "さあ、帰ろう"
+  },
+  {
+    "word": "最近",
+    "reading": "さいきん",
+    "meaning": "1. 최근 2. 현재에서 가장 가까운 과거 3. 몇 개 중에서 가장 가까움",
+    "level": "N4",
+    "example": "最近買ったばかりのゲーム"
+  },
+  {
+    "word": "最後",
+    "reading": "さいご",
+    "meaning": "1. 최후 2. …하는 것을 최후로 3. 임종",
+    "level": "N4",
+    "example": "最後の努力"
+  },
+  {
+    "word": "最初",
+    "reading": "さいしょ",
+    "meaning": "1. 최초 2. 맨 처음",
+    "level": "N4",
+    "example": "最初で最後のチャンス"
+  },
+  {
+    "word": "坂",
+    "reading": "さか",
+    "meaning": "1. 고개 2. 비탈 3. 인생의 한 고비",
+    "level": "N4",
+    "example": "坂を上る"
+  },
+  {
+    "word": "魚屋",
+    "reading": "さかなや",
+    "meaning": "생선 장수",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "盛ん",
+    "reading": "さかん",
+    "meaning": "1. 성함 2. 기세가 좋음 3. 번성함",
+    "level": "N4",
+    "example": "火が盛んに燃える"
+  },
+  {
+    "word": "探す",
+    "reading": "さがす",
+    "meaning": "찾다",
+    "level": "N4",
+    "example": "血眼になって探す"
+  },
+  {
+    "word": "下がる",
+    "reading": "さがる",
+    "meaning": "1. 내리다 2. 내려가다 3. 떨어지다",
+    "level": "N4",
+    "example": "気温が下がる"
+  },
+  {
+    "word": "作品",
+    "reading": "さくひん",
+    "meaning": "작품",
+    "level": "N4",
+    "example": "芸術作品"
+  },
+  {
+    "word": "桜",
+    "reading": "さくら",
+    "meaning": "1. 벚나무 2. ‘桜色’의 준말 3. ‘桜襲’의 준말",
+    "level": "N4",
+    "example": "半開きの桜"
+  },
+  {
+    "word": "下げる",
+    "reading": "さげる",
+    "meaning": "1. 내리다 2. 내려 주다 3. 드리우다",
+    "level": "N4",
+    "example": "電灯を下げる"
+  },
+  {
+    "word": "差し上げる",
+    "reading": "さしあげる",
+    "meaning": "1. 들어 올리다 2. 드리다 3. …해 드리다",
+    "level": "N4",
+    "example": "目よりも高く差し上げる"
+  },
+  {
+    "word": "差す",
+    "reading": "さす",
+    "meaning": "1. 가리다 2. 비치다",
+    "level": "N4",
+    "example": "傘を差す"
+  },
+  {
+    "word": "さす",
+    "reading": null,
+    "meaning": "1. →させる1 2. …시키다",
+    "level": "N4",
+    "example": "結婚式を上げさす"
+  },
+  {
+    "word": "さっき",
+    "reading": null,
+    "meaning": "1. 아까 2. 조금 전",
+    "level": "N4",
+    "example": "先から待っていた"
+  },
+  {
+    "word": "砂糖",
+    "reading": "さとう",
+    "meaning": "설탕",
+    "level": "N4",
+    "example": "砂糖水"
+  },
+  {
+    "word": "寂しい",
+    "reading": "さびしい",
+    "meaning": "1. 허전하다 2. 쓸쓸하다 3. 섭섭하다",
+    "level": "N4",
+    "example": "口が寂しい"
+  },
+  {
+    "word": "様",
+    "reading": "さま",
+    "meaning": "1. 모양 2. 임 3. 존경·공손을 나타냄",
+    "level": "N4",
+    "example": "町の様が一変する"
+  },
+  {
+    "word": "再来月",
+    "reading": "さらいげつ",
+    "meaning": "다다음 달",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "再来週",
+    "reading": "さらいしゅう",
+    "meaning": "다다음 주",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "再来年",
+    "reading": "さらいねん",
+    "meaning": "다다음 해, 후년",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "騒ぐ",
+    "reading": "さわぐ",
+    "meaning": "1. 떠들다 2. 소란을 피우다 3. 사람들의 세평에 오르다",
+    "level": "N4",
+    "example": "がやがやと騒ぐ"
+  },
+  {
+    "word": "触る",
+    "reading": "さわる",
+    "meaning": "1. 손으로 만지다 2. 관여하다 3. 거슬리다",
+    "level": "N4",
+    "example": "展示品には触るな"
+  },
+  {
+    "word": "参",
+    "reading": "さん",
+    "meaning": "1. 셋・삼 2. 참가함",
+    "level": "N4",
+    "example": "参、不参を通知する"
+  },
+  {
+    "word": "三角",
+    "reading": "さんかく",
+    "meaning": "삼각",
+    "level": "N4",
+    "example": "三角ビル"
+  },
+  {
+    "word": "産業",
+    "reading": "さんぎょう",
+    "meaning": "산업",
+    "level": "N4",
+    "example": "産業革命"
+  },
+  {
+    "word": "算数",
+    "reading": "さんすう",
+    "meaning": "1. 산수 2. 초등 수학 3. 수량의 계산・셈.",
+    "level": "N4",
+    "example": "算数に暗い"
+  },
+  {
+    "word": "賛成",
+    "reading": "さんせい",
+    "meaning": "1. 찬성 2. 제안이나 의견에 동의하는 것 3. 어떤 일을 도와서 이루어지도록 함",
+    "level": "N4",
+    "example": "原案に賛成する"
+  },
+  {
+    "word": "残念",
+    "reading": "ざんねん",
+    "meaning": "1. 분함 2. 유감스러움",
+    "level": "N4",
+    "example": "ひどく残念がる"
+  },
+  {
+    "word": "市",
+    "reading": "し",
+    "meaning": "1. 시 2. 번화한 거리・도회 3. …시",
+    "level": "N4",
+    "example": "市の行政[管轄]"
+  },
+  {
+    "word": "試合",
+    "reading": "しあい",
+    "meaning": "1. 경기 2. 서로 뒤얽혀 싸움",
+    "level": "N4",
+    "example": "他流試合"
+  },
+  {
+    "word": "しかし",
+    "reading": null,
+    "meaning": "1. 그러나 2. 앞의 내용과 상반되는 사항을 나타냄 3. 앞의 내용을 받아 화제를 전환할 때 사용하는 말",
+    "level": "N4",
+    "example": "雨は激しくなった。然し、出発する"
+  },
+  {
+    "word": "仕方",
+    "reading": "しかた",
+    "meaning": "1. 하는 방법 2. 처사 3. 몸짓 손짓",
+    "level": "N4",
+    "example": "料理の仕方"
+  },
+  {
+    "word": "仕方ない",
+    "reading": "しかたない",
+    "meaning": "1. 할 수 없다 2. 어쩔 수 없다 3. 견딜 수 없다",
+    "level": "N4",
+    "example": "留守なので仕方なくそのまま帰ってきた"
+  },
+  {
+    "word": "叱る",
+    "reading": "しかる",
+    "meaning": "1. 꾸짖다 2. 야단치다",
+    "level": "N4",
+    "example": "生徒を叱る"
+  },
+  {
+    "word": "試験",
+    "reading": "しけん",
+    "meaning": "1. 시험 2. 사물의 성질이나 성능 등을 실지로 경험하거나 검사하여 알아보는 것 3. 사람의 능력이나 학습 성과 등을 평가하는 것",
+    "level": "N4",
+    "example": "耐久性[弾性]試験"
+  },
+  {
+    "word": "舌",
+    "reading": "した",
+    "meaning": "1. 혀 2. 말을 하는 것 3. 혀와 같은 형태의 것",
+    "level": "N4",
+    "example": "舌を出す"
+  },
+  {
+    "word": "下着",
+    "reading": "したぎ",
+    "meaning": "1. 속옷 2. 내의",
+    "level": "N4",
+    "example": "下着姿"
+  },
+  {
+    "word": "支度",
+    "reading": "したく",
+    "meaning": "1. 준비 2. 채비 3. 몸차림",
+    "level": "N4",
+    "example": "夕食の支度"
+  },
+  {
+    "word": "親しい",
+    "reading": "したしい",
+    "meaning": "1. 친하다 2. 가깝다 3. 직접",
+    "level": "N4",
+    "example": "親しい友人"
+  },
+  {
+    "word": "しっかり",
+    "reading": null,
+    "meaning": "1. 단단히 2. 똑똑히 3. 확고히",
+    "level": "N4",
+    "example": "しっかりした建物"
+  },
+  {
+    "word": "失敗",
+    "reading": "しっぱい",
+    "meaning": "1. 실패 2. 실수",
+    "level": "N4",
+    "example": "失敗作"
+  },
+  {
+    "word": "室内",
+    "reading": "しつない",
+    "meaning": "실내",
+    "level": "N4",
+    "example": "室内装飾"
+  },
+  {
+    "word": "質問",
+    "reading": "しつもん",
+    "meaning": "질문",
+    "level": "N4",
+    "example": "質問を受ける"
+  },
+  {
+    "word": "失礼",
+    "reading": "しつれい",
+    "meaning": "1. 실례 2. 미안",
+    "level": "N4",
+    "example": "失礼に当たる"
+  },
+  {
+    "word": "市内",
+    "reading": "しない",
+    "meaning": "시내",
+    "level": "N4",
+    "example": "市内に住んでいる"
+  },
+  {
+    "word": "品物",
+    "reading": "しなもの",
+    "meaning": "1. 물건 2. 물품 3. 상품",
+    "level": "N4",
+    "example": "上等の品物"
+  },
+  {
+    "word": "支払い",
+    "reading": "しはらい",
+    "meaning": "1. 지불 2. 지급",
+    "level": "N4",
+    "example": "支払い金"
+  },
+  {
+    "word": "島",
+    "reading": "しま",
+    "meaning": "1. 섬 2. 정원 못 속의 석가산 3. 어떤 한정된 지역",
+    "level": "N4",
+    "example": "陸地と島との間の海面"
+  },
+  {
+    "word": "姉妹",
+    "reading": "しまい",
+    "meaning": "1. 자매 2. 여자 형제 3. 같은 계통에 속하여 유사점∙공통점이 있는 두 개 이상의 것",
+    "level": "N4",
+    "example": "兄弟姉妹"
+  },
+  {
+    "word": "しまう",
+    "reading": null,
+    "meaning": "1. 파하다 2. 끝내다",
+    "level": "N4",
+    "example": "仕事が仕舞って帰る"
+  },
+  {
+    "word": "市民",
+    "reading": "しみん",
+    "meaning": "시민",
+    "level": "N4",
+    "example": "ソウル市民"
+  },
+  {
+    "word": "社会",
+    "reading": "しゃかい",
+    "meaning": "1. 사회 2. ‘社会科'의 준말",
+    "level": "N4",
+    "example": "社会開発"
+  },
+  {
+    "word": "社長",
+    "reading": "しゃちょう",
+    "meaning": "사장",
+    "level": "N4",
+    "example": "建設会社の社長"
+  },
+  {
+    "word": "車道",
+    "reading": "しゃどう",
+    "meaning": "차도, 찻길",
+    "level": "N4",
+    "example": "車道を横切る"
+  },
+  {
+    "word": "市役所",
+    "reading": "しやくしょ",
+    "meaning": "시청",
+    "level": "N4",
+    "example": "市役所の建物"
+  },
+  {
+    "word": "週間",
+    "reading": "しゅうかん",
+    "meaning": "주간",
+    "level": "N4",
+    "example": "読書週間"
+  },
+  {
+    "word": "習慣",
+    "reading": "しゅうかん",
+    "meaning": "1. 습관 2. 풍습 3. 학습된 행위가 반복되어 생기는, 비교적 고정화된 반응 양식",
+    "level": "N4",
+    "example": "習慣がつく"
+  },
+  {
+    "word": "主人",
+    "reading": "しゅじん",
+    "meaning": "1. 주인 2. 가장 3. 고용주",
+    "level": "N4",
+    "example": "ご主人はご在宅ですか"
+  },
+  {
+    "word": "出席",
+    "reading": "しゅっせき",
+    "meaning": "1. 출석 2. 회합이나 학교 수업 등에 참석하는 것",
+    "level": "N4",
+    "example": "出席を取る"
+  },
+  {
+    "word": "出発",
+    "reading": "しゅっぱつ",
+    "meaning": "1. 출발 2. 목적지를 향해 떠남 3. 일을 시작함",
+    "level": "N4",
+    "example": "出発時間"
+  },
+  {
+    "word": "趣味",
+    "reading": "しゅみ",
+    "meaning": "1.취미 2.멋, 정취 3.취향",
+    "level": "N4",
+    "example": "趣味が広い"
+  },
+  {
+    "word": "紹介",
+    "reading": "しょうかい",
+    "meaning": "1. 소개 2. 모르는 사람들 사이에서 서로 알고 지내도록 관계를 맺어 주는 것 3. 모르는 사실이나 내용에 대한 정보를 전하는 것",
+    "level": "N4",
+    "example": "新入の会員を紹介する"
+  },
+  {
+    "word": "小学校",
+    "reading": "しょうがっこう",
+    "meaning": "1. 소학교 2. 초등학교",
+    "level": "N4",
+    "example": "小学校５年生"
+  },
+  {
+    "word": "正月",
+    "reading": "しょうがつ",
+    "meaning": "1. 정월 2. 설 3. 즐겁고 기쁜 것",
+    "level": "N4",
+    "example": "お正月の晴れ着"
+  },
+  {
+    "word": "小説",
+    "reading": "しょうせつ",
+    "meaning": "소설",
+    "level": "N4",
+    "example": "長編[短編]小説"
+  },
+  {
+    "word": "招待",
+    "reading": "しょうたい",
+    "meaning": "1. 초대 2. 초청",
+    "level": "N4",
+    "example": "招待券をプレゼントする"
+  },
+  {
+    "word": "醤油",
+    "reading": "しょうゆ",
+    "meaning": "1. 장유 2. 간장",
+    "level": "N4",
+    "example": "からし[酢、生姜]醤油"
+  },
+  {
+    "word": "将来",
+    "reading": "しょうらい",
+    "meaning": "1. 장래 2. 외국에서 가져오는 것",
+    "level": "N4",
+    "example": "将来の韓国を担う"
+  },
+  {
+    "word": "食事",
+    "reading": "しょくじ",
+    "meaning": "1. 식사 2. 끼니로 음식을 먹음 3. 또, 그 음식",
+    "level": "N4",
+    "example": "食事どき"
+  },
+  {
+    "word": "食料品",
+    "reading": "しょくりょうひん",
+    "meaning": "식료품",
+    "level": "N4",
+    "example": "食料品店"
+  },
+  {
+    "word": "知らせる",
+    "reading": "しらせる",
+    "meaning": "1. 알리다 2. 뼈저리게 느끼게 하다",
+    "level": "N4",
+    "example": "暗に知らせる"
+  },
+  {
+    "word": "調べる",
+    "reading": "しらべる",
+    "meaning": "1. 조사하다 2. 연구하다 3. 찾다",
+    "level": "N4",
+    "example": "答案を調べる"
+  },
+  {
+    "word": "知る",
+    "reading": "しる",
+    "meaning": "1. 알다 2. 점유하다 3. ‘知れる’의 문어형",
+    "level": "N4",
+    "example": "知らないうちに"
+  },
+  {
+    "word": "新年",
+    "reading": "しんねん",
+    "meaning": "신년, 새해",
+    "level": "N4",
+    "example": "新年宴会"
+  },
+  {
+    "word": "心配",
+    "reading": "しんぱい",
+    "meaning": "1. 걱정 2. 배려",
+    "level": "N4",
+    "example": "心配の種"
+  },
+  {
+    "word": "新聞社",
+    "reading": "しんぶんしゃ",
+    "meaning": "신문사",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "字",
+    "reading": "じ",
+    "meaning": "1. 자 2. 한자 3. 글씨",
+    "level": "N4",
+    "example": "字を覚える"
+  },
+  {
+    "word": "事故",
+    "reading": "じこ",
+    "meaning": "사고",
+    "level": "N4",
+    "example": "医療事故"
+  },
+  {
+    "word": "地震",
+    "reading": "じしん",
+    "meaning": "지진",
+    "level": "N4",
+    "example": "有感地震"
+  },
+  {
+    "word": "時代",
+    "reading": "じだい",
+    "meaning": "1. 시대 2. 오래되어 낡은 모양·느낌 3. ‘時代物’의 준말",
+    "level": "N4",
+    "example": "時代の趨勢"
+  },
+  {
+    "word": "辞典",
+    "reading": "じてん",
+    "meaning": "사전",
+    "level": "N4",
+    "example": "英和辞典"
+  },
+  {
+    "word": "自転車",
+    "reading": "じてんしゃ",
+    "meaning": "자전거",
+    "level": "N4",
+    "example": "自転車置き場"
+  },
+  {
+    "word": "自動",
+    "reading": "じどう",
+    "meaning": "자동",
+    "level": "N4",
+    "example": "自動装置"
+  },
+  {
+    "word": "自動車",
+    "reading": "じどうしゃ",
+    "meaning": "자동차",
+    "level": "N4",
+    "example": "自動車教習所"
+  },
+  {
+    "word": "字引",
+    "reading": "じびき",
+    "meaning": "1. 자전 2. 사전",
+    "level": "N4",
+    "example": "生き字引"
+  },
+  {
+    "word": "自分",
+    "reading": "じぶん",
+    "meaning": "1. 자기 2. 나",
+    "level": "N4",
+    "example": "自分史"
+  },
+  {
+    "word": "事務所",
+    "reading": "じむしょ",
+    "meaning": "사무소",
+    "level": "N4",
+    "example": "現場事務所"
+  },
+  {
+    "word": "じゃ",
+    "reading": null,
+    "meaning": "1. ‘である’의 준말 ‘であ’의 전와 2. 그럼 3. …은",
+    "level": "N4",
+    "example": "わしはいやじゃ"
+  },
+  {
+    "word": "じゃあ",
+    "reading": null,
+    "meaning": "1. …은 2. 그러면",
+    "level": "N4",
+    "example": "あまり静かじゃあない"
+  },
+  {
+    "word": "邪魔",
+    "reading": "じゃま",
+    "meaning": "1. 방해 2. 사마",
+    "level": "N4",
+    "example": "勉強を邪魔する"
+  },
+  {
+    "word": "中",
+    "reading": "じゅう",
+    "meaning": "1. 동안 2. …중",
+    "level": "N4",
+    "example": "この中は、お世話になりました"
+  },
+  {
+    "word": "住所",
+    "reading": "じゅうしょ",
+    "meaning": "주소",
+    "level": "N4",
+    "example": "現住所"
+  },
+  {
+    "word": "柔道",
+    "reading": "じゅうどう",
+    "meaning": "유도",
+    "level": "N4",
+    "example": "元柔道選手"
+  },
+  {
+    "word": "十分",
+    "reading": "じゅうぶん",
+    "meaning": "1. 충분함 2. 십분 3. 부족함이 없음",
+    "level": "N4",
+    "example": "十分条件"
+  },
+  {
+    "word": "授業",
+    "reading": "じゅぎょう",
+    "meaning": "수업",
+    "level": "N4",
+    "example": "公開[短縮]授業"
+  },
+  {
+    "word": "準備",
+    "reading": "じゅんび",
+    "meaning": "준비",
+    "level": "N4",
+    "example": "下準備"
+  },
+  {
+    "word": "自由",
+    "reading": "じゆう",
+    "meaning": "1. 자유 2. 자신의 뜻대로 행동할 수 있는 것 3. 또, 그런 상태",
+    "level": "N4",
+    "example": "自由経済"
+  },
+  {
+    "word": "女性",
+    "reading": "じょせい",
+    "meaning": "1. 여성 2. 여자 3. 성의 하나",
+    "level": "N4",
+    "example": "女性語"
+  },
+  {
+    "word": "人",
+    "reading": "じん",
+    "meaning": "1. 평점 등에서 3단계로 나눈 것 중 셋째 2. 사람",
+    "level": "N4",
+    "example": "外国人"
+  },
+  {
+    "word": "人口",
+    "reading": "じんこう",
+    "meaning": "1. 인구 2. 사람의 수 3. 사람의 입",
+    "level": "N4",
+    "example": "人口調査"
+  },
+  {
+    "word": "神社",
+    "reading": "じんじゃ",
+    "meaning": "신사, →じいん·ぶっかく",
+    "level": "N4",
+    "example": "神社の境内"
+  },
+  {
+    "word": "水泳",
+    "reading": "すいえい",
+    "meaning": "1. 수영 2. 스포츠나 놀이로서 물속을 헤엄치는 일",
+    "level": "N4",
+    "example": "水泳競技"
+  },
+  {
+    "word": "水道",
+    "reading": "すいどう",
+    "meaning": "1. 수도 2. 상수도 3. 상수도·하수도의 총칭",
+    "level": "N4",
+    "example": "水道料"
+  },
+  {
+    "word": "数学",
+    "reading": "すうがく",
+    "meaning": "수학",
+    "level": "N4",
+    "example": "数学の教師"
+  },
+  {
+    "word": "すぎる",
+    "reading": null,
+    "meaning": "1. 지나다 2. 끝나다 3. 지나치다",
+    "level": "N4",
+    "example": "森を過ぎる"
+  },
+  {
+    "word": "すく",
+    "reading": null,
+    "meaning": "1. 비다 2. 허기지다 3. 가슴이 후련해지다",
+    "level": "N4",
+    "example": "車内が空く"
+  },
+  {
+    "word": "すぐに",
+    "reading": null,
+    "meaning": "1. 곧 2. 곧바로 3. 정직하게",
+    "level": "N4",
+    "example": "直ぐに使える治療薬"
+  },
+  {
+    "word": "すごい",
+    "reading": null,
+    "meaning": "1. 무섭다 2. 굉장하다 3. 오싹하리만큼 황량하다",
+    "level": "N4",
+    "example": "凄い光景"
+  },
+  {
+    "word": "進む",
+    "reading": "すすむ",
+    "meaning": "1. 나아가다 2. ‘進める'의 문어형",
+    "level": "N4",
+    "example": "行列が進む"
+  },
+  {
+    "word": "涼しい",
+    "reading": "すずしい",
+    "meaning": "1. 시원하다 2. 선선하다 3. 맑고 깨끗하다",
+    "level": "N4",
+    "example": "涼しい秋の風"
+  },
+  {
+    "word": "すっかり",
+    "reading": null,
+    "meaning": "1. 죄다 2. 아주",
+    "level": "N4",
+    "example": "すっかり読む"
+  },
+  {
+    "word": "捨てる",
+    "reading": "すてる",
+    "meaning": "1. 버리다 2. 방치하다 3. 포기하다",
+    "level": "N4",
+    "example": "ごみを捨てる"
+  },
+  {
+    "word": "砂",
+    "reading": "すな",
+    "meaning": "모래",
+    "level": "N4",
+    "example": "砂を搔く"
+  },
+  {
+    "word": "素晴らしい",
+    "reading": "すばらしい",
+    "meaning": "1. 훌륭하다 2. 정도가 심하다",
+    "level": "N4",
+    "example": "素晴らしいアイデア"
+  },
+  {
+    "word": "滑る",
+    "reading": "すべる",
+    "meaning": "1. 미끄러지다 2. 양위하다",
+    "level": "N4",
+    "example": "坂道で滑る"
+  },
+  {
+    "word": "スリ",
+    "reading": null,
+    "meaning": "소매치기",
+    "level": "N4",
+    "example": "すりの常習犯"
+  },
+  {
+    "word": "する",
+    "reading": null,
+    "meaning": "1. 깎다 2. 밀다",
+    "level": "N4",
+    "example": "ひげを剃る"
+  },
+  {
+    "word": "すると",
+    "reading": null,
+    "meaning": "1. 그러자 2. 그러면",
+    "level": "N4",
+    "example": "扉が開いた。すると、その人が中から現れた"
+  },
+  {
+    "word": "随分",
+    "reading": "ずいぶん",
+    "meaning": "1. 대단히 2. 너무함",
+    "level": "N4",
+    "example": "随分暑い日だ"
+  },
+  {
+    "word": "ずっと",
+    "reading": null,
+    "meaning": "1. 훨씬 2. 쭉 3. 쑥",
+    "level": "N4",
+    "example": "ずっと昔から知っている"
+  },
+  {
+    "word": "背",
+    "reading": "せい",
+    "meaning": "1. 높이 2. 키",
+    "level": "N4",
+    "example": "背比べ"
+  },
+  {
+    "word": "生活",
+    "reading": "せいかつ",
+    "meaning": "1. 생활 2. 생물이 존재하고 활동하는 것 3. 삶",
+    "level": "N4",
+    "example": "地球温暖化が昆虫の生活に与える影響"
+  },
+  {
+    "word": "生産",
+    "reading": "せいさん",
+    "meaning": "1. 생산 2. 필요한 물건을 만들어 내는 것 3. 재화‧서비스를 만들어 내는 경제 활동의 총칭",
+    "level": "N4",
+    "example": "生産地"
+  },
+  {
+    "word": "政治",
+    "reading": "せいじ",
+    "meaning": "정치",
+    "level": "N4",
+    "example": "独裁政治"
+  },
+  {
+    "word": "西洋",
+    "reading": "せいよう",
+    "meaning": "서양",
+    "level": "N4",
+    "example": "西洋医学[音楽]"
+  },
+  {
+    "word": "世界",
+    "reading": "せかい",
+    "meaning": "1. 세계 2. 지구상의 모든 나라 3. 어떤 분야나 특정 사회",
+    "level": "N4",
+    "example": "世界地図"
+  },
+  {
+    "word": "世界中",
+    "reading": "せかいじゅう",
+    "meaning": "온 세계, 전 세계",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "席",
+    "reading": "せき",
+    "meaning": "1. 자리 2. 순위를 나타내는 말",
+    "level": "N4",
+    "example": "席に着く"
+  },
+  {
+    "word": "説明",
+    "reading": "せつめい",
+    "meaning": "설명",
+    "level": "N4",
+    "example": "取扱説明書"
+  },
+  {
+    "word": "背中",
+    "reading": "せなか",
+    "meaning": "1. 등 2. 뒷면",
+    "level": "N4",
+    "example": "背中を伸ばす"
+  },
+  {
+    "word": "背広",
+    "reading": "せびろ",
+    "meaning": "신사복",
+    "level": "N4",
+    "example": "背広一着"
+  },
+  {
+    "word": "世話",
+    "reading": "せわ",
+    "meaning": "1. 도와줌 2. 소개함 3. 폐",
+    "level": "N4",
+    "example": "世話好きな人"
+  },
+  {
+    "word": "線",
+    "reading": "せん",
+    "meaning": "1. 선 2. 광선·방사선",
+    "level": "N4",
+    "example": "線のように細い"
+  },
+  {
+    "word": "選手",
+    "reading": "せんしゅ",
+    "meaning": "선수",
+    "level": "N4",
+    "example": "補欠選手"
+  },
+  {
+    "word": "先々月",
+    "reading": "せんせんげつ",
+    "meaning": "지지난 달",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "先々週",
+    "reading": "せんせんしゅう",
+    "meaning": "지지난 주",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "戦争",
+    "reading": "せんそう",
+    "meaning": "1. 전쟁 2. 무력에 의한 국가 간의 싸움 3. 치열한 다툼이나 경쟁",
+    "level": "N4",
+    "example": "戦争画"
+  },
+  {
+    "word": "洗濯",
+    "reading": "せんたく",
+    "meaning": "1. 세탁 2. 기분을 일신하거나 피로를 푸는 것",
+    "level": "N4",
+    "example": "洗濯挟み"
+  },
+  {
+    "word": "先輩",
+    "reading": "せんぱい",
+    "meaning": "선배",
+    "level": "N4",
+    "example": "大学の先輩"
+  },
+  {
+    "word": "専門",
+    "reading": "せんもん",
+    "meaning": "1. 전문 2. 오직 그 일에만 관심이 있음",
+    "level": "N4",
+    "example": "専門医"
+  },
+  {
+    "word": "全国",
+    "reading": "ぜんこく",
+    "meaning": "전국",
+    "level": "N4",
+    "example": "全国いっせいに"
+  },
+  {
+    "word": "全然",
+    "reading": "ぜんぜん",
+    "meaning": "1. 전연 2. 온통 3. 대단히",
+    "level": "N4",
+    "example": "全然読めない"
+  },
+  {
+    "word": "全体",
+    "reading": "ぜんたい",
+    "meaning": "1. 전체 2. 본디",
+    "level": "N4",
+    "example": "全体主義"
+  },
+  {
+    "word": "全部",
+    "reading": "ぜんぶ",
+    "meaning": "1. 전부 2. 전질",
+    "level": "N4",
+    "example": "経費は全部で10万円かかった"
+  },
+  {
+    "word": "そう",
+    "reading": null,
+    "meaning": "1. 그렇게 2. 그래",
+    "level": "N4",
+    "example": "そうかと言って"
+  },
+  {
+    "word": "そうして",
+    "reading": null,
+    "meaning": "1. 그리고 2. 그와 같이 해서",
+    "level": "N4",
+    "example": "読んだ。然して考えた"
+  },
+  {
+    "word": "掃除",
+    "reading": "そうじ",
+    "meaning": "1. 소제 2. 제거함",
+    "level": "N4",
+    "example": "掃除当番[道具]"
+  },
+  {
+    "word": "早退",
+    "reading": "そうたい",
+    "meaning": "1. 조퇴 2. 정해진 시간 이전에 물러나는 것",
+    "level": "N4",
+    "example": "風邪で早退する"
+  },
+  {
+    "word": "相談",
+    "reading": "そうだん",
+    "meaning": "1. 상담 2. 상의 3. 의논",
+    "level": "N4",
+    "example": "耳相談"
+  },
+  {
+    "word": "そして",
+    "reading": null,
+    "meaning": "1. 그리고 2. 그러고 나서",
+    "level": "N4",
+    "example": "戦え、そして勝て"
+  },
+  {
+    "word": "育てる",
+    "reading": "そだてる",
+    "meaning": "1. 키우다 2. 기르다 3. 양성하다",
+    "level": "N4",
+    "example": "母乳で育てた赤ちゃん"
+  },
+  {
+    "word": "卒業",
+    "reading": "そつぎょう",
+    "meaning": "1. 졸업 2. 교과 과정을 마침 3. 어떤 정도나 단계를 지남",
+    "level": "N4",
+    "example": "卒業式"
+  },
+  {
+    "word": "外側",
+    "reading": "そとがわ",
+    "meaning": "바깥쪽, 외면, 외측",
+    "level": "N4",
+    "example": "円の外側"
+  },
+  {
+    "word": "稜",
+    "reading": "そば",
+    "meaning": "1. 귀퉁이 2. ‘袴'나 ‘指貫'의 옆구리를 튼 데",
+    "level": "N4",
+    "example": "稜を取る"
+  },
+  {
+    "word": "祖父",
+    "reading": "そふ",
+    "meaning": "1. 조부 2. 할아버지",
+    "level": "N4",
+    "example": "母方の祖父"
+  },
+  {
+    "word": "祖母",
+    "reading": "そぼ",
+    "meaning": "1. 조모 2. 할머니",
+    "level": "N4",
+    "example": "母方の祖母"
+  },
+  {
+    "word": "それから",
+    "reading": null,
+    "meaning": "1. 그 다음에 2. 그 뒤 3. 그래서",
+    "level": "N4",
+    "example": "それから野球をした"
+  },
+  {
+    "word": "それで",
+    "reading": null,
+    "meaning": "1. 그래서 2. 그런 까닭에 3. 다음 이야기를 재촉하는 말",
+    "level": "N4",
+    "example": "それでこうなったのだ"
+  },
+  {
+    "word": "それでは",
+    "reading": null,
+    "meaning": "1. 그러면 2. 그래 가지고는",
+    "level": "N4",
+    "example": "それではこれから始めます"
+  },
+  {
+    "word": "それに",
+    "reading": null,
+    "meaning": "1. 게다가 2. 그런데도 3. 그것에 의해",
+    "level": "N4",
+    "example": "晴れたし、それに風もなかった"
+  },
+  {
+    "word": "それほど",
+    "reading": null,
+    "meaning": "1. 그렇게 2. 그다지",
+    "level": "N4",
+    "example": "それほどやりたいならやりなさい"
+  },
+  {
+    "word": "そろそろ",
+    "reading": null,
+    "meaning": "1. 슬슬 2. 이제 슬슬",
+    "level": "N4",
+    "example": "そろそろ(と)歩く"
+  },
+  {
+    "word": "そんなに",
+    "reading": null,
+    "meaning": "1. 그렇게 2. 그 정도로",
+    "level": "N4",
+    "example": "そんなに簡単に行くかな"
+  },
+  {
+    "word": "存じる",
+    "reading": "ぞんじる",
+    "meaning": "→ぞんずる",
+    "level": "N4",
+    "example": "お名前は存じております"
+  },
+  {
+    "word": "退院",
+    "reading": "たいいん",
+    "meaning": "1. 퇴원 2. 환자가 병원에서 나감 3. 국회 의원이 의회에서 물러남",
+    "level": "N4",
+    "example": "全快して退院する"
+  },
+  {
+    "word": "大使館",
+    "reading": "たいしかん",
+    "meaning": "대사관",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "大切",
+    "reading": "たいせつ",
+    "meaning": "1. 중요함 2. 소중히 여겨 조심히 다루는 모양",
+    "level": "N4",
+    "example": "大切な宝物"
+  },
+  {
+    "word": "大底",
+    "reading": "たいてい",
+    "meaning": "1. 대개 2. 정도껏 3. 정말",
+    "level": "N4",
+    "example": "大抵の事は知っている"
+  },
+  {
+    "word": "台風",
+    "reading": "たいふう",
+    "meaning": "태풍",
+    "level": "N4",
+    "example": "台風警報"
+  },
+  {
+    "word": "大変",
+    "reading": "たいへん",
+    "meaning": "대변, 큰일, 대사건",
+    "level": "N4",
+    "example": "国家の大変"
+  },
+  {
+    "word": "倒れる",
+    "reading": "たおれる",
+    "meaning": "1. 쓰러지다 2. 자빠지다 3. 몸져눕다",
+    "level": "N4",
+    "example": "家が倒れる"
+  },
+  {
+    "word": "他界",
+    "reading": "たかい",
+    "meaning": "1. 타계 2. 다른 세계 3. 죽음",
+    "level": "N4",
+    "example": "祖父は昨年他界した"
+  },
+  {
+    "word": "竹",
+    "reading": "たけ",
+    "meaning": "1. 대나무 2. 대나무로 만든 관악기",
+    "level": "N4",
+    "example": "竹の節"
+  },
+  {
+    "word": "確か",
+    "reading": "たしか",
+    "meaning": "1. 확실함 2. 확실히",
+    "level": "N4",
+    "example": "確かな約束"
+  },
+  {
+    "word": "足す",
+    "reading": "たす",
+    "meaning": "1. 더하다 2. 채우다 3. 볼일을 보다",
+    "level": "N4",
+    "example": "1足す1は2"
+  },
+  {
+    "word": "多数",
+    "reading": "たすう",
+    "meaning": "다수",
+    "level": "N4",
+    "example": "多数派"
+  },
+  {
+    "word": "訪ねる",
+    "reading": "たずねる",
+    "meaning": "1. 찾다 2. 방문하다",
+    "level": "N4",
+    "example": "先生の家を訪ねる"
+  },
+  {
+    "word": "畳",
+    "reading": "たたみ",
+    "meaning": "1. 다다미 2. 왜나막신·짚신 등의 겉에 붙이는 얇은 깔개 3. 자리·멍석 등 깔개의 총칭",
+    "level": "N4",
+    "example": "畳の目"
+  },
+  {
+    "word": "ただいま",
+    "reading": null,
+    "meaning": "1. 지금 2. 다녀왔습니다",
+    "level": "N4",
+    "example": "只今問い合わせております"
+  },
+  {
+    "word": "正しい",
+    "reading": "ただしい",
+    "meaning": "1. 바르다 2. 곧다 3. 사리에 맞다",
+    "level": "N4",
+    "example": "心の正しい人"
+  },
+  {
+    "word": "建つ",
+    "reading": "たつ",
+    "meaning": "1. 세워지다 2. ‘建てる'의 문어형",
+    "level": "N4",
+    "example": "銅像が建つ"
+  },
+  {
+    "word": "縦",
+    "reading": "たて",
+    "meaning": "1. 세로 2. 인간의 상하 관계 3. 남북의 방향",
+    "level": "N4",
+    "example": "縦書き"
+  },
+  {
+    "word": "建てる",
+    "reading": "たてる",
+    "meaning": "1. 세우다 2. 만들다 3. 설립하다",
+    "level": "N4",
+    "example": "丸木で建てた小屋"
+  },
+  {
+    "word": "例えば",
+    "reading": "たとえば",
+    "meaning": "1. 예를 들면 2. 마치 3. 만약",
+    "level": "N4",
+    "example": "からだに害のあるものは、例えばタバコなど"
+  },
+  {
+    "word": "棚",
+    "reading": "たな",
+    "meaning": "1. 선반 2. 선반 모양의 것 3. 덩굴을 받치는 시렁",
+    "level": "N4",
+    "example": "食器棚"
+  },
+  {
+    "word": "楽しみ",
+    "reading": "たのしみ",
+    "meaning": "1. 즐거움 2. 기대함",
+    "level": "N4",
+    "example": "老後の楽しみ"
+  },
+  {
+    "word": "頼む",
+    "reading": "たのむ",
+    "meaning": "1. 부탁하다 2. 믿게 하다",
+    "level": "N4",
+    "example": "借金を頼む"
+  },
+  {
+    "word": "たぶん",
+    "reading": null,
+    "meaning": "1. 양·정도가 많거나 큼 2. 대개",
+    "level": "N4",
+    "example": "多分の出資"
+  },
+  {
+    "word": "食べ過ぎ",
+    "reading": "たべすぎ",
+    "meaning": "과식",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "たまに",
+    "reading": null,
+    "meaning": "1. 드물게 2. 가끔",
+    "level": "N4",
+    "example": "偶に連絡を取る友達"
+  },
+  {
+    "word": "ため",
+    "reading": null,
+    "meaning": "1. 이익·행복 등 유리한 것 2. 때문 3. …에게는",
+    "level": "N4",
+    "example": "為になる本"
+  },
+  {
+    "word": "足りない",
+    "reading": "たりない",
+    "meaning": "1. 모자라다 2. 부족하다 3. 둔하다",
+    "level": "N4",
+    "example": "取るに足ない意見"
+  },
+  {
+    "word": "足りる",
+    "reading": "たりる",
+    "meaning": "1. 족하다 2. 충분하다 3. 충족되다",
+    "level": "N4",
+    "example": "一人で足りる"
+  },
+  {
+    "word": "台",
+    "reading": "だい",
+    "meaning": "1. 물건을 얹거나 사람이 올라가 적당한 높이를 유지하는 것 2. …대",
+    "level": "N4",
+    "example": "電話の台"
+  },
+  {
+    "word": "大学生",
+    "reading": "だいがくせい",
+    "meaning": "1. 대학생 2. 대학교에 다니는 학생",
+    "level": "N4",
+    "example": "今春に卒業した大学生の就職率"
+  },
+  {
+    "word": "大事",
+    "reading": "だいじ",
+    "meaning": "1. 큰일 2. 소중함",
+    "level": "N4",
+    "example": "大事を企てる"
+  },
+  {
+    "word": "大体",
+    "reading": "だいたい",
+    "meaning": "1. 줄거리 2. 대개",
+    "level": "N4",
+    "example": "大体の原則"
+  },
+  {
+    "word": "だいぶ",
+    "reading": null,
+    "meaning": "1. 상당한 것 2. 상당히",
+    "level": "N4",
+    "example": "距離は歩いて大分になる"
+  },
+  {
+    "word": "だから",
+    "reading": null,
+    "meaning": "1. 그러므로 2. 그러니까 3. 그래서",
+    "level": "N4",
+    "example": "だから言わないことじゃない"
+  },
+  {
+    "word": "ダメ",
+    "reading": null,
+    "meaning": "1. 바둑의 공배 2. 소용없음",
+    "level": "N4",
+    "example": "駄目を押す[詰める]"
+  },
+  {
+    "word": "男性",
+    "reading": "だんせい",
+    "meaning": "1. 남성 2. 성년 남자 3. 인도·유럽 어족에서, 문법상 성 구별의 하나",
+    "level": "N4",
+    "example": "頼もしい男性"
+  },
+  {
+    "word": "血",
+    "reading": "ち",
+    "meaning": "1. 피 2. 혈액 3. 혈통",
+    "level": "N4",
+    "example": "血と汗"
+  },
+  {
+    "word": "力",
+    "reading": "ちから",
+    "meaning": "1. 힘 2. 근육의 힘 3. 일으키거나 바꾸거나 멈추는 작용",
+    "level": "N4",
+    "example": "力持ち"
+  },
+  {
+    "word": "違う",
+    "reading": "ちがう",
+    "meaning": "1. 다르다 2. ‘違える'의 문어형",
+    "level": "N4",
+    "example": "性格[価値観]の違う友達"
+  },
+  {
+    "word": "地図",
+    "reading": "ちず",
+    "meaning": "지도",
+    "level": "N4",
+    "example": "世界地図"
+  },
+  {
+    "word": "父親",
+    "reading": "ちちおや",
+    "meaning": "1. 부친 2. 아버지",
+    "level": "N4",
+    "example": "父親参観"
+  },
+  {
+    "word": "ちっとも",
+    "reading": null,
+    "meaning": "1. 조금도 2. 전연 3. 전혀",
+    "level": "N4",
+    "example": "ちっとも知らなかった"
+  },
+  {
+    "word": "茶色",
+    "reading": "ちゃいろ",
+    "meaning": "1. 다색 2. 갈색",
+    "level": "N4",
+    "example": "茶色のショルダーバッグ"
+  },
+  {
+    "word": "茶碗",
+    "reading": "ちゃわん",
+    "meaning": "1. 찻종 2. 도자기의 총칭 3. ‘茶碗盛り’의 준말",
+    "level": "N4",
+    "example": "茶碗酒"
+  },
+  {
+    "word": "中",
+    "reading": "ちゅう",
+    "meaning": "1. 중 2. 가운데",
+    "level": "N4",
+    "example": "中以下に下がる"
+  },
+  {
+    "word": "注意",
+    "reading": "ちゅうい",
+    "meaning": "1. 주의 2. 유의 3. 조심",
+    "level": "N4",
+    "example": "健康に注意する"
+  },
+  {
+    "word": "中学生",
+    "reading": "ちゅうがくせい",
+    "meaning": "중학생",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "中学校",
+    "reading": "ちゅうがっこう",
+    "meaning": "중학교",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "中止",
+    "reading": "ちゅうし",
+    "meaning": "중지",
+    "level": "N4",
+    "example": "発売中止"
+  },
+  {
+    "word": "駐車",
+    "reading": "ちゅうしゃ",
+    "meaning": "주차",
+    "level": "N4",
+    "example": "駐車禁止"
+  },
+  {
+    "word": "駐車場",
+    "reading": "ちゅうしゃじょう",
+    "meaning": "주차장",
+    "level": "N4",
+    "example": "満杯の駐車場"
+  },
+  {
+    "word": "ちょうど",
+    "reading": null,
+    "meaning": "1. 꼭 2. 마치 3. 마침",
+    "level": "N4",
+    "example": "丁度いい加減の温度"
+  },
+  {
+    "word": "地理",
+    "reading": "ちり",
+    "meaning": "지리",
+    "level": "N4",
+    "example": "地理学"
+  },
+  {
+    "word": "捕まえる",
+    "reading": "つかまえる",
+    "meaning": "1. 잡다 2. 붙잡다 3. 붙들다",
+    "level": "N4",
+    "example": "犯人を捕まえる"
+  },
+  {
+    "word": "疲れる",
+    "reading": "つかれる",
+    "meaning": "1. 지치다 2. 약해지다",
+    "level": "N4",
+    "example": "疲れた顔"
+  },
+  {
+    "word": "月",
+    "reading": "つき",
+    "meaning": "1. 달 2. 달빛 3. 한 달",
+    "level": "N4",
+    "example": "月のかさ"
+  },
+  {
+    "word": "着く",
+    "reading": "つく",
+    "meaning": "1. 닿다 2. 도착하다 3. 접촉하다",
+    "level": "N4",
+    "example": "荷物が着く"
+  },
+  {
+    "word": "つく",
+    "reading": null,
+    "meaning": "1. 붙다 2. 달라붙다 3. 묻다",
+    "level": "N4",
+    "example": "子供が付いて離れない"
+  },
+  {
+    "word": "つける",
+    "reading": null,
+    "meaning": "1. 붙이다 2. 늘 …해 오다",
+    "level": "N4",
+    "example": "顔を窓ガラスに付けて覗き込む"
+  },
+  {
+    "word": "就ける",
+    "reading": "つける",
+    "meaning": "1. 지위에 앉히다 2. 하게 하다 3. 지도를 받게 하다",
+    "level": "N4",
+    "example": "職に就ける"
+  },
+  {
+    "word": "即ける",
+    "reading": "つける",
+    "meaning": "왕위에 앉히다",
+    "level": "N4",
+    "example": "位に即ける"
+  },
+  {
+    "word": "都合",
+    "reading": "つごう",
+    "meaning": "1. 다른 일과의 관계 2. 어떻게 함 3. 도합",
+    "level": "N4",
+    "example": "好都合"
+  },
+  {
+    "word": "伝える",
+    "reading": "つたえる",
+    "meaning": "1. 전하다 2. 알리다 3. 물려주다",
+    "level": "N4",
+    "example": "ニュースを伝える番組"
+  },
+  {
+    "word": "包む",
+    "reading": "つつむ",
+    "meaning": "1. 싸다 2. 에워싸다 3. 감추다",
+    "level": "N4",
+    "example": "風呂敷で包む"
+  },
+  {
+    "word": "続く",
+    "reading": "つづく",
+    "meaning": "1. 계속되다 2. つづける의 문어형",
+    "level": "N4",
+    "example": "雨が五日も続く"
+  },
+  {
+    "word": "続ける",
+    "reading": "つづける",
+    "meaning": "1. 계속하다 2. 연달아 하다 3. 연결하다",
+    "level": "N4",
+    "example": "続けて踊る"
+  },
+  {
+    "word": "勤める",
+    "reading": "つとめる",
+    "meaning": "1. 근무하다 2. 불도를 닦다",
+    "level": "N4",
+    "example": "大企業[中小企業]に勤める"
+  },
+  {
+    "word": "妻",
+    "reading": "つま",
+    "meaning": "1. 처 2. 박공",
+    "level": "N4",
+    "example": "糟糠の妻"
+  },
+  {
+    "word": "つまらない",
+    "reading": null,
+    "meaning": "1. 하찮다 2. 보람이 없다 3. 흥미가 없다",
+    "level": "N4",
+    "example": "つまらない品"
+  },
+  {
+    "word": "爪",
+    "reading": "つめ",
+    "meaning": "1. 손톱 2. ‘琴爪'의 준말 3. 물건을 걸어서 고정시키는 갈고랑이",
+    "level": "N4",
+    "example": "爪で引っ掻く"
+  },
+  {
+    "word": "冷たい",
+    "reading": "つめたい",
+    "meaning": "1. 차갑다 2. 냉정하다",
+    "level": "N4",
+    "example": "冷たい水"
+  },
+  {
+    "word": "つもり",
+    "reading": null,
+    "meaning": "1. 쌓임 2. 어림 3. 연회의 마지막 잔",
+    "level": "N4",
+    "example": "雪の積もり具合"
+  },
+  {
+    "word": "積もる",
+    "reading": "つもる",
+    "meaning": "1. 쌓이다 2. 어림하다",
+    "level": "N4",
+    "example": "屋根に積もった雪"
+  },
+  {
+    "word": "梅雨",
+    "reading": "つゆ",
+    "meaning": "1. 장마 2. 또, 장마철",
+    "level": "N4",
+    "example": "空梅雨"
+  },
+  {
+    "word": "つる",
+    "reading": null,
+    "meaning": "1. 낚다 2. 잡다 3. 꾀다",
+    "level": "N4",
+    "example": "フナを釣る"
+  },
+  {
+    "word": "連れる",
+    "reading": "つれる",
+    "meaning": "1. 데리고 오다 2. 그렇게 됨에 따라",
+    "level": "N4",
+    "example": "娘を連れて出かける"
+  },
+  {
+    "word": "丁寧",
+    "reading": "ていねい",
+    "meaning": "1. 주의 깊고 신중함 2. 친절함",
+    "level": "N4",
+    "example": "丁寧な仕事"
+  },
+  {
+    "word": "手伝う",
+    "reading": "てつだう",
+    "meaning": "1. 같이 거들다 2. 한몫 곁들어 영향을 주다",
+    "level": "N4",
+    "example": "家業を手伝う"
+  },
+  {
+    "word": "手袋",
+    "reading": "てぶくろ",
+    "meaning": "1. 장갑 2. 깍지",
+    "level": "N4",
+    "example": "ゴム手袋"
+  },
+  {
+    "word": "手前",
+    "reading": "てまえ",
+    "meaning": "1. 저 2. 너",
+    "level": "N4",
+    "example": "手前どもの店"
+  },
+  {
+    "word": "手元",
+    "reading": "てもと",
+    "meaning": "1. 손이 미치는 범위 2. 손잡이 3. 평소의 솜씨",
+    "level": "N4",
+    "example": "手元が暗い"
+  },
+  {
+    "word": "寺",
+    "reading": "てら",
+    "meaning": "1. 절 2. 園城寺를 가리킴 3. ‘寺銭’의 준말",
+    "level": "N4",
+    "example": "お寺に参る"
+  },
+  {
+    "word": "点",
+    "reading": "てん",
+    "meaning": "1. 점 2. …점",
+    "level": "N4",
+    "example": "地図に点を打つ"
+  },
+  {
+    "word": "店員",
+    "reading": "てんいん",
+    "meaning": "점원",
+    "level": "N4",
+    "example": "服屋の店員"
+  },
+  {
+    "word": "天気予報",
+    "reading": "てんきよほう",
+    "meaning": "1. 일기 예보 2. 날씨의 변화를 예측하여 미리 알리는 일",
+    "level": "N4",
+    "example": "気象庁の週間天気予報"
+  },
+  {
+    "word": "展覧会",
+    "reading": "てんらんかい",
+    "meaning": "전람회",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "出入(り)口",
+    "reading": "でいりぐち",
+    "meaning": "출입구",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "出かける",
+    "reading": "でかける",
+    "meaning": "1. 외출하다 2. 나가려고 하다 3. 손대다",
+    "level": "N4",
+    "example": "散歩に出掛ける"
+  },
+  {
+    "word": "できる",
+    "reading": null,
+    "meaning": "1. 할 수 있다 2. 할 줄 알다 3. 가능하다",
+    "level": "N4",
+    "example": "ロシア語が出来る"
+  },
+  {
+    "word": "できる",
+    "reading": null,
+    "meaning": "1. 생기다 2. 남녀가 은밀히 맺어지다 3. 되다",
+    "level": "N4",
+    "example": "用事が出来る"
+  },
+  {
+    "word": "できるだけ",
+    "reading": null,
+    "meaning": "1. 가능한 한 2. 되도록",
+    "level": "N4",
+    "example": "出来るだけ早く帰れ"
+  },
+  {
+    "word": "では",
+    "reading": null,
+    "meaning": "1. ‘それでは'의 준말 2. 그러면 3. 그럼",
+    "level": "N4",
+    "example": "では、そうします"
+  },
+  {
+    "word": "電気代",
+    "reading": "でんきだい",
+    "meaning": "전기 요금",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "電灯",
+    "reading": "でんとう",
+    "meaning": "1. 전등 2. 전등불",
+    "level": "N4",
+    "example": "懐中電灯"
+  },
+  {
+    "word": "電報",
+    "reading": "でんぽう",
+    "meaning": "전보",
+    "level": "N4",
+    "example": "慶弔電報"
+  },
+  {
+    "word": "戸",
+    "reading": "と",
+    "meaning": "1. 문짝 2. 대문 3. 수류가 드나드는 곳",
+    "level": "N4",
+    "example": "部屋の戸"
+  },
+  {
+    "word": "都",
+    "reading": "と",
+    "meaning": "1. 東京都 2. 도시",
+    "level": "N4",
+    "example": "都の財政"
+  },
+  {
+    "word": "とうとう",
+    "reading": null,
+    "meaning": "1. 드디어 2. 결국 3. 마침내",
+    "level": "N4",
+    "example": "とうとうやり遂げた"
+  },
+  {
+    "word": "十",
+    "reading": "とお",
+    "meaning": "1. 열 2. 열 살",
+    "level": "N4",
+    "example": "十やそこらで親と別れる"
+  },
+  {
+    "word": "遠く",
+    "reading": "とおく",
+    "meaning": "1. 먼 곳 2. 멀리",
+    "level": "N4",
+    "example": "遠くへ行く"
+  },
+  {
+    "word": "通り",
+    "reading": "とおり",
+    "meaning": "1. 길 2. 종류·방법",
+    "level": "N4",
+    "example": "通り道"
+  },
+  {
+    "word": "通る",
+    "reading": "とおる",
+    "meaning": "1. 통하다 2. 뚫리다 3. 동이 닿다",
+    "level": "N4",
+    "example": "詰まっていた鼻が通る"
+  },
+  {
+    "word": "時",
+    "reading": "とき",
+    "meaning": "1. 시간 2. 시 3. 특정한 시기",
+    "level": "N4",
+    "example": "金では買えぬ時"
+  },
+  {
+    "word": "特に",
+    "reading": "とくに",
+    "meaning": "1. 특히 2. 특별히",
+    "level": "N4",
+    "example": "特に心引かれる作品"
+  },
+  {
+    "word": "特別",
+    "reading": "とくべつ",
+    "meaning": "1. 특별 2. 별로",
+    "level": "N4",
+    "example": "特別仕立ての列車"
+  },
+  {
+    "word": "床屋",
+    "reading": "とこや",
+    "meaning": "1. ‘理髪店·理容店’의 속된 표현 2. 이발소 3. 또, 이발사",
+    "level": "N4",
+    "example": "専属の床屋"
+  },
+  {
+    "word": "閉じる",
+    "reading": "とじる",
+    "meaning": "1. 닫히다 2. 닫다",
+    "level": "N4",
+    "example": "水門が閉じる"
+  },
+  {
+    "word": "途中",
+    "reading": "とちゅう",
+    "meaning": "1. 도중 2. 출발하여 목적지에 도착하기까지 길을 가는 중간 3. 시작하여 끝날 때까지 일의 과정이나 중간",
+    "level": "N4",
+    "example": "退勤途中の交通事故"
+  },
+  {
+    "word": "特急",
+    "reading": "とっきゅう",
+    "meaning": "1. 특급 2. ‘特別急行’의 준말 3. 특히, 서두름・특히, 급하게 함",
+    "level": "N4",
+    "example": "特急に乗る"
+  },
+  {
+    "word": "届く",
+    "reading": "とどく",
+    "meaning": "1. 닿다 2. 이루어지다 3. 두루 미치다",
+    "level": "N4",
+    "example": "メール[メッセージ]が届く"
+  },
+  {
+    "word": "届ける",
+    "reading": "とどける",
+    "meaning": "1. 가 닿게 하다 2. 신고하다 3. 받아들이다",
+    "level": "N4",
+    "example": "荷物を届ける"
+  },
+  {
+    "word": "止まる",
+    "reading": "とまる",
+    "meaning": "1. 멈추다 2. 멎다 3. 정지하다",
+    "level": "N4",
+    "example": "出血が止まる"
+  },
+  {
+    "word": "泊まる",
+    "reading": "とまる",
+    "meaning": "1. 묵다 2. 정박하다 3. 숙직하다",
+    "level": "N4",
+    "example": "宿屋に泊まる"
+  },
+  {
+    "word": "止める",
+    "reading": "とめる",
+    "meaning": "1. 멈추다 2. 세우다 3. 끊다",
+    "level": "N4",
+    "example": "車を止める"
+  },
+  {
+    "word": "泊める",
+    "reading": "とめる",
+    "meaning": "1. 숙박시키다 2. 정박시키다",
+    "level": "N4",
+    "example": "旅行者を泊める"
+  },
+  {
+    "word": "取り替える",
+    "reading": "とりかえる",
+    "meaning": "1. 바꾸다 2. 교환하다 3. 갈다",
+    "level": "N4",
+    "example": "友と本を取り替える"
+  },
+  {
+    "word": "取る",
+    "reading": "とる",
+    "meaning": "1. 잡다 2. ‘取れる'의 문어형",
+    "level": "N4",
+    "example": "手に取って見る"
+  },
+  {
+    "word": "度",
+    "reading": "ど",
+    "meaning": "1. 도 2. 온도·습도·각도·안경 등의 세기를 나타내는 말",
+    "level": "N4",
+    "example": "度外れ"
+  },
+  {
+    "word": "道具",
+    "reading": "どうぐ",
+    "meaning": "1. 도구 2. 기구의 총칭 3. 방편",
+    "level": "N4",
+    "example": "家財道具"
+  },
+  {
+    "word": "動物園",
+    "reading": "どうぶつえん",
+    "meaning": "동물원",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "泥棒",
+    "reading": "どろぼう",
+    "meaning": "도둑질, 또, 도둑",
+    "level": "N4",
+    "example": "泥棒猫"
+  },
+  {
+    "word": "どんどん",
+    "reading": null,
+    "meaning": "1. 꽝꽝 2. 부쩍부쩍 3. 자꾸",
+    "level": "N4",
+    "example": "どんどん橋"
+  },
+  {
+    "word": "どんなに",
+    "reading": null,
+    "meaning": "아무리",
+    "level": "N4",
+    "example": "どんなに遅くても３時までには戻ります"
+  },
+  {
+    "word": "ない",
+    "reading": null,
+    "meaning": "1. …지 않다 2. …지 않겠니 3. 않니",
+    "level": "N4",
+    "example": "雨が降らない"
+  },
+  {
+    "word": "内部",
+    "reading": "ないぶ",
+    "meaning": "내부",
+    "level": "N4",
+    "example": "箱の内部"
+  },
+  {
+    "word": "直す",
+    "reading": "なおす",
+    "meaning": "1. 고치다 2. 정정하다 3. 바로잡다",
+    "level": "N4",
+    "example": "誤りを直す"
+  },
+  {
+    "word": "治す",
+    "reading": "なおす",
+    "meaning": "고치다, 치료하다",
+    "level": "N4",
+    "example": "風邪を治す"
+  },
+  {
+    "word": "直る",
+    "reading": "なおる",
+    "meaning": "1. 고쳐지다 2. 바로잡히다 3. 치료되다",
+    "level": "N4",
+    "example": "文章が直る"
+  },
+  {
+    "word": "治る",
+    "reading": "なおる",
+    "meaning": "낫다, 치료되다",
+    "level": "N4",
+    "example": "けがが治る"
+  },
+  {
+    "word": "なかなか",
+    "reading": null,
+    "meaning": "1. 상당히 2. 좀체 3. 일이 달성되기까지 시간이 걸리는 모양",
+    "level": "N4",
+    "example": "なかなか面白い"
+  },
+  {
+    "word": "流れる",
+    "reading": "ながれる",
+    "meaning": "1. 흐르다 2. 흘러내리다 3. 흘러가다",
+    "level": "N4",
+    "example": "川が流れる"
+  },
+  {
+    "word": "鳴く",
+    "reading": "なく",
+    "meaning": "1. 소리를 내다 2. 울다",
+    "level": "N4",
+    "example": "セミの鳴く声"
+  },
+  {
+    "word": "泣く",
+    "reading": "なく",
+    "meaning": "1. 울다 2. 호된 변을 겪다 3. 참다",
+    "level": "N4",
+    "example": "泣く子供をなだめる"
+  },
+  {
+    "word": "なくす",
+    "reading": null,
+    "meaning": "1. 없애다 2. 잃다 3. 분실하다",
+    "level": "N4",
+    "example": "自信を無くす"
+  },
+  {
+    "word": "亡くなる",
+    "reading": "なくなる",
+    "meaning": "1. 죽다 2. 멸망하다",
+    "level": "N4",
+    "example": "交通事故で亡くなる"
+  },
+  {
+    "word": "なくなる",
+    "reading": null,
+    "meaning": "1. 없어지다 2. 보이지 않게 되다 3. 다하다",
+    "level": "N4",
+    "example": "10年後に無くなる職業"
+  },
+  {
+    "word": "投げる",
+    "reading": "なげる",
+    "meaning": "1. 던지다 2. 멀리 보내다 3. 비추다",
+    "level": "N4",
+    "example": "ボールを投げる"
+  },
+  {
+    "word": "なさる",
+    "reading": null,
+    "meaning": "1. 하시다 2. …하시다",
+    "level": "N4",
+    "example": "テニスをなさる"
+  },
+  {
+    "word": "等",
+    "reading": "など",
+    "meaning": "1. 따위 2. 등 3. 등속",
+    "level": "N4",
+    "example": "菓子や茶等を売る店"
+  },
+  {
+    "word": "など",
+    "reading": null,
+    "meaning": "1. 왜 2. 어째서 3. 무엇 때문에",
+    "level": "N4",
+    "example": "何かく頼もしげなく申すぞ"
+  },
+  {
+    "word": "七つ",
+    "reading": "ななつ",
+    "meaning": "1. 일곱・일곱 살 2. 옛 시간의 이름・지금의 오전·오후 4시경 3. 전당포・→ななつや",
+    "level": "N4",
+    "example": "今年七つになる子がある"
+  },
+  {
+    "word": "生ビール",
+    "reading": "なまビール",
+    "meaning": "1. 생맥주 2. 양조한 그대로의 맥주",
+    "level": "N4",
+    "example": "生ビールと瓶ビールの違い"
+  },
+  {
+    "word": "並ぶ",
+    "reading": "ならぶ",
+    "meaning": "1. 줄을 서다 2. ‘ならべる'의 문어형",
+    "level": "N4",
+    "example": "店が並ぶ"
+  },
+  {
+    "word": "並べる",
+    "reading": "ならべる",
+    "meaning": "1. 늘어놓다 2. 열거하다 3. 견주다",
+    "level": "N4",
+    "example": "一列に並べる"
+  },
+  {
+    "word": "鳴る",
+    "reading": "なる",
+    "meaning": "1. 울리다 2. 소리가 나다 3. 떨치다",
+    "level": "N4",
+    "example": "鐘が鳴る"
+  },
+  {
+    "word": "なる",
+    "reading": null,
+    "meaning": "1. …이 되다 2. 다른 것으로 되다 3. 어느 때가 되다",
+    "level": "N4",
+    "example": "学者になる"
+  },
+  {
+    "word": "なるべく",
+    "reading": null,
+    "meaning": "1. 될 수 있는 한 2. 가능한 한 3. 되도록",
+    "level": "N4",
+    "example": "成る可くなら行く"
+  },
+  {
+    "word": "なるほど",
+    "reading": null,
+    "meaning": "1. 정말 2. 아무렴",
+    "level": "N4",
+    "example": "成る程その湖は美しかった"
+  },
+  {
+    "word": "慣れる",
+    "reading": "なれる",
+    "meaning": "1. 익숙해지다 2. 늘 겪어서 예사로워지다 3. 길들다",
+    "level": "N4",
+    "example": "慣れた手つき"
+  },
+  {
+    "word": "何",
+    "reading": "なん",
+    "meaning": "1. 무엇 2. 몇…",
+    "level": "N4",
+    "example": "何でもよい"
+  },
+  {
+    "word": "何度",
+    "reading": "なんど",
+    "meaning": "1. 몇 번 2. 몇 도",
+    "level": "N4",
+    "example": "何度となく"
+  },
+  {
+    "word": "似合う",
+    "reading": "にあう",
+    "meaning": "1. 잘 맞다 2. 어울리다 3. 조화되다",
+    "level": "N4",
+    "example": "帽子がよく似合う"
+  },
+  {
+    "word": "匂い",
+    "reading": "におい",
+    "meaning": "1. 냄새 2. 정취 3. 일본도의 칼몸 표면에 나타나는 안개처럼 뽀얀 무늬",
+    "level": "N4",
+    "example": "菊の芳しい匂い"
+  },
+  {
+    "word": "苦い",
+    "reading": "にがい",
+    "meaning": "1. 쓰다 2. 씁쓸하다 3. 괴롭다",
+    "level": "N4",
+    "example": "苦い薬"
+  },
+  {
+    "word": "肉屋",
+    "reading": "にくや",
+    "meaning": "고깃간, 푸줏간",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "逃げる",
+    "reading": "にげる",
+    "meaning": "1. 도망치다 2. 회피하다 3. 따라잡히지 않고 이기다",
+    "level": "N4",
+    "example": "あわてて逃げる"
+  },
+  {
+    "word": "日",
+    "reading": "にち",
+    "meaning": "1. 일 2. …일",
+    "level": "N4",
+    "example": "土、日"
+  },
+  {
+    "word": "日記",
+    "reading": "にっき",
+    "meaning": "1. 일기 2. 나날의 기록 3. ‘日記帳’의 준말",
+    "level": "N4",
+    "example": "日記をつけ出す"
+  },
+  {
+    "word": "荷物",
+    "reading": "にもつ",
+    "meaning": "1. 짐 2. 화물 3. 부담",
+    "level": "N4",
+    "example": "手荷物"
+  },
+  {
+    "word": "入院",
+    "reading": "にゅういん",
+    "meaning": "1. 입원 2. 환자가 병원에 들어감 3. 승려가 절에 들어가 주지가 됨",
+    "level": "N4",
+    "example": "入院患者"
+  },
+  {
+    "word": "入学",
+    "reading": "にゅうがく",
+    "meaning": "1. 입학 2. 학교에 들어감 3. 입문",
+    "level": "N4",
+    "example": "入学式を執り行う"
+  },
+  {
+    "word": "入社",
+    "reading": "にゅうしゃ",
+    "meaning": "입사",
+    "level": "N4",
+    "example": "入社試験"
+  },
+  {
+    "word": "似る",
+    "reading": "にる",
+    "meaning": "1. 닮다 2. 실제와 달리 …하다",
+    "level": "N4",
+    "example": "親に似ていない子"
+  },
+  {
+    "word": "人",
+    "reading": "にん",
+    "meaning": "1. 사람 2. 인",
+    "level": "N4",
+    "example": "苦労人"
+  },
+  {
+    "word": "人形",
+    "reading": "にんぎょう",
+    "meaning": "1. 인형 2. 꼭두각시",
+    "level": "N4",
+    "example": "操り人形"
+  },
+  {
+    "word": "ニンジン",
+    "reading": null,
+    "meaning": "1. 당근 2. 인삼",
+    "level": "N4",
+    "example": "人参の皮をむく"
+  },
+  {
+    "word": "脱ぐ",
+    "reading": "ぬぐ",
+    "meaning": "1. 벗다 2. 나체로 연기하다",
+    "level": "N4",
+    "example": "ジャケット[アウター]を脱ぐ"
+  },
+  {
+    "word": "盗む",
+    "reading": "ぬすむ",
+    "meaning": "1. 훔치다 2. 남의 작품을 도작하다 3. 다른 사람이 눈치채지 못하게 무엇을 하다",
+    "level": "N4",
+    "example": "財布を盗む"
+  },
+  {
+    "word": "塗る",
+    "reading": "ぬる",
+    "meaning": "1. 바르다 2. 칠하다 3. 화장을 하다",
+    "level": "N4",
+    "example": "ペンキを塗る"
+  },
+  {
+    "word": "ぬるい",
+    "reading": null,
+    "meaning": "1. 미지근하다 2. 미적지근하다",
+    "level": "N4",
+    "example": "温いスープ"
+  },
+  {
+    "word": "濡れる",
+    "reading": "ぬれる",
+    "meaning": "1. 젖다 2. 정을 통하다",
+    "level": "N4",
+    "example": "濡れた瞳"
+  },
+  {
+    "word": "願う",
+    "reading": "ねがう",
+    "meaning": "1. 원하다 2. 출원하다 3. 동작을 나타내는 말을 하지 않고 동작을 부탁하다",
+    "level": "N4",
+    "example": "家内安全を願う"
+  },
+  {
+    "word": "値段",
+    "reading": "ねだん",
+    "meaning": "1. 값 2. 가치",
+    "level": "N4",
+    "example": "手頃な値段で買う"
+  },
+  {
+    "word": "熱",
+    "reading": "ねつ",
+    "meaning": "1. 열 2. 열기 3. 신열",
+    "level": "N4",
+    "example": "熱を加える"
+  },
+  {
+    "word": "寝坊",
+    "reading": "ねぼう",
+    "meaning": "1. 늦잠을 잠 2. 잠꾸러기 3. 아침 늦게까지 자는 일",
+    "level": "N4",
+    "example": "寝坊な[の]人"
+  },
+  {
+    "word": "眠い",
+    "reading": "ねむい",
+    "meaning": "졸리다",
+    "level": "N4",
+    "example": "眠いのをこらえる"
+  },
+  {
+    "word": "眠たい",
+    "reading": "ねむたい",
+    "meaning": "졸리다",
+    "level": "N4",
+    "example": "眠たい陽気"
+  },
+  {
+    "word": "眠る",
+    "reading": "ねむる",
+    "meaning": "1. 잠자다 2. 자다 3. 활용되지 않다",
+    "level": "N4",
+    "example": "ぐっすり(と)眠る"
+  },
+  {
+    "word": "年",
+    "reading": "ねん",
+    "meaning": "1. 년 2. …년",
+    "level": "N4",
+    "example": "年に三回"
+  },
+  {
+    "word": "年代",
+    "reading": "ねんだい",
+    "meaning": "1. 연대 2. 경과한 시대",
+    "level": "N4",
+    "example": "年代順にしるす"
+  },
+  {
+    "word": "残る",
+    "reading": "のこる",
+    "meaning": "1. 남다 2. 머무르다 3. 여분이 생기다",
+    "level": "N4",
+    "example": "会社に残る"
+  },
+  {
+    "word": "喉",
+    "reading": "のど",
+    "meaning": "1. 목 2. 목청 3. 목의 전면 부분",
+    "level": "N4",
+    "example": "喉がかわく"
+  },
+  {
+    "word": "飲みすぎ",
+    "reading": "のみすぎ",
+    "meaning": "과음",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "乗り換え",
+    "reading": "のりかえ",
+    "meaning": "1. 갈아타는 것 2. 이제까지의 관계·생각 따위를 바꾸는 것 3. 다른 주식·채권 따위로 바꿔 사는 것",
+    "level": "N4",
+    "example": "乗り換え案内"
+  },
+  {
+    "word": "乗り換える",
+    "reading": "のりかえる",
+    "meaning": "1. 바꿔 타다 2. 편리한 쪽으로 바꾸다 3. 다른 주식·채권 등으로 바꿔 사다",
+    "level": "N4",
+    "example": "電車からバスに乗り換える"
+  },
+  {
+    "word": "乗り物",
+    "reading": "のりもの",
+    "meaning": "탈것, 교통 기관",
+    "level": "N4",
+    "example": "乗物の便が悪い"
+  },
+  {
+    "word": "歯",
+    "reading": "は",
+    "meaning": "1. 이 2. 이 모양으로 나란히 선 것 3. 살",
+    "level": "N4",
+    "example": "歯を磨く"
+  },
+  {
+    "word": "葉",
+    "reading": "は",
+    "meaning": "1. 잎 2. 잎사귀",
+    "level": "N4",
+    "example": "木の葉"
+  },
+  {
+    "word": "杯",
+    "reading": "はい",
+    "meaning": "1. 잔 2. 상배",
+    "level": "N4",
+    "example": "杯をあげる"
+  },
+  {
+    "word": "拝見する",
+    "reading": "はいけんする",
+    "meaning": "보다, 읽다",
+    "level": "N4",
+    "example": "お手紙拝見しました"
+  },
+  {
+    "word": "歯医者",
+    "reading": "はいしゃ",
+    "meaning": "1. 치과의 2. 치과 의사 3. 치과",
+    "level": "N4",
+    "example": "歯医者に見てもらう"
+  },
+  {
+    "word": "はく",
+    "reading": null,
+    "meaning": "1. 입다 2. 신다",
+    "level": "N4",
+    "example": "ズボンを穿く"
+  },
+  {
+    "word": "白菜",
+    "reading": "はくさい",
+    "meaning": "배추",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "箱",
+    "reading": "はこ",
+    "meaning": "1. 상자 2. 상자 수효를 세는 말",
+    "level": "N4",
+    "example": "箱に詰める"
+  },
+  {
+    "word": "運ぶ",
+    "reading": "はこぶ",
+    "meaning": "1. 운반하다 2. 진행되다",
+    "level": "N4",
+    "example": "荷物を運ぶ"
+  },
+  {
+    "word": "はし",
+    "reading": null,
+    "meaning": "부리, 주둥이",
+    "level": "N4",
+    "example": "イスカの嘴"
+  },
+  {
+    "word": "橋",
+    "reading": "はし",
+    "meaning": "1. 다리 2. 교량 3. 중개",
+    "level": "N4",
+    "example": "川に橋を架ける"
+  },
+  {
+    "word": "走る",
+    "reading": "はしる",
+    "meaning": "1. 달리다 2. 빠르게 움직이다 3. 세차게 흐르다",
+    "level": "N4",
+    "example": "山道を走る"
+  },
+  {
+    "word": "始まり",
+    "reading": "はじまり",
+    "meaning": "시작, 시초, 기원",
+    "level": "N4",
+    "example": "喧嘩の始まり"
+  },
+  {
+    "word": "初めて",
+    "reading": "はじめて",
+    "meaning": "1. 처음으로 2. 비로소",
+    "level": "N4",
+    "example": "初めてのヨーロッパ旅行"
+  },
+  {
+    "word": "はじめに",
+    "reading": null,
+    "meaning": "우선, 먼저",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "始める",
+    "reading": "はじめる",
+    "meaning": "1. 시작하다 2. …하기 시작하다",
+    "level": "N4",
+    "example": "勉強を始める"
+  },
+  {
+    "word": "はず",
+    "reading": null,
+    "meaning": "1. 당연한 일∙도리∙이치를 나타내는 말 2. …할 리 3. …할 예정",
+    "level": "N4",
+    "example": "そんな筈がない"
+  },
+  {
+    "word": "恥ずかしい",
+    "reading": "はずかしい",
+    "meaning": "1. 부끄럽다 2. 면목 없다 3. 수줍다",
+    "level": "N4",
+    "example": "恥ずかしからぬ人物"
+  },
+  {
+    "word": "働く",
+    "reading": "はたらく",
+    "meaning": "1. 일하다 2. 항상 움직이다 3. 나쁜 짓을 하다",
+    "level": "N4",
+    "example": "プロジェクトの中心になって働く人"
+  },
+  {
+    "word": "はっきり",
+    "reading": null,
+    "meaning": "1. 똑똑히 2. 명료한 모양 3. 확실한 모양",
+    "level": "N4",
+    "example": "はっきり(と)見える"
+  },
+  {
+    "word": "発音",
+    "reading": "はつおん",
+    "meaning": "발음",
+    "level": "N4",
+    "example": "発音変化"
+  },
+  {
+    "word": "花見",
+    "reading": "はなみ",
+    "meaning": "1. 꽃구경 2. 꽃놀이",
+    "level": "N4",
+    "example": "花見時"
+  },
+  {
+    "word": "羽",
+    "reading": "はね",
+    "meaning": "1. 날개 2. 새털 3. 기계·기구 따위에 붙인 날개 같은 것",
+    "level": "N4",
+    "example": "羽を畳む"
+  },
+  {
+    "word": "林",
+    "reading": "はやし",
+    "meaning": "1. 숲 2. 수목이 무성한 곳 3. 같은 종류의 것이 많이 모여 있는 상태",
+    "level": "N4",
+    "example": "松林"
+  },
+  {
+    "word": "払う",
+    "reading": "はらう",
+    "meaning": "1. 없애다 2. 털다 3. 쫓다",
+    "level": "N4",
+    "example": "木の下枝[小枝]を払う"
+  },
+  {
+    "word": "張る",
+    "reading": "はる",
+    "meaning": "1. 뻗다 2. 펴다",
+    "level": "N4",
+    "example": "四方に根が張る"
+  },
+  {
+    "word": "晴(れ)",
+    "reading": "はれ",
+    "meaning": "1. 하늘이 갬 2. 공식적인 자리 3. 혐의를 벗음",
+    "level": "N4",
+    "example": "南の風で晴れ"
+  },
+  {
+    "word": "晴れる",
+    "reading": "はれる",
+    "meaning": "1. 개다 2. 사라지다 3. 풀리다",
+    "level": "N4",
+    "example": "空が晴れる"
+  },
+  {
+    "word": "半",
+    "reading": "はん",
+    "meaning": "1. 반 2. 기수 3. 반 시간",
+    "level": "N4",
+    "example": "一つ半"
+  },
+  {
+    "word": "反対",
+    "reading": "はんたい",
+    "meaning": "1. 어떤 사물과의 대립 관계에 있음 2. 반대",
+    "level": "N4",
+    "example": "反対給付"
+  },
+  {
+    "word": "半分",
+    "reading": "はんぶん",
+    "meaning": "1. 반분 2. 반쯤 3. 반 … 삼아",
+    "level": "N4",
+    "example": "半分に切ったキャベツ"
+  },
+  {
+    "word": "場合",
+    "reading": "ばあい",
+    "meaning": "1. 사정 2. 경우",
+    "level": "N4",
+    "example": "場合によっては"
+  },
+  {
+    "word": "ばかり",
+    "reading": null,
+    "meaning": "1. 사물의 정도·범위를 한정해서 말하는 데 씀 2. …정도 3. …만으로는",
+    "level": "N4",
+    "example": "コップに半分ばかりの水"
+  },
+  {
+    "word": "場所",
+    "reading": "ばしょ",
+    "meaning": "1. 장소 2. 자리 3. 相撲의 흥행",
+    "level": "N4",
+    "example": "場所柄"
+  },
+  {
+    "word": "番",
+    "reading": "ばん",
+    "meaning": "1. 순서 2. 순서·등급·횟수 등을 나타내는 말",
+    "level": "N4",
+    "example": "自分の番を待つ"
+  },
+  {
+    "word": "晩",
+    "reading": "ばん",
+    "meaning": "1. 저녁때 2. 밤 3. 저녁",
+    "level": "N4",
+    "example": "朝から晩まで働く"
+  },
+  {
+    "word": "番組",
+    "reading": "ばんぐみ",
+    "meaning": "1. 프로 2. 편성이나 순서 3. 또 그것을 쓴 것",
+    "level": "N4",
+    "example": "視聴率30パーセント超えの番組"
+  },
+  {
+    "word": "番線",
+    "reading": "ばんせん",
+    "meaning": "1. 번선 2. 굵기에 따라 붙인 철사의 번호 3. 역의 번호를 붙인 플랫폼 쪽의 선로",
+    "level": "N4",
+    "example": "八番線で、さくを結う"
+  },
+  {
+    "word": "日",
+    "reading": "ひ",
+    "meaning": "1. 해 2. 햇빛 3. 낮",
+    "level": "N4",
+    "example": "日が出る[昇る]"
+  },
+  {
+    "word": "冷える",
+    "reading": "ひえる",
+    "meaning": "1. 차가워지다 2. 냉담해지다",
+    "level": "N4",
+    "example": "冷えたビール"
+  },
+  {
+    "word": "光",
+    "reading": "ひかり",
+    "meaning": "1. 빛 2. 환한 빛 3. 서광",
+    "level": "N4",
+    "example": "日の光"
+  },
+  {
+    "word": "光る",
+    "reading": "ひかる",
+    "meaning": "1. 빛나다 2. 빛을 내다 3. 광택이 있다",
+    "level": "N4",
+    "example": "白く光る雪"
+  },
+  {
+    "word": "引き出し",
+    "reading": "ひきだし",
+    "meaning": "1. 서랍 2. 찾음",
+    "level": "N4",
+    "example": "箪笥の引き出し"
+  },
+  {
+    "word": "引く",
+    "reading": "ひく",
+    "meaning": "1. 끌다 2. 빠지다",
+    "level": "N4",
+    "example": "網を引く"
+  },
+  {
+    "word": "弾く",
+    "reading": "ひく",
+    "meaning": "1. 연주하다 2. 켜다 3. 치다",
+    "level": "N4",
+    "example": "琴[三味線]を弾く"
+  },
+  {
+    "word": "髭",
+    "reading": "ひげ",
+    "meaning": "1. 수염 2. 동물의 입언저리에 난 뻣뻣한 긴 털 3. 수염을 연상시키는 것",
+    "level": "N4",
+    "example": "カイゼル髭"
+  },
+  {
+    "word": "飛行場",
+    "reading": "ひこうじょう",
+    "meaning": "비행장",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "久しぶり",
+    "reading": "ひさしぶり",
+    "meaning": "1. 오래간만 2. 오랜만",
+    "level": "N4",
+    "example": "久しぶりの雨"
+  },
+  {
+    "word": "非常に",
+    "reading": "ひじょうに",
+    "meaning": "매우, 상당히",
+    "level": "N4",
+    "example": "非常に悲しい"
+  },
+  {
+    "word": "左",
+    "reading": "ひだり",
+    "meaning": "1. 좌 2. 왼쪽 3. 왼손",
+    "level": "N4",
+    "example": "左に曲がる"
+  },
+  {
+    "word": "引っ越す",
+    "reading": "ひっこす",
+    "meaning": "1. 이사하다 2. 이전하다",
+    "level": "N4",
+    "example": "新居に引っ越す"
+  },
+  {
+    "word": "必要",
+    "reading": "ひつよう",
+    "meaning": "필요",
+    "level": "N4",
+    "example": "必要に迫られる"
+  },
+  {
+    "word": "一月",
+    "reading": "ひとつき",
+    "meaning": "한 달, 1개월",
+    "level": "N4",
+    "example": "一月に一度"
+  },
+  {
+    "word": "ひどい",
+    "reading": null,
+    "meaning": "1. 심하다 2. 가혹하다 3. 지독하다",
+    "level": "N4",
+    "example": "酷い仕打ち"
+  },
+  {
+    "word": "百貨店",
+    "reading": "ひゃっかてん",
+    "meaning": "백화점",
+    "level": "N4",
+    "example": "百貨店の地下食品売り場"
+  },
+  {
+    "word": "ひらがな",
+    "reading": null,
+    "meaning": "한자의 초서체에서 만들어진 일본의 음절 문자",
+    "level": "N4",
+    "example": "平仮名の書き順を覚える"
+  },
+  {
+    "word": "開く",
+    "reading": "ひらく",
+    "meaning": "1. 열리다 2. 열다 3. ‘開ける’의 문어형",
+    "level": "N4",
+    "example": "戸が開く"
+  },
+  {
+    "word": "昼間",
+    "reading": "ひるま",
+    "meaning": "1. 주간 2. 낮",
+    "level": "N4",
+    "example": "昼間から酒を飲む"
+  },
+  {
+    "word": "昼休み",
+    "reading": "ひるやすみ",
+    "meaning": "1. 점심시간 2. 낮잠",
+    "level": "N4",
+    "example": "昼休み抜きで仕事をする"
+  },
+  {
+    "word": "拾う",
+    "reading": "ひろう",
+    "meaning": "1. 줍다 2. 걸어서 가다",
+    "level": "N4",
+    "example": "落ち葉を拾う"
+  },
+  {
+    "word": "ひろさ",
+    "reading": null,
+    "meaning": "넓이",
+    "level": "N4",
+    "example": "広さが広い"
+  },
+  {
+    "word": "美術館",
+    "reading": "びじゅつかん",
+    "meaning": "1. 미술관 2. 미술품을 수집∙보관∙전시하는 시설",
+    "level": "N4",
+    "example": "現代美術を専門とする美術館"
+  },
+  {
+    "word": "びっくり",
+    "reading": null,
+    "meaning": "깜짝 놀람",
+    "level": "N4",
+    "example": "びっくり箱"
+  },
+  {
+    "word": "秒",
+    "reading": "びょう",
+    "meaning": "1. 초 2. 시간의 단위 3. 각도·경도·위도의 단위",
+    "level": "N4",
+    "example": "秒読み"
+  },
+  {
+    "word": "封筒",
+    "reading": "ふうとう",
+    "meaning": "봉투",
+    "level": "N4",
+    "example": "窓付き封筒"
+  },
+  {
+    "word": "増える",
+    "reading": "ふえる",
+    "meaning": "1. 늘다 2. 불어나다",
+    "level": "N4",
+    "example": "荷物が増える"
+  },
+  {
+    "word": "深い",
+    "reading": "ふかい",
+    "meaning": "1. 깊다 2. 겉에서 속까지의 길이가 길다 3. 듬쑥하다",
+    "level": "N4",
+    "example": "深い海の底"
+  },
+  {
+    "word": "吹く",
+    "reading": "ふく",
+    "meaning": "1. 불다 2. 입김으로 불다 3. 내솟다",
+    "level": "N4",
+    "example": "南風が吹く"
+  },
+  {
+    "word": "複雑",
+    "reading": "ふくざつ",
+    "meaning": "복잡",
+    "level": "N4",
+    "example": "複雑性"
+  },
+  {
+    "word": "復習",
+    "reading": "ふくしゅう",
+    "meaning": "복습",
+    "level": "N4",
+    "example": "数学の復習"
+  },
+  {
+    "word": "普通",
+    "reading": "ふつう",
+    "meaning": "1. 보통 2. 대개 3. 일반적으로",
+    "level": "N4",
+    "example": "普通そうは言わない"
+  },
+  {
+    "word": "太い",
+    "reading": "ふとい",
+    "meaning": "1. 굵다 2. 가늘지 않다 3. 낮은 목소리에 음량이 풍부하다",
+    "level": "N4",
+    "example": "太い糸"
+  },
+  {
+    "word": "太る",
+    "reading": "ふとる",
+    "meaning": "1. 살찌다 2. 재산 등이 늘어나다",
+    "level": "N4",
+    "example": "まるまると太った人"
+  },
+  {
+    "word": "布団",
+    "reading": "ふとん",
+    "meaning": "1. 포단 2. 이부자리 3. 부들방석",
+    "level": "N4",
+    "example": "掛け布団"
+  },
+  {
+    "word": "船",
+    "reading": "ふね",
+    "meaning": "1. 배 2. 물·술 등을 넣는 상자 모양의 그릇 3. 조개∙생선회 등을 담는 운두가 낮은 용기",
+    "level": "N4",
+    "example": "船に乗る"
+  },
+  {
+    "word": "不便",
+    "reading": "ふべん",
+    "meaning": "1. 불편 2. 편리하지 않음 3. 형편이 좋지 않음",
+    "level": "N4",
+    "example": "交通の不便な所"
+  },
+  {
+    "word": "踏む",
+    "reading": "ふむ",
+    "meaning": "1. 밟다 2. 발로 밟다 3. 발을 움직이다",
+    "level": "N4",
+    "example": "影を踏む"
+  },
+  {
+    "word": "風炉",
+    "reading": "ふろ",
+    "meaning": "물을 끓이는 풍로",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "分",
+    "reading": "ふん",
+    "meaning": "1. 분 2. 시간의 단위 3. 각도의 단위",
+    "level": "N4",
+    "example": "時間を分で表す"
+  },
+  {
+    "word": "豚肉",
+    "reading": "ぶたにく",
+    "meaning": "돼지고기",
+    "level": "N4",
+    "example": "豚肉を使った炒め物"
+  },
+  {
+    "word": "部長",
+    "reading": "ぶちょう",
+    "meaning": "부장",
+    "level": "N4",
+    "example": "人事部長"
+  },
+  {
+    "word": "ぶつかる",
+    "reading": null,
+    "meaning": "1. 부딪다 2. 마주치다 3. 부닥치다",
+    "level": "N4",
+    "example": "電柱にぶつかる"
+  },
+  {
+    "word": "葡萄",
+    "reading": "ぶどう",
+    "meaning": "1. 포도 2. ‘葡萄色’의 준말 3. 포도의 잎이나 열매를 도안화한 가문의 하나",
+    "level": "N4",
+    "example": "葡萄の房"
+  },
+  {
+    "word": "文化",
+    "reading": "ぶんか",
+    "meaning": "문화",
+    "level": "N4",
+    "example": "東洋文化"
+  },
+  {
+    "word": "文学",
+    "reading": "ぶんがく",
+    "meaning": "문학",
+    "level": "N4",
+    "example": "文学書"
+  },
+  {
+    "word": "文書",
+    "reading": "ぶんしょ",
+    "meaning": "문서, 서류",
+    "level": "N4",
+    "example": "公[私]文書"
+  },
+  {
+    "word": "文章",
+    "reading": "ぶんしょう",
+    "meaning": "1. 문장 2. 글월",
+    "level": "N4",
+    "example": "文章家"
+  },
+  {
+    "word": "文法",
+    "reading": "ぶんぽう",
+    "meaning": "1. 문법 2. 작법",
+    "level": "N4",
+    "example": "国文法"
+  },
+  {
+    "word": "下手",
+    "reading": "へた",
+    "meaning": "1. 서투름 2. 어중간함",
+    "level": "N4",
+    "example": "字が下手だ"
+  },
+  {
+    "word": "へん",
+    "reading": null,
+    "meaning": "1. 근처 2. 막연한 사항 3. 정도",
+    "level": "N4",
+    "example": "この辺で待っていろ"
+  },
+  {
+    "word": "変",
+    "reading": "へん",
+    "meaning": "1. 변 2. 보통과 다름",
+    "level": "N4",
+    "example": "桑海の変"
+  },
+  {
+    "word": "返事",
+    "reading": "へんじ",
+    "meaning": "1. 대답 2. 답신",
+    "level": "N4",
+    "example": "大きな声で返事をする"
+  },
+  {
+    "word": "別",
+    "reading": "べつ",
+    "meaning": "1. 구별 2. 다름 3. 별…",
+    "level": "N4",
+    "example": "年齢の別なく"
+  },
+  {
+    "word": "ペラペラ",
+    "reading": null,
+    "meaning": "1. 재잘재잘 2. 외국어를 잘 지껄이는 모양",
+    "level": "N4",
+    "example": "人の秘密をぺらぺら(と)しゃべる"
+  },
+  {
+    "word": "放送",
+    "reading": "ほうそう",
+    "meaning": "방송",
+    "level": "N4",
+    "example": "実況放送"
+  },
+  {
+    "word": "法律",
+    "reading": "ほうりつ",
+    "meaning": "법률",
+    "level": "N4",
+    "example": "法律学"
+  },
+  {
+    "word": "星",
+    "reading": "ほし",
+    "meaning": "1. 별 2. 별 모양 3. 세월",
+    "level": "N4",
+    "example": "星が出る"
+  },
+  {
+    "word": "欲しい",
+    "reading": "ほしい",
+    "meaning": "1. …하고 싶다 2. 바라다",
+    "level": "N4",
+    "example": "果物が欲しい"
+  },
+  {
+    "word": "細い",
+    "reading": "ほそい",
+    "meaning": "1. 가늘다 2. 좁다 3. 적다",
+    "level": "N4",
+    "example": "細いうどん"
+  },
+  {
+    "word": "ほとんど",
+    "reading": null,
+    "meaning": "1. 대부분 2. 하마터면",
+    "level": "N4",
+    "example": "殆どの人が参加する"
+  },
+  {
+    "word": "骨",
+    "reading": "ほね",
+    "meaning": "1. 뼈 2. 곤란한 모양",
+    "level": "N4",
+    "example": "腰の骨"
+  },
+  {
+    "word": "褒める",
+    "reading": "ほめる",
+    "meaning": "1. 칭찬하다 2. 축하하다",
+    "level": "N4",
+    "example": "褒めるべき行為"
+  },
+  {
+    "word": "本気",
+    "reading": "ほんき",
+    "meaning": "1. 본마음 2. 진심 3. 본정신",
+    "level": "N4",
+    "example": "本気で言っているのか"
+  },
+  {
+    "word": "本棚",
+    "reading": "ほんだな",
+    "meaning": "1. 서가 2. 책장",
+    "level": "N4",
+    "example": "作り付けの本棚"
+  },
+  {
+    "word": "本当",
+    "reading": "ほんとう",
+    "meaning": "1. 진실 2. 정상임 3. 정말이지",
+    "level": "N4",
+    "example": "本当を言うと"
+  },
+  {
+    "word": "本当に",
+    "reading": "ほんとうに",
+    "meaning": "1. 정말이지 2. 실로 3. 참으로",
+    "level": "N4",
+    "example": "本当に有難う"
+  },
+  {
+    "word": "本屋",
+    "reading": "ほんや",
+    "meaning": "1. 책방 2. 출판사 3. 안채",
+    "level": "N4",
+    "example": "古本屋"
+  },
+  {
+    "word": "貿易",
+    "reading": "ぼうえき",
+    "meaning": "1. 무역 2. 국제간의 상업 거래 3. 서로 물건을 교환하여 거래하는 것",
+    "level": "N4",
+    "example": "貿易商"
+  },
+  {
+    "word": "帽子",
+    "reading": "ぼうし",
+    "meaning": "1. 모자 2. 물건의 끝부분에 둘러 씌우는 것",
+    "level": "N4",
+    "example": "帽子掛け"
+  },
+  {
+    "word": "僕",
+    "reading": "ぼく",
+    "meaning": "1. 나 2. 머슴",
+    "level": "N4",
+    "example": "僕の願い"
+  },
+  {
+    "word": "毎月",
+    "reading": "まいつき",
+    "meaning": "매월, 달마다",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "毎年",
+    "reading": "まいとし",
+    "meaning": "매년, 매해, 해마다",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "参る",
+    "reading": "まいる",
+    "meaning": "1. 가다 2. 올리다",
+    "level": "N4",
+    "example": "宮中に参る"
+  },
+  {
+    "word": "負ける",
+    "reading": "まける",
+    "meaning": "1. 지다 2. 값을 깎아 주다",
+    "level": "N4",
+    "example": "戦いに負ける"
+  },
+  {
+    "word": "孫",
+    "reading": "まご",
+    "meaning": "1. 손자 2. 대를 한 번 거른 것",
+    "level": "N4",
+    "example": "孫娘"
+  },
+  {
+    "word": "真面目",
+    "reading": "まじめ",
+    "meaning": "1. 진심 2. 착실함",
+    "level": "N4",
+    "example": "真面目一方の人"
+  },
+  {
+    "word": "まず",
+    "reading": null,
+    "meaning": "1. 우선 2. 최초에 3. 일단",
+    "level": "N4",
+    "example": "先ず健康"
+  },
+  {
+    "word": "または",
+    "reading": null,
+    "meaning": "1. 또는 2. 혹은 3. 그게 아니면",
+    "level": "N4",
+    "example": "ペンまたはボールペンで記入して下さい"
+  },
+  {
+    "word": "間違える",
+    "reading": "まちがえる",
+    "meaning": "1. 잘못하다 2. 다른 것으로 착각하다",
+    "level": "N4",
+    "example": "計算を間違える"
+  },
+  {
+    "word": "窓口",
+    "reading": "まどぐち",
+    "meaning": "1. 창구 2. 창을 통해 사무를 보는 곳 3. 외부와 절충하고 교섭하는 곳",
+    "level": "N4",
+    "example": "窓口事務[業務]"
+  },
+  {
+    "word": "窓ガラス",
+    "reading": "まどガラス",
+    "meaning": "창유리",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "間に合う",
+    "reading": "まにあう",
+    "meaning": "1. 아쉬운 대로 쓸 수 있다 2. 충분하다 3. 시간에 대다",
+    "level": "N4",
+    "example": "電話で間に合う用事"
+  },
+  {
+    "word": "守る",
+    "reading": "まもる",
+    "meaning": "1. 지키다 2. 수호하다 3. 소중히 하다",
+    "level": "N4",
+    "example": "国を守る"
+  },
+  {
+    "word": "まるい",
+    "reading": null,
+    "meaning": "둥글다, 원형 또는 구형을 하고 있다",
+    "level": "N4",
+    "example": "円い月"
+  },
+  {
+    "word": "回る",
+    "reading": "まわる",
+    "meaning": "1. 돌다 2. 회전하다 3. 차례로 돌다",
+    "level": "N4",
+    "example": "こまが回る"
+  },
+  {
+    "word": "万",
+    "reading": "まん",
+    "meaning": "1. 만 2. 천의 십 배 3. 수가 많음",
+    "level": "N4",
+    "example": "万を超す件数"
+  },
+  {
+    "word": "漫画",
+    "reading": "まんが",
+    "meaning": "1. 만화 2. 풍자·비판하는 그림 3. 대사와 함께 여러 장면으로 그린 그림",
+    "level": "N4",
+    "example": "時事漫画"
+  },
+  {
+    "word": "真ん中",
+    "reading": "まんなか",
+    "meaning": "한가운데",
+    "level": "N4",
+    "example": "公園の真ん中にある建物"
+  },
+  {
+    "word": "万年筆",
+    "reading": "まんねんひつ",
+    "meaning": "만년필",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "見える",
+    "reading": "みえる",
+    "meaning": "1. 보이다 2. 눈에 들어오다 3. 볼 수 있다",
+    "level": "N4",
+    "example": "山がよく見える"
+  },
+  {
+    "word": "見つかる",
+    "reading": "みつかる",
+    "meaning": "1. 발견되다 2. 들키다 3. 찾게 되다",
+    "level": "N4",
+    "example": "先生に見つかる"
+  },
+  {
+    "word": "見つける",
+    "reading": "みつける",
+    "meaning": "1. 찾다 2. 눈에 익다",
+    "level": "N4",
+    "example": "誤字脱字を見つける"
+  },
+  {
+    "word": "皆",
+    "reading": "みな",
+    "meaning": "1. 모두 2. 모두들 3. 다",
+    "level": "N4",
+    "example": "皆の衆"
+  },
+  {
+    "word": "港",
+    "reading": "みなと",
+    "meaning": "항구",
+    "level": "N4",
+    "example": "港を出る"
+  },
+  {
+    "word": "迎える",
+    "reading": "むかえる",
+    "meaning": "1. 맞이하다 2. 맞다 3. 부르다",
+    "level": "N4",
+    "example": "正月を迎える準備び"
+  },
+  {
+    "word": "昔",
+    "reading": "むかし",
+    "meaning": "1. 옛날 2. 10년의 세월",
+    "level": "N4",
+    "example": "昔昔、ある所に"
+  },
+  {
+    "word": "向こう",
+    "reading": "むこう",
+    "meaning": "1. 맞은편 2. 저쪽 3. 행선지",
+    "level": "N4",
+    "example": "向こうの家"
+  },
+  {
+    "word": "虫",
+    "reading": "むし",
+    "meaning": "1. 벌레 2. 사람·포유류·조류·어패류 이외의 작은 동물의 총칭 3. 기생충",
+    "level": "N4",
+    "example": "虫の音"
+  },
+  {
+    "word": "息子さん",
+    "reading": "むすこさん",
+    "meaning": "아드님",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "娘",
+    "reading": "むすめ",
+    "meaning": "1. 딸 2. 미혼 여성",
+    "level": "N4",
+    "example": "一人娘"
+  },
+  {
+    "word": "娘さん",
+    "reading": "むすめさん",
+    "meaning": "따님, 아가씨",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "六つ",
+    "reading": "むっつ",
+    "meaning": "여섯, 여섯 살, 여섯 개",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "村",
+    "reading": "むら",
+    "meaning": "1. 마을 2. 지방 자치 단체의 하나 3. 어떤 목적을 위해 사람들이나 물건이 모여 있는 곳",
+    "level": "N4",
+    "example": "同じ村の人"
+  },
+  {
+    "word": "無理",
+    "reading": "むり",
+    "meaning": "1. 무리 2. 도리가 아님 3. 억지",
+    "level": "N4",
+    "example": "無理な要求"
+  },
+  {
+    "word": "召し上がる",
+    "reading": "めしあがる",
+    "meaning": "‘飲む’ ‘食べる’의 높임말",
+    "level": "N4",
+    "example": "何を召し上がりますか"
+  },
+  {
+    "word": "珍しい",
+    "reading": "めずらしい",
+    "meaning": "1. 드물다 2. 희귀하다 3. 이상하다",
+    "level": "N4",
+    "example": "珍しい物"
+  },
+  {
+    "word": "もう",
+    "reading": null,
+    "meaning": "1. 벌써 2. 감동·감정을 강조할 때 쓰는 말",
+    "level": "N4",
+    "example": "もう駄目だ"
+  },
+  {
+    "word": "申し上げる",
+    "reading": "もうしあげる",
+    "meaning": "1. 말씀드리다 2. …해 드리다",
+    "level": "N4",
+    "example": "過日申し上げた通り"
+  },
+  {
+    "word": "申す",
+    "reading": "もうす",
+    "meaning": "1. 말하다 2. …을 해 드리다",
+    "level": "N4",
+    "example": "申すに及ばず"
+  },
+  {
+    "word": "もうすぐ",
+    "reading": null,
+    "meaning": "이제 곧, 머지않아",
+    "level": "N4",
+    "example": "もうすぐ来るでしょう"
+  },
+  {
+    "word": "もう一つ",
+    "reading": "もうひとつ",
+    "meaning": "조금 더, 약간",
+    "level": "N4",
+    "example": "もう一つつっこみがたりない"
+  },
+  {
+    "word": "もし",
+    "reading": null,
+    "meaning": "1. 만약 2. 혹은",
+    "level": "N4",
+    "example": "若しよかったら"
+  },
+  {
+    "word": "持ち帰り",
+    "reading": "もちかえり",
+    "meaning": "1. 가지고 돌아감 2. 특히, 산 물건을 직접 갖고 감 3. 포장하여 가지고 감",
+    "level": "N4",
+    "example": "ゴミの持ち帰り"
+  },
+  {
+    "word": "もちろん",
+    "reading": null,
+    "meaning": "1. 물론 2. 말할 것도 없이",
+    "level": "N4",
+    "example": "勿論賛成だ"
+  },
+  {
+    "word": "戻す",
+    "reading": "もどす",
+    "meaning": "1. 되돌리다 2. 진행된 것과 반대 방향으로 움직이다 3. 토하다",
+    "level": "N4",
+    "example": "本を書庫へ戻した"
+  },
+  {
+    "word": "戻る",
+    "reading": "もどる",
+    "meaning": "1. 되돌아가다 2. 되돌아오다",
+    "level": "N4",
+    "example": "席に戻る"
+  },
+  {
+    "word": "もの",
+    "reading": null,
+    "meaning": "…한 걸",
+    "level": "N4",
+    "example": "知らなかったもの"
+  },
+  {
+    "word": "木綿",
+    "reading": "もめん",
+    "meaning": "1. 솜 2. ‘木綿糸'의 준말 3. ‘木綿織り'의 준말",
+    "level": "N4",
+    "example": "木綿針"
+  },
+  {
+    "word": "もらう",
+    "reading": null,
+    "meaning": "1. 받다 2. 청하여 얻다 3. 집으로 맞아들이다",
+    "level": "N4",
+    "example": "年金を貰っている人"
+  },
+  {
+    "word": "森",
+    "reading": "もり",
+    "meaning": "1. 숲 2. 신사를 둘러싼 무성한 숲",
+    "level": "N4",
+    "example": "こんもり(と)した森"
+  },
+  {
+    "word": "屋",
+    "reading": "や",
+    "meaning": "1. 집 2. 그 직업을 가진 집",
+    "level": "N4",
+    "example": "屋の主"
+  },
+  {
+    "word": "夜間",
+    "reading": "やかん",
+    "meaning": "야간",
+    "level": "N4",
+    "example": "夜間学校"
+  },
+  {
+    "word": "焼く",
+    "reading": "やく",
+    "meaning": "1. 태우다 2. ‘焼ける’의 문어형",
+    "level": "N4",
+    "example": "ごみを焼く"
+  },
+  {
+    "word": "約束",
+    "reading": "やくそく",
+    "meaning": "1. 약속 2. 언약 3. 규칙",
+    "level": "N4",
+    "example": "平気で約束を破る人"
+  },
+  {
+    "word": "役に立つ",
+    "reading": "やくにたつ",
+    "meaning": "1. 도움이 되다 2. 유용하다 3. 쓸모가 있다",
+    "level": "N4",
+    "example": "役に立つ情報[道具]"
+  },
+  {
+    "word": "焼ける",
+    "reading": "やける",
+    "meaning": "1. 타다 2. 구워지다 3. 뜨거워지다",
+    "level": "N4",
+    "example": "家が焼ける"
+  },
+  {
+    "word": "優しい",
+    "reading": "やさしい",
+    "meaning": "1. 온순하다 2. 친환경적이다 3. 우아하고 아름답다",
+    "level": "N4",
+    "example": "優しい人"
+  },
+  {
+    "word": "易しい",
+    "reading": "やさしい",
+    "meaning": "1. 쉽다 2. 용이하다 3. 평이하다",
+    "level": "N4",
+    "example": "易しい問題[本]"
+  },
+  {
+    "word": "痩せる",
+    "reading": "やせる",
+    "meaning": "1. 여위다 2. 메마르게 되다 3. 재산이 줄다",
+    "level": "N4",
+    "example": "痩せ薬"
+  },
+  {
+    "word": "八つ",
+    "reading": "やっつ",
+    "meaning": "1. ‘やつ’의 음 변화 2. 여덟 3. 여덟 살·여덟 개·여덟 번째",
+    "level": "N4",
+    "example": "ケーキを八つに分ける"
+  },
+  {
+    "word": "やっと",
+    "reading": null,
+    "meaning": "1. 겨우 2. 많이",
+    "level": "N4",
+    "example": "やっと勝った試合"
+  },
+  {
+    "word": "やはり",
+    "reading": null,
+    "meaning": "1. 역시 2. 여전히 3. 또한",
+    "level": "N4",
+    "example": "今でもやはりここに住んでいますか"
+  },
+  {
+    "word": "山道",
+    "reading": "やまみち",
+    "meaning": "산길",
+    "level": "N4",
+    "example": "山道を歩く"
+  },
+  {
+    "word": "止む",
+    "reading": "やむ",
+    "meaning": "1. 멈추다 2. ‘止める'의 문어형",
+    "level": "N4",
+    "example": "騒音が止む"
+  },
+  {
+    "word": "やめる",
+    "reading": null,
+    "meaning": "1. 그만두다 2. 중지하다 3. 끊다",
+    "level": "N4",
+    "example": "旅行を止める"
+  },
+  {
+    "word": "やる",
+    "reading": null,
+    "meaning": "1. 보내다 2. 다니게 하다 3. 파견하다",
+    "level": "N4",
+    "example": "子供を学校へ遣る"
+  },
+  {
+    "word": "柔らかい",
+    "reading": "やわらかい",
+    "meaning": "1. 몰랑하다・부드럽다 2. 따지지 않다・순순하다",
+    "level": "N4",
+    "example": "柔らかいもち"
+  },
+  {
+    "word": "湯",
+    "reading": "ゆ",
+    "meaning": "1. 뜨거운 물 2. 목욕물 3. 온천",
+    "level": "N4",
+    "example": "湯加減"
+  },
+  {
+    "word": "夕食",
+    "reading": "ゆうしょく",
+    "meaning": "1. 저녁밥 2. 저녁 식사",
+    "level": "N4",
+    "example": "夕食の献立"
+  },
+  {
+    "word": "郵便局",
+    "reading": "ゆうびんきょく",
+    "meaning": "1. 우체국 2. 우편물의 인수∙교부∙우표 판매 및 우편 관련 업무를 하는 사무소",
+    "level": "N4",
+    "example": "郵便局で販売されている封筒の種類や料金"
+  },
+  {
+    "word": "夕べ",
+    "reading": "ゆうべ",
+    "meaning": "1. 저녁때 2. 저녁때부터 시작하는 모임",
+    "level": "N4",
+    "example": "夕べの祈り"
+  },
+  {
+    "word": "昨夜",
+    "reading": "ゆうべ",
+    "meaning": "1. 어제저녁 2. 어젯밤",
+    "level": "N4",
+    "example": "昨夜の新聞"
+  },
+  {
+    "word": "有名",
+    "reading": "ゆうめい",
+    "meaning": "1. 유명 2. 세상에 이름이 널리 알려져 있는 것 3. 이름을 가지는 것",
+    "level": "N4",
+    "example": "有名な人"
+  },
+  {
+    "word": "ゆく",
+    "reading": null,
+    "meaning": "1. 가다 2. 한 곳에서 딴 곳으로 움직여 가다 3. 떠나다",
+    "level": "N4",
+    "example": "道行く人"
+  },
+  {
+    "word": "輸出",
+    "reading": "ゆしゅつ",
+    "meaning": "수출",
+    "level": "N4",
+    "example": "輸出送り状"
+  },
+  {
+    "word": "輸入",
+    "reading": "ゆにゅう",
+    "meaning": "1. 수입 2. 외국의 상품이나 기술·문화 등을 국내로 사들이거나 들여오는 것",
+    "level": "N4",
+    "example": "輸入商"
+  },
+  {
+    "word": "指",
+    "reading": "ゆび",
+    "meaning": "1. 손가락 2. 발가락",
+    "level": "N4",
+    "example": "指が長い"
+  },
+  {
+    "word": "指輪",
+    "reading": "ゆびわ",
+    "meaning": "1. 반지 2. 가락지",
+    "level": "N4",
+    "example": "金の指輪"
+  },
+  {
+    "word": "夢",
+    "reading": "ゆめ",
+    "meaning": "1. 꿈 2. 수면 중의 정신 현상 3. 희망이나 이상",
+    "level": "N4",
+    "example": "夢に現れる"
+  },
+  {
+    "word": "揺れる",
+    "reading": "ゆれる",
+    "meaning": "1. 흔들리다 2. 전후·상하·좌우로 움직이다 3. 불안정한 상태가 되다",
+    "level": "N4",
+    "example": "揺れる舟"
+  },
+  {
+    "word": "酔い",
+    "reading": "よい",
+    "meaning": "1. 취함 2. 멀미",
+    "level": "N4",
+    "example": "ほろ酔い"
+  },
+  {
+    "word": "用意",
+    "reading": "ようい",
+    "meaning": "1. 용의 2. 대비",
+    "level": "N4",
+    "example": "旅行の用意"
+  },
+  {
+    "word": "用事",
+    "reading": "ようじ",
+    "meaning": "1. 볼일 2. 용변",
+    "level": "N4",
+    "example": "家の用事"
+  },
+  {
+    "word": "よく",
+    "reading": null,
+    "meaning": "1. 잘 2. 곧잘 3. 좋게",
+    "level": "N4",
+    "example": "よく分からない"
+  },
+  {
+    "word": "よく",
+    "reading": null,
+    "meaning": "1. 잘 2. 용케 3. 잘도",
+    "level": "N4",
+    "example": "克く困難に打ち勝つ"
+  },
+  {
+    "word": "汚れる",
+    "reading": "よごれる",
+    "meaning": "1. 더러워지다 2. 도덕적으로 그릇되다",
+    "level": "N4",
+    "example": "汚れた川"
+  },
+  {
+    "word": "予習",
+    "reading": "よしゅう",
+    "meaning": "예습",
+    "level": "N4",
+    "example": "数学の予習"
+  },
+  {
+    "word": "予定",
+    "reading": "よてい",
+    "meaning": "예정",
+    "level": "N4",
+    "example": "今月に予定されているイベントスケジュール"
+  },
+  {
+    "word": "読み方",
+    "reading": "よみかた",
+    "meaning": "1. 읽는 법・읽기 2. 문장 내용을 이해하기・또, 그 과정이나 방법 3. 독본・이전에, 초등학교 국어 교과의 하나",
+    "level": "N4",
+    "example": "漢字の読み方"
+  },
+  {
+    "word": "読み物",
+    "reading": "よみもの",
+    "meaning": "1. 읽게 만들어진 것・읽을거리 2. 만담가가 연출하는 연제 3. 읽을 만한 문장·기사",
+    "level": "N4",
+    "example": "連載読物"
+  },
+  {
+    "word": "予約",
+    "reading": "よやく",
+    "meaning": "1. 예약 2. 미리 약속하는 것 3. 장차 계약을 성사시키기로 미리 약속하는 계약",
+    "level": "N4",
+    "example": "席を予約する"
+  },
+  {
+    "word": "寄る",
+    "reading": "よる",
+    "meaning": "1. 접근하다 2. 마음을 두다",
+    "level": "N4",
+    "example": "船が岸に寄る"
+  },
+  {
+    "word": "喜ぶ",
+    "reading": "よろこぶ",
+    "meaning": "1. 즐거워하다 2. 경하하다 3. 달갑게 받아들이다",
+    "level": "N4",
+    "example": "喜ばれる贈り物"
+  },
+  {
+    "word": "よろしい",
+    "reading": null,
+    "meaning": "1. 좋다 2. ‘よい’의 공손한 말씨 3. 허가할 수 있다",
+    "level": "N4",
+    "example": "心掛けが宜しい"
+  },
+  {
+    "word": "立派",
+    "reading": "りっぱ",
+    "meaning": "1. 훌륭함 2. 당당함 3. 더할 나위 없음",
+    "level": "N4",
+    "example": "立派な人"
+  },
+  {
+    "word": "理由",
+    "reading": "りゆう",
+    "meaning": "1. 이유 2. 까닭 3. 구실",
+    "level": "N4",
+    "example": "理由のない非難"
+  },
+  {
+    "word": "両親",
+    "reading": "りょうしん",
+    "meaning": "1. 양친 2. 부모 3. 어버이",
+    "level": "N4",
+    "example": "両親を失う"
+  },
+  {
+    "word": "両方",
+    "reading": "りょうほう",
+    "meaning": "1. 양방 2. 쌍방 3. 두 방면",
+    "level": "N4",
+    "example": "両方とも悪い"
+  },
+  {
+    "word": "旅館",
+    "reading": "りょかん",
+    "meaning": "여관",
+    "level": "N4",
+    "example": "温泉旅館"
+  },
+  {
+    "word": "旅行",
+    "reading": "りょこう",
+    "meaning": "여행",
+    "level": "N4",
+    "example": "日帰りの旅行"
+  },
+  {
+    "word": "利用",
+    "reading": "りよう",
+    "meaning": "1. 이용 2. 필요에 따라 쓰는 것 3. 자신의 이익을 위한 방편으로 쓰는 것",
+    "level": "N4",
+    "example": "廃物利用"
+  },
+  {
+    "word": "リンゴ",
+    "reading": null,
+    "meaning": "1. 사과 2. 사과나무",
+    "level": "N4",
+    "example": "林檎の皮"
+  },
+  {
+    "word": "留守",
+    "reading": "るす",
+    "meaning": "1. 집안사람들의 부재중에 집을 지킴 2. 외출하고 집에 없음 3. 할 일을 하지 않음",
+    "level": "N4",
+    "example": "隣に留守を頼む"
+  },
+  {
+    "word": "零",
+    "reading": "れい",
+    "meaning": "1. 영 2. 제로",
+    "level": "N4",
+    "example": "五対零で勝つ"
+  },
+  {
+    "word": "冷蔵庫",
+    "reading": "れいぞうこ",
+    "meaning": "냉장고",
+    "level": "N4",
+    "example": "電気冷蔵庫"
+  },
+  {
+    "word": "冷房",
+    "reading": "れいぼう",
+    "meaning": "냉방",
+    "level": "N4",
+    "example": "冷房装置"
+  },
+  {
+    "word": "歴史",
+    "reading": "れきし",
+    "meaning": "1. 역사 2. 인간 사회가 거쳐 온 변천·발전의 경과 3. 경력",
+    "level": "N4",
+    "example": "歴史家"
+  },
+  {
+    "word": "列車",
+    "reading": "れっしゃ",
+    "meaning": "열차",
+    "level": "N4",
+    "example": "急行[貨物]列車"
+  },
+  {
+    "word": "練習",
+    "reading": "れんしゅう",
+    "meaning": "연습",
+    "level": "N4",
+    "example": "漢字練習帳"
+  },
+  {
+    "word": "連絡",
+    "reading": "れんらく",
+    "meaning": "1. 연락 2. 관련이 있는 것 3. 알리는 것",
+    "level": "N4",
+    "example": "何の連絡も無い2つの事件"
+  },
+  {
+    "word": "廊下",
+    "reading": "ろうか",
+    "meaning": "1. 낭하 2. 협곡",
+    "level": "N4",
+    "example": "渡り廊下"
+  },
+  {
+    "word": "老人",
+    "reading": "ろうじん",
+    "meaning": "노인",
+    "level": "N4",
+    "example": "元気な老人"
+  },
+  {
+    "word": "若い",
+    "reading": "わかい",
+    "meaning": "1. 젊다 2. 어리다 3. 생긴 지 얼마 안 되다",
+    "level": "N4",
+    "example": "若い人"
+  },
+  {
+    "word": "沸かす",
+    "reading": "わかす",
+    "meaning": "1. 데우다 2. 열광시키다 3. 녹이다",
+    "level": "N4",
+    "example": "風呂を沸かす"
+  },
+  {
+    "word": "別れる",
+    "reading": "わかれる",
+    "meaning": "1. 헤어지다 2. 작별하다 3. 갈라서다",
+    "level": "N4",
+    "example": "さようならと言って別れる"
+  },
+  {
+    "word": "わく",
+    "reading": null,
+    "meaning": "1. 끓다 2. 들끓다 3. 발효하다",
+    "level": "N4",
+    "example": "風呂が沸く"
+  },
+  {
+    "word": "わけ",
+    "reading": null,
+    "meaning": "1. 의미 2. 도리 3. 원인",
+    "level": "N4",
+    "example": "この言葉の訳が分からない"
+  },
+  {
+    "word": "わざわざ",
+    "reading": null,
+    "meaning": "1. 일부러 2. 특별히 3. 고의로",
+    "level": "N4",
+    "example": "わざわざ作らせた品"
+  },
+  {
+    "word": "忘れ物",
+    "reading": "わすれもの",
+    "meaning": "1. 물건을 깜박 잊고 옴 2. 또, 그 잊은 물건",
+    "level": "N4",
+    "example": "忘れ物をする"
+  },
+  {
+    "word": "忘れる",
+    "reading": "わすれる",
+    "meaning": "1. 잊다 2. 기억이 없어지다 3. 열중하여 깨닫지 못하다",
+    "level": "N4",
+    "example": "忘れられない人"
+  },
+  {
+    "word": "わたくし",
+    "reading": null,
+    "meaning": "1. 저 2. 사",
+    "level": "N4",
+    "example": "私如き者"
+  },
+  {
+    "word": "渡し",
+    "reading": "わたし",
+    "meaning": "1. 인도 2. 나룻배로 사람을 건넴 3. 발판",
+    "level": "N4",
+    "example": "工場渡し"
+  },
+  {
+    "word": "渡す",
+    "reading": "わたす",
+    "meaning": "1. 건네주다 2. 건너가게 하다 3. 주다",
+    "level": "N4",
+    "example": "舟で人を渡す"
+  },
+  {
+    "word": "渡る",
+    "reading": "わたる",
+    "meaning": "1. 건너다 2. ‘行く’ ‘来る’ ‘歩む’ ‘居る’ ‘在る’의 높임말",
+    "level": "N4",
+    "example": "道を渡る"
+  },
+  {
+    "word": "笑う",
+    "reading": "わらう",
+    "meaning": "1. 웃다 2. 기쁨·우스움·계면쩍음 등으로 웃다 3. 꽃봉오리 따위가 열려 방긋거리다",
+    "level": "N4",
+    "example": "にこにこ(と)笑う"
+  },
+  {
+    "word": "割る",
+    "reading": "わる",
+    "meaning": "1. 나누다 2. ‘割れる'의 문어형",
+    "level": "N4",
+    "example": "二十を五で割る"
+  },
+  {
+    "word": "割れる",
+    "reading": "われる",
+    "meaning": "1. 깨지다 2. 부서지다 3. 성공 못하다",
+    "level": "N4",
+    "example": "窓ガラスが割れる"
+  },
+  {
+    "word": "アイアン",
+    "reading": null,
+    "meaning": "1. 철. 쇠 2. 공을 치는 부분이 철제인 골프채",
+    "level": "N4",
+    "example": "パワーとアイアンの技に自信がある"
+  },
+  {
+    "word": "アイディア",
+    "reading": null,
+    "meaning": "생각. 착상. 관념",
+    "level": "N4",
+    "example": "ポスト・プレーが封じられると，サイド攻撃に転じるなどのアイディアもなかった"
+  },
+  {
+    "word": "アイロン",
+    "reading": null,
+    "meaning": "1. 아이론 2. 다리미 3. 머리카락을 지지는 데 쓰는 기구",
+    "level": "N4",
+    "example": "電気アイロン"
+  },
+  {
+    "word": "アクセサリー",
+    "reading": null,
+    "meaning": "1. 액세서리 2. 복장의 장식품 3. 기계 등의 부속품",
+    "level": "N4",
+    "example": "手作りアクセサリーを販売する"
+  },
+  {
+    "word": "アシスト",
+    "reading": null,
+    "meaning": "1. 돕다. 원조하다 2. 득점에 연결되는 마지막 패스 플레이. 또, 그 패스를 한 선수",
+    "level": "N4",
+    "example": "どんな優秀な人でも一人では駄目。いいアシスト，いいチームワークがなければいけない"
+  },
+  {
+    "word": "アジア",
+    "reading": null,
+    "meaning": "아시아",
+    "level": "N4",
+    "example": "アジア人種"
+  },
+  {
+    "word": "アナウンサー",
+    "reading": null,
+    "meaning": "아나운서",
+    "level": "N4",
+    "example": "新人[最古参]アナウンサー"
+  },
+  {
+    "word": "アニメ",
+    "reading": null,
+    "meaning": "1. ‘アニメーション'의 준말 2. 애니메이션",
+    "level": "N4",
+    "example": "スポ根アニメ"
+  },
+  {
+    "word": "アフリカ",
+    "reading": null,
+    "meaning": "아프리카",
+    "level": "N4",
+    "example": "アフリカ人種"
+  },
+  {
+    "word": "アメリカ",
+    "reading": null,
+    "meaning": "아메리카, 미국",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "アルコール",
+    "reading": null,
+    "meaning": "알코올, 주정",
+    "level": "N4",
+    "example": "アルコール分"
+  },
+  {
+    "word": "アルバイト",
+    "reading": null,
+    "meaning": "1. 아르바이트 2. 업적",
+    "level": "N4",
+    "example": "アルバイトしながら学校を卒業する"
+  },
+  {
+    "word": "イヤリング",
+    "reading": null,
+    "meaning": "이어링, 귀걸이",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "エアコン",
+    "reading": null,
+    "meaning": "에어컨",
+    "level": "N4",
+    "example": "エアコンが壊れている"
+  },
+  {
+    "word": "エスカレーター",
+    "reading": null,
+    "meaning": "에스컬레이터, 자동 계단",
+    "level": "N4",
+    "example": "エスカレーター式に大学までいく"
+  },
+  {
+    "word": "オートバイ",
+    "reading": null,
+    "meaning": "오토바이",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "カレー",
+    "reading": null,
+    "meaning": "1. 카레 2. 카레 가루 3. ‘カレーライス’ ‘ライスカレー’의 준말",
+    "level": "N4",
+    "example": "激辛カレー"
+  },
+  {
+    "word": "カーテン",
+    "reading": null,
+    "meaning": "커튼, 휘장, 장막",
+    "level": "N4",
+    "example": "鉄のカーテン"
+  },
+  {
+    "word": "ガス",
+    "reading": null,
+    "meaning": "1. 가스 2. ‘ガス糸·ガス織り’의 준말 3. 짙은 안개",
+    "level": "N4",
+    "example": "水素ガス"
+  },
+  {
+    "word": "ガス代",
+    "reading": "ガスだい",
+    "meaning": "가스 요금",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ガソリン",
+    "reading": null,
+    "meaning": "가솔린, 휘발유",
+    "level": "N4",
+    "example": "ガソリン輸入の自由化"
+  },
+  {
+    "word": "ガソリンスタンド",
+    "reading": null,
+    "meaning": "가솔린 스탠드, 주유소",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ガラス",
+    "reading": null,
+    "meaning": "1. 유리 2. 깨지기 쉬운 것의 비유",
+    "level": "N4",
+    "example": "ガラス窓"
+  },
+  {
+    "word": "キッチン",
+    "reading": null,
+    "meaning": "→キチン",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "キロ",
+    "reading": null,
+    "meaning": "킬로, ‘キロメートル·キログラム·キロワット’ 등의 준말",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "キログラム",
+    "reading": null,
+    "meaning": "킬로그램",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "キロメートル",
+    "reading": null,
+    "meaning": "킬로미터",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "グラム",
+    "reading": null,
+    "meaning": "그램",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ケーキ",
+    "reading": null,
+    "meaning": "1. 케이크 2. 양과자",
+    "level": "N4",
+    "example": "生クリームケーキ"
+  },
+  {
+    "word": "ゲーム",
+    "reading": null,
+    "meaning": "게임",
+    "level": "N4",
+    "example": "ビッグゲーム"
+  },
+  {
+    "word": "コンサート",
+    "reading": null,
+    "meaning": "콘서트, 연주회, 음악회",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "コンピューター",
+    "reading": null,
+    "meaning": "1. 컴퓨터 2. 전자계산기",
+    "level": "N4",
+    "example": "コンピューター犯罪"
+  },
+  {
+    "word": "サイン",
+    "reading": null,
+    "meaning": "1. 사인 2. 서명 3. 신호・암호",
+    "level": "N4",
+    "example": "キャッチャーのサイン"
+  },
+  {
+    "word": "サラダ",
+    "reading": null,
+    "meaning": "샐러드",
+    "level": "N4",
+    "example": "野菜サラダ"
+  },
+  {
+    "word": "サンダル",
+    "reading": null,
+    "meaning": "샌들",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "サンドイッチ",
+    "reading": null,
+    "meaning": "샌드위치",
+    "level": "N4",
+    "example": "サンドイッチデモ"
+  },
+  {
+    "word": "ジャム",
+    "reading": null,
+    "meaning": "잼",
+    "level": "N4",
+    "example": "パンにジャムをつける"
+  },
+  {
+    "word": "ジュース",
+    "reading": null,
+    "meaning": "1. 주스 2. 즙 3. 액체",
+    "level": "N4",
+    "example": "レモンジュース"
+  },
+  {
+    "word": "スクリーン",
+    "reading": null,
+    "meaning": "1. 스크린 2. 은막・영사막 3. 영화・영화계",
+    "level": "N4",
+    "example": "スクリーンに立つ"
+  },
+  {
+    "word": "ステレオ",
+    "reading": null,
+    "meaning": "1. 스테레오 2. 입체 3. 입체 장치",
+    "level": "N4",
+    "example": "ステレオ印刷"
+  },
+  {
+    "word": "ステーキ",
+    "reading": null,
+    "meaning": "스테이크, 구운 고기, 특히, ‘ビーフステーキ’의 준말",
+    "level": "N4",
+    "example": "サーモンステーキ"
+  },
+  {
+    "word": "スピーカー",
+    "reading": null,
+    "meaning": "1. 스피커 2. 라디오나 텔레비전 등의 소리 나는 곳 3. ‘ラウドスピーカー’의 준말",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "スピーチ",
+    "reading": null,
+    "meaning": "스피치, 연설",
+    "level": "N4",
+    "example": "テーブルスピーチ"
+  },
+  {
+    "word": "スピード",
+    "reading": null,
+    "meaning": "스피드, 속력, 속도",
+    "level": "N4",
+    "example": "スピード違反"
+  },
+  {
+    "word": "スリッパ",
+    "reading": null,
+    "meaning": "슬리퍼",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "スーツ",
+    "reading": null,
+    "meaning": "1. 슈트 2. 상의와 하의를 같은 천으로 만든 한 벌의 양복",
+    "level": "N4",
+    "example": "スーツケース"
+  },
+  {
+    "word": "スーツケース",
+    "reading": null,
+    "meaning": "슈트케이스, 여행용 소형 가방",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "スーパー",
+    "reading": null,
+    "meaning": "1. 슈퍼 2. ‘초…, …보다 위인, 뛰어난, 특대의, 더욱 …한’의 뜻",
+    "level": "N4",
+    "example": "スーパーへ買い物に行く"
+  },
+  {
+    "word": "セット",
+    "reading": null,
+    "meaning": "1. 세트 2. 조절·설정·준비함",
+    "level": "N4",
+    "example": "ワンセット"
+  },
+  {
+    "word": "ソフト",
+    "reading": null,
+    "meaning": "1. 소프트・부드러움 2. ‘ソフト帽’의 준말 3. ‘ソフトドリンク’의 준말",
+    "level": "N4",
+    "example": "ソフトな感じ"
+  },
+  {
+    "word": "タイプ",
+    "reading": null,
+    "meaning": "1. 타입 2. 형 3. 타이프・‘タイプライター’의 준말・또, 타이프라이터로 치는 일・타자",
+    "level": "N4",
+    "example": "学者[芸術家]タイプ"
+  },
+  {
+    "word": "ダンス",
+    "reading": null,
+    "meaning": "댄스, 춤, 특히, 사교춤",
+    "level": "N4",
+    "example": "ソーシャルダンス"
+  },
+  {
+    "word": "チェック",
+    "reading": null,
+    "meaning": "1. 체크 2. 수표 3. 표를 함・또, 대조하여 검사함",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "チケット",
+    "reading": null,
+    "meaning": "티켓, 입장권·승차권·회수권 따위의 표",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "テキスト",
+    "reading": null,
+    "meaning": "1. 텍스트 2. 교과서・특히, 부독본·강좌용 교재 3. 원문・원전",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "テニス",
+    "reading": null,
+    "meaning": "테니스",
+    "level": "N4",
+    "example": "テニスボール"
+  },
+  {
+    "word": "テープレコーダー",
+    "reading": null,
+    "meaning": "테이프 리코더, 테이프식 녹음기",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "トラック",
+    "reading": null,
+    "meaning": "트럭, 화물 자동차",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ドラマ",
+    "reading": null,
+    "meaning": "1. 드라마 2. 연극・극 3. 극본・희곡",
+    "level": "N4",
+    "example": "ホームドラマ"
+  },
+  {
+    "word": "ドレス",
+    "reading": null,
+    "meaning": "드레스, 여성의 양복",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ニュース",
+    "reading": null,
+    "meaning": "뉴스",
+    "level": "N4",
+    "example": "大ニュース"
+  },
+  {
+    "word": "ハイ・ティーン",
+    "reading": null,
+    "meaning": "하이틴. 10대 후반의 소년·소녀",
+    "level": "N4",
+    "example": "ハイ・ティーン向けの雑誌"
+  },
+  {
+    "word": "ハンバーグ",
+    "reading": null,
+    "meaning": "햄버그",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "バケツ",
+    "reading": null,
+    "meaning": "버킷, 바께쓰, 양동이",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "バター",
+    "reading": null,
+    "meaning": "버터, 우락",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "パソコン",
+    "reading": null,
+    "meaning": "1. パーソナルコンピューター'의 준말 2. 퍼스널 컴퓨터 3. 피시",
+    "level": "N4",
+    "example": "超薄型のノートパソコン"
+  },
+  {
+    "word": "パン屋",
+    "reading": "パンや",
+    "meaning": "빵가게, 빵집",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "パージ",
+    "reading": null,
+    "meaning": "퍼지, 추방, 숙청",
+    "level": "N4",
+    "example": "レッドパージ"
+  },
+  {
+    "word": "パーティー",
+    "reading": null,
+    "meaning": "1. 파티 2. 회합 3. 정당",
+    "level": "N4",
+    "example": "ダンスパーティー"
+  },
+  {
+    "word": "パートタイム",
+    "reading": null,
+    "meaning": "파트 타임, 단시간 근무",
+    "level": "N4",
+    "example": "パートタイムジャブ"
+  },
+  {
+    "word": "ビール",
+    "reading": null,
+    "meaning": "맥주",
+    "level": "N4",
+    "example": "ビール瓶"
+  },
+  {
+    "word": "ピアノ",
+    "reading": null,
+    "meaning": "1. 피아노 2. 여리게",
+    "level": "N4",
+    "example": "ピアノ三[五]重奏"
+  },
+  {
+    "word": "ピクニック",
+    "reading": null,
+    "meaning": "피크닉, 소풍, 들놀이",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ピンク",
+    "reading": null,
+    "meaning": "1. 핑크 2. 분홍빛・담홍색 3. 색정적임",
+    "level": "N4",
+    "example": "ピンクのブラウス"
+  },
+  {
+    "word": "フィルム",
+    "reading": null,
+    "meaning": "1. 필름 2. 사진 감광판・또, 그것을 현상한 음화 3. 영화",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "フォーク",
+    "reading": null,
+    "meaning": "포크, 삼지창, 쇠스랑",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ブラックアウト",
+    "reading": null,
+    "meaning": "1. 장면 전환시 장내나 화면이 어두워지는 일 2. 스포츠 등의 방송을 특정 구역에만 송신함 3. 뉴스의 보도 금지",
+    "level": "N4",
+    "example": "新聞，テレビのヘリコプターが三日間飛行禁止となっては情報のブラックアウト現象が起き…"
+  },
+  {
+    "word": "プリント",
+    "reading": null,
+    "meaning": "1. 프린트 2. 인쇄 3. 음화로부터 양화를 인화하는 일・또, 그렇게 한 필름",
+    "level": "N4",
+    "example": "プリント屋"
+  },
+  {
+    "word": "プレゼント",
+    "reading": null,
+    "meaning": "1. 프레젠트 2. 선사 3. 선물",
+    "level": "N4",
+    "example": "クリスマスプレゼント"
+  },
+  {
+    "word": "プール",
+    "reading": null,
+    "meaning": "1. 풀 2. 수영장 3. 공동 계산으로 함・또, 기업가 연합 따위",
+    "level": "N4",
+    "example": "モータープール"
+  },
+  {
+    "word": "ベッド",
+    "reading": null,
+    "meaning": "1. 베드 2. 침대 3. 묘상",
+    "level": "N4",
+    "example": "ダブルベッド"
+  },
+  {
+    "word": "ベル",
+    "reading": null,
+    "meaning": "벨, 종, 방울",
+    "level": "N4",
+    "example": "非常ベル"
+  },
+  {
+    "word": "ペット",
+    "reading": null,
+    "meaning": "‘トランペット’의 준말",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ページ",
+    "reading": null,
+    "meaning": "1. 페이지 2. 책이나 장부의 한 면 3. 컴퓨터에서, 일정한 크기로 주기억 장치를 분할한 경우의 단위",
+    "level": "N4",
+    "example": "ページの狂った本"
+  },
+  {
+    "word": "ボート",
+    "reading": null,
+    "meaning": "보트",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ボール",
+    "reading": null,
+    "meaning": "1. 볼 2. 공・구슬 3. 스트라이크가 아닌 투구",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ポスト",
+    "reading": null,
+    "meaning": "1. 포스트 2. 우체통・우편함 3. 지위・직위",
+    "level": "N4",
+    "example": "手紙をポストに入れる"
+  },
+  {
+    "word": "マスク",
+    "reading": null,
+    "meaning": "1. 마스크 2. 면 3. 가면・탈",
+    "level": "N4",
+    "example": "マスクプレー"
+  },
+  {
+    "word": "マッチ",
+    "reading": null,
+    "meaning": "매치, 성냥",
+    "level": "N4",
+    "example": "マッチ棒"
+  },
+  {
+    "word": "メロン",
+    "reading": null,
+    "meaning": "멜론",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "メートル",
+    "reading": null,
+    "meaning": "1. 미터 2. 미터법에서, 길이의 기본 단위 3. →メーター",
+    "level": "N4",
+    "example": "ガスのメートル"
+  },
+  {
+    "word": "ラジカセ",
+    "reading": null,
+    "meaning": "‘ラジオカセット’의 준말",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "レコード",
+    "reading": null,
+    "meaning": "1. 레코드 2. 기록 3. 축음기 음반・축음기판",
+    "level": "N4",
+    "example": "レコード破り"
+  },
+  {
+    "word": "レジ",
+    "reading": null,
+    "meaning": "1. ‘レジスター'의 준말 2. 금전 등록기 3. 금전 출납계",
+    "level": "N4",
+    "example": "レジ袋"
+  },
+  {
+    "word": "レベル",
+    "reading": null,
+    "meaning": "1. 레벨 2. 수준・정도 3. 수준기・수평기",
+    "level": "N4",
+    "example": "レベルが上がる"
+  },
+  {
+    "word": "レポート",
+    "reading": null,
+    "meaning": "리포트, 보고, 보고서",
+    "level": "N4",
+    "example": "現地からレポートする"
+  },
+  {
+    "word": "ワイシャツ",
+    "reading": null,
+    "meaning": "와이셔츠",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ワンピース",
+    "reading": null,
+    "meaning": "원피스",
+    "level": "N4",
+    "example": null
+  },
+  {
+    "word": "ワープロ",
+    "reading": null,
+    "meaning": "‘ワードプロセッサー’의 준말",
+    "level": "N4",
+    "example": null
+  }
+]

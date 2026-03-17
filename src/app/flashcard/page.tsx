@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { sampleVocabularies } from "@/lib/sample-data";
 import {
   calculateNextReview,
   formatReviewInterval,
   type Difficulty,
 } from "@/lib/spaced-repetition";
+import type { StudyFlashcard } from "@/lib/study-data-types";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
+import { useStudyData } from "@/lib/use-study-data";
 
 interface CardState {
   vocabIndex: number;
@@ -16,16 +17,24 @@ interface CardState {
   repetitions: number;
 }
 
+const EMPTY_FLASHCARDS: StudyFlashcard[] = [];
+
 export default function FlashcardPage() {
-  const { isLoading, level, supportedLevel, userLabel } = useActiveStudyProfile();
+  const { isLoading: isProfileLoading, supportedLevel, userLabel } =
+    useActiveStudyProfile();
   const [flipped, setFlipped] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [stats, setStats] = useState({ reviewed: 0, correct: 0 });
   const [cardStates, setCardStates] = useState<Map<number, CardState>>(
     new Map()
   );
+  const { data: vocabs, error, isLoading: isStudyLoading } = useStudyData<
+    StudyFlashcard[]
+  >(
+    isProfileLoading ? null : `flashcards-${supportedLevel}.json`,
+    EMPTY_FLASHCARDS
+  );
 
-  const vocabs = sampleVocabularies.filter((v) => v.level === supportedLevel);
   const current = vocabs[currentIndex];
   const currentCardState = cardStates.get(currentIndex) || {
     vocabIndex: currentIndex,
@@ -45,6 +54,10 @@ export default function FlashcardPage() {
     );
 
   function handleDifficulty(difficulty: Difficulty) {
+    if (!current || vocabs.length === 0) {
+      return;
+    }
+
     const result = calculateNextReview(
       currentCardState.easeFactor,
       currentCardState.interval,
@@ -72,29 +85,8 @@ export default function FlashcardPage() {
     setCurrentIndex((prev) => (prev + 1) % vocabs.length);
   }
 
-  if (isLoading) {
+  if (isProfileLoading || isStudyLoading) {
     return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
-  }
-
-  if (!supportedLevel) {
-    return (
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <h1 className="text-2xl font-bold">단어 학습</h1>
-          <div className="flex flex-wrap gap-2 text-sm">
-            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
-              현재 사용자 {userLabel}
-            </span>
-            <span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-700">
-              설정 레벨 {level}
-            </span>
-          </div>
-        </div>
-        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
-          {level} 단어 학습 데이터는 아직 준비되지 않았습니다.
-        </p>
-      </div>
-    );
   }
 
   if (!current) {
@@ -111,7 +103,14 @@ export default function FlashcardPage() {
             </span>
           </div>
         </div>
-        <p className="text-center text-gray-500">해당 레벨의 단어가 없습니다.</p>
+        {error && (
+          <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+          </p>
+        )}
+        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+          {supportedLevel} 단어 데이터가 없습니다.
+        </p>
       </div>
     );
   }
@@ -129,6 +128,12 @@ export default function FlashcardPage() {
           </span>
         </div>
       </div>
+
+      {error && (
+        <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+          {error}
+        </p>
+      )}
 
       {/* Stats */}
       <div className="flex gap-4 text-sm text-gray-500">
@@ -158,7 +163,9 @@ export default function FlashcardPage() {
           {/* Front */}
           <div className="flashcard-front absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-8">
             <p className="text-5xl font-bold mb-4">{current.word}</p>
-            <p className="text-xl text-gray-400">{current.reading}</p>
+            {current.reading && (
+              <p className="text-xl text-gray-400">{current.reading}</p>
+            )}
             <p className="mt-6 text-sm text-gray-400">
               탭하여 뜻 확인
             </p>
@@ -167,7 +174,9 @@ export default function FlashcardPage() {
           {/* Back */}
           <div className="flashcard-back absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-8">
             <p className="text-3xl font-bold mb-2">{current.word}</p>
-            <p className="text-lg text-gray-400 mb-4">{current.reading}</p>
+            {current.reading && (
+              <p className="text-lg text-gray-400 mb-4">{current.reading}</p>
+            )}
             <p className="text-2xl text-blue-600 dark:text-blue-400 font-semibold mb-4">
               {current.meaning}
             </p>

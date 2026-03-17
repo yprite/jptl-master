@@ -1,0 +1,29 @@
+{
+  "flashcards": {
+    "N5": 744,
+    "N4": 1036,
+    "N3": 1546
+  },
+  "vocabulary_questions": {
+    "N5": {
+      "total": 1359,
+      "meaning": 744,
+      "reading": 615
+    },
+    "N4": {
+      "total": 1832,
+      "meaning": 1036,
+      "reading": 796
+    },
+    "N3": {
+      "total": 2856,
+      "meaning": 1546,
+      "reading": 1310
+    }
+  },
+  "grammar_questions": {
+    "N5": 1207,
+    "N4": 0,
+    "N3": 1305
+  }
+}

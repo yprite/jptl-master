@@ -1,0 +1,5210 @@
+[
+  {
+    "word": "~ずつ",
+    "reading": null,
+    "meaning": "1. …씩 2. 같은 분량으로 할당함 3. 같은 분량만큼 되풀이함",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "会う",
+    "reading": "あう",
+    "meaning": "1. 만나다 2. 대면하다 3. 우연히 만나다",
+    "level": "N5",
+    "example": "友達[客]に会う"
+  },
+  {
+    "word": "青い",
+    "reading": "あおい",
+    "meaning": "1. 파랗다 2. 푸르다 3. 창백하다",
+    "level": "N5",
+    "example": "青い空"
+  },
+  {
+    "word": "赤い",
+    "reading": "あかい",
+    "meaning": "1. 붉다 2. 아름답다 3. 공산주의적이다",
+    "level": "N5",
+    "example": "顔を赤くする"
+  },
+  {
+    "word": "明るい",
+    "reading": "あかるい",
+    "meaning": "1. 밝다 2. 환하다 3. 명랑하다",
+    "level": "N5",
+    "example": "明るい部屋"
+  },
+  {
+    "word": "上がる",
+    "reading": "あがる",
+    "meaning": "1. 오르다 2. 몰수되다 3. ‘食う’ ‘飲む’‘吸う’의 높임말",
+    "level": "N5",
+    "example": "階段を上がる"
+  },
+  {
+    "word": "秋",
+    "reading": "あき",
+    "meaning": "가을",
+    "level": "N5",
+    "example": "昨年の秋"
+  },
+  {
+    "word": "開く",
+    "reading": "あく",
+    "meaning": "1. 열리다 2. 가게 문이 열리다 3. 면해 있다",
+    "level": "N5",
+    "example": "扉が開く"
+  },
+  {
+    "word": "開ける",
+    "reading": "あける",
+    "meaning": "1. 열다 2. 사이를 떼다",
+    "level": "N5",
+    "example": "窓を開ける"
+  },
+  {
+    "word": "上げる",
+    "reading": "あげる",
+    "meaning": "1. 올리다 2. 조수가 밀려오다",
+    "level": "N5",
+    "example": "幕を上げる"
+  },
+  {
+    "word": "朝",
+    "reading": "あさ",
+    "meaning": "아침",
+    "level": "N5",
+    "example": "朝ご飯"
+  },
+  {
+    "word": "朝ご飯",
+    "reading": "あさごはん",
+    "meaning": "아침 밥",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "明後日",
+    "reading": "あさって",
+    "meaning": "모레",
+    "level": "N5",
+    "example": "明後日の朝お伺いします"
+  },
+  {
+    "word": "足",
+    "reading": "あし",
+    "meaning": "1.발 2.걸음 3.보조",
+    "level": "N5",
+    "example": "足の裏"
+  },
+  {
+    "word": "明日",
+    "reading": "あした",
+    "meaning": "내일",
+    "level": "N5",
+    "example": "明日は晴れるだろう"
+  },
+  {
+    "word": "あそこ",
+    "reading": null,
+    "meaning": "1. 저기 2. 저처럼",
+    "level": "N5",
+    "example": "ここからあそこまで"
+  },
+  {
+    "word": "遊ぶ",
+    "reading": "あそぶ",
+    "meaning": "1. 놀다 2. 스포츠∙취미 등 좋아하는 것을 하며 시간을 보내다 3. 정해진 일∙직업이 없어 한가하게 시간을 보내다",
+    "level": "N5",
+    "example": "友達と遊ぶ"
+  },
+  {
+    "word": "頭",
+    "reading": "あたま",
+    "meaning": "1. 머리 2. 두부 3. 두발",
+    "level": "N5",
+    "example": "頭を掻く"
+  },
+  {
+    "word": "新しい",
+    "reading": "あたらしい",
+    "meaning": "1. 새롭다 2. 오래지 않다 3. 싱싱하다",
+    "level": "N5",
+    "example": "新しく入社した人"
+  },
+  {
+    "word": "あちら",
+    "reading": null,
+    "meaning": "1. 자신이나 상대방에게서 멀리 떨어진 방향·장소·사물을 가리킴 2. 저쪽 3. 저것",
+    "level": "N5",
+    "example": "南はあちらです"
+  },
+  {
+    "word": "暑い",
+    "reading": "あつい",
+    "meaning": "덥다",
+    "level": "N5",
+    "example": "夏の暑い盛り"
+  },
+  {
+    "word": "後",
+    "reading": "あと",
+    "meaning": "1. 뒤 2. 앞으로",
+    "level": "N5",
+    "example": "後に残る"
+  },
+  {
+    "word": "あなた",
+    "reading": null,
+    "meaning": "1. 당신 2. 여보",
+    "level": "N5",
+    "example": "あなたはどうなさいますか"
+  },
+  {
+    "word": "兄",
+    "reading": "あに",
+    "meaning": "1. 형 2. 시아주버니 3. 나이 든 사람이 젊은 남자를 친근하게 부르는 말",
+    "level": "N5",
+    "example": "三つ違いの兄"
+  },
+  {
+    "word": "姉",
+    "reading": "あね",
+    "meaning": "1. 언니 2. 배우자의 손위 여자 형제",
+    "level": "N5",
+    "example": "1番上の姉"
+  },
+  {
+    "word": "あの",
+    "reading": null,
+    "meaning": "1. 저 2. 말하는 이와 듣는 이로부터 멀리 있는 대상을 가리키는 말 3. 말하는 이와 듣는 이가 이미 알고 있는 사항을 가리키는 말",
+    "level": "N5",
+    "example": "あの山越えて"
+  },
+  {
+    "word": "浴びる",
+    "reading": "あびる",
+    "meaning": "1. 뒤집어쓰다 2. 들쓰다 3. 흠뻑 쓰다",
+    "level": "N5",
+    "example": "シャワーを浴びる"
+  },
+  {
+    "word": "危ない",
+    "reading": "あぶない",
+    "meaning": "1. 위험하다 2. 불안하다 3. 하마터면",
+    "level": "N5",
+    "example": "危ないおもちゃ"
+  },
+  {
+    "word": "甘い",
+    "reading": "あまい",
+    "meaning": "1. 달다 2. 싱겁다 3. 달콤하다",
+    "level": "N5",
+    "example": "甘いお菓子"
+  },
+  {
+    "word": "あまり",
+    "reading": null,
+    "meaning": "1. 남은 것 2. 너무 3. 도가 지나침",
+    "level": "N5",
+    "example": "余りが出る"
+  },
+  {
+    "word": "雨",
+    "reading": "あめ",
+    "meaning": "1. 비 2. 빗발치듯 쏟아지는 모양",
+    "level": "N5",
+    "example": "にわか雨"
+  },
+  {
+    "word": "洗う",
+    "reading": "あらう",
+    "meaning": "1. 씻다 2. 밀려왔다 나갔다 하다 3. 자세히 들춰 조사하다",
+    "level": "N5",
+    "example": "石鹸で手を洗う"
+  },
+  {
+    "word": "ありがとうございます",
+    "reading": null,
+    "meaning": "감사합니다",
+    "level": "N5",
+    "example": "どうも有り難うございます"
+  },
+  {
+    "word": "ある",
+    "reading": null,
+    "meaning": "1. 있다 2. 얼마큼 되다 3. 죽 …하다",
+    "level": "N5",
+    "example": "事ある時は"
+  },
+  {
+    "word": "歩く",
+    "reading": "あるく",
+    "meaning": "1. 걷다 2. 여기저기 돌아다니다 3. 타자가 사사구로 출루하다",
+    "level": "N5",
+    "example": "田舎道を歩く"
+  },
+  {
+    "word": "あんな",
+    "reading": null,
+    "meaning": "1. 저런 2. 그런",
+    "level": "N5",
+    "example": "あんなに"
+  },
+  {
+    "word": "いい",
+    "reading": null,
+    "meaning": "1. 좋다 2. ‘나쁘다·꼴사납다’의 뜻을 나타냄",
+    "level": "N5",
+    "example": "いい家柄"
+  },
+  {
+    "word": "いいえ",
+    "reading": null,
+    "meaning": "1. 아니 2. 아뇨",
+    "level": "N5",
+    "example": "いいえ、行きませんでした"
+  },
+  {
+    "word": "言う",
+    "reading": "いう",
+    "meaning": "1. 말하다 2. 소리가 나다",
+    "level": "N5",
+    "example": "意見を言う"
+  },
+  {
+    "word": "家",
+    "reading": "いえ",
+    "meaning": "1. 집 2. 주택 3. 자택",
+    "level": "N5",
+    "example": "家を建てる"
+  },
+  {
+    "word": "行く",
+    "reading": "いく",
+    "meaning": "1. 가다 2. 딴 곳으로 움직여 가다 3. 향하다",
+    "level": "N5",
+    "example": "一緒に行く"
+  },
+  {
+    "word": "いくつ",
+    "reading": null,
+    "meaning": "1. 몇 2. 몇 살",
+    "level": "N5",
+    "example": "5千円でいくつですか"
+  },
+  {
+    "word": "いくら",
+    "reading": null,
+    "meaning": "1. 얼마 2. 얼마나",
+    "level": "N5",
+    "example": "目方はいくら"
+  },
+  {
+    "word": "池",
+    "reading": "いけ",
+    "meaning": "1. 못 2. 연지",
+    "level": "N5",
+    "example": "池を掘る"
+  },
+  {
+    "word": "医者",
+    "reading": "いしゃ",
+    "meaning": "의사",
+    "level": "N5",
+    "example": "掛かりつけの医者"
+  },
+  {
+    "word": "椅子",
+    "reading": "いす",
+    "meaning": "1. 의자 2. 관직 등의 직위",
+    "level": "N5",
+    "example": "座り心地のいい椅子"
+  },
+  {
+    "word": "忙しい",
+    "reading": "いそがしい",
+    "meaning": "1. 바쁘다 2. 닥치어 들뜨다",
+    "level": "N5",
+    "example": "旅支度に忙しい"
+  },
+  {
+    "word": "痛い",
+    "reading": "いたい",
+    "meaning": "1. 아프다 2. 육체적 고통을 느끼다 3. 정신적 고통을 느끼다",
+    "level": "N5",
+    "example": "歯が痛い"
+  },
+  {
+    "word": "いただきます",
+    "reading": null,
+    "meaning": "잘 먹겠습니다",
+    "level": "N5",
+    "example": "‘いただきます'の挨拶で一斉に食べ始める子供たち"
+  },
+  {
+    "word": "一",
+    "reading": "いち",
+    "meaning": "1. 일 2. 가장",
+    "level": "N5",
+    "example": "一円"
+  },
+  {
+    "word": "一円",
+    "reading": "いちえん",
+    "meaning": "1. 일원・어떤 장소 일대 2. 1엔 3. 조금도・전혀・도무지",
+    "level": "N5",
+    "example": "関東一円に亙って"
+  },
+  {
+    "word": "一月",
+    "reading": "いちがつ",
+    "meaning": "일월, 정월",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "一時",
+    "reading": "いちじ",
+    "meaning": "1. 일시 2. 잠시 3. 한때",
+    "level": "N5",
+    "example": "一時見合わせる"
+  },
+  {
+    "word": "一日",
+    "reading": "いちにち",
+    "meaning": "1. 일일 2. 하루 3. 아침부터 저녁까지",
+    "level": "N5",
+    "example": "一日千秋"
+  },
+  {
+    "word": "一年",
+    "reading": "いちねん",
+    "meaning": "1. 일 년 2. 한 해 3. 한 해 동안",
+    "level": "N5",
+    "example": "一年は三百六十五日だ"
+  },
+  {
+    "word": "一倍",
+    "reading": "いちばい",
+    "meaning": "1. 곱 2. 일배 3. 두 배・갑절",
+    "level": "N5",
+    "example": "一倍半"
+  },
+  {
+    "word": "一番",
+    "reading": "いちばん",
+    "meaning": "1. 일 번 2. 가장",
+    "level": "N5",
+    "example": "一番打者"
+  },
+  {
+    "word": "一枚",
+    "reading": "いちまい",
+    "meaning": "1. 일매 2. 논의 한 구획 3. 한 사람",
+    "level": "N5",
+    "example": "一枚刷り"
+  },
+  {
+    "word": "一回",
+    "reading": "いっかい",
+    "meaning": "1. 1회 2. 일주 3. 한 회",
+    "level": "N5",
+    "example": "一回限り"
+  },
+  {
+    "word": "一階",
+    "reading": "いっかい",
+    "meaning": "1. 일층 2. 관직의 일계급",
+    "level": "N5",
+    "example": "地下一階"
+  },
+  {
+    "word": "一個",
+    "reading": "いっこ",
+    "meaning": "1. 한 개 2. 일개",
+    "level": "N5",
+    "example": "ミカン一個"
+  },
+  {
+    "word": "一週間",
+    "reading": "いっしゅうかん",
+    "meaning": "1. 한 주간 2. 일주일간 3. 7일간",
+    "level": "N5",
+    "example": "一週間の休暇を取る"
+  },
+  {
+    "word": "いっしょに",
+    "reading": null,
+    "meaning": "함께, 같이",
+    "level": "N5",
+    "example": "母といっしょに出かける"
+  },
+  {
+    "word": "いっぱい",
+    "reading": null,
+    "meaning": "1. 일배 2. 한잔함 3. 한 그릇에 한 번만 담고 더 주지 않음",
+    "level": "N5",
+    "example": "一杯の美酒"
+  },
+  {
+    "word": "一匹",
+    "reading": "いっぴき",
+    "meaning": "1. 한 필 2. 한 마리 3. 옛날 돈의 10文 또는 25文",
+    "level": "N5",
+    "example": "一匹の子犬"
+  },
+  {
+    "word": "一分",
+    "reading": "いっぷん",
+    "meaning": "1. 일 분 2. 일 푼",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "一本",
+    "reading": "いっぽん",
+    "meaning": "1. 한 자루 2. 한 대 침 3. 한 권의 책",
+    "level": "N5",
+    "example": "鉛筆一本"
+  },
+  {
+    "word": "いつ",
+    "reading": null,
+    "meaning": "1. 언제 2. 평소",
+    "level": "N5",
+    "example": "誕生日は何時ですか"
+  },
+  {
+    "word": "五日",
+    "reading": "いつか",
+    "meaning": "1. 오일 2. 닷새 동안 3. 초닷새",
+    "level": "N5",
+    "example": "風邪で五日寝た"
+  },
+  {
+    "word": "五つ",
+    "reading": "いつつ",
+    "meaning": "1. 다섯 2. 다섯 살 3. 옛 시각의 이름",
+    "level": "N5",
+    "example": "りんごが五つ残っている"
+  },
+  {
+    "word": "いつも",
+    "reading": null,
+    "meaning": "1. 여느 때 2. 언제나",
+    "level": "N5",
+    "example": "何時もの通り"
+  },
+  {
+    "word": "犬",
+    "reading": "いぬ",
+    "meaning": "1. 개 2. 하찮은 것",
+    "level": "N5",
+    "example": "犬を飼う"
+  },
+  {
+    "word": "今",
+    "reading": "いま",
+    "meaning": "1. 지금 2. 방금 3. 현재의",
+    "level": "N5",
+    "example": "今の政府"
+  },
+  {
+    "word": "意味",
+    "reading": "いみ",
+    "meaning": "1. 의미 2. 말의 뜻 3. 의도",
+    "level": "N5",
+    "example": "言葉の意味変化"
+  },
+  {
+    "word": "妹",
+    "reading": "いもうと",
+    "meaning": "1. 여동생 2. 처제",
+    "level": "N5",
+    "example": "妹も行きたいって"
+  },
+  {
+    "word": "嫌",
+    "reading": "いや",
+    "meaning": "1. 싫음 2. 불쾌한 모양 3. 대단히",
+    "level": "N5",
+    "example": "嫌な奴"
+  },
+  {
+    "word": "いらっしゃいませ",
+    "reading": null,
+    "meaning": "1. 어서 오십시오 2. 어서 오세요",
+    "level": "N5",
+    "example": "従業員が‘いらっしゃいませ'と声をかける"
+  },
+  {
+    "word": "入り口",
+    "reading": "いりぐち",
+    "meaning": "1. 입구 2. 시초",
+    "level": "N5",
+    "example": "トンネルの入り口"
+  },
+  {
+    "word": "いる",
+    "reading": null,
+    "meaning": "1. 필요하다 2. 소용되다 3. 들다",
+    "level": "N5",
+    "example": "お金が要る"
+  },
+  {
+    "word": "いる",
+    "reading": null,
+    "meaning": "1. 있다 2. 앉다 3. 가만히 있다",
+    "level": "N5",
+    "example": "ずっと東京に居る"
+  },
+  {
+    "word": "入れる",
+    "reading": "いれる",
+    "meaning": "1. 넣다 2. 속에 집어넣다 3. 들어가게 하다",
+    "level": "N5",
+    "example": "箱に入れる"
+  },
+  {
+    "word": "色",
+    "reading": "いろ",
+    "meaning": "1. 색 2. 빛깔 3. 안색",
+    "level": "N5",
+    "example": "色のないガラス"
+  },
+  {
+    "word": "色々",
+    "reading": "いろいろ",
+    "meaning": "1. 여러 가지 종류 2. 여러모로",
+    "level": "N5",
+    "example": "花の色色"
+  },
+  {
+    "word": "上",
+    "reading": "うえ",
+    "meaning": "1. 위 2. 손윗사람을 이를 때 덧붙이는 말",
+    "level": "N5",
+    "example": "雲の上"
+  },
+  {
+    "word": "後ろ",
+    "reading": "うしろ",
+    "meaning": "1. 뒤 2. 뒤쪽 3. 등",
+    "level": "N5",
+    "example": "後ろの列"
+  },
+  {
+    "word": "薄い",
+    "reading": "うすい",
+    "meaning": "1. 얇다 2. 정도·밀도가 적다 3. 산뜻하다",
+    "level": "N5",
+    "example": "薄い紙"
+  },
+  {
+    "word": "歌",
+    "reading": "うた",
+    "meaning": "1. 노래 2. 단가 3. 근대∙현대의 시",
+    "level": "N5",
+    "example": "歌がうまい"
+  },
+  {
+    "word": "歌う",
+    "reading": "うたう",
+    "meaning": "1. 노래하다 2. 새가 지저귀다",
+    "level": "N5",
+    "example": "裏声で歌う"
+  },
+  {
+    "word": "生まれる",
+    "reading": "うまれる",
+    "meaning": "1. 태어나다 2. 새로 생기다",
+    "level": "N5",
+    "example": "私の生まれた年"
+  },
+  {
+    "word": "海",
+    "reading": "うみ",
+    "meaning": "1. 바다 2. 호수 3. 널리 퍼져 있는 것",
+    "level": "N5",
+    "example": "海の水"
+  },
+  {
+    "word": "売る",
+    "reading": "うる",
+    "meaning": "1. 팔다 2. 값을 받고 물건 등을 주다 3. 배반하다",
+    "level": "N5",
+    "example": "土地を売る"
+  },
+  {
+    "word": "うるさい",
+    "reading": null,
+    "meaning": "1. 시끄럽다 2. 귀찮다 3. 까다롭다",
+    "level": "N5",
+    "example": "テレビの音が煩い"
+  },
+  {
+    "word": "上着",
+    "reading": "うわぎ",
+    "meaning": "1. 겉옷 2. 아래위가 따로 떨어진 옷의 윗도리 3. 平安 시대의 여성이 うちぎぬ의 위, 小うちぎ의 아래에 입던 옷",
+    "level": "N5",
+    "example": "上着をぬぐ"
+  },
+  {
+    "word": "絵",
+    "reading": "え",
+    "meaning": "1. 그림 2. 화면",
+    "level": "N5",
+    "example": "絵を描く"
+  },
+  {
+    "word": "映画館",
+    "reading": "えいがかん",
+    "meaning": "영화관",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "英語",
+    "reading": "えいご",
+    "meaning": "영어",
+    "level": "N5",
+    "example": "英語の授業"
+  },
+  {
+    "word": "駅",
+    "reading": "えき",
+    "meaning": "1. 역 2. 역참",
+    "level": "N5",
+    "example": "ソウル駅"
+  },
+  {
+    "word": "円",
+    "reading": "えん",
+    "meaning": "1. 둥긂 2. 엔",
+    "level": "N5",
+    "example": "円の面積"
+  },
+  {
+    "word": "鉛筆",
+    "reading": "えんぴつ",
+    "meaning": "1.연필 2.‘음경’의 은어",
+    "level": "N5",
+    "example": "鉛筆で字を書く"
+  },
+  {
+    "word": "美味しい",
+    "reading": "おいしい",
+    "meaning": "1. 맛있다 2. 형편이 좋다",
+    "level": "N5",
+    "example": "この料理は美味しい"
+  },
+  {
+    "word": "多い",
+    "reading": "おおい",
+    "meaning": "1. 많다 2. 많이 있다 3. 보통을 넘거나 상당한 상태에 있다",
+    "level": "N5",
+    "example": "地震の多い国"
+  },
+  {
+    "word": "大きい",
+    "reading": "おおきい",
+    "meaning": "1. 크다 2. 보통 정도를 넘다 3. 많다",
+    "level": "N5",
+    "example": "大きい箱"
+  },
+  {
+    "word": "大きな",
+    "reading": "おおきな",
+    "meaning": "1. 큰 2. 수∙양이 많음 3. 정도가 심함",
+    "level": "N5",
+    "example": "大きな池のある公園"
+  },
+  {
+    "word": "大勢",
+    "reading": "おおぜい",
+    "meaning": "1. 많은 사람 2. 여럿",
+    "level": "N5",
+    "example": "大勢のファンが集まった"
+  },
+  {
+    "word": "お母さん",
+    "reading": "おかあさん",
+    "meaning": "1. 엄마 2. 아이가 자신의 모친을 부르는 말 3. 제3자가 다른 사람의 모친을 친근하게 부르는 말",
+    "level": "N5",
+    "example": "お母さん、誕生日おめでとう"
+  },
+  {
+    "word": "お菓子",
+    "reading": "おかし",
+    "meaning": "과자",
+    "level": "N5",
+    "example": "お土産にしたい美味しいお菓子"
+  },
+  {
+    "word": "お金",
+    "reading": "おかね",
+    "meaning": "1. 돈 2. 금전",
+    "level": "N5",
+    "example": "お金になる仕事"
+  },
+  {
+    "word": "お客さん",
+    "reading": "おきゃくさん",
+    "meaning": "1. 손님 2. 수준이 너무 낮아 적당히 별도 취급을 받는 사람 3. 다루기 쉬운 상대",
+    "level": "N5",
+    "example": "お客さんが待っている"
+  },
+  {
+    "word": "起きる",
+    "reading": "おきる",
+    "meaning": "1. 일어나다 2. 바로 서다 3. 기상하다",
+    "level": "N5",
+    "example": "倒れかかっていた稲が起きる"
+  },
+  {
+    "word": "おく",
+    "reading": null,
+    "meaning": "1. 두다 2. 앉다",
+    "level": "N5",
+    "example": "本[眼鏡]を机の上に置く"
+  },
+  {
+    "word": "奥さん",
+    "reading": "おくさん",
+    "meaning": "1. 부인 2. 아주머니",
+    "level": "N5",
+    "example": "隣の奥さん"
+  },
+  {
+    "word": "お酒",
+    "reading": "おさけ",
+    "meaning": "술",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "お皿",
+    "reading": "おさら",
+    "meaning": "접시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "教える",
+    "reading": "おしえる",
+    "meaning": "1. 가르치다 2. 지식·기능 등을 배워 주다 3. 자기가 아는 바를 알리다",
+    "level": "N5",
+    "example": "数学を教える"
+  },
+  {
+    "word": "おじいさん",
+    "reading": null,
+    "meaning": "1. 할아버지 2. 영감님",
+    "level": "N5",
+    "example": "田舎のおじいさん"
+  },
+  {
+    "word": "おじさん",
+    "reading": null,
+    "meaning": "1. 백부·숙부의 높임말 2. 아저씨",
+    "level": "N5",
+    "example": "お隣りのおじさん"
+  },
+  {
+    "word": "押す",
+    "reading": "おす",
+    "meaning": "1. 밀다 2. 누르다 3. 내리누르다",
+    "level": "N5",
+    "example": "車を押す"
+  },
+  {
+    "word": "遅い",
+    "reading": "おそい",
+    "meaning": "1. 늦다 2. 느리다 3. 대지 못하다",
+    "level": "N5",
+    "example": "仕事が遅い"
+  },
+  {
+    "word": "お茶",
+    "reading": "おちゃ",
+    "meaning": "1. 차 2. 일하는 도중에 잠깐 쉼 3. 다도",
+    "level": "N5",
+    "example": "お茶の会"
+  },
+  {
+    "word": "お父さん",
+    "reading": "おとうさん",
+    "meaning": "1. 아버지 2. 아빠",
+    "level": "N5",
+    "example": "お父さん、行ってまいります"
+  },
+  {
+    "word": "弟",
+    "reading": "おとうと",
+    "meaning": "1. 남동생 2. 배우자의 남동생 3. 성별 관계없이 자신보다 어린 형제",
+    "level": "N5",
+    "example": "弟に当たる人"
+  },
+  {
+    "word": "男",
+    "reading": "おとこ",
+    "meaning": "1. 남자 2. 사나이다움 3. 성인 남자",
+    "level": "N5",
+    "example": "男を見せる"
+  },
+  {
+    "word": "男の子",
+    "reading": "おとこのこ",
+    "meaning": "1. 사내아이 2. 젊은 남자",
+    "level": "N5",
+    "example": "6歳の男の子"
+  },
+  {
+    "word": "男の人",
+    "reading": "おとこのひと",
+    "meaning": "남자",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "一昨日",
+    "reading": "おととい",
+    "meaning": "1. 그저께 2. 그제 3. 재작일",
+    "level": "N5",
+    "example": "一昨日の夜"
+  },
+  {
+    "word": "一昨年",
+    "reading": "おととし",
+    "meaning": "1. 그러께 2. 재작년",
+    "level": "N5",
+    "example": "一昨年の今ごろ"
+  },
+  {
+    "word": "大人",
+    "reading": "おとな",
+    "meaning": "1. 어른 2. 성장하여 제 역할을 하게 된 사람 3. 예전에, ‘元服∙裳着' 등의 성인식을 끝낸 사람",
+    "level": "N5",
+    "example": "子供が大人になる"
+  },
+  {
+    "word": "おなか",
+    "reading": null,
+    "meaning": "1. 배 2. 식사 3. 솜",
+    "level": "N5",
+    "example": "御中をこわす"
+  },
+  {
+    "word": "同じ",
+    "reading": "おなじ",
+    "meaning": "1. ‘같음·동일’의 뜻 2. 어차피",
+    "level": "N5",
+    "example": "同じ日の午後"
+  },
+  {
+    "word": "お兄さん",
+    "reading": "おにいさん",
+    "meaning": "1. 형 2. 젊은 남성을 친근하게 부르는 말",
+    "level": "N5",
+    "example": "お兄さんはいつお帰りになりますか"
+  },
+  {
+    "word": "お姉さん",
+    "reading": "おねえさん",
+    "meaning": "1. 언니 2. 아가씨 3. 아줌마",
+    "level": "N5",
+    "example": "お姉さんのお下がりの服"
+  },
+  {
+    "word": "お願いします",
+    "reading": "おねがいします",
+    "meaning": "1. 부탁드립니다 2. 부탁합니다",
+    "level": "N5",
+    "example": "オレンジジュースとコーヒーをお願いします"
+  },
+  {
+    "word": "おばあさん",
+    "reading": null,
+    "meaning": "1. 할머님 2. 조모님",
+    "level": "N5",
+    "example": "田舎のおばあさん"
+  },
+  {
+    "word": "おばさん",
+    "reading": null,
+    "meaning": "1. 아주머니 2. ‘おば’를 높이거나 친근하게 부르는 말 3. 나이 든 여성을 친근하게 부르는 말",
+    "level": "N5",
+    "example": "親戚のおばさん"
+  },
+  {
+    "word": "お風呂",
+    "reading": "おふろ",
+    "meaning": "목욕, 욕실",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "お弁当",
+    "reading": "おべんとう",
+    "meaning": "도시락",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "覚える",
+    "reading": "おぼえる",
+    "meaning": "1. 느끼다 2. 기억하다 3. 배우다",
+    "level": "N5",
+    "example": "哀れを覚える"
+  },
+  {
+    "word": "おまわりさん",
+    "reading": null,
+    "meaning": "경찰",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "重い",
+    "reading": "おもい",
+    "meaning": "1. 무겁다 2. 무게가 나가다 3. 언동이 가볍지 않다",
+    "level": "N5",
+    "example": "重い荷"
+  },
+  {
+    "word": "面白い",
+    "reading": "おもしろい",
+    "meaning": "1. 재미있다 2. 우습다 3. 흥미 있다",
+    "level": "N5",
+    "example": "面白い映画[ドラマ、動画]"
+  },
+  {
+    "word": "おやすみなさい",
+    "reading": null,
+    "meaning": "1. 안녕히 주무세요 2. 편히 쉬세요",
+    "level": "N5",
+    "example": "お父さん、お母さん、おやすみなさい"
+  },
+  {
+    "word": "泳ぐ",
+    "reading": "およぐ",
+    "meaning": "1. 헤엄치다 2. 헤쳐 나가다 3. 헤집고 나아가다",
+    "level": "N5",
+    "example": "海で泳ぐ"
+  },
+  {
+    "word": "おりる",
+    "reading": null,
+    "meaning": "1. 내리다 2. 도중에서 포기하다",
+    "level": "N5",
+    "example": "汽車から降りる"
+  },
+  {
+    "word": "終わる",
+    "reading": "おわる",
+    "meaning": "1. 끝나다 2. 마치다",
+    "level": "N5",
+    "example": "授業[会期]が終わる"
+  },
+  {
+    "word": "音楽",
+    "reading": "おんがく",
+    "meaning": "1. 음악 2. 인물의 등장이나 퇴장에 쓰는 囃子",
+    "level": "N5",
+    "example": "音楽会のポスター"
+  },
+  {
+    "word": "女",
+    "reading": "おんな",
+    "meaning": "1. 여자 2. 어엿한 여자 3. 애인",
+    "level": "N5",
+    "example": "女湯"
+  },
+  {
+    "word": "女の子",
+    "reading": "おんなのこ",
+    "meaning": "1. 여자아이 2. 젊은 여자",
+    "level": "N5",
+    "example": "十ばかりの女の子"
+  },
+  {
+    "word": "女の人",
+    "reading": "おんなのひと",
+    "meaning": "여자",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "会社",
+    "reading": "かいしゃ",
+    "meaning": "1. 회사 2. 공동의 목적을 이루기 위해 조직된 집단",
+    "level": "N5",
+    "example": "親会社"
+  },
+  {
+    "word": "会社員",
+    "reading": "かいしゃいん",
+    "meaning": "1. 회사원 2. 회사에 고용되어 일하는 사람",
+    "level": "N5",
+    "example": "会社員の給与に課税される所得税"
+  },
+  {
+    "word": "階段",
+    "reading": "かいだん",
+    "meaning": "1. 계단 2. 층층대 3. 단계",
+    "level": "N5",
+    "example": "非常階段"
+  },
+  {
+    "word": "買い物",
+    "reading": "かいもの",
+    "meaning": "1. 물건을 삼 2. 사서 이득이 된 물건",
+    "level": "N5",
+    "example": "買い物かご"
+  },
+  {
+    "word": "買う",
+    "reading": "かう",
+    "meaning": "1. 사다 2. 구입하다 3. 자초하다",
+    "level": "N5",
+    "example": "株を買う"
+  },
+  {
+    "word": "返す",
+    "reading": "かえす",
+    "meaning": "1. 되돌리다 2. 되돌아오다",
+    "level": "N5",
+    "example": "昔に返す"
+  },
+  {
+    "word": "帰る",
+    "reading": "かえる",
+    "meaning": "1. 돌아가다 2. 주자가 홈으로 들어오다",
+    "level": "N5",
+    "example": "故郷に帰る"
+  },
+  {
+    "word": "顔",
+    "reading": "かお",
+    "meaning": "1. 얼굴 2. 낯 3. 얼굴 표정",
+    "level": "N5",
+    "example": "顔に免じて"
+  },
+  {
+    "word": "かかる",
+    "reading": null,
+    "meaning": "1. 걸리다 2. 달리다 3. 불 위에 올려 놓이다",
+    "level": "N5",
+    "example": "床の間に掛かっている軸物"
+  },
+  {
+    "word": "鍵",
+    "reading": "かぎ",
+    "meaning": "1. 열쇠 2. 자물쇠 3. 중요한 단서",
+    "level": "N5",
+    "example": "鍵束"
+  },
+  {
+    "word": "書く",
+    "reading": "かく",
+    "meaning": "1. 쓰다 2. 기억 장치에 데이터를 기억시키다",
+    "level": "N5",
+    "example": "手紙を書く"
+  },
+  {
+    "word": "傘",
+    "reading": "かさ",
+    "meaning": "1. 우산 2. 양산",
+    "level": "N5",
+    "example": "子供用の小さいビニール傘"
+  },
+  {
+    "word": "貸す",
+    "reading": "かす",
+    "meaning": "1. 빌려주다 2. 이용하게 하다 3. 조력하다",
+    "level": "N5",
+    "example": "本を貸してやる"
+  },
+  {
+    "word": "風",
+    "reading": "かぜ",
+    "meaning": "1. 바람 2. 형세 3. 막연한 것",
+    "level": "N5",
+    "example": "秋風"
+  },
+  {
+    "word": "風邪",
+    "reading": "かぜ",
+    "meaning": "1. 감기 2. 고뿔",
+    "level": "N5",
+    "example": "風邪に効く薬"
+  },
+  {
+    "word": "家族",
+    "reading": "かぞく",
+    "meaning": "가족",
+    "level": "N5",
+    "example": "核家族"
+  },
+  {
+    "word": "角",
+    "reading": "かど",
+    "meaning": "1. 모난 귀퉁이 2. 구석 3. 길모퉁이",
+    "level": "N5",
+    "example": "岩の角"
+  },
+  {
+    "word": "鞄",
+    "reading": "かばん",
+    "meaning": "1. 가방 2. 선거에 필요한 자금",
+    "level": "N5",
+    "example": "大きな鞄を提げて行く"
+  },
+  {
+    "word": "花瓶",
+    "reading": "かびん",
+    "meaning": "1. 화병 2. 꽃병",
+    "level": "N5",
+    "example": "花瓶の下敷き"
+  },
+  {
+    "word": "かぶる",
+    "reading": null,
+    "meaning": "1. 덥석 물다 2. 배가 아프다",
+    "level": "N5",
+    "example": "ブランディを齧りつつ"
+  },
+  {
+    "word": "かぶる",
+    "reading": null,
+    "meaning": "1. 쓰다 2. 끝나다",
+    "level": "N5",
+    "example": "人の罪を被る"
+  },
+  {
+    "word": "紙",
+    "reading": "かみ",
+    "meaning": "1. 종이 2. 종이 매체를 말함 3. 보",
+    "level": "N5",
+    "example": "紙切れ"
+  },
+  {
+    "word": "火曜日",
+    "reading": "かようび",
+    "meaning": "화요일",
+    "level": "N5",
+    "example": "火曜日の午後"
+  },
+  {
+    "word": "辛い",
+    "reading": "からい",
+    "meaning": "1. 맵다 2. 짜다 3. 독하다",
+    "level": "N5",
+    "example": "辛い食べ物が好きな人"
+  },
+  {
+    "word": "体",
+    "reading": "からだ",
+    "meaning": "1. 몸 2. 육체 3. 몸통",
+    "level": "N5",
+    "example": "丈夫な体"
+  },
+  {
+    "word": "借りる",
+    "reading": "かりる",
+    "meaning": "1. 빌리다 2. 나중에 갚기로 하고 일시적으로 사용하다 3. 사용료를 지불하고 사용하다",
+    "level": "N5",
+    "example": "お金を借りる"
+  },
+  {
+    "word": "軽い",
+    "reading": "かるい",
+    "meaning": "1. 가볍다 2. 무게가 적다 3. 정도가 심하지 않다",
+    "level": "N5",
+    "example": "荷物が軽い"
+  },
+  {
+    "word": "川",
+    "reading": "かわ",
+    "meaning": "1. 강 2. 시내 3. 내",
+    "level": "N5",
+    "example": "川の上"
+  },
+  {
+    "word": "可愛い",
+    "reading": "かわいい",
+    "meaning": "1. 귀엽다 2. 작다 3. 사랑스럽다",
+    "level": "N5",
+    "example": "可愛い小犬[人形]"
+  },
+  {
+    "word": "漢字",
+    "reading": "かんじ",
+    "meaning": "한자",
+    "level": "N5",
+    "example": "教育漢字"
+  },
+  {
+    "word": "外国人",
+    "reading": "がいこくじん",
+    "meaning": "1. 외국인 2. 다른 나라 사람",
+    "level": "N5",
+    "example": "外国人選手を起用する"
+  },
+  {
+    "word": "学生",
+    "reading": "がくせい",
+    "meaning": "1. 학생 2. 특히, 대학생",
+    "level": "N5",
+    "example": "学生運動に身を投ずる"
+  },
+  {
+    "word": "学校",
+    "reading": "がっこう",
+    "meaning": "1. 학교 2. 배움의 장",
+    "level": "N5",
+    "example": "学校がひける"
+  },
+  {
+    "word": "木",
+    "reading": "き",
+    "meaning": "1. 나무 2. 재목 3. 딱따기",
+    "level": "N5",
+    "example": "柿の木"
+  },
+  {
+    "word": "黄色い",
+    "reading": "きいろい",
+    "meaning": "1. 노랗다 2. 새되다",
+    "level": "N5",
+    "example": "黄色い花"
+  },
+  {
+    "word": "消える",
+    "reading": "きえる",
+    "meaning": "1. 꺼지다 2. 스러지다 3. 없어지다",
+    "level": "N5",
+    "example": "火が消えたような"
+  },
+  {
+    "word": "聞く",
+    "reading": "きく",
+    "meaning": "1. 듣다 2. 귀를 기울이다 3. 받아들이다",
+    "level": "N5",
+    "example": "私の聞いたところによると"
+  },
+  {
+    "word": "北",
+    "reading": "きた",
+    "meaning": "1. 북 2. 북쪽 3. 북쪽 지방",
+    "level": "N5",
+    "example": "北に面した窓"
+  },
+  {
+    "word": "汚い",
+    "reading": "きたない",
+    "meaning": "1. 더럽다 2. 불결하다 3. 꾀죄죄하다",
+    "level": "N5",
+    "example": "汚い足"
+  },
+  {
+    "word": "喫茶店",
+    "reading": "きっさてん",
+    "meaning": "1. 찻집 2. 카페 3. 커피∙홍차 등 음료나 가벼운 식사를 제공하는 음식점",
+    "level": "N5",
+    "example": "落ち着いた雰囲気の喫茶店"
+  },
+  {
+    "word": "切手",
+    "reading": "きって",
+    "meaning": "1. ‘郵便切手’의 준말 2. ‘商品切手’의 준말 3. 수표",
+    "level": "N5",
+    "example": "切手を貼る"
+  },
+  {
+    "word": "切符",
+    "reading": "きっぷ",
+    "meaning": "1. 표 2. 어떤 표로 쓰는 종잇조각 3. 자격이나 권리",
+    "level": "N5",
+    "example": "切符売り場"
+  },
+  {
+    "word": "昨日",
+    "reading": "きのう",
+    "meaning": "1. 어제 2. 오늘의 하루 전날 3. 아주 가까운 과거",
+    "level": "N5",
+    "example": "昨日今日"
+  },
+  {
+    "word": "九",
+    "reading": "きゅう",
+    "meaning": "1. 구 2. 아홉",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九円",
+    "reading": "きゅうえん",
+    "meaning": "9엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九回",
+    "reading": "きゅうかい",
+    "meaning": "9회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九階",
+    "reading": "きゅうかい",
+    "meaning": "9층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九個",
+    "reading": "きゅうこ",
+    "meaning": "9개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九人",
+    "reading": "きゅうにん",
+    "meaning": "9명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九年",
+    "reading": "きゅうねん",
+    "meaning": "9년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九杯",
+    "reading": "きゅうはい",
+    "meaning": "아홉 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九倍",
+    "reading": "きゅうばい",
+    "meaning": "9배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九番",
+    "reading": "きゅうばん",
+    "meaning": "9번",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九匹",
+    "reading": "きゅうひき",
+    "meaning": "9마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九分",
+    "reading": "きゅうふん",
+    "meaning": "9분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九本",
+    "reading": "きゅうほん",
+    "meaning": "9자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九枚",
+    "reading": "きゅうまい",
+    "meaning": "9장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "今日",
+    "reading": "きょう",
+    "meaning": "1. 오늘 2. 금일 3. 같은 날짜의 날",
+    "level": "N5",
+    "example": "今日の天気"
+  },
+  {
+    "word": "教室",
+    "reading": "きょうしつ",
+    "meaning": "1. 교실 2. 학교에서 수업하는 방 3. 대학 연구실",
+    "level": "N5",
+    "example": "教室の掃除当番"
+  },
+  {
+    "word": "兄弟",
+    "reading": "きょうだい",
+    "meaning": "1. 형제 2. 형제뻘이 되는 사람 3. 형제의 의를 맺은 사이",
+    "level": "N5",
+    "example": "太郎の兄弟"
+  },
+  {
+    "word": "去年",
+    "reading": "きょねん",
+    "meaning": "1. 거년 2. 작년 3. 지난해",
+    "level": "N5",
+    "example": "去年の正月休み"
+  },
+  {
+    "word": "嫌い",
+    "reading": "きらい",
+    "meaning": "1. 싫음 2. …한 경향이 있다 3. …의 차별 없이",
+    "level": "N5",
+    "example": "好き嫌い"
+  },
+  {
+    "word": "綺麗",
+    "reading": "きれい",
+    "meaning": "1. 고움 2. 깨끗함 3. 정결함",
+    "level": "N5",
+    "example": "綺麗な花"
+  },
+  {
+    "word": "金曜日",
+    "reading": "きんようび",
+    "meaning": "금요일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "牛肉",
+    "reading": "ぎゅうにく",
+    "meaning": "1. 우육 2. 쇠고기",
+    "level": "N5",
+    "example": "塩漬けした牛肉"
+  },
+  {
+    "word": "牛乳",
+    "reading": "ぎゅうにゅう",
+    "meaning": "우유",
+    "level": "N5",
+    "example": "生牛乳"
+  },
+  {
+    "word": "銀行",
+    "reading": "ぎんこう",
+    "meaning": "1. 은행 2. 예금을 자금으로 하여 대출‧어음 거래‧증권 인수 등의 업무를 하는 금융 기관 3. 필요한 것을 확보‧보관하여 요구에 따라 공급하는 조직",
+    "level": "N5",
+    "example": "銀行に預金する"
+  },
+  {
+    "word": "九月",
+    "reading": "くがつ",
+    "meaning": "구월",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "九時",
+    "reading": "くじ",
+    "meaning": "9시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "薬",
+    "reading": "くすり",
+    "meaning": "1. 약 2. 병의 치료제 3. 해로운 동식물을 없애는 데 쓰는 물질",
+    "level": "N5",
+    "example": "粉薬"
+  },
+  {
+    "word": "果物",
+    "reading": "くだもの",
+    "meaning": "1. 과실 2. 과일",
+    "level": "N5",
+    "example": "果物のジャム"
+  },
+  {
+    "word": "口",
+    "reading": "くち",
+    "meaning": "1. 입 2. 아가리 3. 말",
+    "level": "N5",
+    "example": "口を開ける"
+  },
+  {
+    "word": "靴",
+    "reading": "くつ",
+    "meaning": "1. 신 2. 신발 3. 구두",
+    "level": "N5",
+    "example": "登山靴"
+  },
+  {
+    "word": "靴下",
+    "reading": "くつした",
+    "meaning": "양말",
+    "level": "N5",
+    "example": "靴下止め"
+  },
+  {
+    "word": "国",
+    "reading": "くに",
+    "meaning": "1. 나라 2. 국가 3. 독립된 하나의 세계",
+    "level": "N5",
+    "example": "父母の国"
+  },
+  {
+    "word": "九人",
+    "reading": "くにん",
+    "meaning": "9명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "位",
+    "reading": "くらい",
+    "meaning": "1. 지위 2. 정도",
+    "level": "N5",
+    "example": "大臣の位"
+  },
+  {
+    "word": "暗い",
+    "reading": "くらい",
+    "meaning": "1. 어둡다 2. 밝지 않다 3. 희망이 없다",
+    "level": "N5",
+    "example": "暗い夜道"
+  },
+  {
+    "word": "くる",
+    "reading": null,
+    "meaning": "1. 오다 2. 이리로 오다 3. 일어나다",
+    "level": "N5",
+    "example": "行く年来る年"
+  },
+  {
+    "word": "車",
+    "reading": "くるま",
+    "meaning": "1. 탈것의 총칭 2. 차륜 3. 가문의 하나",
+    "level": "N5",
+    "example": "車で行く"
+  },
+  {
+    "word": "黒い",
+    "reading": "くろい",
+    "meaning": "1. 검다 2. 까맣다 3. 거무스름하다",
+    "level": "N5",
+    "example": "黒い服を着ている"
+  },
+  {
+    "word": "位",
+    "reading": "ぐらい",
+    "meaning": "1. 정도 2. …만큼 …한 것은 없다",
+    "level": "N5",
+    "example": "プロ選手位の実力"
+  },
+  {
+    "word": "警官",
+    "reading": "けいかん",
+    "meaning": "1. ‘警察官’의 준말 2. 경관 3. 경찰",
+    "level": "N5",
+    "example": "偽警官"
+  },
+  {
+    "word": "今朝",
+    "reading": "けさ",
+    "meaning": "오늘 아침",
+    "level": "N5",
+    "example": "今朝の新聞"
+  },
+  {
+    "word": "消す",
+    "reading": "けす",
+    "meaning": "1. 끄다 2. 불타는 것을 죽이다 3. 스위치·고동 등을 틀어 멈추다",
+    "level": "N5",
+    "example": "火事を消す"
+  },
+  {
+    "word": "結婚",
+    "reading": "けっこん",
+    "meaning": "결혼",
+    "level": "N5",
+    "example": "結婚記念日"
+  },
+  {
+    "word": "月曜日",
+    "reading": "げつようび",
+    "meaning": "월요일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "元気",
+    "reading": "げんき",
+    "meaning": "1. 원기 2. 만물 생성의 근원이 되는 정기",
+    "level": "N5",
+    "example": "元気づく"
+  },
+  {
+    "word": "公園",
+    "reading": "こうえん",
+    "meaning": "공원",
+    "level": "N5",
+    "example": "児童公園"
+  },
+  {
+    "word": "紅茶",
+    "reading": "こうちゃ",
+    "meaning": "홍차",
+    "level": "N5",
+    "example": "紅茶を飲む"
+  },
+  {
+    "word": "交番",
+    "reading": "こうばん",
+    "meaning": "1. ‘交番所’의 준말 2. 교번 3. 크기와 방향을 주기적으로 바꾸는 것",
+    "level": "N5",
+    "example": "駅前の交番"
+  },
+  {
+    "word": "声",
+    "reading": "こえ",
+    "meaning": "1. 소리 2. 목소리 3. 물건이 진동하여 내는 소리",
+    "level": "N5",
+    "example": "虫の声"
+  },
+  {
+    "word": "ここ",
+    "reading": null,
+    "meaning": "1. 근칭의 지시 대명사 2. 여기 3. 이 점",
+    "level": "N5",
+    "example": "ここから東京まで"
+  },
+  {
+    "word": "九日",
+    "reading": "ここのか",
+    "meaning": "1. 구일 2. 아흐렛날 3. 9일간",
+    "level": "N5",
+    "example": "四月九日"
+  },
+  {
+    "word": "答える",
+    "reading": "こたえる",
+    "meaning": "1. 대답하다 2. 회답하다 3. 해답하다",
+    "level": "N5",
+    "example": "元気よく答える"
+  },
+  {
+    "word": "こちら",
+    "reading": null,
+    "meaning": "1. 이쪽 2. 이 방향 3. 여기",
+    "level": "N5",
+    "example": "此方を向いて下さい"
+  },
+  {
+    "word": "こちらこそ",
+    "reading": null,
+    "meaning": "저야말로",
+    "level": "N5",
+    "example": "こちらこそ、よろしくお願いします"
+  },
+  {
+    "word": "今年",
+    "reading": "ことし",
+    "meaning": "1. 올해 2. 금년",
+    "level": "N5",
+    "example": "今年米"
+  },
+  {
+    "word": "子供",
+    "reading": "こども",
+    "meaning": "1. 아이 2. 자식 3. 생각이 모자람",
+    "level": "N5",
+    "example": "幼稚園の子供"
+  },
+  {
+    "word": "この",
+    "reading": null,
+    "meaning": "1. 이 2. 이쪽 3. 지금 말하는 사항과 관계되는 뜻",
+    "level": "N5",
+    "example": "この本"
+  },
+  {
+    "word": "困る",
+    "reading": "こまる",
+    "meaning": "1. 곤란하다 2. 고민하다 3. 괴로움을 겪다",
+    "level": "N5",
+    "example": "返事に困る"
+  },
+  {
+    "word": "これ",
+    "reading": null,
+    "meaning": "1. 시간적‧공간적으로 근처에 있는 것을 가리키는 말 2. 어조를 고르고 강조하는 말",
+    "level": "N5",
+    "example": "これを御覧"
+  },
+  {
+    "word": "今月",
+    "reading": "こんげつ",
+    "meaning": "1. 금월 2. 이달",
+    "level": "N5",
+    "example": "今月の行事"
+  },
+  {
+    "word": "今週",
+    "reading": "こんしゅう",
+    "meaning": "1. 금주 2. 이번 주",
+    "level": "N5",
+    "example": "今週の催し物"
+  },
+  {
+    "word": "こんな",
+    "reading": null,
+    "meaning": "1. 이러한 2. 이와 같은",
+    "level": "N5",
+    "example": "そんなこんなで"
+  },
+  {
+    "word": "こんにちは",
+    "reading": null,
+    "meaning": "1. 안녕하십니까 2. 안녕하세요",
+    "level": "N5",
+    "example": "親愛なる読者の皆さん、こんにちは"
+  },
+  {
+    "word": "今晩",
+    "reading": "こんばん",
+    "meaning": "오늘 밤",
+    "level": "N5",
+    "example": "今晩のテレビ番組"
+  },
+  {
+    "word": "こんばんは",
+    "reading": null,
+    "meaning": "1. 안녕하십니까 2. 안녕하세요",
+    "level": "N5",
+    "example": "こんばんは。お邪魔します"
+  },
+  {
+    "word": "五",
+    "reading": "ご",
+    "meaning": "1. 오 2. 다섯 3. 다섯째",
+    "level": "N5",
+    "example": "三に五を足す"
+  },
+  {
+    "word": "五円",
+    "reading": "ごえん",
+    "meaning": "5엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五階",
+    "reading": "ごかい",
+    "meaning": "5층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五回",
+    "reading": "ごかい",
+    "meaning": "5회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五月",
+    "reading": "ごがつ",
+    "meaning": "오월",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五個",
+    "reading": "ごこ",
+    "meaning": "5개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "午後",
+    "reading": "ごご",
+    "meaning": "1. 오후 2. 정오부터 밤 열두 시까지의 시간 3. 정오부터 해가 질 때까지의 동안",
+    "level": "N5",
+    "example": "午後六時にソウルに着く"
+  },
+  {
+    "word": "五時",
+    "reading": "ごじ",
+    "meaning": "1. 오시 2. 다섯 시 3. 계절이 변하는 시기",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "午前",
+    "reading": "ごぜん",
+    "meaning": "1. 오전 2. 자정에서 정오까지의 시간대 3. 새벽에서 정오까지의 시간대",
+    "level": "N5",
+    "example": "午前零時を過ぎると日付けが変わる"
+  },
+  {
+    "word": "ごちそうさまでした",
+    "reading": null,
+    "meaning": "잘 먹었습니다",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五人",
+    "reading": "ごにん",
+    "meaning": "5명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五年",
+    "reading": "ごねん",
+    "meaning": "5년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五杯",
+    "reading": "ごはい",
+    "meaning": "다섯 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "ご飯",
+    "reading": "ごはん",
+    "meaning": "‘めし·食事’의 공손한 말씨",
+    "level": "N5",
+    "example": "グリンピースを使った豆ご飯"
+  },
+  {
+    "word": "五倍",
+    "reading": "ごばい",
+    "meaning": "5배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五番",
+    "reading": "ごばん",
+    "meaning": "5번",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五匹",
+    "reading": "ごひき",
+    "meaning": "5마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五分",
+    "reading": "ごふん",
+    "meaning": "5분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五本",
+    "reading": "ごほん",
+    "meaning": "5자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "五枚",
+    "reading": "ごまい",
+    "meaning": "5장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "ごめんなさい",
+    "reading": null,
+    "meaning": "미안합니다",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "財布",
+    "reading": "さいふ",
+    "meaning": "돈지갑",
+    "level": "N5",
+    "example": "長財布"
+  },
+  {
+    "word": "魚",
+    "reading": "さかな",
+    "meaning": "1. 물고기 2. 생선",
+    "level": "N5",
+    "example": "魚屋"
+  },
+  {
+    "word": "先",
+    "reading": "さき",
+    "meaning": "1. 끝 2. 앞 3. 앞쪽",
+    "level": "N5",
+    "example": "指の先"
+  },
+  {
+    "word": "咲く",
+    "reading": "さく",
+    "meaning": "피다",
+    "level": "N5",
+    "example": "道端に咲いている野菊"
+  },
+  {
+    "word": "作文",
+    "reading": "さくぶん",
+    "meaning": "1. 작문 2. 문장을 만드는 것 3. 국어 교육의 한 분야",
+    "level": "N5",
+    "example": "作文を書く"
+  },
+  {
+    "word": "寒い",
+    "reading": "さむい",
+    "meaning": "1. 춥다 2. 오싹하다 3. 가난하다",
+    "level": "N5",
+    "example": "寒い地方"
+  },
+  {
+    "word": "さようなら",
+    "reading": null,
+    "meaning": "1. 안녕 2. 그러면",
+    "level": "N5",
+    "example": "悲しみよ、 さようなら"
+  },
+  {
+    "word": "三",
+    "reading": "さん",
+    "meaning": "1. 삼 2. 세 번째 3. ‘三の糸’의 준말",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三円",
+    "reading": "さんえん",
+    "meaning": "3엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三回",
+    "reading": "さんかい",
+    "meaning": "3회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三階",
+    "reading": "さんかい",
+    "meaning": "3층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三月",
+    "reading": "さんがつ",
+    "meaning": "3월",
+    "level": "N5",
+    "example": "三月の声を聞くと大学入試だ"
+  },
+  {
+    "word": "三個",
+    "reading": "さんこ",
+    "meaning": "3개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三時",
+    "reading": "さんじ",
+    "meaning": "1. 오후의 간식・오후 3시쯤에 먹는 간식 2. 중요한 세 시기 3. 아침·낮·밤",
+    "level": "N5",
+    "example": "お三時にビスケットを与える"
+  },
+  {
+    "word": "31日",
+    "reading": "さんじゅういちにち",
+    "meaning": "31일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "30日",
+    "reading": "さんじゅうにち",
+    "meaning": "30일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三人",
+    "reading": "さんにん",
+    "meaning": "삼인, 세 사람",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三年",
+    "reading": "さんねん",
+    "meaning": "삼년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三倍",
+    "reading": "さんばい",
+    "meaning": "3배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三杯",
+    "reading": "さんばい",
+    "meaning": "세 잔, 석 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三番",
+    "reading": "さんばん",
+    "meaning": "1. 셋・세 번 2. 세 번째",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三匹",
+    "reading": "さんびき",
+    "meaning": "3마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三分",
+    "reading": "さんぷん",
+    "meaning": "3분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "三本",
+    "reading": "さんぼん",
+    "meaning": "세 자루, 세 대, 세 개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "散歩",
+    "reading": "さんぽ",
+    "meaning": "1. 산보 2. 산책",
+    "level": "N5",
+    "example": "公園を散歩する"
+  },
+  {
+    "word": "三枚",
+    "reading": "さんまい",
+    "meaning": "1. 석 장 2. 생선의 머리를 떼고 등뼈를 따라 칼집을 내어 뼈와 두 조각의 살로 뜨는 일",
+    "level": "N5",
+    "example": "三枚におろす"
+  },
+  {
+    "word": "雑誌",
+    "reading": "ざっし",
+    "meaning": "1. 잡지 2. 2. 잡다한 사항을 쓴 책",
+    "level": "N5",
+    "example": "月刊雑誌"
+  },
+  {
+    "word": "四",
+    "reading": "し",
+    "meaning": "1. 사 2. 네 번째",
+    "level": "N5",
+    "example": "四の五の言う"
+  },
+  {
+    "word": "塩",
+    "reading": "しお",
+    "meaning": "1.소금, 식염 2.짠맛의 정도, 간 3.소금절이",
+    "level": "N5",
+    "example": "塩鱈"
+  },
+  {
+    "word": "四月",
+    "reading": "しがつ",
+    "meaning": "사월, →うづき",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "仕事",
+    "reading": "しごと",
+    "meaning": "1. 일 2. 직업 3. 업적",
+    "level": "N5",
+    "example": "台所[翻訳]の仕事"
+  },
+  {
+    "word": "静か",
+    "reading": "しずか",
+    "meaning": "1. 조용한 모양·상태 2. 아무런 소리도 들리지 않음 3. 움직임이 두드러지지 않음",
+    "level": "N5",
+    "example": "静かな夜"
+  },
+  {
+    "word": "下",
+    "reading": "した",
+    "meaning": "1. 아래 2. 예비의",
+    "level": "N5",
+    "example": "崖の下"
+  },
+  {
+    "word": "七",
+    "reading": "しち",
+    "meaning": "1. 칠 2. 일곱",
+    "level": "N5",
+    "example": "七を数える"
+  },
+  {
+    "word": "七月",
+    "reading": "しちがつ",
+    "meaning": "칠월",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七時",
+    "reading": "しちじ",
+    "meaning": "7시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七人",
+    "reading": "しちにん",
+    "meaning": "7명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七年",
+    "reading": "しちねん",
+    "meaning": "7년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七分",
+    "reading": "しちふん",
+    "meaning": "7분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七枚",
+    "reading": "しちまい",
+    "meaning": "7장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "失礼します",
+    "reading": "しつれいします",
+    "meaning": "1. 실례합니다 2. 실례하겠습니다",
+    "level": "N5",
+    "example": "夜分遅く失礼します"
+  },
+  {
+    "word": "死ぬ",
+    "reading": "しぬ",
+    "meaning": "1. 죽다 2. 숨이 끊어지다 3. 활동이 멈추다",
+    "level": "N5",
+    "example": "死ぬ人と生まれる人"
+  },
+  {
+    "word": "閉まる",
+    "reading": "しまる",
+    "meaning": "1. 닫히다 2. 꼭 닫히다 3. 끝나다",
+    "level": "N5",
+    "example": "シャッターが閉まった銀行"
+  },
+  {
+    "word": "閉める",
+    "reading": "しめる",
+    "meaning": "닫다",
+    "level": "N5",
+    "example": "戸を閉める"
+  },
+  {
+    "word": "締める",
+    "reading": "しめる",
+    "meaning": "1. 죄다 2. 조르다 3. 다잡다",
+    "level": "N5",
+    "example": "ネクタイを締める"
+  },
+  {
+    "word": "写真",
+    "reading": "しゃしん",
+    "meaning": "1. 사진 2. ‘活動写真'의 준말",
+    "level": "N5",
+    "example": "集合写真"
+  },
+  {
+    "word": "宿題",
+    "reading": "しゅくだい",
+    "meaning": "1. 숙제 2. 학생에게 내 주는 과제 3. 앞으로 두고 해결해야 할 문제",
+    "level": "N5",
+    "example": "宿題帳"
+  },
+  {
+    "word": "食堂",
+    "reading": "しょくどう",
+    "meaning": "1. 식당 2. 식사를 하는 방 3. 식사를 시키는 가게",
+    "level": "N5",
+    "example": "食堂車"
+  },
+  {
+    "word": "白い",
+    "reading": "しろい",
+    "meaning": "1. 희다 2. 결백하다 3. 염색되거나 문자·그림으로 채워져 있지 않다",
+    "level": "N5",
+    "example": "白い花"
+  },
+  {
+    "word": "新聞",
+    "reading": "しんぶん",
+    "meaning": "1. 신문 2. 보도나 평론 등을 전달하기 위한 정기 간행물 3. 신문지",
+    "level": "N5",
+    "example": "新聞を印刷する輪転機"
+  },
+  {
+    "word": "時間",
+    "reading": "じかん",
+    "meaning": "1. 시간 2. 때 3. 시각",
+    "level": "N5",
+    "example": "時間講師"
+  },
+  {
+    "word": "辞書",
+    "reading": "じしょ",
+    "meaning": "1. 사서 2. 사전 파일 3. 사직의 뜻을 적은 문서",
+    "level": "N5",
+    "example": "分からない単語が出てきたら辞書を引く"
+  },
+  {
+    "word": "十回",
+    "reading": "じっかい",
+    "meaning": "10회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十階",
+    "reading": "じっかい",
+    "meaning": "10층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十個",
+    "reading": "じっこ",
+    "meaning": "10개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十杯",
+    "reading": "じっぱい",
+    "meaning": "열 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十匹",
+    "reading": "じっぴき",
+    "meaning": "10마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十分",
+    "reading": "じっぷん",
+    "meaning": "10분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十本",
+    "reading": "じっぽん",
+    "meaning": "10자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十",
+    "reading": "じゅう",
+    "meaning": "1. 십 2. 열 3. 전부",
+    "level": "N5",
+    "example": "十の大罪"
+  },
+  {
+    "word": "十一月",
+    "reading": "じゅういちがつ",
+    "meaning": "11월, 동짓달",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十一時",
+    "reading": "じゅういちじ",
+    "meaning": "11시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十円",
+    "reading": "じゅうえん",
+    "meaning": "10엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十月",
+    "reading": "じゅうがつ",
+    "meaning": "시월",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "19日",
+    "reading": "じゅうくにち",
+    "meaning": "19일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "15日",
+    "reading": "じゅうごにち",
+    "meaning": "15일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "13日",
+    "reading": "じゅうさんにち",
+    "meaning": "13일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "17日",
+    "reading": "じゅうしちにち",
+    "meaning": "17일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十時",
+    "reading": "じゅうじ",
+    "meaning": "10시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十二月",
+    "reading": "じゅうにがつ",
+    "meaning": "12월, 섣달",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十二時",
+    "reading": "じゅうにじ",
+    "meaning": "12시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "12日",
+    "reading": "じゅうににち",
+    "meaning": "12일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十人",
+    "reading": "じゅうにん",
+    "meaning": "10명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十年",
+    "reading": "じゅうねん",
+    "meaning": "10년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "18日",
+    "reading": "じゅうはちにち",
+    "meaning": "18일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十倍",
+    "reading": "じゅうばい",
+    "meaning": "10배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十番",
+    "reading": "じゅうばん",
+    "meaning": "10번",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十枚",
+    "reading": "じゅうまい",
+    "meaning": "10장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "14日",
+    "reading": "じゅうよっか",
+    "meaning": "14일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "16日",
+    "reading": "じゅうろくにち",
+    "meaning": "16일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十階",
+    "reading": "じゅっかい",
+    "meaning": "10층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十回",
+    "reading": "じゅっかい",
+    "meaning": "10회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十個",
+    "reading": "じゅっこ",
+    "meaning": "10개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十杯",
+    "reading": "じゅっぱい",
+    "meaning": "열 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十匹",
+    "reading": "じゅっぴき",
+    "meaning": "10마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十分",
+    "reading": "じゅっぷん",
+    "meaning": "10분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "十本",
+    "reading": "じゅっぽん",
+    "meaning": "10자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "上手",
+    "reading": "じょうず",
+    "meaning": "1. 상수 2. 치렛말",
+    "level": "N5",
+    "example": "上手な人"
+  },
+  {
+    "word": "丈夫",
+    "reading": "じょうぶ",
+    "meaning": "1. 건강함 2. 견고함",
+    "level": "N5",
+    "example": "丈夫な人"
+  },
+  {
+    "word": "水曜日",
+    "reading": "すいようび",
+    "meaning": "수요일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "吸う",
+    "reading": "すう",
+    "meaning": "1. 들이마시다 2. 마시다 3. 빨아들이다",
+    "level": "N5",
+    "example": "新鮮な空気を吸う"
+  },
+  {
+    "word": "好き",
+    "reading": "すき",
+    "meaning": "1. 좋아함 2. 호색 3. 호기심",
+    "level": "N5",
+    "example": "好きな役者"
+  },
+  {
+    "word": "少ない",
+    "reading": "すくない",
+    "meaning": "1.적다 2.어리다, 나이가 적다",
+    "level": "N5",
+    "example": "口数の少ない子供"
+  },
+  {
+    "word": "すぐ",
+    "reading": null,
+    "meaning": "1.곧, 즉시 2.곧음, 똑바름 3.순진함, 정직함",
+    "level": "N5",
+    "example": "起きると直ぐ(に)"
+  },
+  {
+    "word": "少し",
+    "reading": "すこし",
+    "meaning": "1. 조금 2. 약간 3. 좀",
+    "level": "N5",
+    "example": "ここで少し休もう"
+  },
+  {
+    "word": "済みません",
+    "reading": "すみません",
+    "meaning": "1. 済まない의 정중한 말 2. 죄송합니다 3. 고맙습니다",
+    "level": "N5",
+    "example": "連絡が遅れてすみません"
+  },
+  {
+    "word": "住む",
+    "reading": "すむ",
+    "meaning": "1. 살다 2. 남자가 여자 집에 다니면서 동서하다",
+    "level": "N5",
+    "example": "都会に住む"
+  },
+  {
+    "word": "する",
+    "reading": null,
+    "meaning": "1. 하다 2. 어떤 일∙동작∙행위 등을 하다 3. 어떤 역할을 하다",
+    "level": "N5",
+    "example": "仕事[勉強]をする"
+  },
+  {
+    "word": "座る",
+    "reading": "すわる",
+    "meaning": "1. 앉다 2. 자리에 엉덩이를 붙이다 3. 어느 지위·자리를 이어받다",
+    "level": "N5",
+    "example": "座ってする仕事[運動]"
+  },
+  {
+    "word": "背",
+    "reading": "せ",
+    "meaning": "1. 등 2. 배의 반대쪽 3. 뒤",
+    "level": "N5",
+    "example": "荷を背に負う"
+  },
+  {
+    "word": "生徒",
+    "reading": "せいと",
+    "meaning": "학생, →じどう·がくせい",
+    "level": "N5",
+    "example": "受持ちの生徒"
+  },
+  {
+    "word": "石鹸",
+    "reading": "せっけん",
+    "meaning": "비누",
+    "level": "N5",
+    "example": "浴用石鹸"
+  },
+  {
+    "word": "節倹",
+    "reading": "せっけん",
+    "meaning": "1. 절검 2. 절약 3. 검약",
+    "level": "N5",
+    "example": "節倹家"
+  },
+  {
+    "word": "狭い",
+    "reading": "せまい",
+    "meaning": "1. 좁다 2. 면적이 작다 3. 너비가 작다",
+    "level": "N5",
+    "example": "狭い庭"
+  },
+  {
+    "word": "千",
+    "reading": "せん",
+    "meaning": "1. 천 2. 또, 수많음의 비유",
+    "level": "N5",
+    "example": "2千億円超の赤字"
+  },
+  {
+    "word": "先月",
+    "reading": "せんげつ",
+    "meaning": "1. 선월 2. 지난달",
+    "level": "N5",
+    "example": "先月分"
+  },
+  {
+    "word": "先週",
+    "reading": "せんしゅう",
+    "meaning": "1. 전주 2. 지난주",
+    "level": "N5",
+    "example": "先週の日曜の午後"
+  },
+  {
+    "word": "先生",
+    "reading": "せんせい",
+    "meaning": "1. 선생 2. 스승 3. 학식이 있는 사람에 대한 경칭",
+    "level": "N5",
+    "example": "国語[音楽]の先生"
+  },
+  {
+    "word": "そこ",
+    "reading": null,
+    "meaning": "1. 거기 2. 그곳 3. 그 장면",
+    "level": "N5",
+    "example": "そこにあるスマホ"
+  },
+  {
+    "word": "そちら",
+    "reading": null,
+    "meaning": "1. 그쪽 2. 그곳 3. 그쪽의 것",
+    "level": "N5",
+    "example": "そちらにあります"
+  },
+  {
+    "word": "外",
+    "reading": "そと",
+    "meaning": "1. 밖 2. 설정된 범위의 외부 3. 외면",
+    "level": "N5",
+    "example": "関心の外"
+  },
+  {
+    "word": "その",
+    "reading": null,
+    "meaning": "1. 그 2. 저…",
+    "level": "N5",
+    "example": "その人"
+  },
+  {
+    "word": "蕎麦",
+    "reading": "そば",
+    "meaning": "1. 메밀 2. 메밀국수",
+    "level": "N5",
+    "example": "蕎麦粉"
+  },
+  {
+    "word": "空",
+    "reading": "そら",
+    "meaning": "1. 하늘 2. 일부러 3. 헛",
+    "level": "N5",
+    "example": "空に輝く太陽"
+  },
+  {
+    "word": "それ",
+    "reading": null,
+    "meaning": "1. 그것 2. 야",
+    "level": "N5",
+    "example": "あれじゃない、それだよ"
+  },
+  {
+    "word": "そんな",
+    "reading": null,
+    "meaning": "1. 그러한 2. ‘そんなことは有りません’의 압축된 말씨",
+    "level": "N5",
+    "example": "そんな訳で"
+  },
+  {
+    "word": "大変",
+    "reading": "たいへん",
+    "meaning": "1. 대사건 2. 대단함 3. 몹시",
+    "level": "N5",
+    "example": "国家の大変"
+  },
+  {
+    "word": "高い",
+    "reading": "たかい",
+    "meaning": "1. 높다 2. 위쪽에 있다 3. 크다",
+    "level": "N5",
+    "example": "高い山"
+  },
+  {
+    "word": "たくさん",
+    "reading": null,
+    "meaning": "1. 많음 2. 충분함 3. 충분하리만큼 많은 모양을 나타냄",
+    "level": "N5",
+    "example": "沢山食べる"
+  },
+  {
+    "word": "立つ",
+    "reading": "たつ",
+    "meaning": "1. 일어서다 2. ‘立てる'의 문어형",
+    "level": "N5",
+    "example": "椅子から立つ"
+  },
+  {
+    "word": "建物",
+    "reading": "たてもの",
+    "meaning": "1. 건물 2. 건축물 3. 사람이 살거나 일을 하거나 물건을 넣어 두기 위하여 지은 집의 총칭",
+    "level": "N5",
+    "example": "洋風[木造]の建物"
+  },
+  {
+    "word": "楽しい",
+    "reading": "たのしい",
+    "meaning": "1. 즐겁다 2. 유쾌하다",
+    "level": "N5",
+    "example": "楽しい旅行[クリスマス]"
+  },
+  {
+    "word": "食べ物",
+    "reading": "たべもの",
+    "meaning": "1. 음식물 2. 씹어서 먹는 음식",
+    "level": "N5",
+    "example": "食べ物屋"
+  },
+  {
+    "word": "食べる",
+    "reading": "たべる",
+    "meaning": "1. 먹다 2. 먹을 것을 먹다 3. 생활하다",
+    "level": "N5",
+    "example": "ご飯を食べる"
+  },
+  {
+    "word": "卵",
+    "reading": "たまご",
+    "meaning": "1. 알 2. 달걀 3. 아직 제구실을 못하는 사람",
+    "level": "N5",
+    "example": "卵を産む"
+  },
+  {
+    "word": "誕生日",
+    "reading": "たんじょうび",
+    "meaning": "1. 생일 2. 출생일",
+    "level": "N5",
+    "example": "手作りの誕生日ケーキ"
+  },
+  {
+    "word": "大学",
+    "reading": "だいがく",
+    "meaning": "1. 대학 2. 최고 학부 3. 律令제에서 관리 양성을 위해 중앙에 설립한 기관",
+    "level": "N5",
+    "example": "大学出"
+  },
+  {
+    "word": "大丈夫",
+    "reading": "だいじょうぶ",
+    "meaning": "1. 괜찮음 2. 틀림없이",
+    "level": "N5",
+    "example": "地震にも大丈夫な建物"
+  },
+  {
+    "word": "大好き",
+    "reading": "だいすき",
+    "meaning": "매우 좋아하는 모양",
+    "level": "N5",
+    "example": "大好きな食べ物"
+  },
+  {
+    "word": "台所",
+    "reading": "だいどころ",
+    "meaning": "1. 부엌 2. 살림",
+    "level": "N5",
+    "example": "台所用品"
+  },
+  {
+    "word": "だけ",
+    "reading": null,
+    "meaning": "1. 정도·범위의 한계를 나타냄 2. …만큼 3. 한",
+    "level": "N5",
+    "example": "いいだけ取りなさい"
+  },
+  {
+    "word": "出す",
+    "reading": "だす",
+    "meaning": "1. 내다 2. …하기 시작하다",
+    "level": "N5",
+    "example": "財布を出す"
+  },
+  {
+    "word": "誰",
+    "reading": "だれ",
+    "meaning": "누구",
+    "level": "N5",
+    "example": "誰あろう"
+  },
+  {
+    "word": "だんだん",
+    "reading": null,
+    "meaning": "1. 계단 2. 차차 3. だんだんありがとう의 준말",
+    "level": "N5",
+    "example": "段段畑"
+  },
+  {
+    "word": "小さい",
+    "reading": "ちいさい",
+    "meaning": "1. 작다 2. 크지 않다 3. 규모가 작다",
+    "level": "N5",
+    "example": "小さい声"
+  },
+  {
+    "word": "小さな",
+    "reading": "ちいさな",
+    "meaning": "작은",
+    "level": "N5",
+    "example": "小さな家"
+  },
+  {
+    "word": "近い",
+    "reading": "ちかい",
+    "meaning": "1. 가깝다 2. 공간적으로 멀지 않다 3. 시간적으로 멀지 않다",
+    "level": "N5",
+    "example": "学校に近い所"
+  },
+  {
+    "word": "近く",
+    "reading": "ちかく",
+    "meaning": "1. 가까운 곳 2. 근간",
+    "level": "N5",
+    "example": "近くの店"
+  },
+  {
+    "word": "地下鉄",
+    "reading": "ちかてつ",
+    "meaning": "1. ‘地下鉄道'의 준말 2. 지하철",
+    "level": "N5",
+    "example": "地下鉄の入り口"
+  },
+  {
+    "word": "父",
+    "reading": "ちち",
+    "meaning": "1. 아버지 2. 부친 3. 하나님",
+    "level": "N5",
+    "example": "父と母"
+  },
+  {
+    "word": "ちょっと",
+    "reading": null,
+    "meaning": "1. 조금 2. 여보세요",
+    "level": "N5",
+    "example": "もうちょっと右"
+  },
+  {
+    "word": "朔",
+    "reading": "ついたち",
+    "meaning": "1. 초하루 2. 초순",
+    "level": "N5",
+    "example": "十月一日"
+  },
+  {
+    "word": "使う",
+    "reading": "つかう",
+    "meaning": "1. 쓰다 2. 사용하다 3. 소비하다",
+    "level": "N5",
+    "example": "ペンを使う"
+  },
+  {
+    "word": "次",
+    "reading": "つぎ",
+    "meaning": "1. 다음 2. 역참",
+    "level": "N5",
+    "example": "次の間"
+  },
+  {
+    "word": "机",
+    "reading": "つくえ",
+    "meaning": "1. 책상 2. 음식을 담은 그릇이나 공물을 올리는 대",
+    "level": "N5",
+    "example": "机に向かう"
+  },
+  {
+    "word": "作る",
+    "reading": "つくる",
+    "meaning": "1. 만들다 2. 만들어 내다 3. 조직하다",
+    "level": "N5",
+    "example": "洋服を作る"
+  },
+  {
+    "word": "強い",
+    "reading": "つよい",
+    "meaning": "1. 강하다 2. 힘이 세다 3. 능력·실력이 좋다",
+    "level": "N5",
+    "example": "喧嘩に強い"
+  },
+  {
+    "word": "手",
+    "reading": "て",
+    "meaning": "1. 손 2. 어조를 강하게 하는 말 3. 그 동작을 하는 사람을 나타냄",
+    "level": "N5",
+    "example": "手の甲"
+  },
+  {
+    "word": "手紙",
+    "reading": "てがみ",
+    "meaning": "1. 편지 2. 겉봉을 봉한 우편물 3. 길이가 짧고 옆으로 긴 재래식 일본 종이",
+    "level": "N5",
+    "example": "手紙の返事"
+  },
+  {
+    "word": "天気",
+    "reading": "てんき",
+    "meaning": "1. 날씨 2. 일기 3. 쾌청한 날씨",
+    "level": "N5",
+    "example": "晴上がった天気"
+  },
+  {
+    "word": "出口",
+    "reading": "でぐち",
+    "meaning": "출구",
+    "level": "N5",
+    "example": "非常出口"
+  },
+  {
+    "word": "でも",
+    "reading": null,
+    "meaning": "1. …라도 2. …지라도 3. ‘ても’가 音便상 ‘でも’로 된 것",
+    "level": "N5",
+    "example": "お茶でも飲みましょう"
+  },
+  {
+    "word": "出る",
+    "reading": "でる",
+    "meaning": "1. 나가다 2. 나아가다 3. 나오다",
+    "level": "N5",
+    "example": "よく出る品"
+  },
+  {
+    "word": "電気",
+    "reading": "でんき",
+    "meaning": "1. 전기 2. 전등",
+    "level": "N5",
+    "example": "電気代"
+  },
+  {
+    "word": "電車",
+    "reading": "でんしゃ",
+    "meaning": "전차",
+    "level": "N5",
+    "example": "電車道"
+  },
+  {
+    "word": "電話",
+    "reading": "でんわ",
+    "meaning": "1. 전화 2. 전화에 의한 통화 3. ‘電話機’의 준말",
+    "level": "N5",
+    "example": "有線電話"
+  },
+  {
+    "word": "遠い",
+    "reading": "とおい",
+    "meaning": "1. 멀다 2. 많이 떨어지다 3. 길거나 오래다",
+    "level": "N5",
+    "example": "遠く離れている友"
+  },
+  {
+    "word": "十日",
+    "reading": "とおか",
+    "meaning": "1. 10일간 2. 열흘",
+    "level": "N5",
+    "example": "十日ほど前"
+  },
+  {
+    "word": "時々",
+    "reading": "ときどき",
+    "meaning": "1. 가끔 2. 그때그때",
+    "level": "N5",
+    "example": "時時訪ねてくる"
+  },
+  {
+    "word": "時計",
+    "reading": "とけい",
+    "meaning": "시계",
+    "level": "N5",
+    "example": "目覚まし時計"
+  },
+  {
+    "word": "ところ",
+    "reading": null,
+    "meaning": "1. 곳 2. 분",
+    "level": "N5",
+    "example": "明るい所"
+  },
+  {
+    "word": "年",
+    "reading": "とし",
+    "meaning": "1. 해 2. 나이 3. 노령",
+    "level": "N5",
+    "example": "年の始め"
+  },
+  {
+    "word": "図書館",
+    "reading": "としょかん",
+    "meaning": "도서관",
+    "level": "N5",
+    "example": "国会図書館"
+  },
+  {
+    "word": "とても",
+    "reading": null,
+    "meaning": "1. 아무리 해도 2. 대단히",
+    "level": "N5",
+    "example": "とても出来ない"
+  },
+  {
+    "word": "隣",
+    "reading": "となり",
+    "meaning": "1. 이웃 2. 옆 3. 이웃집",
+    "level": "N5",
+    "example": "隣村"
+  },
+  {
+    "word": "飛ぶ",
+    "reading": "とぶ",
+    "meaning": "1. 날다 2. 날아가다 3. 흩날다",
+    "level": "N5",
+    "example": "空を飛ぶ雁の群れ"
+  },
+  {
+    "word": "友達",
+    "reading": "ともだち",
+    "meaning": "1. 친구 2. 벗 3. 동무",
+    "level": "N5",
+    "example": "釣り[遊び]友達になる"
+  },
+  {
+    "word": "鳥",
+    "reading": "とり",
+    "meaning": "1. 새 2. （鶏） 닭 3. 새고기",
+    "level": "N5",
+    "example": "鳥の声"
+  },
+  {
+    "word": "鳥肉",
+    "reading": "とりにく",
+    "meaning": "새고기, 특히, 닭고기",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "撮る",
+    "reading": "とる",
+    "meaning": "1. 찍다 2. 촬영하다",
+    "level": "N5",
+    "example": "映画を撮る"
+  },
+  {
+    "word": "どう",
+    "reading": null,
+    "meaning": "1. 우어 2. 워",
+    "level": "N5",
+    "example": "はいしい、どうどう"
+  },
+  {
+    "word": "どう",
+    "reading": null,
+    "meaning": "1. 어떻게 2. 아무리 3. ‘どうですか’의 준말",
+    "level": "N5",
+    "example": "どうしたらいいか"
+  },
+  {
+    "word": "どういたしまして",
+    "reading": null,
+    "meaning": "1. 천만의 말씀 2. 별말씀을 다 하십니다",
+    "level": "N5",
+    "example": "たいへんお世話になりました。どういたしまして"
+  },
+  {
+    "word": "どうして",
+    "reading": null,
+    "meaning": "1. 어떻게 2. 어째서 3. 오히려",
+    "level": "N5",
+    "example": "どうして暮らすか"
+  },
+  {
+    "word": "どうぞ",
+    "reading": null,
+    "meaning": "1. 아무쪼록 2. 승낙을 나타내는 공손한 말씨 3. 어떻게든",
+    "level": "N5",
+    "example": "どうぞよろしく"
+  },
+  {
+    "word": "動物",
+    "reading": "どうぶつ",
+    "meaning": "동물",
+    "level": "N5",
+    "example": "動物体"
+  },
+  {
+    "word": "どうも",
+    "reading": null,
+    "meaning": "1. 정말 2. 참 3. 매우",
+    "level": "N5",
+    "example": "この間はどうも"
+  },
+  {
+    "word": "どこ",
+    "reading": null,
+    "meaning": "1. 어디 2. 어느 곳",
+    "level": "N5",
+    "example": "どこやら"
+  },
+  {
+    "word": "どちら",
+    "reading": null,
+    "meaning": "1. 어느 쪽 2. 어느 것 3. 어디",
+    "level": "N5",
+    "example": "どちらに向いていますか"
+  },
+  {
+    "word": "どなた",
+    "reading": null,
+    "meaning": "1. 어느 분 2. 어느 쪽",
+    "level": "N5",
+    "example": "どなた様ですか"
+  },
+  {
+    "word": "どの",
+    "reading": null,
+    "meaning": "1. 어느 2. 어느 것이나 가리지 않고",
+    "level": "N5",
+    "example": "どの方法で"
+  },
+  {
+    "word": "土曜日",
+    "reading": "どようび",
+    "meaning": "토요일",
+    "level": "N5",
+    "example": "土曜日の夜"
+  },
+  {
+    "word": "どれ",
+    "reading": null,
+    "meaning": "1. 어느 것 2. 어디",
+    "level": "N5",
+    "example": "この中でどれが気に入ったか"
+  },
+  {
+    "word": "どんな",
+    "reading": null,
+    "meaning": "1. 어떠한 2. 분명하지 않은 상태∙성질·정도 등을 상상하려는 모양 3. 사물의 상태·성질·정도 등에 좌우되지 않는 모양",
+    "level": "N5",
+    "example": "最近はどんな本を読んでいますか"
+  },
+  {
+    "word": "ない",
+    "reading": null,
+    "meaning": "1. 없다 2. 존재하지 않다 3. 일어나지 않다",
+    "level": "N5",
+    "example": "何も無い"
+  },
+  {
+    "word": "中",
+    "reading": "なか",
+    "meaning": "1. 내부 2. 중앙 3. 중간",
+    "level": "N5",
+    "example": "箱の中"
+  },
+  {
+    "word": "長い",
+    "reading": "ながい",
+    "meaning": "1. 길다 2. 오래다 3. 멀다",
+    "level": "N5",
+    "example": "長い髪"
+  },
+  {
+    "word": "なぜ",
+    "reading": null,
+    "meaning": "1. 왜 2. 어째서",
+    "level": "N5",
+    "example": "何故だろうか"
+  },
+  {
+    "word": "夏",
+    "reading": "なつ",
+    "meaning": "1. 여름 2. 하절",
+    "level": "N5",
+    "example": "この夏"
+  },
+  {
+    "word": "夏休み",
+    "reading": "なつやすみ",
+    "meaning": "1. 여름 방학 2. 여름휴가",
+    "level": "N5",
+    "example": "小中学校の夏休み"
+  },
+  {
+    "word": "七",
+    "reading": "なな",
+    "meaning": "1. 일곱 2. 수가 많음을 나타냄",
+    "level": "N5",
+    "example": "いつ、む、七、や"
+  },
+  {
+    "word": "七円",
+    "reading": "ななえん",
+    "meaning": "7엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七回",
+    "reading": "ななかい",
+    "meaning": "7회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七階",
+    "reading": "ななかい",
+    "meaning": "7층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七個",
+    "reading": "ななこ",
+    "meaning": "7개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七人",
+    "reading": "ななにん",
+    "meaning": "7명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七年",
+    "reading": "ななねん",
+    "meaning": "7년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七杯",
+    "reading": "ななはい",
+    "meaning": "일곱 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七倍",
+    "reading": "ななばい",
+    "meaning": "7배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七番",
+    "reading": "ななばん",
+    "meaning": "7번",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七匹",
+    "reading": "ななひき",
+    "meaning": "7마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七分",
+    "reading": "ななふん",
+    "meaning": "7분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七本",
+    "reading": "ななほん",
+    "meaning": "7자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "七枚",
+    "reading": "ななまい",
+    "meaning": "7장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何",
+    "reading": "なに",
+    "meaning": "1. 무엇 2. 무엇 하나 3. 뭐",
+    "level": "N5",
+    "example": "これは何?"
+  },
+  {
+    "word": "七日",
+    "reading": "なのか",
+    "meaning": "1. 초이렛날 2. 7일간 3. 사람이 죽은 뒤 이레째 되는 날",
+    "level": "N5",
+    "example": "七日の夜"
+  },
+  {
+    "word": "名前",
+    "reading": "なまえ",
+    "meaning": "1. 이름 2. 성명 3. 사람의 성 다음에 붙여 다른 사람과 구별하여 부르는 말",
+    "level": "N5",
+    "example": "名前さえ知らない人"
+  },
+  {
+    "word": "習う",
+    "reading": "ならう",
+    "meaning": "1. 배우다 2. 연습하다",
+    "level": "N5",
+    "example": "泳ぎ[生け花、ピアノ]を習う"
+  },
+  {
+    "word": "何回",
+    "reading": "なんかい",
+    "meaning": "몇 회, 몇 번, 여러 번",
+    "level": "N5",
+    "example": "何回見てもおもしろい"
+  },
+  {
+    "word": "何階",
+    "reading": "なんがい",
+    "meaning": "몇 층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何月",
+    "reading": "なんがつ",
+    "meaning": "몇 월",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何個",
+    "reading": "なんこ",
+    "meaning": "1. 몇 개 2. 몇 개인가를 알아 맞히는 아이들 놀이",
+    "level": "N5",
+    "example": "みかんなら何個でも食べられる"
+  },
+  {
+    "word": "何時",
+    "reading": "なんじ",
+    "meaning": "1. 하시 2. 몇 시",
+    "level": "N5",
+    "example": "今何時ですか"
+  },
+  {
+    "word": "何日",
+    "reading": "なんにち",
+    "meaning": "며칠, 며칟날",
+    "level": "N5",
+    "example": "何日かかってもやる"
+  },
+  {
+    "word": "何人",
+    "reading": "なんにん",
+    "meaning": "몇 사람",
+    "level": "N5",
+    "example": "何人ぐらい集まったか"
+  },
+  {
+    "word": "何年",
+    "reading": "なんねん",
+    "meaning": "몇 년, 몇 해, 몇 살",
+    "level": "N5",
+    "example": "完成に何年かかりましたか"
+  },
+  {
+    "word": "何杯",
+    "reading": "なんばい",
+    "meaning": "몇 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何倍",
+    "reading": "なんばい",
+    "meaning": "몇 배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何番",
+    "reading": "なんばん",
+    "meaning": "몇 번, 몇 째",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何匹",
+    "reading": "なんびき",
+    "meaning": "몇 마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何分",
+    "reading": "なんぷん",
+    "meaning": "몇 분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何本",
+    "reading": "なんぼん",
+    "meaning": "몇 자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何枚",
+    "reading": "なんまい",
+    "meaning": "몇 장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "何曜日",
+    "reading": "なんようび",
+    "meaning": "무슨 요일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二",
+    "reading": "に",
+    "meaning": "1. 둘 2. 두 번째 3. 같지 않음",
+    "level": "N5",
+    "example": "一足す一は二"
+  },
+  {
+    "word": "二円",
+    "reading": "にえん",
+    "meaning": "2엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二回",
+    "reading": "にかい",
+    "meaning": "2회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二階",
+    "reading": "にかい",
+    "meaning": "1. ‘二階建て’의 준말 2. 이층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二月",
+    "reading": "にがつ",
+    "meaning": "2월, →きさらぎ",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "賑やか",
+    "reading": "にぎやか",
+    "meaning": "1. 활기참 2. 흥청거림 3. 명랑하게 떠드는 모양",
+    "level": "N5",
+    "example": "賑やかな祭り"
+  },
+  {
+    "word": "肉",
+    "reading": "にく",
+    "meaning": "1. 육 2. 고기 3. 과일의 살",
+    "level": "N5",
+    "example": "肉が付く"
+  },
+  {
+    "word": "二個",
+    "reading": "にこ",
+    "meaning": "2개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "西",
+    "reading": "にし",
+    "meaning": "1. 서쪽 2. 서풍 3. 関西 지방",
+    "level": "N5",
+    "example": "日が西に沈む"
+  },
+  {
+    "word": "二時",
+    "reading": "にじ",
+    "meaning": "2시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "21日",
+    "reading": "にじゅういちにち",
+    "meaning": "21일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "29日",
+    "reading": "にじゅうくにち",
+    "meaning": "29일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "25日",
+    "reading": "にじゅうごにち",
+    "meaning": "25일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "23日",
+    "reading": "にじゅうさんにち",
+    "meaning": "23일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "27日",
+    "reading": "にじゅうしちにち",
+    "meaning": "27일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "22日",
+    "reading": "にじゅうににち",
+    "meaning": "22일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "28日",
+    "reading": "にじゅうはちにち",
+    "meaning": "28일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "24日",
+    "reading": "にじゅうよっか",
+    "meaning": "24일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "26日",
+    "reading": "にじゅうろくにち",
+    "meaning": "26일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "日曜日",
+    "reading": "にちようび",
+    "meaning": "일요일",
+    "level": "N5",
+    "example": "日曜日も受け付ける"
+  },
+  {
+    "word": "二年",
+    "reading": "にねん",
+    "meaning": "1. 이년 2. 두 해 3. 일년의 다음 해",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二杯",
+    "reading": "にはい",
+    "meaning": "두 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二倍",
+    "reading": "にばい",
+    "meaning": "2배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二番",
+    "reading": "にばん",
+    "meaning": "1. 이번 2. 두 번째・이등 3. ‘二番抵當’의 준말",
+    "level": "N5",
+    "example": "二番で卒業する"
+  },
+  {
+    "word": "二匹",
+    "reading": "にひき",
+    "meaning": "2마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二分",
+    "reading": "にふん",
+    "meaning": "2분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二本",
+    "reading": "にほん",
+    "meaning": "2자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "日本人",
+    "reading": "にほんじん",
+    "meaning": "1. 일본인 2. 일본 사람",
+    "level": "N5",
+    "example": "米系日本人"
+  },
+  {
+    "word": "二枚",
+    "reading": "にまい",
+    "meaning": "1. 두 장 2. 두 개・두 부분",
+    "level": "N5",
+    "example": "半紙二枚"
+  },
+  {
+    "word": "庭",
+    "reading": "にわ",
+    "meaning": "1. 정원 2. 장소 3. 봉당, 토방",
+    "level": "N5",
+    "example": "広い[狭い]庭"
+  },
+  {
+    "word": "猫",
+    "reading": "ねこ",
+    "meaning": "1. 고양이 2. ‘三味線’의 별칭 3. 기생의 별칭",
+    "level": "N5",
+    "example": "黒猫"
+  },
+  {
+    "word": "寝る",
+    "reading": "ねる",
+    "meaning": "1. 자다 2. 잠을 자다 3. 잠자리를 같이하다",
+    "level": "N5",
+    "example": "8時間寝る"
+  },
+  {
+    "word": "登る",
+    "reading": "のぼる",
+    "meaning": "1. 오르다 2. 올라가다",
+    "level": "N5",
+    "example": "木に登る"
+  },
+  {
+    "word": "飲み物",
+    "reading": "のみもの",
+    "meaning": "1. 마실 것 2. 음료",
+    "level": "N5",
+    "example": "飲み物を持って行く"
+  },
+  {
+    "word": "飲む",
+    "reading": "のむ",
+    "meaning": "1. 마시다 2. 먹다 3. 복용하다",
+    "level": "N5",
+    "example": "水をがぶがぶと飲む"
+  },
+  {
+    "word": "乗る",
+    "reading": "のる",
+    "meaning": "1. 타다 2. 탈것에 타다 3. 실리다",
+    "level": "N5",
+    "example": "ベビーカーに乗った子供"
+  },
+  {
+    "word": "はい",
+    "reading": null,
+    "meaning": "1. 네 2. 대답하는 소리 3. 주의를 촉구하는 소리",
+    "level": "N5",
+    "example": "はい、大田です"
+  },
+  {
+    "word": "灰皿",
+    "reading": "はいざら",
+    "meaning": "재떨이",
+    "level": "N5",
+    "example": "タバコの灰皿"
+  },
+  {
+    "word": "入る",
+    "reading": "はいる",
+    "meaning": "1. 들다 2. 들어오다 3. 빠지다",
+    "level": "N5",
+    "example": "汽車が入る"
+  },
+  {
+    "word": "葉書",
+    "reading": "はがき",
+    "meaning": "1. 엽서 2. ‘郵便葉書’의 준말 3. 종잇조각 등에 쓴 각서나 서류",
+    "level": "N5",
+    "example": "往復葉書"
+  },
+  {
+    "word": "始まる",
+    "reading": "はじまる",
+    "meaning": "1. 시작되다 2. 개시되다 3. 기인하다",
+    "level": "N5",
+    "example": "国会が始まる"
+  },
+  {
+    "word": "初めまして",
+    "reading": "はじめまして",
+    "meaning": "처음 뵙겠습니다",
+    "level": "N5",
+    "example": "初めまして、私、田中と申します"
+  },
+  {
+    "word": "二十",
+    "reading": "はたち",
+    "meaning": "1. 20세 2. 20",
+    "level": "N5",
+    "example": "今年二十になる息子"
+  },
+  {
+    "word": "八",
+    "reading": "はち",
+    "meaning": "1. 팔 2. 여덟째 3. ‘八の字’의 준말",
+    "level": "N5",
+    "example": "八の日"
+  },
+  {
+    "word": "八円",
+    "reading": "はちえん",
+    "meaning": "8엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八階",
+    "reading": "はちかい",
+    "meaning": "8층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八月",
+    "reading": "はちがつ",
+    "meaning": "8월",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八時",
+    "reading": "はちじ",
+    "meaning": "8시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八人",
+    "reading": "はちにん",
+    "meaning": "8명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八年",
+    "reading": "はちねん",
+    "meaning": "8년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八倍",
+    "reading": "はちばい",
+    "meaning": "8배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八番",
+    "reading": "はちばん",
+    "meaning": "8번",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八分",
+    "reading": "はちふん",
+    "meaning": "8분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八枚",
+    "reading": "はちまい",
+    "meaning": "8장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八階",
+    "reading": "はっかい",
+    "meaning": "8층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八回",
+    "reading": "はっかい",
+    "meaning": "8회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八個",
+    "reading": "はっこ",
+    "meaning": "8개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八杯",
+    "reading": "はっぱい",
+    "meaning": "여덟 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八匹",
+    "reading": "はっぴき",
+    "meaning": "8마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八分",
+    "reading": "はっぷん",
+    "meaning": "8분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "八本",
+    "reading": "はっぽん",
+    "meaning": "8자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "二十日",
+    "reading": "はつか",
+    "meaning": "1. 20일 2. 20일 동안",
+    "level": "N5",
+    "example": "五月二十日"
+  },
+  {
+    "word": "鼻",
+    "reading": "はな",
+    "meaning": "1. 코 2. 후각 3. 나",
+    "level": "N5",
+    "example": "高い鼻"
+  },
+  {
+    "word": "花",
+    "reading": "はな",
+    "meaning": "1. 꽃 2. 꽃과 같이 아름다운 것 3. 아름답고 한창임",
+    "level": "N5",
+    "example": "花が咲く"
+  },
+  {
+    "word": "話",
+    "reading": "はなし",
+    "meaning": "1. 이야기 2. 상의 3. 소문",
+    "level": "N5",
+    "example": "子供の話"
+  },
+  {
+    "word": "話す",
+    "reading": "はなす",
+    "meaning": "1. 말하다 2. 외국어를 쓰다 3. 상담하다",
+    "level": "N5",
+    "example": "大声で[ぼそぼそ]話す"
+  },
+  {
+    "word": "母",
+    "reading": "はは",
+    "meaning": "1. 모친 2. 근원",
+    "level": "N5",
+    "example": "母后"
+  },
+  {
+    "word": "速い",
+    "reading": "はやい",
+    "meaning": "1. 빠르다 2. 세차다",
+    "level": "N5",
+    "example": "速い飛行機"
+  },
+  {
+    "word": "早い",
+    "reading": "はやい",
+    "meaning": "1. 이르다 2. 아직 그 시각·시기가 아니다 3. 시간이 짧다",
+    "level": "N5",
+    "example": "朝早く起きる"
+  },
+  {
+    "word": "春",
+    "reading": "はる",
+    "meaning": "1. 봄 2. 새해 3. 전성기",
+    "level": "N5",
+    "example": "春の息吹"
+  },
+  {
+    "word": "番号",
+    "reading": "ばんごう",
+    "meaning": "번호",
+    "level": "N5",
+    "example": "郵便番号"
+  },
+  {
+    "word": "晩ご飯",
+    "reading": "ばんごはん",
+    "meaning": "1. 저녁 식사 2. 저녁밥",
+    "level": "N5",
+    "example": "晩御飯抜き"
+  },
+  {
+    "word": "東",
+    "reading": "ひがし",
+    "meaning": "1. 동쪽 2. 동양 3. ‘東風'의 준말",
+    "level": "N5",
+    "example": "東向きの家"
+  },
+  {
+    "word": "低い",
+    "reading": "ひくい",
+    "meaning": "1. 낮다 2. 작다 3. 짧다",
+    "level": "N5",
+    "example": "天井の低い部屋"
+  },
+  {
+    "word": "飛行機",
+    "reading": "ひこうき",
+    "meaning": "1. 비행기 2. 동력으로 프로펠러를 돌리거나 연소 가스에 의한 양력을 이용한 항공기",
+    "level": "N5",
+    "example": "飛行機が離陸[着陸]する"
+  },
+  {
+    "word": "人",
+    "reading": "ひと",
+    "meaning": "1. 사람 2. 인류 3. 개인",
+    "level": "N5",
+    "example": "人の子"
+  },
+  {
+    "word": "一つ",
+    "reading": "ひとつ",
+    "meaning": "1. 하나 2. 그럼",
+    "level": "N5",
+    "example": "一つ、二つ…"
+  },
+  {
+    "word": "一人",
+    "reading": "ひとり",
+    "meaning": "1. 한 사람 2. 비단",
+    "level": "N5",
+    "example": "一人に一つずつ配る"
+  },
+  {
+    "word": "暇",
+    "reading": "ひま",
+    "meaning": "1. 손이 비어 있는 시간·상태 2. 틈 3. 한가한 상태",
+    "level": "N5",
+    "example": "本を読む暇がない"
+  },
+  {
+    "word": "百",
+    "reading": "ひゃく",
+    "meaning": "1. 백 2. 다수 3. 100세",
+    "level": "N5",
+    "example": "百の二倍"
+  },
+  {
+    "word": "百点",
+    "reading": "ひゃくてん",
+    "meaning": "100점",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "昼",
+    "reading": "ひる",
+    "meaning": "1. 낮 2. 정오 3. 점심",
+    "level": "N5",
+    "example": "昼寝"
+  },
+  {
+    "word": "昼ご飯",
+    "reading": "ひるごはん",
+    "meaning": "점심",
+    "level": "N5",
+    "example": "ダイエットに効果的な昼ご飯レシピ"
+  },
+  {
+    "word": "広い",
+    "reading": "ひろい",
+    "meaning": "1. 넓다 2. 너르다 3. 크다",
+    "level": "N5",
+    "example": "広い庭"
+  },
+  {
+    "word": "病院",
+    "reading": "びょういん",
+    "meaning": "병원",
+    "level": "N5",
+    "example": "病院船"
+  },
+  {
+    "word": "病気",
+    "reading": "びょうき",
+    "meaning": "1. 병 2. 앓음 3. 나쁜 버릇",
+    "level": "N5",
+    "example": "重い病気"
+  },
+  {
+    "word": "服",
+    "reading": "ふく",
+    "meaning": "1. 옷 2. 첩약·가루약 봉지를 세는 말",
+    "level": "N5",
+    "example": "服を新調する"
+  },
+  {
+    "word": "二つ",
+    "reading": "ふたつ",
+    "meaning": "1. 둘 2. 두 살 3. 양쪽",
+    "level": "N5",
+    "example": "りんごを二つに割る"
+  },
+  {
+    "word": "二人",
+    "reading": "ふたり",
+    "meaning": "두 사람",
+    "level": "N5",
+    "example": "お二人"
+  },
+  {
+    "word": "二日",
+    "reading": "ふつか",
+    "meaning": "1. 이틀 2. 2일",
+    "level": "N5",
+    "example": "二日掛かりの仕事"
+  },
+  {
+    "word": "冬",
+    "reading": "ふゆ",
+    "meaning": "겨울",
+    "level": "N5",
+    "example": "冬の日は短い"
+  },
+  {
+    "word": "降る",
+    "reading": "ふる",
+    "meaning": "1. 내리다 2. 위에서 물건이 떨어지다 3. 쏟아지다",
+    "level": "N5",
+    "example": "雪が降る"
+  },
+  {
+    "word": "古い",
+    "reading": "ふるい",
+    "meaning": "1. 오래되다 2. 헐다 3. 옛일이다",
+    "level": "N5",
+    "example": "古い友人"
+  },
+  {
+    "word": "部屋",
+    "reading": "へや",
+    "meaning": "1. 방 2. 헛간 3. 궁중에서 궁녀가 거처하는 방",
+    "level": "N5",
+    "example": "大べや"
+  },
+  {
+    "word": "勉強",
+    "reading": "べんきょう",
+    "meaning": "1. 열심히 힘을 기울임 2. 쓰라린 경험 3. 싸게 해서 팖",
+    "level": "N5",
+    "example": "勉強家"
+  },
+  {
+    "word": "便利",
+    "reading": "べんり",
+    "meaning": "1. 편리 2. 대소변을 누는 것",
+    "level": "N5",
+    "example": "生活するのに便利な場所"
+  },
+  {
+    "word": "方",
+    "reading": "ほう",
+    "meaning": "1. 방면 2. 방향 3. 부면",
+    "level": "N5",
+    "example": "左の方"
+  },
+  {
+    "word": "他",
+    "reading": "ほか",
+    "meaning": "1. 다른 것 2. 바깥 3. …밖에",
+    "level": "N5",
+    "example": "ほかの人[品]"
+  },
+  {
+    "word": "本",
+    "reading": "ほん",
+    "meaning": "1. 책 2. 본… 3. 가늘고 긴 것을 세는 말",
+    "level": "N5",
+    "example": "一冊の本"
+  },
+  {
+    "word": "毎朝",
+    "reading": "まいあさ",
+    "meaning": "1. 매일 아침 2. 아침마다",
+    "level": "N5",
+    "example": "毎朝の日課"
+  },
+  {
+    "word": "毎月",
+    "reading": "まいげつ",
+    "meaning": "매월, 달마다",
+    "level": "N5",
+    "example": "雑誌を毎月発行する"
+  },
+  {
+    "word": "毎週",
+    "reading": "まいしゅう",
+    "meaning": "매주, 일주일마다",
+    "level": "N5",
+    "example": "毎週の目標"
+  },
+  {
+    "word": "毎日",
+    "reading": "まいにち",
+    "meaning": "1. 매일 2. 날마다",
+    "level": "N5",
+    "example": "毎日が楽しい"
+  },
+  {
+    "word": "毎年",
+    "reading": "まいねん",
+    "meaning": "매년, 해마다",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "毎晩",
+    "reading": "まいばん",
+    "meaning": "1. 매일 밤 2. 밤마다",
+    "level": "N5",
+    "example": "毎晩のように飲み歩く"
+  },
+  {
+    "word": "前",
+    "reading": "まえ",
+    "meaning": "1. 앞 2. 앞서 3. 먼저",
+    "level": "N5",
+    "example": "前へ進む"
+  },
+  {
+    "word": "曲がる",
+    "reading": "まがる",
+    "meaning": "1. 구부러지다 2. 방향을 바꾸다 3. 기울다",
+    "level": "N5",
+    "example": "曲がった道"
+  },
+  {
+    "word": "まずい",
+    "reading": null,
+    "meaning": "1. 맛이 없다 2. 서투르다 3. 못생기다",
+    "level": "N5",
+    "example": "高くて不味い料理"
+  },
+  {
+    "word": "また",
+    "reading": null,
+    "meaning": "1. 다른 때 2. 또 3. 그 위에 또",
+    "level": "N5",
+    "example": "またの機会"
+  },
+  {
+    "word": "まだ",
+    "reading": null,
+    "meaning": "1. 아직 2. 계속 3. 겨우",
+    "level": "N5",
+    "example": "未だ見ぬ母"
+  },
+  {
+    "word": "町",
+    "reading": "まち",
+    "meaning": "1. 집이 많이 모여 있는 구역 2. 상점들이 늘어선 번화한 장소 3. 지방 자치체의 하나",
+    "level": "N5",
+    "example": "町の病院"
+  },
+  {
+    "word": "まっすぐ",
+    "reading": null,
+    "meaning": "1. 쪽 곧음 2. 숨김이 없음",
+    "level": "N5",
+    "example": "真っ直ぐな線"
+  },
+  {
+    "word": "待つ",
+    "reading": "まつ",
+    "meaning": "1. 기다리다 2. 빨리 오거나 실현되기를 바라다 3. 채비를 하고 맞이하다",
+    "level": "N5",
+    "example": "春を待つ"
+  },
+  {
+    "word": "窓",
+    "reading": "まど",
+    "meaning": "1. 창 2. 외부와 내부를 이어 주는 것 3. 산의 능선 일부가 V 자형으로 움푹 낮아진 곳",
+    "level": "N5",
+    "example": "窓越しに見える夜景"
+  },
+  {
+    "word": "丸い",
+    "reading": "まるい",
+    "meaning": "1. 둥글다 2. 원만하다 3. 포동포동 살찌다",
+    "level": "N5",
+    "example": "丸い顔"
+  },
+  {
+    "word": "磨く",
+    "reading": "みがく",
+    "meaning": "1. 닦다 2. 아름답게 하다 3. 갈고닦다",
+    "level": "N5",
+    "example": "玉を磨く"
+  },
+  {
+    "word": "右",
+    "reading": "みぎ",
+    "meaning": "1. 우 2. 오른쪽 3. 세로 쓴 문장에서 ‘이상’의 뜻",
+    "level": "N5",
+    "example": "右側通行"
+  },
+  {
+    "word": "短い",
+    "reading": "みじかい",
+    "meaning": "1. 짧다 2. 길이가 길지 않다 3. 길지 않다",
+    "level": "N5",
+    "example": "短い帯"
+  },
+  {
+    "word": "水",
+    "reading": "みず",
+    "meaning": "1. 물 2. 냉수 3. 홍수",
+    "level": "N5",
+    "example": "飲み水"
+  },
+  {
+    "word": "店",
+    "reading": "みせ",
+    "meaning": "1. 가게 2. 江戸 시대, 유곽에서 유녀가 지나가는 손님을 불러들이는 격자 구조의 방",
+    "level": "N5",
+    "example": "流行る店"
+  },
+  {
+    "word": "見せる",
+    "reading": "みせる",
+    "meaning": "1. 보이다 2. 남에게 보도록 하다 3. 숨김없이 드러내다",
+    "level": "N5",
+    "example": "本を見せる"
+  },
+  {
+    "word": "道",
+    "reading": "みち",
+    "meaning": "1. 길 2. 도로 3. 도중",
+    "level": "N5",
+    "example": "帰り道"
+  },
+  {
+    "word": "三日",
+    "reading": "みっか",
+    "meaning": "1. 초사흘 2. 사흘",
+    "level": "N5",
+    "example": "八月三日"
+  },
+  {
+    "word": "三つ",
+    "reading": "みっつ",
+    "meaning": "1. 셋 2. 세 살",
+    "level": "N5",
+    "example": "三つの方法"
+  },
+  {
+    "word": "緑",
+    "reading": "みどり",
+    "meaning": "1. 녹색 2. 녹색의 초목 3. 나무의 새싹",
+    "level": "N5",
+    "example": "緑色"
+  },
+  {
+    "word": "皆さん",
+    "reading": "みなさん",
+    "meaning": "여러분",
+    "level": "N5",
+    "example": "ご来場の皆さん"
+  },
+  {
+    "word": "南",
+    "reading": "みなみ",
+    "meaning": "1. 남 2. 남풍",
+    "level": "N5",
+    "example": "南の国"
+  },
+  {
+    "word": "耳",
+    "reading": "みみ",
+    "meaning": "1. 귀 2. 듣는 기관 3. 귓바퀴",
+    "level": "N5",
+    "example": "耳が大きい"
+  },
+  {
+    "word": "見る",
+    "reading": "みる",
+    "meaning": "1. 보다 2. 눈으로 파악·확인하다 3. 조사하다",
+    "level": "N5",
+    "example": "見ての通り"
+  },
+  {
+    "word": "みんな",
+    "reading": null,
+    "meaning": "1. 모두 2. 전부",
+    "level": "N5",
+    "example": "皆が賛成した"
+  },
+  {
+    "word": "六日",
+    "reading": "むいか",
+    "meaning": "1. 6일 2. 엿새 3. 초엿새",
+    "level": "N5",
+    "example": "締め切りまであと六日ある"
+  },
+  {
+    "word": "難しい",
+    "reading": "むずかしい",
+    "meaning": "1. 어렵다 2. 힘들다 3. 해결이 곤란하다",
+    "level": "N5",
+    "example": "説明が難しい"
+  },
+  {
+    "word": "目",
+    "reading": "め",
+    "meaning": "1. 눈 2. 째 3. 쏘아보며 꾸짖을 때 내는 소리",
+    "level": "N5",
+    "example": "青い目"
+  },
+  {
+    "word": "眼鏡",
+    "reading": "めがね",
+    "meaning": "1. 안경 2. 선악이나 진위 등을 판단하는 것 3. 쌍안경",
+    "level": "N5",
+    "example": "色眼鏡"
+  },
+  {
+    "word": "もう一度",
+    "reading": "もういちど",
+    "meaning": "한번 더",
+    "level": "N5",
+    "example": "もう一度言ってください"
+  },
+  {
+    "word": "木曜日",
+    "reading": "もくようび",
+    "meaning": "목요일",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "もしもし",
+    "reading": null,
+    "meaning": "1. 여보세요 2. 사람을 부를 때 하는 말 3. 전화로 상대를 부르고 대답하는 말",
+    "level": "N5",
+    "example": "もしもし、お金が落ちましたよ"
+  },
+  {
+    "word": "もっと",
+    "reading": null,
+    "meaning": "1. 더 2. 더욱 3. 좀 더",
+    "level": "N5",
+    "example": "もっと右[左]へ"
+  },
+  {
+    "word": "持つ",
+    "reading": "もつ",
+    "meaning": "1. 쥐다 2. 오래가다",
+    "level": "N5",
+    "example": "箸を持つ"
+  },
+  {
+    "word": "もの",
+    "reading": null,
+    "meaning": "1. 것 2. 어쩐지 3. 거리",
+    "level": "N5",
+    "example": "物を大切にする"
+  },
+  {
+    "word": "門",
+    "reading": "もん",
+    "meaning": "1. 문 2. …문",
+    "level": "N5",
+    "example": "凱旋門"
+  },
+  {
+    "word": "問題",
+    "reading": "もんだい",
+    "meaning": "1. 문제 2. 해답을 요구하는 물음 3. 토론·연구 등의 대상이 되는 사항",
+    "level": "N5",
+    "example": "試験問題"
+  },
+  {
+    "word": "八百屋",
+    "reading": "やおや",
+    "meaning": "1. 채소 가게 2. 깊이는 없지만 여러 가지 일에 두루 밝은 사람",
+    "level": "N5",
+    "example": "市場の一角にある八百屋"
+  },
+  {
+    "word": "野菜",
+    "reading": "やさい",
+    "meaning": "1. 야채 2. 채소 3. 푸성귀",
+    "level": "N5",
+    "example": "野菜畑"
+  },
+  {
+    "word": "安い",
+    "reading": "やすい",
+    "meaning": "1. 싸다 2. 편하다 3. 남녀 사이가 심상치 않음을 놀리는 말",
+    "level": "N5",
+    "example": "安い品物"
+  },
+  {
+    "word": "休み",
+    "reading": "やすみ",
+    "meaning": "1. 쉼 2. 쉬는 시간 3. 휴일",
+    "level": "N5",
+    "example": "一時間の休み"
+  },
+  {
+    "word": "休む",
+    "reading": "やすむ",
+    "meaning": "1. 쉬다 2. 편해지다 3. ‘やすめる'의 문어형",
+    "level": "N5",
+    "example": "休まずに働く"
+  },
+  {
+    "word": "山",
+    "reading": "やま",
+    "meaning": "1. 산 2. 광산 3. 산더미",
+    "level": "N5",
+    "example": "山に登る"
+  },
+  {
+    "word": "夕方",
+    "reading": "ゆうがた",
+    "meaning": "1. 저녁때 2. 해 질 녘",
+    "level": "N5",
+    "example": "夕方の冷やつく風"
+  },
+  {
+    "word": "夕飯",
+    "reading": "ゆうはん",
+    "meaning": "1. 석반 2. 저녁밥 3. 저녁 식사",
+    "level": "N5",
+    "example": "夕飯を食べる"
+  },
+  {
+    "word": "雪",
+    "reading": "ゆき",
+    "meaning": "1. 눈 2. 흰 것을 비유하는 말 3. 연극에서, 눈으로 사용하는 흰 종잇조각",
+    "level": "N5",
+    "example": "垂り雪"
+  },
+  {
+    "word": "ゆっくり",
+    "reading": null,
+    "meaning": "1. 천천히 2. 넉넉히 3. 마음 편히",
+    "level": "N5",
+    "example": "ゆっくりした口調"
+  },
+  {
+    "word": "よい",
+    "reading": null,
+    "meaning": "1. 좋다 2. 만족할 만하다 3. 뛰어나다",
+    "level": "N5",
+    "example": "良い気持ち"
+  },
+  {
+    "word": "八日",
+    "reading": "ようか",
+    "meaning": "1. 초여드렛날 2. 8일간",
+    "level": "N5",
+    "example": "十月八日"
+  },
+  {
+    "word": "洋服",
+    "reading": "ようふく",
+    "meaning": "양복",
+    "level": "N5",
+    "example": "出来合いの洋服"
+  },
+  {
+    "word": "四円",
+    "reading": "よえん",
+    "meaning": "4엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "横",
+    "reading": "よこ",
+    "meaning": "1. 옆 2. 가로 3. 측면",
+    "level": "N5",
+    "example": "横幅"
+  },
+  {
+    "word": "四時",
+    "reading": "よじ",
+    "meaning": "4시",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四日",
+    "reading": "よっか",
+    "meaning": "1. 나흘 2. 초나흗날 3. 4일",
+    "level": "N5",
+    "example": "三月四日"
+  },
+  {
+    "word": "四つ",
+    "reading": "よっつ",
+    "meaning": "1. 넷 2. 네 살 3. 네 가지",
+    "level": "N5",
+    "example": "四つ目"
+  },
+  {
+    "word": "四人",
+    "reading": "よにん",
+    "meaning": "4명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四年",
+    "reading": "よねん",
+    "meaning": "4년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "呼ぶ",
+    "reading": "よぶ",
+    "meaning": "1. 부르다 2. 소리 내어 부르다 3. 큰 소리로 외치다",
+    "level": "N5",
+    "example": "名前を呼ぶ"
+  },
+  {
+    "word": "読む",
+    "reading": "よむ",
+    "meaning": "1. 읽다 2. 소리 내어 읽다 3. 보고 이해하다",
+    "level": "N5",
+    "example": "本を読む"
+  },
+  {
+    "word": "夜",
+    "reading": "よる",
+    "meaning": "1. 밤 2. 야간",
+    "level": "N5",
+    "example": "夜夜中"
+  },
+  {
+    "word": "弱い",
+    "reading": "よわい",
+    "meaning": "1. 약하다 2. 작다 3. 튼튼하지 못하다",
+    "level": "N5",
+    "example": "握力の弱い人"
+  },
+  {
+    "word": "四階",
+    "reading": "よんかい",
+    "meaning": "4층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四回",
+    "reading": "よんかい",
+    "meaning": "4회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四個",
+    "reading": "よんこ",
+    "meaning": "4개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四杯",
+    "reading": "よんはい",
+    "meaning": "네 잔, 넉 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四倍",
+    "reading": "よんばい",
+    "meaning": "4배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四番",
+    "reading": "よんばん",
+    "meaning": "4번",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四匹",
+    "reading": "よんひき",
+    "meaning": "4마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四分",
+    "reading": "よんぷん",
+    "meaning": "4분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四本",
+    "reading": "よんほん",
+    "meaning": "4자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "四枚",
+    "reading": "よんまい",
+    "meaning": "4장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "来月",
+    "reading": "らいげつ",
+    "meaning": "1. 내월 2. 내달 3. 다음 달",
+    "level": "N5",
+    "example": "来月の下旬頃"
+  },
+  {
+    "word": "来週",
+    "reading": "らいしゅう",
+    "meaning": "1. 내주 2. 다음 주. 차주",
+    "level": "N5",
+    "example": "来週に延びる[延期される]"
+  },
+  {
+    "word": "来年",
+    "reading": "らいねん",
+    "meaning": "1. 내년 2. 명년",
+    "level": "N5",
+    "example": "来年の末"
+  },
+  {
+    "word": "留学生",
+    "reading": "りゅうがくせい",
+    "meaning": "유학생",
+    "level": "N5",
+    "example": "国費留学生"
+  },
+  {
+    "word": "料理",
+    "reading": "りょうり",
+    "meaning": "1. 요리 2. 음식을 만듦 3. 사물을 잘 처리함",
+    "level": "N5",
+    "example": "あっさりした料理が食べたい"
+  },
+  {
+    "word": "六",
+    "reading": "ろく",
+    "meaning": "1. 육 2. 여섯 번째",
+    "level": "N5",
+    "example": "六の数"
+  },
+  {
+    "word": "六円",
+    "reading": "ろくえん",
+    "meaning": "6엔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六月",
+    "reading": "ろくがつ",
+    "meaning": "6월",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六時",
+    "reading": "ろくじ",
+    "meaning": "1. 여섯 시 2. 육시・하루를 여섯으로 나눈 염불 독경의 시각",
+    "level": "N5",
+    "example": "六時の勤め"
+  },
+  {
+    "word": "六人",
+    "reading": "ろくにん",
+    "meaning": "6명",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六年",
+    "reading": "ろくねん",
+    "meaning": "6년",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六倍",
+    "reading": "ろくばい",
+    "meaning": "6배",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六番",
+    "reading": "ろくばん",
+    "meaning": "6번",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六枚",
+    "reading": "ろくまい",
+    "meaning": "6장",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六回",
+    "reading": "ろっかい",
+    "meaning": "6회",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六階",
+    "reading": "ろっかい",
+    "meaning": "6층",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六個",
+    "reading": "ろっこ",
+    "meaning": "6개",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六杯",
+    "reading": "ろっぱい",
+    "meaning": "여섯 잔",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六匹",
+    "reading": "ろっぴき",
+    "meaning": "6마리",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六分",
+    "reading": "ろっぷん",
+    "meaning": "6분",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "六本",
+    "reading": "ろっぽん",
+    "meaning": "6자루",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "わかる",
+    "reading": null,
+    "meaning": "1. 알다 2. 分かれる의 문어형",
+    "level": "N5",
+    "example": "味の違いが分かる"
+  },
+  {
+    "word": "私",
+    "reading": "わたし",
+    "meaning": "1. 나 2. 저",
+    "level": "N5",
+    "example": "私の住んでいた家"
+  },
+  {
+    "word": "悪い",
+    "reading": "わるい",
+    "meaning": "1. 나쁘다 2. 좋지 않다 3. 둔하다",
+    "level": "N5",
+    "example": "頭が悪い"
+  },
+  {
+    "word": "アパート",
+    "reading": null,
+    "meaning": "1. ‘アパートメントハウス'의 준말 2. 아파트 3. 공동 주택",
+    "level": "N5",
+    "example": "賃貸アパート"
+  },
+  {
+    "word": "エレベーター",
+    "reading": null,
+    "meaning": "1. 엘리베이터 2. 승강기",
+    "level": "N5",
+    "example": "上りのエレベーター"
+  },
+  {
+    "word": "カップ",
+    "reading": null,
+    "meaning": "1. 컵 2. 손잡이 달린 찻잔 3. 작은 그릇",
+    "level": "N5",
+    "example": "コーヒーカップ"
+  },
+  {
+    "word": "カメラ",
+    "reading": null,
+    "meaning": "1. 카메라 2. ‘カメラマン’의 준말",
+    "level": "N5",
+    "example": "カメラアングル"
+  },
+  {
+    "word": "カレンダー",
+    "reading": null,
+    "meaning": "캘린더, 달력, 행사 일람표",
+    "level": "N5",
+    "example": "スポーツカレンダー"
+  },
+  {
+    "word": "ギター",
+    "reading": null,
+    "meaning": "기타",
+    "level": "N5",
+    "example": "ハワイアンギター"
+  },
+  {
+    "word": "クラス",
+    "reading": null,
+    "meaning": "1. 클래스 2. 학급 3. 등급",
+    "level": "N5",
+    "example": "クラスメート"
+  },
+  {
+    "word": "グラス",
+    "reading": null,
+    "meaning": "1. 글라스・유리컵 2. 안경・쌍안경",
+    "level": "N5",
+    "example": "ワイングラス"
+  },
+  {
+    "word": "コップ",
+    "reading": null,
+    "meaning": "컵",
+    "level": "N5",
+    "example": "コップ酒"
+  },
+  {
+    "word": "コピー",
+    "reading": null,
+    "meaning": "1. 카피 2. 사본 3. 흉내",
+    "level": "N5",
+    "example": "コピーを取る"
+  },
+  {
+    "word": "コート",
+    "reading": null,
+    "meaning": "1. 코트 2. 여자가 일본 옷 위에 입는 외투 3. 양복 위에 입는 외투",
+    "level": "N5",
+    "example": "半コート"
+  },
+  {
+    "word": "コーヒー",
+    "reading": null,
+    "meaning": "1. 커피 2. 커피 원두",
+    "level": "N5",
+    "example": "インスタントコーヒー"
+  },
+  {
+    "word": "シャツ",
+    "reading": null,
+    "meaning": "1. 셔츠 2. 와이셔츠·폴로셔츠 따위",
+    "level": "N5",
+    "example": "アンダーシャツ"
+  },
+  {
+    "word": "シャワー",
+    "reading": null,
+    "meaning": "1. 샤워 2. 샤워 장치",
+    "level": "N5",
+    "example": "シャワー室"
+  },
+  {
+    "word": "スカート",
+    "reading": null,
+    "meaning": "1. 스커트 2. 치마 3. 기차·전차·자동차 등의 전면 아랫 부분을 덮은 철판",
+    "level": "N5",
+    "example": "フレヤスカート"
+  },
+  {
+    "word": "ストーブ",
+    "reading": null,
+    "meaning": "스토브, 난로",
+    "level": "N5",
+    "example": "電気ストーブ"
+  },
+  {
+    "word": "スプーン",
+    "reading": null,
+    "meaning": "스푼, 양식 숟가락",
+    "level": "N5",
+    "example": "ティースプーン"
+  },
+  {
+    "word": "スポーツ",
+    "reading": null,
+    "meaning": "스포츠",
+    "level": "N5",
+    "example": "ウィンタースポーツ"
+  },
+  {
+    "word": "ズボン",
+    "reading": null,
+    "meaning": "1. 즈봉 2. 바지",
+    "level": "N5",
+    "example": "替えズボン"
+  },
+  {
+    "word": "セーター",
+    "reading": null,
+    "meaning": "스웨터, 털 재킷",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "ゼロ",
+    "reading": null,
+    "meaning": "제로, 영",
+    "level": "N5",
+    "example": "三対ゼロ"
+  },
+  {
+    "word": "タクシー",
+    "reading": null,
+    "meaning": "택시, →ハイヤー",
+    "level": "N5",
+    "example": "タクシー乗り場"
+  },
+  {
+    "word": "タバコ",
+    "reading": null,
+    "meaning": "1. 담배 2. 불을 붙여 피우는 기호품 3. 가짓과의 일년초",
+    "level": "N5",
+    "example": "葉タバコ"
+  },
+  {
+    "word": "テスト",
+    "reading": null,
+    "meaning": "테스트, 검사, 시험",
+    "level": "N5",
+    "example": "学期末テスト"
+  },
+  {
+    "word": "テレビ",
+    "reading": null,
+    "meaning": "1. ‘テレビジョン’의 준말 2. 텔레비전 3. 티브이",
+    "level": "N5",
+    "example": "壁掛けテレビ"
+  },
+  {
+    "word": "テーブル",
+    "reading": null,
+    "meaning": "1. 테이블 2. 탁자 3. 표",
+    "level": "N5",
+    "example": "メーンテーブル"
+  },
+  {
+    "word": "テープ",
+    "reading": null,
+    "meaning": "1. 테이프 2. 환송·환영용 및 결승선에 치는 것 3. 녹음기·통신기 따위에 쓰는 기록용의 것",
+    "level": "N5",
+    "example": "別れのテープ"
+  },
+  {
+    "word": "デパート",
+    "reading": null,
+    "meaning": "1. ‘デパートメントストア’의 준말 2. 관련된 것이 많이 모여 있는 모양∙장소",
+    "level": "N5",
+    "example": "デパートの売り場"
+  },
+  {
+    "word": "トイレ",
+    "reading": null,
+    "meaning": "1. ‘トイレット·トイレットルーム’의 준말 2. 화장실",
+    "level": "N5",
+    "example": "バス·トイレ付きの個室"
+  },
+  {
+    "word": "ドア",
+    "reading": null,
+    "meaning": "도어, 문",
+    "level": "N5",
+    "example": "回転ドア"
+  },
+  {
+    "word": "ナイフ",
+    "reading": null,
+    "meaning": "나이프, 서양식 작은 칼",
+    "level": "N5",
+    "example": "ジャックナイフ"
+  },
+  {
+    "word": "ネクタイ",
+    "reading": null,
+    "meaning": "넥타이",
+    "level": "N5",
+    "example": "蝶ネクタイ"
+  },
+  {
+    "word": "ノート",
+    "reading": null,
+    "meaning": "1. 노트 2. 필기해 둠 3. 주",
+    "level": "N5",
+    "example": "要点をノートする"
+  },
+  {
+    "word": "ハンカチ",
+    "reading": null,
+    "meaning": "1. ‘ハンカチーフ’의 준말 2. 손수건 3. 네모난 작은 천",
+    "level": "N5",
+    "example": "リネン素材のハンカチ"
+  },
+  {
+    "word": "バス",
+    "reading": null,
+    "meaning": "1. 버스 2. 많은 사람이 함께 타는 대형 자동차 3. 내부에서 각 장치를 연결하는 회선",
+    "level": "N5",
+    "example": "バス便"
+  },
+  {
+    "word": "パン",
+    "reading": null,
+    "meaning": "1. 빵 2. 밀가루를 주원료로 하여 물에 반죽하고 효모를 넣어 발효시킨 후 구워 낸 식품 3. 생활의 양식",
+    "level": "N5",
+    "example": "パンくず"
+  },
+  {
+    "word": "ペン",
+    "reading": null,
+    "meaning": "펜",
+    "level": "N5",
+    "example": "ペン画"
+  },
+  {
+    "word": "ホテル",
+    "reading": null,
+    "meaning": "호텔",
+    "level": "N5",
+    "example": "ビジネスホテル"
+  },
+  {
+    "word": "ボタン",
+    "reading": null,
+    "meaning": "1. 보탕 2. 버튼",
+    "level": "N5",
+    "example": "金ボタン"
+  },
+  {
+    "word": "ボールペン",
+    "reading": null,
+    "meaning": "볼펜",
+    "level": "N5",
+    "example": null
+  },
+  {
+    "word": "ポケット",
+    "reading": null,
+    "meaning": "포켓, 호주머니",
+    "level": "N5",
+    "example": "うちポケット"
+  },
+  {
+    "word": "ラジオ",
+    "reading": null,
+    "meaning": "라디오",
+    "level": "N5",
+    "example": "カーラジオ"
+  },
+  {
+    "word": "レストラン",
+    "reading": null,
+    "meaning": "레스토랑, 양식 식당",
+    "level": "N5",
+    "example": null
+  }
+]
