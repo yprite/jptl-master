@@ -46,6 +46,17 @@ body {
   opacity: 0.32;
 }
 
+.mobile-rail {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-padding-inline: 1.25rem;
+}
+
+.mobile-rail::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .companion-scene {
   position: relative;
   overflow: hidden;

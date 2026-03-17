@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import {
   type DailyQuests,
   type HomeState,
@@ -292,8 +291,6 @@ export default function Home() {
   const activeState = states[userId] ?? EMPTY_STATE;
   const activeUser = activeState.user;
   const activePlan = activeState.plan;
-  const activeQuests = activeState.quests;
-  const activeProgress = activeState.progress;
 
   const switchUser = (id: UserId) => {
     setCurrentUserId(id);
@@ -355,45 +352,7 @@ export default function Home() {
     );
   }
 
-  const questDefs = activePlan
-    ? [
-        {
-          key: "flashcard" as const,
-          title: "단어 암기",
-          desc: `플래시카드 ${activePlan.dailyFlashcard}장`,
-          href: "/flashcard",
-          accent: "from-sky-500 to-blue-600",
-        },
-        {
-          key: "vocabulary" as const,
-          title: "어휘 문제",
-          desc: `어휘 문제 ${activePlan.dailyVocabulary}개`,
-          href: "/vocabulary",
-          accent: "from-indigo-500 to-violet-600",
-        },
-        {
-          key: "grammar" as const,
-          title: "문법 문제",
-          desc: `문법 문제 ${activePlan.dailyGrammar}개`,
-          href: "/grammar",
-          accent: "from-amber-400 to-orange-500",
-        },
-        {
-          key: "reading" as const,
-          title: "독해",
-          desc: `독해 문제 ${activePlan.dailyReading}개`,
-          href: "/reading",
-          accent: "from-emerald-400 to-green-600",
-        },
-      ]
-    : [];
-
-  const completedCount = getCompletedCount(activeQuests);
-  const currentQuestIdx = questDefs.findIndex((quest) => !activeQuests[quest.key]);
   const currentDay = getPlanDayNumber(activePlan);
-  const planProgressPercent = activePlan
-    ? Math.min(100, Math.round((activeProgress.totalDays / activePlan.totalDays) * 100))
-    : 0;
   const derivedPlanTargets = deriveDailyTargets(planDays, activeUser?.level ?? formLevel);
   const isOnboarding = showProfileSetup || showPlanSetup;
   const configuredCount = USER_IDS.filter((id) => states[id].user).length;
@@ -405,6 +364,40 @@ export default function Home() {
     (sum, id) => sum + getCompletedCount(states[id].quests),
     0
   );
+  const sharedSummaryCards = [
+    {
+      label: "함께 설정",
+      value: `${configuredCount}/2`,
+      note:
+        configuredCount === USER_IDS.length ? "두 사람 모두 루틴 준비 완료" : "한 사람의 출발 준비가 남아 있습니다.",
+    },
+    {
+      label: "누적 Day",
+      value: `${sharedCompletedDays}`,
+      note: "함께 쌓인 날짜만 조용히 남겨 둡니다.",
+    },
+    {
+      label: "오늘의 걸음",
+      value: `${sharedTodayCount}`,
+      note: "오늘 체크된 단계를 한 줄로 요약했습니다.",
+    },
+  ];
+  const companionSnapshots = USER_IDS.map((id) => {
+    const state = states[id];
+    const completed = getCompletedCount(state.quests);
+    const plan = state.plan;
+    const ratio = plan
+      ? Math.min(100, Math.round((state.progress.totalDays / plan.totalDays) * 100))
+      : 0;
+
+    return {
+      id,
+      state,
+      completed,
+      ratio,
+      note: getJourneyNote(id, states),
+    };
+  });
 
   return (
     <div className="space-y-6">
@@ -436,80 +429,236 @@ export default function Home() {
             )}
           </div>
 
-          <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-[1.4fr_0.9fr]">
-            <div className="rounded-[1.65rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-4 backdrop-blur sm:rounded-[1.8rem] sm:p-5">
-              <div className="flex flex-wrap items-center gap-2">
-                {USER_IDS.map((id) => {
-                  const isActive = id === userId;
+          {isOnboarding ? (
+            <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-[1.4fr_0.9fr]">
+              <div className="rounded-[1.65rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-4 backdrop-blur sm:rounded-[1.8rem] sm:p-5">
+                <div className="flex flex-wrap items-center gap-2">
+                  {USER_IDS.map((id) => {
+                    const isActive = id === userId;
 
-                  return (
-                    <button
-                      key={id}
-                      onClick={() => void switchUser(id)}
-                      className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                        isActive
-                          ? "bg-white text-stone-900 shadow-lg"
-                          : "border border-white/15 bg-white/8 text-white/80 hover:bg-white/14"
-                      }`}
+                    return (
+                      <button
+                        key={id}
+                        onClick={() => void switchUser(id)}
+                        className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                          isActive
+                            ? "bg-white text-stone-900 shadow-lg"
+                            : "border border-white/15 bg-white/8 text-white/80 hover:bg-white/14"
+                        }`}
+                      >
+                        {USER_LABELS[id]}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-3">
+                  {sharedSummaryCards.map((card) => (
+                    <div
+                      key={card.label}
+                      className="rounded-[1.25rem] border border-white/10 bg-black/10 px-3.5 py-3.5 sm:rounded-[1.4rem] sm:px-4 sm:py-4"
                     >
-                      {USER_LABELS[id]}
-                    </button>
-                  );
-                })}
+                      <p className="text-xs uppercase tracking-[0.24em] text-white/50">
+                        {card.label}
+                      </p>
+                      <p className="mt-1.5 text-[1.7rem] font-black text-white sm:mt-2 sm:text-3xl">
+                        {card.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="mt-5 max-w-2xl text-[13px] leading-6 text-white/72 sm:mt-6 sm:text-sm sm:leading-7">
+                  {getSharedMood(states)}
+                </p>
               </div>
 
-              <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-3">
-                <div className="rounded-[1.25rem] border border-white/10 bg-black/10 px-3.5 py-3.5 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
-                  <p className="text-xs uppercase tracking-[0.24em] text-white/50">
-                    함께 설정
-                  </p>
-                  <p className="mt-1.5 text-[1.7rem] font-black text-white sm:mt-2 sm:text-3xl">
-                    {configuredCount}/2
-                  </p>
-                </div>
-                <div className="rounded-[1.25rem] border border-white/10 bg-black/10 px-3.5 py-3.5 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
-                  <p className="text-xs uppercase tracking-[0.24em] text-white/50">
-                    누적 Day
-                  </p>
-                  <p className="mt-1.5 text-[1.7rem] font-black text-white sm:mt-2 sm:text-3xl">
-                    {sharedCompletedDays}
-                  </p>
-                </div>
-                <div className="rounded-[1.25rem] border border-white/10 bg-black/10 px-3.5 py-3.5 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
-                  <p className="text-xs uppercase tracking-[0.24em] text-white/50">
-                    오늘의 걸음
-                  </p>
-                  <p className="mt-1.5 text-[1.7rem] font-black text-white sm:mt-2 sm:text-3xl">
-                    {sharedTodayCount}
-                  </p>
-                </div>
-              </div>
-
-              <p className="mt-5 max-w-2xl text-[13px] leading-6 text-white/72 sm:mt-6 sm:text-sm sm:leading-7">
-                {getSharedMood(states)}
-              </p>
+              <CompanionJourneyScene
+                isOnboarding={isOnboarding}
+                currentDay={currentDay}
+              />
             </div>
+          ) : (
+            <>
+              <div className="mt-5 space-y-3 sm:hidden">
+                <div className="rounded-[1.65rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-4 backdrop-blur">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {USER_IDS.map((id) => {
+                      const isActive = id === userId;
 
-            <CompanionJourneyScene
-              isOnboarding={isOnboarding}
-              currentDay={currentDay}
-            />
-          </div>
+                      return (
+                        <button
+                          key={id}
+                          onClick={() => void switchUser(id)}
+                          className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                            isActive
+                              ? "bg-white text-stone-900 shadow-lg"
+                              : "border border-white/15 bg-white/8 text-white/80 hover:bg-white/14"
+                          }`}
+                        >
+                          {USER_LABELS[id]}
+                        </button>
+                      );
+                    })}
+                  </div>
 
-          {!isOnboarding && (
-            <div className="mt-5 grid gap-3 sm:mt-6 md:grid-cols-2">
-              {USER_IDS.map((id) => {
-                const state = states[id];
-                const completed = getCompletedCount(state.quests);
-                const plan = state.plan;
-                const ratio = plan
-                  ? Math.min(100, Math.round((state.progress.totalDays / plan.totalDays) * 100))
-                  : 0;
+                  <p className="mt-4 text-[13px] leading-6 text-white/72">
+                    {getSharedMood(states)}
+                  </p>
+                </div>
 
-                return (
+                <CompanionJourneyScene
+                  isOnboarding={isOnboarding}
+                  currentDay={currentDay}
+                />
+
+                <div>
+                  <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
+                    Today in one swipe
+                  </p>
+                  <div className="mobile-rail no-scrollbar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1">
+                    {sharedSummaryCards.map((card) => (
+                      <div
+                        key={card.label}
+                        className="min-w-[12.4rem] snap-start rounded-[1.35rem] border border-white/12 bg-[rgba(255,255,255,0.14)] px-4 py-4 backdrop-blur"
+                      >
+                        <p className="text-[11px] uppercase tracking-[0.2em] text-white/48">
+                          {card.label}
+                        </p>
+                        <p className="mt-2 text-[1.9rem] font-black text-white">
+                          {card.value}
+                        </p>
+                        <p className="mt-2 text-[12px] leading-5 text-white/70">
+                          {card.note}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
+                    Side by side
+                  </p>
+                  <div className="mobile-rail no-scrollbar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1">
+                    {companionSnapshots.map(({ id, state, completed, ratio, note }) => (
+                      <div
+                        key={id}
+                        className={`min-w-[calc(100vw-3rem)] max-w-[22rem] snap-start rounded-[1.55rem] border p-4 backdrop-blur ${
+                          id === userId
+                            ? "border-white/28 bg-[rgba(255,255,255,0.18)]"
+                            : "border-white/10 bg-[rgba(0,0,0,0.14)]"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-[11px] uppercase tracking-[0.2em] text-white/50">
+                              {id === userId ? "지금 보고 있는 사람" : "함께 걷는 사람"}
+                            </p>
+                            <p className="mt-1 text-[1.35rem] font-black text-white">
+                              {getDisplayName(id)}
+                            </p>
+                          </div>
+                          <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-semibold text-white/80">
+                            {state.user ? `${completed}/4 진행` : "대기 중"}
+                          </span>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-2 gap-3">
+                          <div className="rounded-[1.2rem] bg-white/10 px-3.5 py-3">
+                            <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                              완주 일수
+                            </div>
+                            <div className="mt-1.5 text-[1.6rem] font-black text-white">
+                              {state.progress.totalDays}
+                            </div>
+                          </div>
+                          <div className="rounded-[1.2rem] bg-white/10 px-3.5 py-3">
+                            <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                              오늘 루틴
+                            </div>
+                            <div className="mt-1.5 text-[1.6rem] font-black text-white">
+                              {completed}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-white/45">
+                            <span>Journey line</span>
+                            <span>{ratio}%</span>
+                          </div>
+                          <div className="h-2 overflow-hidden rounded-full bg-white/12">
+                            <div
+                              className="h-full rounded-full bg-[linear-gradient(90deg,#fbf6dd,#f6ad55,#9dd5b0)] transition-all duration-500"
+                              style={{ width: `${ratio}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <p className="mt-3.5 text-[13px] leading-6 text-white/72">
+                          {note}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 hidden gap-3 sm:grid sm:grid-cols-[1.4fr_0.9fr]">
+                <div className="rounded-[1.8rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-5 backdrop-blur">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {USER_IDS.map((id) => {
+                      const isActive = id === userId;
+
+                      return (
+                        <button
+                          key={id}
+                          onClick={() => void switchUser(id)}
+                          className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                            isActive
+                              ? "bg-white text-stone-900 shadow-lg"
+                              : "border border-white/15 bg-white/8 text-white/80 hover:bg-white/14"
+                          }`}
+                        >
+                          {USER_LABELS[id]}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                    {sharedSummaryCards.map((card) => (
+                      <div
+                        key={card.label}
+                        className="rounded-[1.4rem] border border-white/10 bg-black/10 px-4 py-4"
+                      >
+                        <p className="text-xs uppercase tracking-[0.24em] text-white/50">
+                          {card.label}
+                        </p>
+                        <p className="mt-2 text-3xl font-black text-white">
+                          {card.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <p className="mt-6 max-w-2xl text-sm leading-7 text-white/72">
+                    {getSharedMood(states)}
+                  </p>
+                </div>
+
+                <CompanionJourneyScene
+                  isOnboarding={isOnboarding}
+                  currentDay={currentDay}
+                />
+              </div>
+
+              <div className="mt-6 hidden gap-3 md:grid md:grid-cols-2">
+                {companionSnapshots.map(({ id, state, completed, ratio, note }) => (
                   <div
                     key={id}
-                    className={`rounded-[1.6rem] border p-4 transition sm:rounded-[1.8rem] sm:p-5 ${
+                    className={`rounded-[1.8rem] border p-5 transition ${
                       id === userId
                         ? "border-white/30 bg-[rgba(255,255,255,0.16)]"
                         : "border-white/10 bg-[rgba(0,0,0,0.12)]"
@@ -520,7 +669,7 @@ export default function Home() {
                         <p className="text-xs uppercase tracking-[0.2em] text-white/50">
                           {id === userId ? "지금 보고 있는 사람" : "함께 걷는 사람"}
                         </p>
-                        <p className="mt-1 text-[1.35rem] font-black text-white sm:text-2xl">
+                        <p className="mt-1 text-2xl font-black text-white">
                           {getDisplayName(id)}
                         </p>
                       </div>
@@ -529,20 +678,20 @@ export default function Home() {
                       </span>
                     </div>
 
-                    <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5">
-                      <div className="rounded-[1.2rem] bg-white/10 px-3.5 py-3 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <div className="rounded-[1.4rem] bg-white/10 px-4 py-4">
                         <div className="text-xs uppercase tracking-[0.18em] text-white/45">
                           완주 일수
                         </div>
-                        <div className="mt-1.5 text-[1.6rem] font-black text-white sm:mt-2 sm:text-3xl">
+                        <div className="mt-2 text-3xl font-black text-white">
                           {state.progress.totalDays}
                         </div>
                       </div>
-                      <div className="rounded-[1.2rem] bg-white/10 px-3.5 py-3 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
+                      <div className="rounded-[1.4rem] bg-white/10 px-4 py-4">
                         <div className="text-xs uppercase tracking-[0.18em] text-white/45">
                           오늘 루틴
                         </div>
-                        <div className="mt-1.5 text-[1.6rem] font-black text-white sm:mt-2 sm:text-3xl">
+                        <div className="mt-2 text-3xl font-black text-white">
                           {completed}
                         </div>
                       </div>
@@ -561,13 +710,13 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <p className="mt-3.5 text-[13px] leading-6 text-white/72 sm:mt-4 sm:text-sm">
-                      {getJourneyNote(id, states)}
+                    <p className="mt-4 text-sm leading-6 text-white/72">
+                      {note}
                     </p>
                   </div>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </section>
@@ -777,71 +926,6 @@ export default function Home() {
         </section>
       )}
 
-      {!showProfileSetup && !showPlanSetup && activeUser && activePlan && (
-        <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-                Study Page
-              </p>
-              <h2 className="mt-2 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
-                실제 루틴은 학습 탭에서 이어집니다.
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-stone-600">
-                동행 탭은 두 사람의 흐름과 분위기를 보는 곳으로 두고, 오늘의 카드와 문제는 아래
-                학습 탭에서 단계별로 집중해서 진행하도록 분리했습니다.
-              </p>
-            </div>
-            <div className="rounded-[1.6rem] bg-[linear-gradient(135deg,#f4efe4,#ebe2d4)] px-4 py-3 text-right">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
-                Today
-              </div>
-              <div className="mt-1 text-lg font-black text-stone-900">
-                Day {currentDay}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <div className="rounded-[1.6rem] border border-stone-200 bg-white/85 px-4 py-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-stone-400">다음 단계</div>
-              <div className="mt-2 text-lg font-black text-stone-900">
-                {currentQuestIdx >= 0 ? questDefs[currentQuestIdx].title : "오늘 루틴 완료"}
-              </div>
-            </div>
-            <div className="rounded-[1.6rem] border border-stone-200 bg-white/85 px-4 py-4">
-              <div className="text-xs uppercase tracking-[0.18em] text-stone-400">오늘 진행</div>
-              <div className="mt-2 text-lg font-black text-stone-900">
-                {completedCount}/{questDefs.length}
-              </div>
-            </div>
-            <div className="col-span-2 rounded-[1.6rem] border border-stone-200 bg-white/85 px-4 py-4 sm:col-span-1">
-              <div className="text-xs uppercase tracking-[0.18em] text-stone-400">누적 진행률</div>
-              <div className="mt-2 text-lg font-black text-stone-900">{planProgressPercent}%</div>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <div className="mb-2 flex items-center justify-between text-sm font-semibold text-stone-600">
-              <span>루틴 진행선</span>
-              <span>{planProgressPercent}%</span>
-            </div>
-            <div className="h-3 overflow-hidden rounded-full bg-stone-100">
-              <div
-                className="h-full rounded-full bg-[linear-gradient(90deg,#f6ad55,#c96f43,#31473a)] transition-all"
-                style={{ width: `${planProgressPercent}%` }}
-              />
-            </div>
-          </div>
-
-          <Link
-            href="/study"
-            className="mt-6 flex w-full items-center justify-center rounded-[1.8rem] bg-[linear-gradient(135deg,#31473a,#c96f43)] px-4 py-4 text-sm font-black text-white shadow-[0_16px_34px_rgba(70,54,36,0.14)] transition hover:brightness-105"
-          >
-            학습 탭 열기
-          </Link>
-        </section>
-      )}
     </div>
   );
 }
