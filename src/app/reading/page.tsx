@@ -2,17 +2,16 @@
 
 import { useState } from "react";
 import { sampleReadingQuestions } from "@/lib/sample-data";
-
-type Level = "N4" | "N3";
+import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 
 export default function ReadingPage() {
-  const [level, setLevel] = useState<Level>("N4");
+  const { isLoading, level, supportedLevel, userLabel } = useActiveStudyProfile();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [stats, setStats] = useState({ total: 0, correct: 0 });
 
-  const questions = sampleReadingQuestions.filter((q) => q.level === level);
+  const questions = sampleReadingQuestions.filter((q) => q.level === supportedLevel);
   const current = questions[currentIndex];
 
   const handleAnswer = (choice: string) => {
@@ -32,11 +31,47 @@ export default function ReadingPage() {
     setCurrentIndex((prev) => (prev + 1) % questions.length);
   };
 
+  if (isLoading) {
+    return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
+  }
+
+  if (!supportedLevel) {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold">독해</h1>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+              현재 사용자 {userLabel}
+            </span>
+            <span className="rounded-full bg-green-100 px-3 py-1 font-medium text-green-700">
+              설정 레벨 {level}
+            </span>
+          </div>
+        </div>
+        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+          {level} 독해 데이터는 아직 준비되지 않았습니다.
+        </p>
+      </div>
+    );
+  }
+
   if (!current) {
     return (
-      <p className="text-center text-gray-500">
-        해당 레벨의 문제가 없습니다.
-      </p>
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold">독해</h1>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+              현재 사용자 {userLabel}
+            </span>
+            <span className="rounded-full bg-green-100 px-3 py-1 font-medium text-green-700">
+              설정 레벨 {supportedLevel}
+            </span>
+          </div>
+        </div>
+        <p className="text-center text-gray-500">해당 레벨의 문제가 없습니다.</p>
+      </div>
     );
   }
 
@@ -44,25 +79,13 @@ export default function ReadingPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">독해</h1>
-        <div className="flex gap-2">
-          {(["N4", "N3"] as Level[]).map((l) => (
-            <button
-              key={l}
-              onClick={() => {
-                setLevel(l);
-                setCurrentIndex(0);
-                setSelectedAnswer(null);
-                setShowResult(false);
-              }}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                level === l
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-              }`}
-            >
-              {l}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-2 text-sm">
+          <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+            현재 사용자 {userLabel}
+          </span>
+          <span className="rounded-full bg-green-100 px-3 py-1 font-medium text-green-700">
+            설정 레벨 {supportedLevel}
+          </span>
         </div>
       </div>
 

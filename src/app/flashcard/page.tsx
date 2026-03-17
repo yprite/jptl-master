@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { sampleVocabularies } from "@/lib/sample-data";
 import {
   calculateNextReview,
   type Difficulty,
 } from "@/lib/spaced-repetition";
-
-type Level = "N4" | "N3";
+import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 
 interface CardState {
   vocabIndex: number;
@@ -17,7 +16,7 @@ interface CardState {
 }
 
 export default function FlashcardPage() {
-  const [level, setLevel] = useState<Level>("N4");
+  const { isLoading, level, supportedLevel, userLabel } = useActiveStudyProfile();
   const [flipped, setFlipped] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [stats, setStats] = useState({ reviewed: 0, correct: 0 });
@@ -25,7 +24,7 @@ export default function FlashcardPage() {
     new Map()
   );
 
-  const vocabs = sampleVocabularies.filter((v) => v.level === level);
+  const vocabs = sampleVocabularies.filter((v) => v.level === supportedLevel);
   const current = vocabs[currentIndex];
 
   const handleDifficulty = useCallback(
@@ -66,11 +65,47 @@ export default function FlashcardPage() {
     [currentIndex, cardStates, vocabs.length]
   );
 
+  if (isLoading) {
+    return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
+  }
+
+  if (!supportedLevel) {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold">단어 학습</h1>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+              현재 사용자 {userLabel}
+            </span>
+            <span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-700">
+              설정 레벨 {level}
+            </span>
+          </div>
+        </div>
+        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+          {level} 단어 학습 데이터는 아직 준비되지 않았습니다.
+        </p>
+      </div>
+    );
+  }
+
   if (!current) {
     return (
-      <p className="text-center text-gray-500">
-        해당 레벨의 단어가 없습니다.
-      </p>
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold">단어 학습</h1>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+              현재 사용자 {userLabel}
+            </span>
+            <span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-700">
+              설정 레벨 {supportedLevel}
+            </span>
+          </div>
+        </div>
+        <p className="text-center text-gray-500">해당 레벨의 단어가 없습니다.</p>
+      </div>
     );
   }
 
@@ -78,24 +113,13 @@ export default function FlashcardPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">단어 학습</h1>
-        <div className="flex gap-2">
-          {(["N4", "N3"] as Level[]).map((l) => (
-            <button
-              key={l}
-              onClick={() => {
-                setLevel(l);
-                setCurrentIndex(0);
-                setFlipped(false);
-              }}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                level === l
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-              }`}
-            >
-              {l}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-2 text-sm">
+          <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+            현재 사용자 {userLabel}
+          </span>
+          <span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-700">
+            설정 레벨 {supportedLevel}
+          </span>
         </div>
       </div>
 

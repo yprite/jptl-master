@@ -7,8 +7,7 @@ import {
   type VocabQuestionType,
   type VocabQuestion,
 } from "@/lib/vocab-questions";
-
-type Level = "N4" | "N3";
+import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 
 const allTypes: VocabQuestionType[] = [
   "kanji_reading",
@@ -19,7 +18,7 @@ const allTypes: VocabQuestionType[] = [
 ];
 
 export default function VocabularyPage() {
-  const [level, setLevel] = useState<Level>("N4");
+  const { isLoading, level, supportedLevel, userLabel } = useActiveStudyProfile();
   const [selectedType, setSelectedType] = useState<VocabQuestionType | "all">(
     "all"
   );
@@ -30,7 +29,7 @@ export default function VocabularyPage() {
 
   const filtered = vocabQuestions.filter(
     (q) =>
-      q.level === level &&
+      q.level === supportedLevel &&
       (selectedType === "all" || q.type === selectedType)
   );
   const current: VocabQuestion | undefined = filtered[currentIndex];
@@ -52,39 +51,56 @@ export default function VocabularyPage() {
     setCurrentIndex((prev) => (prev + 1) % filtered.length);
   };
 
-  const resetWith = (newLevel?: Level, newType?: VocabQuestionType | "all") => {
-    if (newLevel !== undefined) setLevel(newLevel);
+  const resetWith = (newType?: VocabQuestionType | "all") => {
     if (newType !== undefined) setSelectedType(newType);
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setShowResult(false);
   };
 
+  if (isLoading) {
+    return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
+  }
+
+  if (!supportedLevel) {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold">어휘 문제</h1>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+              현재 사용자 {userLabel}
+            </span>
+            <span className="rounded-full bg-indigo-100 px-3 py-1 font-medium text-indigo-700">
+              설정 레벨 {level}
+            </span>
+          </div>
+        </div>
+        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+          {level} 어휘 문제 데이터는 아직 준비되지 않았습니다.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">어휘 문제</h1>
-
-      {/* Level */}
-      <div className="flex gap-2">
-        {(["N4", "N3"] as Level[]).map((l) => (
-          <button
-            key={l}
-            onClick={() => resetWith(l)}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-              level === l
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            {l}
-          </button>
-        ))}
+      <div className="space-y-3">
+        <h1 className="text-2xl font-bold">어휘 문제</h1>
+        <div className="flex flex-wrap gap-2 text-sm">
+          <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+            현재 사용자 {userLabel}
+          </span>
+          <span className="rounded-full bg-indigo-100 px-3 py-1 font-medium text-indigo-700">
+            설정 레벨 {supportedLevel}
+          </span>
+        </div>
       </div>
 
       {/* Question type filter */}
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={() => resetWith(undefined, "all")}
+          onClick={() => resetWith("all")}
           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
             selectedType === "all"
               ? "bg-indigo-600 text-white"
@@ -96,7 +112,7 @@ export default function VocabularyPage() {
         {allTypes.map((t) => (
           <button
             key={t}
-            onClick={() => resetWith(undefined, t)}
+            onClick={() => resetWith(t)}
             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               selectedType === t
                 ? "bg-indigo-600 text-white"
