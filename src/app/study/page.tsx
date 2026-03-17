@@ -72,6 +72,14 @@ function getDisplayName(id: UserId): string {
   return USER_LABELS[id];
 }
 
+function getTopicLabel(id: UserId): string {
+  const label = getDisplayName(id);
+  const lastCode = label.charCodeAt(label.length - 1);
+  const isHangul = lastCode >= 0xac00 && lastCode <= 0xd7a3;
+  const hasBatchim = isHangul && (lastCode - 0xac00) % 28 !== 0;
+  return `${label}${hasBatchim ? "은" : "는"}`;
+}
+
 export default function StudyPage() {
   const [userId, setUserId] = useState<UserId>(() => getCurrentUserId());
   const [states, setStates] = useState<Record<UserId, HomeState>>(createEmptyStates);
@@ -196,7 +204,7 @@ export default function StudyPage() {
               Day {currentDay} 루틴
             </h1>
             <p className="mt-2 text-sm leading-7 text-stone-600">
-              {getDisplayName(userId)}는 오늘 암기에서 시작해 어휘, 문법, 독해 순서로 천천히 이어갑니다.
+              {getTopicLabel(userId)} 오늘 암기에서 시작해 어휘, 문법, 독해 순서로 천천히 이어갑니다.
             </p>
           </div>
           <div className="rounded-[1.5rem] bg-white/80 px-4 py-3 text-right shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
