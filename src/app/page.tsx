@@ -1,6 +1,5 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -23,14 +22,12 @@ const USER_LABELS: Record<UserId, string> = {
   me: "유저 1",
   wife: "유저 2",
 };
-type SliderField = [
-  string,
-  number,
-  Dispatch<SetStateAction<number>>,
-  number,
-  number,
-  number,
-];
+type TargetRange = {
+  min: number;
+  max: number;
+  label: string;
+  suffix: string;
+};
 const EMPTY_STATE: HomeState = {
   user: null,
   plan: null,
@@ -48,6 +45,21 @@ const EMPTY_STATE: HomeState = {
     readingCount: 0,
   },
 };
+const PLAN_DAY_RANGE = {
+  min: 30,
+  max: 180,
+};
+const TARGET_RANGES = {
+  dailyFlashcard: { min: 8, max: 22, label: "단어 암기", suffix: "장" },
+  dailyVocabulary: { min: 4, max: 12, label: "어휘 문제", suffix: "개" },
+  dailyGrammar: { min: 3, max: 10, label: "문법 문제", suffix: "개" },
+  dailyReading: { min: 2, max: 6, label: "독해 문제", suffix: "개" },
+} satisfies Record<keyof Omit<StudyPlanDraft, "totalDays">, TargetRange>;
+const LEVEL_MULTIPLIER = {
+  N5: 0.9,
+  N4: 1,
+  N3: 1.15,
+} as const;
 
 function createEmptyStates(): Record<UserId, HomeState> {
   return {
@@ -92,6 +104,32 @@ function getDisplayName(id: UserId, state: HomeState): string {
   return state.user?.name || USER_LABELS[id];
 }
 
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function deriveDailyTargets(totalDays: number, level: "N5" | "N4" | "N3"): StudyPlanDraft {
+  const normalized =
+    (PLAN_DAY_RANGE.max - clamp(totalDays, PLAN_DAY_RANGE.min, PLAN_DAY_RANGE.max)) /
+    (PLAN_DAY_RANGE.max - PLAN_DAY_RANGE.min);
+  const levelMultiplier = LEVEL_MULTIPLIER[level];
+  const computeValue = ({ min, max }: TargetRange) =>
+    clamp(Math.round((min + (max - min) * normalized) * levelMultiplier), min, max);
+
+  return {
+    totalDays,
+    dailyFlashcard: computeValue(TARGET_RANGES.dailyFlashcard),
+    dailyVocabulary: computeValue(TARGET_RANGES.dailyVocabulary),
+    dailyGrammar: computeValue(TARGET_RANGES.dailyGrammar),
+    dailyReading: computeValue(TARGET_RANGES.dailyReading),
+  };
+}
+
+function getTargetProgress(value: number, range: TargetRange): number {
+  if (range.max === range.min) return 100;
+  return ((value - range.min) / (range.max - range.min)) * 100;
+}
+
 export default function Home() {
   const [userId, setUserId] = useState<UserId>(() => getCurrentUserId());
   const [states, setStates] = useState<Record<UserId, HomeState>>(createEmptyStates);
@@ -103,40 +141,20 @@ export default function Home() {
 
   const [formName, setFormName] = useState("");
   const [formLevel, setFormLevel] = useState<"N5" | "N4" | "N3">("N4");
-  const [formFlashcard, setFormFlashcard] = useState(10);
-  const [formVocab, setFormVocab] = useState(5);
-  const [formGrammar, setFormGrammar] = useState(5);
-  const [formReading, setFormReading] = useState(2);
 
   const [planDays, setPlanDays] = useState(84);
-  const [planFlashcard, setPlanFlashcard] = useState(10);
-  const [planVocab, setPlanVocab] = useState(5);
-  const [planGrammar, setPlanGrammar] = useState(5);
-  const [planReading, setPlanReading] = useState(2);
 
   const hydrateForms = useCallback((state: HomeState) => {
     if (state.user) {
       setFormName(state.user.name);
       setFormLevel(state.user.level);
-      setFormFlashcard(state.user.daily_flashcard);
-      setFormVocab(state.user.daily_vocab);
-      setFormGrammar(state.user.daily_grammar);
-      setFormReading(state.user.daily_reading);
     } else {
       setFormName("");
       setFormLevel("N4");
-      setFormFlashcard(10);
-      setFormVocab(5);
-      setFormGrammar(5);
-      setFormReading(2);
     }
 
     const plan = state.plan;
     setPlanDays(plan?.totalDays ?? 84);
-    setPlanFlashcard(plan?.dailyFlashcard ?? state.user?.daily_flashcard ?? 10);
-    setPlanVocab(plan?.dailyVocabulary ?? state.user?.daily_vocab ?? 5);
-    setPlanGrammar(plan?.dailyGrammar ?? state.user?.daily_grammar ?? 5);
-    setPlanReading(plan?.dailyReading ?? state.user?.daily_reading ?? 2);
   }, []);
 
   const loadStates = useCallback(
@@ -181,27 +199,22 @@ export default function Home() {
 
   const saveProfile = async () => {
     if (!formName.trim()) return;
+    const baselineTargets = deriveDailyTargets(activePlan?.totalDays ?? 84, formLevel);
 
     await upsertUser(userId, {
       name: formName.trim(),
       level: formLevel,
-      daily_flashcard: formFlashcard,
-      daily_vocab: formVocab,
-      daily_grammar: formGrammar,
-      daily_reading: formReading,
+      daily_flashcard: baselineTargets.dailyFlashcard,
+      daily_vocab: baselineTargets.dailyVocabulary,
+      daily_grammar: baselineTargets.dailyGrammar,
+      daily_reading: baselineTargets.dailyReading,
     });
 
     await loadStates(userId);
   };
 
   const savePlan = async () => {
-    const draft: StudyPlanDraft = {
-      totalDays: planDays,
-      dailyFlashcard: planFlashcard,
-      dailyVocabulary: planVocab,
-      dailyGrammar: planGrammar,
-      dailyReading: planReading,
-    };
+    const draft = deriveDailyTargets(planDays, activeUser?.level ?? formLevel);
 
     await saveStudyPlan(userId, draft);
     await loadStates(userId);
@@ -288,18 +301,7 @@ export default function Home() {
   const planProgressPercent = activePlan
     ? Math.min(100, Math.round((activeProgress.totalDays / activePlan.totalDays) * 100))
     : 0;
-  const profileSliderFields: SliderField[] = [
-    ["단어 암기", formFlashcard, setFormFlashcard, 5, 30, 5],
-    ["어휘 문제", formVocab, setFormVocab, 3, 20, 1],
-    ["문법 문제", formGrammar, setFormGrammar, 3, 20, 1],
-    ["독해 문제", formReading, setFormReading, 1, 10, 1],
-  ];
-  const planSliderFields: SliderField[] = [
-    ["단어 암기", planFlashcard, setPlanFlashcard, 5, 30, 5],
-    ["어휘 문제", planVocab, setPlanVocab, 3, 20, 1],
-    ["문법 문제", planGrammar, setPlanGrammar, 3, 20, 1],
-    ["독해 문제", planReading, setPlanReading, 1, 10, 1],
-  ];
+  const derivedPlanTargets = deriveDailyTargets(planDays, activeUser?.level ?? formLevel);
 
   return (
     <div className="space-y-6">
@@ -450,7 +452,7 @@ export default function Home() {
             </p>
             <h2 className="text-2xl font-black text-stone-900">프로필 설정</h2>
             <p className="text-sm text-stone-500">
-              이 단계는 처음 한 번만 필요합니다. 저장해두면 다음부터는 바로 학습 화면으로 들어옵니다.
+              이 단계는 처음 한 번만 필요합니다. 이름과 목표 레벨만 정하면 학습 일수에 맞춰 하루 루틴은 다음 단계에서 자동으로 잡힙니다.
             </p>
           </div>
 
@@ -485,27 +487,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid gap-3 md:grid-cols-2">
-              {profileSliderFields.map(([label, value, setter, min, max, step]) => (
-                <label
-                  key={String(label)}
-                  className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4"
-                >
-                  <div className="flex items-center justify-between text-sm font-semibold text-stone-700">
-                    <span>{label}</span>
-                    <span>{Number(value)}{label === "단어 암기" ? "장" : "개"}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min={Number(min)}
-                    max={Number(max)}
-                    step={Number(step)}
-                    value={Number(value)}
-                    onChange={(event) => setter(Number(event.target.value))}
-                    className="mt-3 w-full"
-                  />
-                </label>
-              ))}
+            <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4 text-sm text-stone-600">
+              저장 후 다음 단계에서 학습 일수를 조절하면 단어 암기, 어휘, 문법, 독해 목표가 자동으로 계산됩니다.
             </div>
 
             <div className="flex gap-3">
@@ -537,7 +520,7 @@ export default function Home() {
             </p>
             <h2 className="text-2xl font-black text-stone-900">학습 계획 세우기</h2>
             <p className="text-sm text-stone-500">
-              프로필을 저장했으니 이제 하루 루틴을 고정합니다. 이후에는 이 계획대로 하루치만 차례대로 진행합니다.
+              학습 일수만 정하면 하루 목표는 자동으로 맞춰집니다. 슬라이더를 움직이면 루틴 강도가 바로 바뀝니다.
             </p>
           </div>
 
@@ -558,26 +541,48 @@ export default function Home() {
               />
             </label>
 
-            {planSliderFields.map(([label, value, setter, min, max, step]) => (
-              <label
-                key={String(label)}
-                className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4"
+            {(
+              Object.entries(TARGET_RANGES) as Array<
+                [keyof Omit<StudyPlanDraft, "totalDays">, TargetRange]
               >
-                <div className="flex items-center justify-between text-sm font-semibold text-stone-700">
-                  <span>{label}</span>
-                  <span>{Number(value)}{label === "단어 암기" ? "장" : "개"}</span>
+            ).map(([key, range]) => {
+              const value = derivedPlanTargets[key];
+              const progress = getTargetProgress(value, range);
+
+              return (
+                <div
+                  key={key}
+                  className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4"
+                >
+                  <div className="flex items-center justify-between text-sm font-semibold text-stone-700">
+                    <span>{range.label}</span>
+                    <span className="text-base font-black text-stone-900">
+                      {value}
+                      {range.suffix}
+                    </span>
+                  </div>
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-stone-200">
+                    <div
+                      className="h-full rounded-full bg-[linear-gradient(90deg,#0f172a,#7c3aed,#f59e0b)] transition-all duration-500 ease-out"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <div className="mt-3 flex items-center justify-between text-xs text-stone-500">
+                    <span>느긋한 페이스 {range.min}{range.suffix}</span>
+                    <span>빠른 페이스 {range.max}{range.suffix}</span>
+                  </div>
                 </div>
-                <input
-                  type="range"
-                  min={Number(min)}
-                  max={Number(max)}
-                  step={Number(step)}
-                  value={Number(value)}
-                  onChange={(event) => setter(Number(event.target.value))}
-                  className="mt-3 w-full"
-                />
-              </label>
-            ))}
+              );
+            })}
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-violet-200 bg-violet-50 px-4 py-4 text-sm text-violet-900">
+            <div className="font-bold">자동 추천 루틴</div>
+            <div className="mt-1 text-violet-700">
+              {planDays}일 완주 기준으로 하루에 단어 암기 {derivedPlanTargets.dailyFlashcard}장,
+              어휘 {derivedPlanTargets.dailyVocabulary}개, 문법 {derivedPlanTargets.dailyGrammar}개,
+              독해 {derivedPlanTargets.dailyReading}개를 진행합니다.
+            </div>
           </div>
 
           <div className="mt-5 flex gap-3">
