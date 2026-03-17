@@ -29,7 +29,7 @@ export function useStudyData<T>(filename: string | null, fallback: T): UseStudyD
 
       try {
         const response = await fetch(`/study-data/${filename}`, {
-          cache: "force-cache",
+          cache: "no-store",
         });
 
         if (!response.ok) {
