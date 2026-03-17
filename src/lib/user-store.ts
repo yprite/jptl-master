@@ -125,6 +125,12 @@ function setLocalUsers(users: Partial<Record<UserId, User>>): void {
   writeJson(STORAGE_KEY_USERS, users);
 }
 
+function clearLocalUser(id: UserId): void {
+  const users = getLocalUsers();
+  delete users[id];
+  setLocalUsers(users);
+}
+
 function getLocalPlans(): Partial<Record<UserId, StudyPlan | null>> {
   return readJson<Partial<Record<UserId, StudyPlan | null>>>(STORAGE_KEY_PLANS, {});
 }
@@ -373,25 +379,11 @@ function getLocalState(userId: UserId): HomeState {
   };
 }
 
-function hasMeaningfulState(state: HomeState): boolean {
-  return (
-    state.user !== null ||
-    state.plan !== null ||
-    state.quests.flashcard ||
-    state.quests.vocabulary ||
-    state.quests.grammar ||
-    state.quests.reading ||
-    state.progress.totalDays > 0 ||
-    state.progress.flashcardCount > 0 ||
-    state.progress.vocabCount > 0 ||
-    state.progress.grammarCount > 0 ||
-    state.progress.readingCount > 0
-  );
-}
-
 function syncLocalState(userId: UserId, state: HomeState): HomeState {
   if (state.user) {
     setLocalUser(state.user);
+  } else {
+    clearLocalUser(userId);
   }
   setLocalPlan(userId, state.plan);
   syncLocalQuest(userId, state.quests);
@@ -461,13 +453,6 @@ async function fetchRemoteState(userId: UserId): Promise<HomeState> {
   return requestJson<HomeState>(`/api/home/state?user_id=${userId}`);
 }
 
-async function seedRemoteState(userId: UserId, state: HomeState): Promise<HomeState> {
-  return requestJson<HomeState>("/api/home/state", {
-    method: "POST",
-    body: JSON.stringify({ userId, state }),
-  });
-}
-
 export function getCurrentUserId(): UserId {
   if (!canUseStorage()) return "me";
   return (window.localStorage.getItem(STORAGE_KEY_USER) as UserId) || "me";
@@ -485,12 +470,7 @@ export async function getHomeState(userId: UserId): Promise<HomeState> {
 
   try {
     const remoteState = await fetchRemoteState(userId);
-    if (hasMeaningfulState(remoteState) || !hasMeaningfulState(localState)) {
-      return syncLocalState(userId, remoteState);
-    }
-
-    const seeded = await seedRemoteState(userId, localState);
-    return syncLocalState(userId, seeded);
+    return syncLocalState(userId, remoteState);
   } catch (error) {
     if (shouldUseLocalFallback(error)) {
       activateLocalFallback(error);
