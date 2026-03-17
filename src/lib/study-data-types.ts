@@ -24,7 +24,8 @@ export interface GeneratedVocabularyQuestion {
 export interface GeneratedGrammarQuestion {
   id: string;
   level: StudyLevel;
-  type: "meaning";
+  type: "meaning" | "pattern";
+  badge: string;
   pattern: string;
   question: string;
   choices: string[];
@@ -32,4 +33,15 @@ export interface GeneratedGrammarQuestion {
   explanation: string;
   example_jp: string | null;
   example_kr: string | null;
+}
+
+export interface GeneratedReadingQuestion {
+  id: string;
+  level: StudyLevel;
+  passage: string;
+  question: string;
+  choices: string[];
+  correct_answer: string;
+  explanation: string;
+  difficulty: number;
 }

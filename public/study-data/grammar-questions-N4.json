@@ -1,1 +1,2234 @@
-[]
+[
+  {
+    "id": "hanabira-n4-1-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "A とか B とか",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb たほうがいい",
+      "～のに",
+      "い-Adjective く する/なる",
+      "A とか B とか"
+    ],
+    "correct_answer": "A とか B とか",
+    "explanation": "정답은 A とか B とか. Hanabira 설명: Used to express multiple examples or possibilities; 'such as', 'like', 'for example'.",
+    "example_jp": "週末は映画とか買い物とか楽しいことをしたいです。",
+    "example_kr": "영문 번역: I want to do fun things like watching movies and shopping on the weekend."
+  },
+  {
+    "id": "hanabira-n4-2-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "A は B ほど～ありません",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～という (〜to iu) Noun",
+      "A は B ほど～ありません",
+      "Verb 終わる",
+      "Verb て + さしあげる"
+    ],
+    "correct_answer": "A は B ほど～ありません",
+    "explanation": "정답은 A は B ほど～ありません. Hanabira 설명: Express that A is not as much as B; 'not as... as', 'not... to the extent of'.",
+    "example_jp": "今日は昨日ほど寒くありません。",
+    "example_kr": "영문 번역: Today is not as cold as yesterday."
+  },
+  {
+    "id": "hanabira-n4-3-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "A は B ほど～ない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb てしまう",
+      "Verb て いる ところ",
+      "A は B ほど～ない",
+      "～てはいけない"
+    ],
+    "correct_answer": "A は B ほど～ない",
+    "explanation": "정답은 A は B ほど～ない. Hanabira 설명: Expressing that A is not as ~ as B; 'not as...as'",
+    "example_jp": "山田さんは鈴木さんほど背が高くない。",
+    "example_kr": "영문 번역: Yamada is not as tall as Suzuki."
+  },
+  {
+    "id": "hanabira-n4-4-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "A より B のほうが〜",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Nounをいただく",
+      "A とか B とか",
+      "A より B のほうが〜",
+      "～と思う"
+    ],
+    "correct_answer": "A より B のほうが〜",
+    "explanation": "정답은 A より B のほうが〜. Hanabira 설명: Comparing two things; 'B is more ~ than A'.",
+    "example_jp": "田中さんより鈴木さんのほうが背が高いです。",
+    "example_kr": "영문 번역: Suzuki is taller than Tanaka."
+  },
+  {
+    "id": "hanabira-n4-5-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "い-Adjective く する/なる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun ばかり",
+      "～なくてもいい",
+      "～なければ ならない",
+      "い-Adjective く する/なる"
+    ],
+    "correct_answer": "い-Adjective く する/なる",
+    "explanation": "정답은 い-Adjective く する/なる. Hanabira 설명: Express a change happening or making something change.",
+    "example_jp": "部屋を明るくします。",
+    "example_kr": "영문 번역: I will make the room brighter."
+  },
+  {
+    "id": "hanabira-n4-6-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "な-adjective に する/なる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ることにする",
+      "文A。だから 文B",
+      "～ので",
+      "な-adjective に する/なる"
+    ],
+    "correct_answer": "な-adjective に する/なる",
+    "explanation": "정답은 な-adjective に する/なる. Hanabira 설명: Used to indicate change or decision; 'to become' or 'to make' with na-adjectives.",
+    "example_jp": "部屋をきれいにする。",
+    "example_kr": "영문 번역: To make the room clean."
+  },
+  {
+    "id": "hanabira-n4-7-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun しか～ない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～だろう",
+      "Noun しか～ない",
+      "～のです",
+      "Noun に する"
+    ],
+    "correct_answer": "Noun しか～ない",
+    "explanation": "정답은 Noun しか～ない. Hanabira 설명: Expresses 'only', 'nothing but', or 'no other'.",
+    "example_jp": "私はリンゴしか食べない。",
+    "example_kr": "영문 번역: I eat only apples."
+  },
+  {
+    "id": "hanabira-n4-8-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun に する",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun に する",
+      "～ずつ",
+      "～という",
+      "～かしら"
+    ],
+    "correct_answer": "Noun に する",
+    "explanation": "정답은 Noun に する. Hanabira 설명: Used to indicate a choice or decision, 'to decide on' or 'to choose'.",
+    "example_jp": "メニューからピザにしました。",
+    "example_kr": "영문 번역: I decided on pizza from the menu."
+  },
+  {
+    "id": "hanabira-n4-9-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun に なる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "文A。そのうえ 文B。",
+      "Verb て くる",
+      "Noun に なる",
+      "～でしょう"
+    ],
+    "correct_answer": "Noun に なる",
+    "explanation": "정답은 Noun に なる. Hanabira 설명: To become; to change into; to turn into.",
+    "example_jp": "彼は医者になりました。",
+    "example_kr": "영문 번역: He became a doctor."
+  },
+  {
+    "id": "hanabira-n4-10-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "のために",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "のために",
+      "Verb るときに",
+      "～させてください",
+      "Nounをくださる"
+    ],
+    "correct_answer": "のために",
+    "explanation": "정답은 のために. Hanabira 설명: Used to express purpose or reason; 'for', 'for the sake of', 'in order to'.",
+    "example_jp": "勉強のために、図書館で静かな場所を探しています。",
+    "example_kr": "영문 번역: In order to study, I am looking for a quiet place in the library."
+  },
+  {
+    "id": "hanabira-n4-11-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun の 間に",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～かもしれない",
+      "Verb ることにする",
+      "～てはいけない",
+      "Noun の 間に"
+    ],
+    "correct_answer": "Noun の 間に",
+    "explanation": "정답은 Noun の 間に. Hanabira 설명: Expresses 'while' or 'during' a specific period or time.",
+    "example_jp": "昼休みの間に銀行に行きます。",
+    "example_kr": "영문 번역: I will go to the bank during lunch break."
+  },
+  {
+    "id": "hanabira-n4-12-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun ばかり",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun ばかり",
+      "Verb て くださる",
+      "Verb て いる",
+      "のために"
+    ],
+    "correct_answer": "Noun ばかり",
+    "explanation": "정답은 Noun ばかり. Hanabira 설명: Expresses 'only', 'nothing but', 'always', or 'just'.",
+    "example_jp": "彼はお金の話ばかりする。",
+    "example_kr": "영문 번역: He talks about nothing but money."
+  },
+  {
+    "id": "hanabira-n4-13-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun を あげる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ることにする",
+      "～なきゃいけない",
+      "Verb ように",
+      "Noun を あげる"
+    ],
+    "correct_answer": "Noun を あげる",
+    "explanation": "정답은 Noun を あげる. Hanabira 설명: To give something to someone; 'give', 'offer', 'present'.",
+    "example_jp": "プレゼントをあげる。",
+    "example_kr": "영문 번역: I give a present."
+  },
+  {
+    "id": "hanabira-n4-14-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Nounをいただく",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Nounをいただく",
+      "～ずつ",
+      "～し、～し、～",
+      "～といい"
+    ],
+    "correct_answer": "Nounをいただく",
+    "explanation": "정답은 Nounをいただく. Hanabira 설명: To receive or accept something politely; 'to receive', 'to get', 'to accept'.",
+    "example_jp": "プレゼントをいただきありがとうございます。",
+    "example_kr": "영문 번역: Thank you for the gift that I received."
+  },
+  {
+    "id": "hanabira-n4-15-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Nounをくださる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun を あげる",
+      "～てもいい",
+      "Nounをくださる",
+      "Verb ようにする"
+    ],
+    "correct_answer": "Nounをくださる",
+    "explanation": "정답은 Nounをくださる. Hanabira 설명: Used to express someone doing something as a favor or for the benefit of the speaker.",
+    "example_jp": "先生が資料をくださった。",
+    "example_kr": "영문 번역: The teacher gave me the materials."
+  },
+  {
+    "id": "hanabira-n4-16-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun を くれる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb させる",
+      "Noun を くれる",
+      "～かどうか",
+      "～ないといけない"
+    ],
+    "correct_answer": "Noun を くれる",
+    "explanation": "정답은 Noun を くれる. Hanabira 설명: Expresses that someone gives a thing to the speaker or someone close to the speaker.",
+    "example_jp": "友達が私にプレゼントをくれました。",
+    "example_kr": "영문 번역: My friend gave me a present."
+  },
+  {
+    "id": "hanabira-n4-17-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun を さしあげる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun を さしあげる",
+      "Verb て ある",
+      "～なくてはいけない",
+      "～なければ ならない"
+    ],
+    "correct_answer": "Noun を さしあげる",
+    "explanation": "정답은 Noun を さしあげる. Hanabira 설명: A polite way of expressing to give something.",
+    "example_jp": "先生に本をさしあげます。",
+    "example_kr": "영문 번역: I will give a book to the teacher."
+  },
+  {
+    "id": "hanabira-n4-18-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun もらう",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～ので",
+      "～かもしれない",
+      "Noun もらう",
+      "～に"
+    ],
+    "correct_answer": "Noun もらう",
+    "explanation": "정답은 Noun もらう. Hanabira 설명: To receive or get something from someone; 'to receive', 'to get'.",
+    "example_jp": "友達からプレゼントをもらいました。",
+    "example_kr": "영문 번역: I received a gift from my friend."
+  },
+  {
+    "id": "hanabira-n4-19-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Noun + 中",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～まま",
+      "Verb + 続ける",
+      "～に",
+      "Noun + 中"
+    ],
+    "correct_answer": "Noun + 中",
+    "explanation": "정답은 Noun + 中. Hanabira 설명: Express 'in the middle of', 'during', or 'in the process of'.",
+    "example_jp": "彼は仕事中です。",
+    "example_kr": "영문 번역: He is in the middle of work."
+  },
+  {
+    "id": "hanabira-n4-20-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb させられる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb 方",
+      "～なきゃいけない",
+      "Noun + 中",
+      "Verb させられる"
+    ],
+    "correct_answer": "Verb させられる",
+    "explanation": "정답은 Verb させられる. Hanabira 설명: Express the passive causative form; 'to be made to', 'to be forced to'.",
+    "example_jp": "子供たちは先生に宿題をやらせられました。",
+    "example_kr": "영문 번역: The children were made to do their homework by the teacher."
+  },
+  {
+    "id": "hanabira-n4-21-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb させる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て ある",
+      "A とか B とか",
+      "Verb ない + ことにする",
+      "Verb させる"
+    ],
+    "correct_answer": "Verb させる",
+    "explanation": "정답은 Verb させる. Hanabira 설명: Expresses 'to make someone do something', 'to let someone do something', or 'to cause someone to do something'.",
+    "example_jp": "先生が生徒に宿題をさせました。",
+    "example_kr": "영문 번역: The teacher made the students do homework."
+  },
+  {
+    "id": "hanabira-n4-22-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb た ことがある",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～だろう",
+      "Verb て + さしあげる",
+      "Verb た ところ",
+      "Verb た ことがある"
+    ],
+    "correct_answer": "Verb た ことがある",
+    "explanation": "정답은 Verb た ことがある. Hanabira 설명: Expresses the experience of having done something in the past.",
+    "example_jp": "日本に行ったことがあります。",
+    "example_kr": "영문 번역: I have been to Japan before."
+  },
+  {
+    "id": "hanabira-n4-23-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb た ときに",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb る ことがある",
+      "Verb ない ことがある",
+      "Verb た ときに",
+      "A とか B とか"
+    ],
+    "correct_answer": "Verb た ときに",
+    "explanation": "정답은 Verb た ときに. Hanabira 설명: Express an action or event that occurred at a specific time in the past; 'when', 'at the time'.",
+    "example_jp": "映画を見たときに、泣きました。",
+    "example_kr": "영문 번역: When I watched the movie, I cried."
+  },
+  {
+    "id": "hanabira-n4-24-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb た ところ",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～んです",
+      "～という (〜to iu) Noun",
+      "Verb た ところ",
+      "～に"
+    ],
+    "correct_answer": "Verb た ところ",
+    "explanation": "정답은 Verb た ところ. Hanabira 설명: Expresses the situation right after an action has taken place.",
+    "example_jp": "ドアを開けたところ、猫が飛び出してきた。",
+    "example_kr": "영문 번역: When I opened the door, a cat came jumping out."
+  },
+  {
+    "id": "hanabira-n4-25-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb たほうがいい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "文A。そのうえ 文B。",
+      "Noun を さしあげる",
+      "Verb たほうがいい",
+      "Verb ように言う"
+    ],
+    "correct_answer": "Verb たほうがいい",
+    "explanation": "정답은 Verb たほうがいい. Hanabira 설명: Used to give advice or make a suggestion to someone - 'it's better if...'.",
+    "example_jp": "早く寝たほうがいい。",
+    "example_kr": "영문 번역: It's better if you go to bed early."
+  },
+  {
+    "id": "hanabira-n4-26-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ために",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て くださる",
+      "Verb たほうがいい",
+      "Verb ために",
+      "文A。それで 文B"
+    ],
+    "correct_answer": "Verb ために",
+    "explanation": "정답은 Verb ために. Hanabira 설명: Used to describe the purpose or reason for an action; 'for the sake of', 'in order to', 'because of'.",
+    "example_jp": "試験に合格するために、毎日勉強しています。",
+    "example_kr": "영문 번역: I study every day in order to pass the exam."
+  },
+  {
+    "id": "hanabira-n4-27-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb つもり",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb る ことになる",
+      "～まま",
+      "Verb つもり",
+      "Verb たほうがいい"
+    ],
+    "correct_answer": "Verb つもり",
+    "explanation": "정답은 Verb つもり. Hanabira 설명: Express the intention, plan, or determination to do something; 'I intend to', 'I plan to', 'I'm determined to'.",
+    "example_jp": "明日、友達に会うつもりです。",
+    "example_kr": "영문 번역: I plan to meet my friend tomorrow."
+  },
+  {
+    "id": "hanabira-n4-28-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb てあげる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb てあげる",
+      "～し、～し、～",
+      "Verb て ある",
+      "～という (〜to iu) Noun"
+    ],
+    "correct_answer": "Verb てあげる",
+    "explanation": "정답은 Verb てあげる. Hanabira 설명: Used to express doing something for someone; 'do something for someone'.",
+    "example_jp": "友達が疲れていたから、荷物を持ってあげた。",
+    "example_kr": "영문 번역: Since my friend was tired, I carried their luggage for them."
+  },
+  {
+    "id": "hanabira-n4-29-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て ある",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "な-adjective に する/なる",
+      "Verb ようになる",
+      "Verb て ある",
+      "Verb て いただけませんか"
+    ],
+    "correct_answer": "Verb て ある",
+    "explanation": "정답은 Verb て ある. Hanabira 설명: Indicates that an action has been done and its result is still in effect.",
+    "example_jp": "窓が開けてある。",
+    "example_kr": "영문 번역: The window has been opened (and remains open)."
+  },
+  {
+    "id": "hanabira-n4-30-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て いく",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て いく",
+      "～っていう",
+      "A とか B とか",
+      "～けれど"
+    ],
+    "correct_answer": "Verb て いく",
+    "explanation": "정답은 Verb て いく. Hanabira 설명: Expresses an action that continues on into the future or a change that progresses over time.",
+    "example_jp": "このまま練習を続けていくと、上達するでしょう。",
+    "example_kr": "영문 번역: If you keep practicing like this, you will improve."
+  },
+  {
+    "id": "hanabira-n4-31-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ていただきたい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て くれる",
+      "Noun ばかり",
+      "Nounをくださる",
+      "Verb ていただきたい"
+    ],
+    "correct_answer": "Verb ていただきたい",
+    "explanation": "정답은 Verb ていただきたい. Hanabira 설명: Express a polite request or desire that someone does something for you.",
+    "example_jp": "資料をコピーしていただきたいです。",
+    "example_kr": "영문 번역: I would like you to make copies of the documents."
+  },
+  {
+    "id": "hanabira-n4-32-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ていただく",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ていただく",
+      "Verb ない + ことにする",
+      "～そうだ",
+      "Verb 出す"
+    ],
+    "correct_answer": "Verb ていただく",
+    "explanation": "정답은 Verb ていただく. Hanabira 설명: Used to express receiving someone's favor or help; 'to kindly do'.",
+    "example_jp": "メールを送っていただいて、ありがとうございます。",
+    "example_kr": "영문 번역: Thank you for kindly sending the email."
+  },
+  {
+    "id": "hanabira-n4-33-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て いただけませんか",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て いただけませんか",
+      "Verb やすい",
+      "文A。だから 文B",
+      "Verb て ある"
+    ],
+    "correct_answer": "Verb て いただけませんか",
+    "explanation": "정답은 Verb て いただけませんか. Hanabira 설명: A polite request; 'Could you please...', 'Would you mind...'",
+    "example_jp": "この手紙を投函していただけませんか。",
+    "example_kr": "영문 번역: Could you please mail this letter for me?"
+  },
+  {
+    "id": "hanabira-n4-34-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て いる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て いる",
+      "Verb + 続ける",
+      "Noun に する",
+      "～てもいい"
+    ],
+    "correct_answer": "Verb て いる",
+    "explanation": "정답은 Verb て いる. Hanabira 설명: Expresses an ongoing action or a state resulting from a past action.",
+    "example_jp": "今、本を読んでいます。",
+    "example_kr": "영문 번역: I am reading a book now."
+  },
+  {
+    "id": "hanabira-n4-35-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て いる ところ",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～たら いかがですか",
+      "Verb て いる ところ",
+      "Noun もらう",
+      "Verb る ことがある"
+    ],
+    "correct_answer": "Verb て いる ところ",
+    "explanation": "정답은 Verb て いる ところ. Hanabira 설명: Describes an action that is currently happening; 'in the middle of', 'in the process of'.",
+    "example_jp": "彼は宿題をしているところです。",
+    "example_kr": "영문 번역: He is in the middle of doing his homework."
+  },
+  {
+    "id": "hanabira-n4-36-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ている間に",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て いく",
+      "Verb る ところ",
+      "A は B ほど～ない",
+      "Verb ている間に"
+    ],
+    "correct_answer": "Verb ている間に",
+    "explanation": "정답은 Verb ている間に. Hanabira 설명: Expresses 'while' or 'during the time' something is happening.",
+    "example_jp": "映画を見ている間に、彼は寝てしまった。",
+    "example_kr": "영문 번역: While watching the movie, he fell asleep."
+  },
+  {
+    "id": "hanabira-n4-37-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ておく",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ておく",
+      "Verb ようにする",
+      "Verb ように言う",
+      "Verb た ところ"
+    ],
+    "correct_answer": "Verb ておく",
+    "explanation": "정답은 Verb ておく. Hanabira 설명: Perform an action in preparation for a future situation; 'to do something in advance'.",
+    "example_jp": "駅で切符を買っておこう。",
+    "example_kr": "영문 번역: Let's buy the tickets in advance at the station."
+  },
+  {
+    "id": "hanabira-n4-38-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て くださいませんか",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～させてください",
+      "～たら いかがですか",
+      "Verb てくれませんか",
+      "Verb て くださいませんか"
+    ],
+    "correct_answer": "Verb て くださいませんか",
+    "explanation": "정답은 Verb て くださいませんか. Hanabira 설명: Polite request for asking someone for a favor.",
+    "example_jp": "コーヒーを飲んでくださいませんか。",
+    "example_kr": "영문 번역: Would you please drink some coffee?"
+  },
+  {
+    "id": "hanabira-n4-39-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て くださる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb る ところ",
+      "Verb 方",
+      "Verb て ほしい",
+      "Verb て くださる"
+    ],
+    "correct_answer": "Verb て くださる",
+    "explanation": "정답은 Verb て くださる. Hanabira 설명: Expresses gratitude for receiving someone's favor; 'to kindly do'.",
+    "example_jp": "先生が手伝ってくださる。",
+    "example_kr": "영문 번역: The teacher kindly helps."
+  },
+  {
+    "id": "hanabira-n4-40-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て くる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て くる",
+      "～んです",
+      "～し、～し、～",
+      "Verb てもらいたい"
+    ],
+    "correct_answer": "Verb て くる",
+    "explanation": "정답은 Verb て くる. Hanabira 설명: An action that starts in the past and continues to the present or future; 'come to', 'begin to', 'become'.",
+    "example_jp": "最近、日本語が分かってくるようになりました。",
+    "example_kr": "영문 번역: Recently, I've come to understand Japanese."
+  },
+  {
+    "id": "hanabira-n4-41-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb てくれませんか",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb たほうがいい",
+      "Verb てくれませんか",
+      "Verb て + さしあげる",
+      "Verb ようと思う"
+    ],
+    "correct_answer": "Verb てくれませんか",
+    "explanation": "정답은 Verb てくれませんか. Hanabira 설명: A polite way to request someone to do something for you; 'Could you please', 'Would you please', 'Won't you'.",
+    "example_jp": "ドアを開けてくれませんか。",
+    "example_kr": "영문 번역: Could you please open the door?"
+  },
+  {
+    "id": "hanabira-n4-42-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て くれる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb 方",
+      "Verb て くれる",
+      "Verb た ときに",
+      "Verb てしまう"
+    ],
+    "correct_answer": "Verb て くれる",
+    "explanation": "정답은 Verb て くれる. Hanabira 설명: Expresses that someone does something for the speaker (or another person in speaker's group); 'to do something for me/us'.",
+    "example_jp": "友達が宿題を手伝ってくれました。",
+    "example_kr": "영문 번역: My friend helped me with my homework."
+  },
+  {
+    "id": "hanabira-n4-43-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て + さしあげる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "どういう Noun",
+      "Verb て ほしい",
+      "～に",
+      "Verb て + さしあげる"
+    ],
+    "correct_answer": "Verb て + さしあげる",
+    "explanation": "정답은 Verb て + さしあげる. Hanabira 설명: A polite way to express giving or doing something for someone.",
+    "example_jp": "お茶を入れてさしあげます。",
+    "example_kr": "영문 번역: I will prepare and serve tea (for you)."
+  },
+  {
+    "id": "hanabira-n4-44-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb てしまう",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～という",
+      "Verb やすい",
+      "Verb てしまう",
+      "～と思う"
+    ],
+    "correct_answer": "Verb てしまう",
+    "explanation": "정답은 Verb てしまう. Hanabira 설명: Expresses unintentional actions or actions with regrettable outcomes; 'to end up doing', 'to accidentally do'.",
+    "example_jp": "ケーキを全部食べてしまった。",
+    "example_kr": "영문 번역: I ended up eating the whole cake."
+  },
+  {
+    "id": "hanabira-n4-45-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て ほしい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "文A。それで 文B",
+      "Verb てくれませんか",
+      "～たら どうですか",
+      "Verb て ほしい"
+    ],
+    "correct_answer": "Verb て ほしい",
+    "explanation": "정답은 Verb て ほしい. Hanabira 설명: Express a desire for someone else to do something; 'I want (someone) to'.",
+    "example_jp": "子供にもっと勉強してほしい。",
+    "example_kr": "영문 번역: I want my child to study more."
+  },
+  {
+    "id": "hanabira-n4-46-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb てみる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun ばかり",
+      "～っていう",
+      "そんな (sonna) + Noun",
+      "Verb てみる"
+    ],
+    "correct_answer": "Verb てみる",
+    "explanation": "정답은 Verb てみる. Hanabira 설명: Used to express 'try to' or 'attempt to do'.",
+    "example_jp": "この料理を作ってみます。",
+    "example_kr": "영문 번역: I will try to make this dish."
+  },
+  {
+    "id": "hanabira-n4-47-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb てもらいたい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun に なる",
+      "い-Adjective く する/なる",
+      "Verb てもらいたい",
+      "Verb ることにする"
+    ],
+    "correct_answer": "Verb てもらいたい",
+    "explanation": "정답은 Verb てもらいたい. Hanabira 설명: Express a desire to receive a favor or service from someone else.",
+    "example_jp": "この荷物を運んでもらいたいです。",
+    "example_kr": "영문 번역: I want you to carry this luggage for me."
+  },
+  {
+    "id": "hanabira-n4-48-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb て もらう",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て もらう",
+      "文A。それに 文B",
+      "～までに",
+      "～たり～たり"
+    ],
+    "correct_answer": "Verb て もらう",
+    "explanation": "정답은 Verb て もらう. Hanabira 설명: Express receiving a favor or action from someone.",
+    "example_jp": "友達に宿題を手伝ってもらった。",
+    "example_kr": "영문 번역: I had my friend help me with my homework."
+  },
+  {
+    "id": "hanabira-n4-49-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb てもらえませんか",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun を あげる",
+      "Verb ないほうがいい",
+      "Verb てもらえませんか",
+      "～んです"
+    ],
+    "correct_answer": "Verb てもらえませんか",
+    "explanation": "정답은 Verb てもらえませんか. Hanabira 설명: A polite way to ask for a favor or request someone to do something.",
+    "example_jp": "この手紙を見てもらえませんか。",
+    "example_kr": "영문 번역: Could you take a look at this letter for me?"
+  },
+  {
+    "id": "hanabira-n4-50-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ない ことがある",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ない ことがある",
+      "Verb ために",
+      "～という (〜to iu) Noun",
+      "Noun を あげる"
+    ],
+    "correct_answer": "Verb ない ことがある",
+    "explanation": "정답은 Verb ない ことがある. Hanabira 설명: Expresses that something doesn't always happen or there are occasions when it doesn't happen.",
+    "example_jp": "彼は会議に出席しないことがある。",
+    "example_kr": "영문 번역: There are times when he doesn't attend meetings."
+  },
+  {
+    "id": "hanabira-n4-51-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ない + ことにする",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ない + ことにする",
+      "Verb させる",
+      "Noun しか～ない",
+      "Verb ために"
+    ],
+    "correct_answer": "Verb ない + ことにする",
+    "explanation": "정답은 Verb ない + ことにする. Hanabira 설명: To decide not to do something.",
+    "example_jp": "明日のパーティーに行かないことにする。",
+    "example_kr": "영문 번역: I've decided not to go to tomorrow's party."
+  },
+  {
+    "id": "hanabira-n4-52-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ない ことになる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ために",
+      "～なければ ならない",
+      "Verb ない ことになる",
+      "～という"
+    ],
+    "correct_answer": "Verb ない ことになる",
+    "explanation": "정답은 Verb ない ことになる. Hanabira 설명: Expresses a result; 'end up not', 'it will become that', 'it would mean that'.",
+    "example_jp": "今日彼が来ないことになると、私たちの予定はキャンセルされます。",
+    "example_kr": "영문 번역: If he doesn't come today, our plans will be canceled."
+  },
+  {
+    "id": "hanabira-n4-53-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ないほうがいい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ないほうがいい",
+      "Noun + 中",
+      "～すぎる",
+      "Noun しか～ない"
+    ],
+    "correct_answer": "Verb ないほうがいい",
+    "explanation": "정답은 Verb ないほうがいい. Hanabira 설명: Expresses the idea that it is better not to do something.",
+    "example_jp": "この薬は飲まないほうがいいです。",
+    "example_kr": "영문 번역: It's better not to take this medicine."
+  },
+  {
+    "id": "hanabira-n4-54-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ながら",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～てもいい",
+      "～かもしれない",
+      "～たり～たり",
+      "Verb ながら"
+    ],
+    "correct_answer": "Verb ながら",
+    "explanation": "정답은 Verb ながら. Hanabira 설명: Expresses 'while' or 'as' in the sense of doing two things simultaneously.",
+    "example_jp": "テレビを見ながら宿題をしました。",
+    "example_kr": "영문 번역: I did my homework while watching television."
+  },
+  {
+    "id": "hanabira-n4-55-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb なさい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb なさい",
+      "～といい",
+      "～すぎる",
+      "Verb + 続ける"
+    ],
+    "correct_answer": "Verb なさい",
+    "explanation": "정답은 Verb なさい. Hanabira 설명: A command form used to give orders or instructions; 'Please do', 'Do this'.",
+    "example_jp": "部屋を掃除しなさい。",
+    "example_kr": "영문 번역: Clean your room."
+  },
+  {
+    "id": "hanabira-n4-56-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb にくい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb にくい",
+      "Verb てしまう",
+      "Verb ながら",
+      "Verb て くださいませんか"
+    ],
+    "correct_answer": "Verb にくい",
+    "explanation": "정답은 Verb にくい. Hanabira 설명: Express difficulty or complexity; 'hard to', 'difficult to', 'not easily'.",
+    "example_jp": "この字は読みにくいです。",
+    "example_kr": "영문 번역: This character is hard to read."
+  },
+  {
+    "id": "hanabira-n4-57-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb やすい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb やすい",
+      "～のに",
+      "～なければ ならない",
+      "Verb ることにする"
+    ],
+    "correct_answer": "Verb やすい",
+    "explanation": "정답은 Verb やすい. Hanabira 설명: Indicates that something is easy to do; 'easy to', 'easy for'.",
+    "example_jp": "この本は読みやすいです。",
+    "example_kr": "영문 번역: This book is easy to read."
+  },
+  {
+    "id": "hanabira-n4-58-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ようと思う",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb られる",
+      "Verb てもらえませんか",
+      "Verb ようと思う",
+      "～かもしれない"
+    ],
+    "correct_answer": "Verb ようと思う",
+    "explanation": "정답은 Verb ようと思う. Hanabira 설명: Express intention or plan to do something; 'I think I will', 'I plan to', 'I intend to'.",
+    "example_jp": "明日、映画を見ようと思います。",
+    "example_kr": "영문 번역: I think I will watch a movie tomorrow."
+  },
+  {
+    "id": "hanabira-n4-59-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ように",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ように",
+      "～から",
+      "Verb ない ことがある",
+      "Noun を さしあげる"
+    ],
+    "correct_answer": "Verb ように",
+    "explanation": "정답은 Verb ように. Hanabira 설명: Used to express 'like', 'as if', 'in order to', or 'so that'.",
+    "example_jp": "彼女は鳥のように軽やかに踊る。",
+    "example_kr": "영문 번역: She dances lightly like a bird."
+  },
+  {
+    "id": "hanabira-n4-60-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ようにする",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun に する",
+      "Verb ようにする",
+      "Verb て いる",
+      "Noun に なる"
+    ],
+    "correct_answer": "Verb ようにする",
+    "explanation": "정답은 Verb ようにする. Hanabira 설명: Make an effort to; try to; see to it that; ensure that.",
+    "example_jp": "毎日運動するようにしています。",
+    "example_kr": "영문 번역: I try to exercise every day."
+  },
+  {
+    "id": "hanabira-n4-61-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ようになる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ようになる",
+      "Verb させられる",
+      "～たら いかがですか",
+      "～かなあ"
+    ],
+    "correct_answer": "Verb ようになる",
+    "explanation": "정답은 Verb ようになる. Hanabira 설명: Express a change in ability, situation or state; 'become able to', 'come to', 'begin to'.",
+    "example_jp": "日本語が話せるようになりました。",
+    "example_kr": "영문 번역: I have become able to speak Japanese."
+  },
+  {
+    "id": "hanabira-n4-62-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ように言う",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～ずつ",
+      "Verb ように言う",
+      "文A。だから 文B",
+      "～ても/でも"
+    ],
+    "correct_answer": "Verb ように言う",
+    "explanation": "정답은 Verb ように言う. Hanabira 설명: Tell someone to do something; 'tell to do', 'instruct to do'.",
+    "example_jp": "先生は私たちに宿題をやるように言いました。",
+    "example_kr": "영문 번역: The teacher told us to do our homework."
+  },
+  {
+    "id": "hanabira-n4-63-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb られる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ることにする",
+      "～だろう",
+      "文A。だから 文B",
+      "Verb られる"
+    ],
+    "correct_answer": "Verb られる",
+    "explanation": "정답은 Verb られる. Hanabira 설명: Expresses passive voice or potential form for verbs.",
+    "example_jp": "彼は先生に褒められました。",
+    "example_kr": "영문 번역: He was praised by the teacher."
+  },
+  {
+    "id": "hanabira-n4-64-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb る ことがある",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb る ことがある",
+      "～という (〜to iu) Noun",
+      "Verb て ある",
+      "Verb 方"
+    ],
+    "correct_answer": "Verb る ことがある",
+    "explanation": "정답은 Verb る ことがある. Hanabira 설명: Used to express that something happens sometimes or has happened before.",
+    "example_jp": "彼は遅刻することがあります。",
+    "example_kr": "영문 번역: He is sometimes late."
+  },
+  {
+    "id": "hanabira-n4-65-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ることができる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～ずつ",
+      "～みたいだ",
+      "～なくてもいい",
+      "Verb ることができる"
+    ],
+    "correct_answer": "Verb ることができる",
+    "explanation": "정답은 Verb ることができる. Hanabira 설명: Express ability or possibility of doing an action; 'can', 'be able to', 'is possible'.",
+    "example_jp": "私は日本語を話すことができます。",
+    "example_kr": "영문 번역: I can speak Japanese."
+  },
+  {
+    "id": "hanabira-n4-66-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb ることにする",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ていただく",
+      "Verb 終わる",
+      "Verb させられる",
+      "Verb ることにする"
+    ],
+    "correct_answer": "Verb ることにする",
+    "explanation": "정답은 Verb ることにする. Hanabira 설명: Decide to do something, make a decision.",
+    "example_jp": "来週、ジムに行くことにしました。",
+    "example_kr": "영문 번역: I decided to go to the gym next week."
+  },
+  {
+    "id": "hanabira-n4-67-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb る ことになる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～ても/でも",
+      "Noun に なる",
+      "Verb る ことになる",
+      "文A。そのうえ 文B。"
+    ],
+    "correct_answer": "Verb る ことになる",
+    "explanation": "정답은 Verb る ことになる. Hanabira 설명: Indicates that something has been decided or arranged; 'it has been decided that', 'it turns out that'.",
+    "example_jp": "今日は会議がなくなることになりました。",
+    "example_kr": "영문 번역: It has been decided that there will be no meeting today."
+  },
+  {
+    "id": "hanabira-n4-68-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb るときに",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ように言う",
+      "～たり～たり",
+      "Noun に する",
+      "Verb るときに"
+    ],
+    "correct_answer": "Verb るときに",
+    "explanation": "정답은 Verb るときに. Hanabira 설명: Describes the time when a certain action takes place; 'when', 'at the time'.",
+    "example_jp": "映画を見るときに、ポップコーンを食べます。",
+    "example_kr": "영문 번역: When I watch a movie, I eat popcorn."
+  },
+  {
+    "id": "hanabira-n4-69-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb る ところ",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て くる",
+      "Verb させる",
+      "Verb る ところ",
+      "Noun を あげる"
+    ],
+    "correct_answer": "Verb る ところ",
+    "explanation": "정답은 Verb る ところ. Hanabira 설명: Expresses the state or moment when an action is about to happen or is happening.",
+    "example_jp": "彼は食べるところです。",
+    "example_kr": "영문 번역: He is in the process of eating."
+  },
+  {
+    "id": "hanabira-n4-70-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb 出す",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "な-adjective に する/なる",
+      "Verb 出す",
+      "Verb ることができる",
+      "～すぎる"
+    ],
+    "correct_answer": "Verb 出す",
+    "explanation": "정답은 Verb 出す. Hanabira 설명: Express the action of taking something out, starting an action, or emphasizing a verb.",
+    "example_jp": "本を棚から出してください。",
+    "example_kr": "영문 번역: Please take the book out from the shelf."
+  },
+  {
+    "id": "hanabira-n4-71-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb 方",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ようと思う",
+      "Verb 方",
+      "Noun の 間に",
+      "～まま"
+    ],
+    "correct_answer": "Verb 方",
+    "explanation": "정답은 Verb 方. Hanabira 설명: Indicates the way or method of doing something; often read as '～かた' ('how to', 'the way of').",
+    "example_jp": "誰かがケーキの作り方を知っていますか？",
+    "example_kr": "영문 번역: Does anyone know how to make a cake?"
+  },
+  {
+    "id": "hanabira-n4-72-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb 終わる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun ばかり",
+      "Verb 終わる",
+      "～かどうか",
+      "Verb + 続ける"
+    ],
+    "correct_answer": "Verb 終わる",
+    "explanation": "정답은 Verb 終わる. Hanabira 설명: Verbal action is completed; 'to finish', 'to end'.",
+    "example_jp": "映画が終わったら、家に帰ります。",
+    "example_kr": "영문 번역: When the movie finishes, I'll go home."
+  },
+  {
+    "id": "hanabira-n4-73-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "Verb + 続ける",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て + さしあげる",
+      "Verb + 続ける",
+      "Verb ないほうがいい",
+      "～かもしれない"
+    ],
+    "correct_answer": "Verb + 続ける",
+    "explanation": "정답은 Verb + 続ける. Hanabira 설명: To continue doing or to keep doing an action.",
+    "example_jp": "彼は毎日ジムで運動を続けています。",
+    "example_kr": "영문 번역: He continues to exercise at the gym every day."
+  },
+  {
+    "id": "hanabira-n4-74-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～かしら",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb られる",
+      "A とか B とか",
+      "Verb るときに",
+      "～かしら"
+    ],
+    "correct_answer": "～かしら",
+    "explanation": "정답은 ～かしら. Hanabira 설명: Indicates uncertainty or doubt; 'I wonder', 'I'm not sure'.",
+    "example_jp": "今日は雨が降るかしら？",
+    "example_kr": "영문 번역: I wonder if it will rain today?"
+  },
+  {
+    "id": "hanabira-n4-75-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～かどうか",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～でしょう",
+      "A とか B とか",
+      "～と思う",
+      "～かどうか"
+    ],
+    "correct_answer": "～かどうか",
+    "explanation": "정답은 ～かどうか. Hanabira 설명: Used to express 'whether' or 'if' in indirect questions or statements.",
+    "example_jp": "彼が来るかどうか知りません。",
+    "example_kr": "영문 번역: I don't know if he will come or not."
+  },
+  {
+    "id": "hanabira-n4-76-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～かなあ",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun を あげる",
+      "Verb られる",
+      "～かなあ",
+      "Nounをくださる"
+    ],
+    "correct_answer": "～かなあ",
+    "explanation": "정답은 ～かなあ. Hanabira 설명: Expresses uncertainty or wonder; 'I wonder', 'I'm not sure'.",
+    "example_jp": "明日雨が降るかなあ。",
+    "example_kr": "영문 번역: I wonder if it will rain tomorrow."
+  },
+  {
+    "id": "hanabira-n4-77-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～かもしれない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～みたいだ",
+      "Verb るときに",
+      "～かもしれない",
+      "Verb て いただけませんか"
+    ],
+    "correct_answer": "～かもしれない",
+    "explanation": "정답은 ～かもしれない. Hanabira 설명: Express uncertainty; 'maybe', 'might', 'possibly'.",
+    "example_jp": "明日雨が降るかもしれない。",
+    "example_kr": "영문 번역: It might rain tomorrow."
+  },
+  {
+    "id": "hanabira-n4-78-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～から",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～から",
+      "～のです",
+      "Noun の 間に",
+      "～なくてはいけない"
+    ],
+    "correct_answer": "～から",
+    "explanation": "정답은 ～から. Hanabira 설명: Express a reason or cause; 'because', 'since', 'due to'.",
+    "example_jp": "雨が降るから、傘を持って行ってください。",
+    "example_kr": "영문 번역: Because it's raining, please bring an umbrella."
+  },
+  {
+    "id": "hanabira-n4-79-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～けれど",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～けれど",
+      "Verb ながら",
+      "Verb て くる",
+      "～ないといけない"
+    ],
+    "correct_answer": "～けれど",
+    "explanation": "정답은 ～けれど. Hanabira 설명: Indicate a soft contrast or contradiction; 'but', 'however'.",
+    "example_jp": "今日は忙しいけれど、明日はもっと時間がある。",
+    "example_kr": "영문 번역: I'm busy today, but I have more time tomorrow."
+  },
+  {
+    "id": "hanabira-n4-80-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～させてください",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～させてください",
+      "のために",
+      "Verb ていただく",
+      "Noun + 中"
+    ],
+    "correct_answer": "～させてください",
+    "explanation": "정답은 ～させてください. Hanabira 설명: Express a polite request to allow or permit someone to do something.",
+    "example_jp": "もう少し考えさせてください。",
+    "example_kr": "영문 번역: Please let me think a little more."
+  },
+  {
+    "id": "hanabira-n4-81-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～し、～し、～",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ることができる",
+      "Verb て + さしあげる",
+      "～し、～し、～",
+      "～ので"
+    ],
+    "correct_answer": "～し、～し、～",
+    "explanation": "정답은 ～し、～し、～. Hanabira 설명: Express multiple reasons or characteristics; 'and', 'because', 'since'.",
+    "example_jp": "彼は若いし、元気だし、フレンドリーだし、みんなと仲良くなれると思います。",
+    "example_kr": "영문 번역: He is young, energetic, friendly, and I think he can get along with everyone."
+  },
+  {
+    "id": "hanabira-n4-82-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～すぎる",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～んです",
+      "～のに",
+      "文A。そのうえ 文B。",
+      "～すぎる"
+    ],
+    "correct_answer": "～すぎる",
+    "explanation": "정답은 ～すぎる. Hanabira 설명: Expresses that something is excessive or overdone; 'too much', 'too', 'over'.",
+    "example_jp": "この部屋は暑すぎる。",
+    "example_kr": "영문 번역: This room is too hot."
+  },
+  {
+    "id": "hanabira-n4-83-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～ずつ",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ようにする",
+      "～ずつ",
+      "文A。それに 文B",
+      "～なくてもいい"
+    ],
+    "correct_answer": "～ずつ",
+    "explanation": "정답은 ～ずつ. Hanabira 설명: Indicates equal distribution; 'each', 'per', 'apiece'.",
+    "example_jp": "りんごを2つずつ配ります。",
+    "example_kr": "영문 번역: I will distribute 2 apples each."
+  },
+  {
+    "id": "hanabira-n4-84-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～そうだ",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ている間に",
+      "～そうだ",
+      "～で",
+      "Noun ばかり"
+    ],
+    "correct_answer": "～そうだ",
+    "explanation": "정답은 ～そうだ. Hanabira 설명: Express the appearance, seeming, or feeling of something; 'looks like', 'seems', 'appears'.",
+    "example_jp": "その花はとてもきれいそうだ。",
+    "example_kr": "영문 번역: That flower looks very beautiful."
+  },
+  {
+    "id": "hanabira-n4-85-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "そんな (sonna) + Noun",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ない ことになる",
+      "そんな (sonna) + Noun",
+      "い-Adjective く する/なる",
+      "Verb やすい"
+    ],
+    "correct_answer": "そんな (sonna) + Noun",
+    "explanation": "정답은 そんな (sonna) + Noun. Hanabira 설명: Expresses 'that kind/type of'; referring to something near the listener or previously mentioned.",
+    "example_jp": "そんな話、信じられない。",
+    "example_kr": "영문 번역: I can't believe that kind of story."
+  },
+  {
+    "id": "hanabira-n4-86-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "そんなに～",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～まで",
+      "Verb やすい",
+      "そんなに～",
+      "～かなあ"
+    ],
+    "correct_answer": "そんなに～",
+    "explanation": "정답은 そんなに～. Hanabira 설명: Expresses 'not so much', 'not that', or 'not so ~'.",
+    "example_jp": "そんなに急がなくてもいいですよ。",
+    "example_kr": "영문 번역: You don't have to hurry that much."
+  },
+  {
+    "id": "hanabira-n4-87-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～たらいい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～たらいい",
+      "～させてください",
+      "そんなに～",
+      "Verb ようになる"
+    ],
+    "correct_answer": "～たらいい",
+    "explanation": "정답은 ～たらいい. Hanabira 설명: Expressing a desire or suggestion for a particular outcome; 'it would be good if', 'should', 'I hope'.",
+    "example_jp": "もっと勉強したらいいですよ。",
+    "example_kr": "영문 번역: It would be good if you studied more."
+  },
+  {
+    "id": "hanabira-n4-88-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～たら いかがですか",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～たら いかがですか",
+      "～なければ ならない",
+      "～てもいい",
+      "Verb ている間に"
+    ],
+    "correct_answer": "～たら いかがですか",
+    "explanation": "정답은 ～たら いかがですか. Hanabira 설명: Making polite suggestions; 'how about if', 'what if', 'it would be good if'.",
+    "example_jp": "図書館に行ったらいかがですか。",
+    "example_kr": "영문 번역: How about going to the library?"
+  },
+  {
+    "id": "hanabira-n4-89-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～たら どうですか",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～そうだ",
+      "Noun ばかり",
+      "～たら どうですか",
+      "Noun の 間に"
+    ],
+    "correct_answer": "～たら どうですか",
+    "explanation": "정답은 ～たら どうですか. Hanabira 설명: Express a suggestion or advice; 'what if', 'how about', 'why don't you'.",
+    "example_jp": "スキーに行ったらどうですか？",
+    "example_kr": "영문 번역: How about going skiing?"
+  },
+  {
+    "id": "hanabira-n4-90-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～たり～たり",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て + さしあげる",
+      "そんなに～",
+      "のために",
+      "～たり～たり"
+    ],
+    "correct_answer": "～たり～たり",
+    "explanation": "정답은 ～たり～たり. Hanabira 설명: Used to list multiple actions or states; 'doing things like', 'and so on', 'etc.'",
+    "example_jp": "週末は映画を観たり、本を読んだりする。",
+    "example_kr": "영문 번역: On weekends, I do things like watching movies and reading books."
+  },
+  {
+    "id": "hanabira-n4-91-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～だろう",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～だろう",
+      "Verb てしまう",
+      "～ばいい",
+      "Noun + 中"
+    ],
+    "correct_answer": "～だろう",
+    "explanation": "정답은 ～だろう. Hanabira 설명: Express probability, likelihood or certainty; 'probably', 'maybe', 'I think'.",
+    "example_jp": "明日は晴れるだろう。",
+    "example_kr": "영문 번역: It will probably be sunny tomorrow."
+  },
+  {
+    "id": "hanabira-n4-92-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～っていう",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun を さしあげる",
+      "～っていう",
+      "Verb ために",
+      "～たり～たり"
+    ],
+    "correct_answer": "～っていう",
+    "explanation": "정답은 ～っていう. Hanabira 설명: Used to quote, define, or specify a noun.",
+    "example_jp": "ピザっていう料理が大好きです。",
+    "example_kr": "영문 번역: I love the dish called pizza."
+  },
+  {
+    "id": "hanabira-n4-93-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～で",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb てあげる",
+      "Verb ていただきたい",
+      "～で",
+      "～し、～し、～"
+    ],
+    "correct_answer": "～で",
+    "explanation": "정답은 ～で. Hanabira 설명: Indicates the means, method, or place.",
+    "example_jp": "私は自転車で学校に行きます。",
+    "example_kr": "영문 번역: I go to school by bicycle."
+  },
+  {
+    "id": "hanabira-n4-94-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～でしょう",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb てもらえませんか",
+      "～ないといけない",
+      "～でしょう",
+      "～ばいい"
+    ],
+    "correct_answer": "～でしょう",
+    "explanation": "정답은 ～でしょう. Hanabira 설명: A conjecture or probability; 'probably', 'I think', 'it seems'.",
+    "example_jp": "明日は晴れでしょう。",
+    "example_kr": "영문 번역: It will probably be sunny tomorrow."
+  },
+  {
+    "id": "hanabira-n4-95-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～てはいけない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun に する",
+      "～てはいけない",
+      "Verb てあげる",
+      "そんなに～"
+    ],
+    "correct_answer": "～てはいけない",
+    "explanation": "정답은 ～てはいけない. Hanabira 설명: Expresses prohibition; 'must not', 'cannot'.",
+    "example_jp": "公園でたばこを吸ってはいけない。",
+    "example_kr": "영문 번역: You must not smoke in the park."
+  },
+  {
+    "id": "hanabira-n4-96-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～てもいい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～させてください",
+      "Verb てあげる",
+      "～てもいい",
+      "～まで"
+    ],
+    "correct_answer": "～てもいい",
+    "explanation": "정답은 ～てもいい. Hanabira 설명: To give or ask permission; 'it's okay to', 'may', 'can'.",
+    "example_jp": "ここで写真を撮ってもいいですか。",
+    "example_kr": "영문 번역: Is it okay to take a photo here?"
+  },
+  {
+    "id": "hanabira-n4-97-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～ても/でも",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～かどうか",
+      "Noun ばかり",
+      "～ても/でも",
+      "Verb て くださる"
+    ],
+    "correct_answer": "～ても/でも",
+    "explanation": "정답은 ～ても/でも. Hanabira 설명: Expresses 'even if' or 'even though'; used to convey contradiction or contrast.",
+    "example_jp": "雨が降っても、学校に行きます。",
+    "example_kr": "영문 번역: Even if it rains, I will go to school."
+  },
+  {
+    "id": "hanabira-n4-98-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～といい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～といい",
+      "な-adjective に する/なる",
+      "Verb て くる",
+      "文A。そのうえ 文B。"
+    ],
+    "correct_answer": "～といい",
+    "explanation": "정답은 ～といい. Hanabira 설명: Express a wish or hope; 'I hope', 'it would be good if'.",
+    "example_jp": "明日晴れるといいね。",
+    "example_kr": "영문 번역: I hope it will be sunny tomorrow."
+  },
+  {
+    "id": "hanabira-n4-99-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～という (〜to iu) Noun",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～させてください",
+      "～という (〜to iu) Noun",
+      "Verb ように言う",
+      "～ずつ"
+    ],
+    "correct_answer": "～という (〜to iu) Noun",
+    "explanation": "정답은 ～という (〜to iu) Noun. Hanabira 설명: Used to define or explain a noun more specifically.",
+    "example_jp": "彼は日本語が流暢なアメリカ人という人です。",
+    "example_kr": "영문 번역: He is an American who speaks fluent Japanese."
+  },
+  {
+    "id": "hanabira-n4-100-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "どういう Noun",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "どういう Noun",
+      "Noun の 間に",
+      "Verb てみる",
+      "Verb ようにする"
+    ],
+    "correct_answer": "どういう Noun",
+    "explanation": "정답은 どういう Noun. Hanabira 설명: Asking for clarification or more information about a noun; 'what kind of', 'what sort of'.",
+    "example_jp": "どういう仕事をしていますか？",
+    "example_kr": "영문 번역: What kind of work do you do?"
+  },
+  {
+    "id": "hanabira-n4-101-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～と思う",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て + さしあげる",
+      "Verb させられる",
+      "A より B のほうが〜",
+      "～と思う"
+    ],
+    "correct_answer": "～と思う",
+    "explanation": "정답은 ～と思う. Hanabira 설명: Express one's thoughts or opinions; 'I think', 'I believe'.",
+    "example_jp": "明日晴れると思います。",
+    "example_kr": "영문 번역: I think it will be sunny tomorrow."
+  },
+  {
+    "id": "hanabira-n4-102-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～という",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb 終わる",
+      "Verb + 続ける",
+      "～でしょう",
+      "～という"
+    ],
+    "correct_answer": "～という",
+    "explanation": "정답은 ～という. Hanabira 설명: Used to quote, express hearsay or define something.",
+    "example_jp": "彼は「好きだ」と言った。",
+    "example_kr": "영문 번역: He said 'I like you'."
+  },
+  {
+    "id": "hanabira-n4-103-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～ないといけない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～ずつ",
+      "な-adjective に する/なる",
+      "～ないといけない",
+      "A は B ほど～ない"
+    ],
+    "correct_answer": "～ないといけない",
+    "explanation": "정답은 ～ないといけない. Hanabira 설명: Express a necessity; 'must', 'have to', 'need to'.",
+    "example_jp": "明日試験があるから、今夜勉強しないといけない。",
+    "example_kr": "영문 번역: I have an exam tomorrow, so I have to study tonight."
+  },
+  {
+    "id": "hanabira-n4-104-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～なきゃいけない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb てみる",
+      "～なきゃいけない",
+      "A は B ほど～ありません",
+      "～けれど"
+    ],
+    "correct_answer": "～なきゃいけない",
+    "explanation": "정답은 ～なきゃいけない. Hanabira 설명: Express a necessity or obligation; 'must', 'have to'.",
+    "example_jp": "明日までに宿題を終わらなきゃいけない。",
+    "example_kr": "영문 번역: I have to finish my homework by tomorrow."
+  },
+  {
+    "id": "hanabira-n4-105-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～なくちゃいけない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～ばいい",
+      "～まで",
+      "～なくちゃいけない",
+      "Verb る ところ"
+    ],
+    "correct_answer": "～なくちゃいけない",
+    "explanation": "정답은 ～なくちゃいけない. Hanabira 설명: Express the obligation to do something; 'have to', 'must', 'need to'.",
+    "example_jp": "仕事に行かなくちゃいけないので、早起きしなければなりません。",
+    "example_kr": "영문 번역: I have to go to work, so I must wake up early."
+  },
+  {
+    "id": "hanabira-n4-106-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～なくてはいけない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Noun しか～ない",
+      "～なくてはいけない",
+      "Verb て いく",
+      "Verb てしまう"
+    ],
+    "correct_answer": "～なくてはいけない",
+    "explanation": "정답은 ～なくてはいけない. Hanabira 설명: Expresses the necessity or obligation; 'must', 'have to'.",
+    "example_jp": "宿題をしなくてはいけない。",
+    "example_kr": "영문 번역: I have to do my homework."
+  },
+  {
+    "id": "hanabira-n4-107-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～なくてもいい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～ので",
+      "～まま",
+      "A は B ほど～ない",
+      "～なくてもいい"
+    ],
+    "correct_answer": "～なくてもいい",
+    "explanation": "정답은 ～なくてもいい. Hanabira 설명: Expresses that something is not necessary to do; 'it's okay if not', 'don't have to'.",
+    "example_jp": "コーヒーは飲まなくてもいいです。",
+    "example_kr": "영문 번역: You don't have to drink the coffee."
+  },
+  {
+    "id": "hanabira-n4-108-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～なければ ならない",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～なければ ならない",
+      "Verb た ことがある",
+      "Verb た ところ",
+      "～も"
+    ],
+    "correct_answer": "～なければ ならない",
+    "explanation": "정답은 ～なければ ならない. Hanabira 설명: Express obligation or necessity; 'must', 'have to', 'need to'.",
+    "example_jp": "宿題をやらなければならない。",
+    "example_kr": "영문 번역: I have to do my homework."
+  },
+  {
+    "id": "hanabira-n4-109-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～に",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ようと思う",
+      "～に",
+      "～も",
+      "Verb たほうがいい"
+    ],
+    "correct_answer": "～に",
+    "explanation": "정답은 ～に. Hanabira 설명: Indicates direction, destination, purpose, or time.",
+    "example_jp": "母は私にケーキを作りました。",
+    "example_kr": "영문 번역: My mother made a cake for me."
+  },
+  {
+    "id": "hanabira-n4-110-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～ので",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ない ことになる",
+      "～かどうか",
+      "Verb ない + ことにする",
+      "～ので"
+    ],
+    "correct_answer": "～ので",
+    "explanation": "정답은 ～ので. Hanabira 설명: Express a reason or a cause for something; 'because', 'since', 'so'.",
+    "example_jp": "明日試験があるので、今晩勉強します。",
+    "example_kr": "영문 번역: I will study tonight because there is a test tomorrow."
+  },
+  {
+    "id": "hanabira-n4-111-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～のです",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ていただきたい",
+      "Verb た ところ",
+      "～も",
+      "～のです"
+    ],
+    "correct_answer": "～のです",
+    "explanation": "정답은 ～のです. Hanabira 설명: Provides an explanation or gives background information; 'the fact is', 'the reason is', 'actually'.",
+    "example_jp": "この本は難しいのです。",
+    "example_kr": "영문 번역: This book is difficult, you see."
+  },
+  {
+    "id": "hanabira-n4-112-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～のに",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～たり～たり",
+      "～のに",
+      "Verb ために",
+      "～なくてはいけない"
+    ],
+    "correct_answer": "～のに",
+    "explanation": "정답은 ～のに. Hanabira 설명: Used to express contrast between expectation and reality, or to indicate a purpose for doing something",
+    "example_jp": "遅刻したのに、先生は怒らなかった。",
+    "example_kr": "영문 번역: Even though I was late, the teacher didn't get angry."
+  },
+  {
+    "id": "hanabira-n4-113-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～ばいい",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て + さしあげる",
+      "～ばいい",
+      "Noun を くれる",
+      "Verb やすい"
+    ],
+    "correct_answer": "～ばいい",
+    "explanation": "정답은 ～ばいい. Hanabira 설명: Express a suggestion or advice; 'should', 'it would be good if'.",
+    "example_jp": "もっと勉強すればいい。",
+    "example_kr": "영문 번역: You should study more."
+  },
+  {
+    "id": "hanabira-n4-114-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～まで",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～といい",
+      "～まで",
+      "Verb させられる",
+      "Verb る ことになる"
+    ],
+    "correct_answer": "～まで",
+    "explanation": "정답은 ～まで. Hanabira 설명: Indicates extent, 'until', 'up to', 'as far as', 'even'.",
+    "example_jp": "仕事が終わるまで待っています。",
+    "example_kr": "영문 번역: I will wait until work is finished."
+  },
+  {
+    "id": "hanabira-n4-115-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～までに",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～までに",
+      "Verb + 続ける",
+      "Verb た ところ",
+      "Verb つもり"
+    ],
+    "correct_answer": "～までに",
+    "explanation": "정답은 ～までに. Hanabira 설명: Express 'by' or 'before' a certain time or action.",
+    "example_jp": "明日の朝８時までに起きてください。",
+    "example_kr": "영문 번역: Please wake up by 8 a.m. tomorrow."
+  },
+  {
+    "id": "hanabira-n4-116-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～まま",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "A は B ほど～ない",
+      "Noun に なる",
+      "Verb 出す",
+      "～まま"
+    ],
+    "correct_answer": "～まま",
+    "explanation": "정답은 ～まま. Hanabira 설명: Express 'as it is', 'while' or 'unchanged state'.",
+    "example_jp": "ドアを開けたまま出かけてしまった。",
+    "example_kr": "영문 번역: I accidentally left with the door open."
+  },
+  {
+    "id": "hanabira-n4-117-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～みたいだ",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～までに",
+      "文A。そのうえ 文B。",
+      "～みたいだ",
+      "Verb ている間に"
+    ],
+    "correct_answer": "～みたいだ",
+    "explanation": "정답은 ～みたいだ. Hanabira 설명: Indicates similarity, resemblance or 'like'; 'it seems', 'appears', 'looks like'.",
+    "example_jp": "彼女が病気のみたいだ。",
+    "example_kr": "영문 번역: She seems to be sick."
+  },
+  {
+    "id": "hanabira-n4-118-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～も",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～でしょう",
+      "～も",
+      "Verb て + さしあげる",
+      "Nounをくださる"
+    ],
+    "correct_answer": "～も",
+    "explanation": "정답은 ～も. Hanabira 설명: Indicates 'also', 'too', or 'as well'.",
+    "example_jp": "私もお寿司が好きです。",
+    "example_kr": "영문 번역: I also like sushi."
+  },
+  {
+    "id": "hanabira-n4-119-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～ようだ",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～ようだ",
+      "～すぎる",
+      "Verb ために",
+      "Verb たほうがいい"
+    ],
+    "correct_answer": "～ようだ",
+    "explanation": "정답은 ～ようだ. Hanabira 설명: Expresses appearance, similarity or inference; 'it seems', 'it looks like', 'it appears'.",
+    "example_jp": "彼は元気がないようだ。",
+    "example_kr": "영문 번역: He seems to be lacking energy."
+  },
+  {
+    "id": "hanabira-n4-120-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "～んです",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb て もらう",
+      "～んです",
+      "Nounをくださる",
+      "～まで"
+    ],
+    "correct_answer": "～んです",
+    "explanation": "정답은 ～んです. Hanabira 설명: Provide an explanation or reason; 'it is that', 'the thing is', 'the reason is'.",
+    "example_jp": "遅れたんですが、電車が遅れました。",
+    "example_kr": "영문 번역: I was late because the train was delayed."
+  },
+  {
+    "id": "hanabira-n4-121-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "文A。そのうえ 文B。",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "Verb ることにする",
+      "文A。そのうえ 文B。",
+      "A は B ほど～ありません",
+      "Verb にくい"
+    ],
+    "correct_answer": "文A。そのうえ 文B。",
+    "explanation": "정답은 文A。そのうえ 文B。. Hanabira 설명: Shows additional information; 'furthermore', 'besides', 'in addition'.",
+    "example_jp": "このソフトウェアは使いやすい。そのうえ、価格も手ごろだ。",
+    "example_kr": "영문 번역: This software is easy to use. Furthermore, the price is reasonable."
+  },
+  {
+    "id": "hanabira-n4-122-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "文A。それで 文B",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "文A。それで 文B",
+      "～といい",
+      "～ずつ",
+      "Verb ように"
+    ],
+    "correct_answer": "文A。それで 文B",
+    "explanation": "정답은 文A。それで 文B. Hanabira 설명: Used to connect two sentences; 'So', 'That's why', 'Therefore'.",
+    "example_jp": "今日は暑いです。それで、エアコンをつけました。",
+    "example_kr": "영문 번역: It is hot today. So, I turned on the air conditioner."
+  },
+  {
+    "id": "hanabira-n4-123-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "文A。それに 文B",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～けれど",
+      "文A。それに 文B",
+      "～と思う",
+      "～てもいい"
+    ],
+    "correct_answer": "文A。それに 文B",
+    "explanation": "정답은 文A。それに 文B. Hanabira 설명: Express 'in addition to; besides,' used to include additional information.",
+    "example_jp": "彼は頭がいい。それに、スポーツも得意だ。",
+    "example_kr": "영문 번역: He is smart. In addition, he is good at sports."
+  },
+  {
+    "id": "hanabira-n4-124-pattern",
+    "level": "N4",
+    "type": "pattern",
+    "badge": "예문 문법",
+    "pattern": "文A。だから 文B",
+    "question": "次の例文で使われている文法はどれですか。",
+    "choices": [
+      "～っていう",
+      "～も",
+      "い-Adjective く する/なる",
+      "文A。だから 文B"
+    ],
+    "correct_answer": "文A。だから 文B",
+    "explanation": "정답은 文A。だから 文B. Hanabira 설명: Express reason or cause; 'because', 'so', 'therefore'.",
+    "example_jp": "明日は試験だ。だから今日勉強しなければならない。",
+    "example_kr": "영문 번역: Tomorrow is the exam, so I have to study today."
+  }
+]

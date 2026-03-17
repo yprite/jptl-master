@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "JPTL - JLPT 학습",
-  description: "Anki 스타일 JLPT N4/N3 단어 & 독해 학습",
+  description: "Anki 스타일 JLPT N5/N4/N3 단어, 문법, 독해 학습",
 };
 
 export default function RootLayout({

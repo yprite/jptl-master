@@ -22,6 +22,7 @@ export default function GrammarPage() {
   );
 
   const current = grammarQuestions[currentIndex];
+  const questionLabel = current?.type === "pattern" ? "예문 문법" : "문형 의미";
 
   const handleAnswer = (choice: string) => {
     if (showResult || !current) return;
@@ -74,7 +75,7 @@ export default function GrammarPage() {
           {/* Stats */}
           <div className="flex justify-between text-sm text-gray-500">
             <span>
-              문형 의미 | {currentIndex + 1}/{grammarQuestions.length}
+              {questionLabel} | {currentIndex + 1}/{grammarQuestions.length}
             </span>
             <span>
               정답률:{" "}
@@ -88,7 +89,7 @@ export default function GrammarPage() {
           {/* Question */}
           <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
-              {current.pattern}
+              {current.badge}
             </p>
             <p className="text-lg leading-relaxed whitespace-pre-wrap">
               {current.question}

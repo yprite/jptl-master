@@ -12,8 +12,11 @@ import json
 import random
 import re
 import sqlite3
+import urllib.request
 from pathlib import Path
 from typing import Any
+
+from reading_templates import build_reading_question_bank
 
 
 LEVELS = ("N5", "N4", "N3")
@@ -21,6 +24,11 @@ OUTPUT_DIR_NAME = "study-data"
 MAX_EXAMPLE_LENGTH = 220
 DISTRACTOR_COUNT = 3
 ANKI_TTS_PATTERN = re.compile(r"\[anki:tts[^\]]*\](.*?)\[/anki:tts\]", re.DOTALL)
+TRAILING_ROMAJI_PATTERN = re.compile(r"\s*\([^)]*[A-Za-z][^)]*\)\s*$")
+HANABIRA_N4_GRAMMAR_URL = (
+    "https://raw.githubusercontent.com/tristcoil/hanabira.org-japanese-content/master/"
+    "grammar_json/grammar_ja_N4_full_alphabetical_0001.json"
+)
 
 
 def normalize_text(value: str | None) -> str:
@@ -54,10 +62,10 @@ def unique_values(rows: list[sqlite3.Row], key: str) -> list[str]:
     seen: set[str] = set()
     values: list[str] = []
     for row in rows:
-      value = normalize_text(row[key])
-      if value and value not in seen:
-          values.append(value)
-          seen.add(value)
+        value = normalize_text(row[key])
+        if value and value not in seen:
+            values.append(value)
+            seen.add(value)
     return values
 
 
@@ -87,6 +95,11 @@ def shuffled_choices(seed: str, correct: str, distractors: list[str]) -> list[st
     rng = random.Random(f"{seed}:shuffle")
     rng.shuffle(choices)
     return choices
+
+
+def fetch_json_payload(url: str) -> Any:
+    with urllib.request.urlopen(url, timeout=30) as response:
+        return json.loads(response.read().decode("utf-8"))
 
 
 def load_rows(conn: sqlite3.Connection, level: str, item_type: str) -> list[sqlite3.Row]:
@@ -217,6 +230,7 @@ def build_grammar_questions(rows: list[sqlite3.Row], level: str) -> list[dict[st
                 "id": f"{row['id']}-grammar",
                 "level": level,
                 "type": "meaning",
+                "badge": pattern,
                 "pattern": pattern,
                 "question": f"「{pattern}」의 의미로 맞는 것은?",
                 "choices": shuffled_choices(seed, meaning, distractors),
@@ -230,6 +244,116 @@ def build_grammar_questions(rows: list[sqlite3.Row], level: str) -> list[dict[st
     return questions
 
 
+def normalize_hanabira_pattern(title: str | None) -> str:
+    text = normalize_text(title)
+    if not text:
+        return ""
+    return normalize_text(TRAILING_ROMAJI_PATTERN.sub("", text))
+
+
+def build_hanabira_n4_grammar_questions() -> list[dict[str, Any]]:
+    payload = fetch_json_payload(HANABIRA_N4_GRAMMAR_URL)
+    if not isinstance(payload, list):
+        raise ValueError("Unexpected Hanabira grammar payload")
+
+    cleaned_entries: list[dict[str, str | None]] = []
+    for index, entry in enumerate(payload):
+        if not isinstance(entry, dict):
+            continue
+
+        pattern = normalize_hanabira_pattern(entry.get("title"))
+        if not pattern or "$" in pattern:
+            continue
+
+        examples = entry.get("examples")
+        if not isinstance(examples, list) or not examples:
+            continue
+
+        first_valid_example = None
+        for example in examples:
+            if not isinstance(example, dict):
+                continue
+            jp = normalize_text(example.get("jp"))
+            en = normalize_text(example.get("en"))
+            if not jp or "$" in jp:
+                continue
+            first_valid_example = {
+                "jp": jp,
+                "en": en or None,
+            }
+            break
+
+        if not first_valid_example:
+            continue
+
+        short_explanation = normalize_text(entry.get("short_explanation"))
+        if not short_explanation:
+            continue
+
+        cleaned_entries.append(
+            {
+                "seed_id": f"hanabira-n4-{index + 1}",
+                "pattern": pattern,
+                "short_explanation": short_explanation,
+                "example_jp": first_valid_example["jp"],
+                "example_en": first_valid_example["en"],
+            }
+        )
+
+    pattern_pool = [str(entry["pattern"]) for entry in cleaned_entries]
+    questions: list[dict[str, Any]] = []
+    for entry in cleaned_entries:
+        seed = str(entry["seed_id"])
+        pattern = str(entry["pattern"])
+        distractors = pick_distractors(seed=seed, pool=pattern_pool, correct=pattern)
+        if len(distractors) != DISTRACTOR_COUNT:
+            continue
+
+        source_summary = str(entry["short_explanation"])
+        explanation = normalize_text(
+            f"정답은 {pattern}. Hanabira 설명: {source_summary}"
+        )
+        example_en = entry["example_en"]
+
+        questions.append(
+            {
+                "id": f"{seed}-pattern",
+                "level": "N4",
+                "type": "pattern",
+                "badge": "예문 문법",
+                "pattern": pattern,
+                "question": "次の例文で使われている文法はどれですか。",
+                "choices": shuffled_choices(seed, pattern, distractors),
+                "correct_answer": pattern,
+                "explanation": explanation,
+                "example_jp": str(entry["example_jp"]),
+                "example_kr": f"영문 번역: {example_en}" if example_en else None,
+            }
+        )
+
+    return questions
+
+
+def build_reading_questions(level: str) -> list[dict[str, Any]]:
+    bank = build_reading_question_bank()
+    seeds = bank.get(level, [])
+    questions: list[dict[str, Any]] = []
+    for index, seed in enumerate(seeds, start=1):
+        questions.append(
+            {
+                "id": f"{level.lower()}-reading-{index:03d}",
+                "level": level,
+                "passage": seed["passage"],
+                "question": seed["question"],
+                "choices": seed["choices"],
+                "correct_answer": seed["correct_answer"],
+                "explanation": seed["explanation"],
+                "difficulty": seed["difficulty"],
+            }
+        )
+    return questions
+
+
 def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -239,6 +363,7 @@ def build_manifest(
     flashcards: dict[str, list[dict[str, Any]]],
     vocabulary_questions: dict[str, list[dict[str, Any]]],
     grammar_questions: dict[str, list[dict[str, Any]]],
+    reading_questions: dict[str, list[dict[str, Any]]],
 ) -> dict[str, Any]:
     return {
         "flashcards": {level: len(items) for level, items in flashcards.items()},
@@ -251,6 +376,7 @@ def build_manifest(
             for level, items in vocabulary_questions.items()
         },
         "grammar_questions": {level: len(items) for level, items in grammar_questions.items()},
+        "reading_questions": {level: len(items) for level, items in reading_questions.items()},
     }
 
 
@@ -284,6 +410,7 @@ def main() -> None:
         flashcards: dict[str, list[dict[str, Any]]] = {}
         vocabulary_questions: dict[str, list[dict[str, Any]]] = {}
         grammar_questions: dict[str, list[dict[str, Any]]] = {}
+        reading_questions: dict[str, list[dict[str, Any]]] = {}
 
         for level in LEVELS:
             vocab_rows = load_rows(conn, level, "vocabulary")
@@ -291,7 +418,13 @@ def main() -> None:
 
             flashcards[level] = build_flashcards(vocab_rows, level)
             vocabulary_questions[level] = build_vocabulary_questions(vocab_rows, level)
-            grammar_questions[level] = build_grammar_questions(grammar_rows, level)
+            if grammar_rows:
+                grammar_questions[level] = build_grammar_questions(grammar_rows, level)
+            elif level == "N4":
+                grammar_questions[level] = build_hanabira_n4_grammar_questions()
+            else:
+                grammar_questions[level] = []
+            reading_questions[level] = build_reading_questions(level)
 
             write_json(output_dir / f"flashcards-{level}.json", flashcards[level])
             write_json(
@@ -299,10 +432,16 @@ def main() -> None:
                 vocabulary_questions[level],
             )
             write_json(output_dir / f"grammar-questions-{level}.json", grammar_questions[level])
+            write_json(output_dir / f"reading-questions-{level}.json", reading_questions[level])
 
         write_json(
             output_dir / "manifest.json",
-            build_manifest(flashcards, vocabulary_questions, grammar_questions),
+            build_manifest(
+                flashcards,
+                vocabulary_questions,
+                grammar_questions,
+                reading_questions,
+            ),
         )
     finally:
         conn.close()
