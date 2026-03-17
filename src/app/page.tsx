@@ -8,7 +8,6 @@ import {
   type StudyPlan,
   type StudyPlanDraft,
   type UserId,
-  completeDailyQuest,
   getCurrentUserId,
   getHomeState,
   resetUserState,
@@ -323,14 +322,6 @@ export default function Home() {
     await loadStates(userId);
   };
 
-  const markComplete = async (quest: keyof DailyQuests) => {
-    const updated = await completeDailyQuest(userId, quest);
-    setStates((prev) => ({
-      ...prev,
-      [userId]: updated,
-    }));
-  };
-
   const openProfileEditor = () => {
     hydrateForms(activeState);
     setShowSettings(false);
@@ -398,7 +389,6 @@ export default function Home() {
     : [];
 
   const completedCount = getCompletedCount(activeQuests);
-  const allDone = completedCount === questDefs.length && questDefs.length > 0;
   const currentQuestIdx = questDefs.findIndex((quest) => !activeQuests[quest.key]);
   const currentDay = getPlanDayNumber(activePlan);
   const planProgressPercent = activePlan
@@ -788,127 +778,68 @@ export default function Home() {
       )}
 
       {!showProfileSetup && !showPlanSetup && activeUser && activePlan && (
-        <section className="space-y-6">
-          <div className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-                  Step 3
-                </p>
-                <h2 className="mt-1 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
-                  Day {currentDay} 루틴
-                </h2>
-                <p className="mt-1 text-sm text-stone-500">
-                  {getDisplayName(userId)}는 오늘{" "}
-                  <span className="font-semibold text-stone-900">암기 → 어휘 → 문법 → 독해</span>{" "}
-                  순서로 진행합니다.
-                </p>
-              </div>
-              <div className="rounded-[1.6rem] bg-[linear-gradient(135deg,#f4efe4,#ebe2d4)] px-4 py-3 text-right">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
-                  Gentle Pace
-                </div>
-                <div className="mt-1 text-lg font-black text-stone-900">
-                  {activeProgress.totalDays}/{activePlan.totalDays}일
-                </div>
-              </div>
+        <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
+                Study Page
+              </p>
+              <h2 className="mt-2 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
+                실제 루틴은 학습 탭에서 이어집니다.
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-stone-600">
+                동행 탭은 두 사람의 흐름과 분위기를 보는 곳으로 두고, 오늘의 카드와 문제는 아래
+                학습 탭에서 단계별로 집중해서 진행하도록 분리했습니다.
+              </p>
             </div>
-
-            <div className="mt-5">
-              <div className="mb-2 flex items-center justify-between text-sm font-semibold text-stone-600">
-                <span>누적 진행률</span>
-                <span>{planProgressPercent}%</span>
+            <div className="rounded-[1.6rem] bg-[linear-gradient(135deg,#f4efe4,#ebe2d4)] px-4 py-3 text-right">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
+                Today
               </div>
-              <div className="h-3 overflow-hidden rounded-full bg-stone-100">
-                <div
-                  className="h-full rounded-full bg-[linear-gradient(90deg,#f59e0b,#7c3aed)] transition-all"
-                  style={{ width: `${planProgressPercent}%` }}
-                />
+              <div className="mt-1 text-lg font-black text-stone-900">
+                Day {currentDay}
               </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            {questDefs.map((quest, index) => {
-              const done = activeQuests[quest.key];
-              const isCurrent = index === currentQuestIdx;
-              const locked = !done && index > currentQuestIdx && currentQuestIdx >= 0;
-
-              return (
-                <div
-                  key={quest.key}
-                  className={`rounded-[1.8rem] border p-5 shadow-[0_12px_34px_rgba(90,68,40,0.06)] transition ${
-                    done
-                      ? "border-emerald-200 bg-[linear-gradient(135deg,#f2fbf4,#ecf7ef)]"
-                      : isCurrent
-                      ? "border-stone-300 bg-white"
-                      : "border-stone-200 bg-[rgba(249,245,238,0.85)]"
-                  }`}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-lg font-black text-white ${
-                          done ? "from-emerald-500 to-green-600" : quest.accent
-                        }`}
-                      >
-                        {done ? "✓" : index + 1}
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-black text-stone-900">{quest.title}</h3>
-                        <p className="text-sm text-stone-500">{quest.desc}</p>
-                      </div>
-                    </div>
-
-                    {done ? (
-                      <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700">
-                        오늘 완료
-                      </span>
-                    ) : isCurrent ? (
-                      <Link
-                        href={quest.href}
-                        className="rounded-full bg-[linear-gradient(135deg,#31473a,#c96f43)] px-4 py-2 text-sm font-bold text-white transition hover:brightness-105"
-                      >
-                        시작
-                      </Link>
-                    ) : locked ? (
-                      <span className="rounded-full bg-stone-200 px-4 py-2 text-sm font-bold text-stone-500">
-                        잠김
-                      </span>
-                    ) : (
-                      <Link
-                        href={quest.href}
-                        className="rounded-full bg-stone-200 px-4 py-2 text-sm font-bold text-stone-700"
-                      >
-                        이동
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="rounded-[1.6rem] border border-stone-200 bg-white/85 px-4 py-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-stone-400">다음 단계</div>
+              <div className="mt-2 text-lg font-black text-stone-900">
+                {currentQuestIdx >= 0 ? questDefs[currentQuestIdx].title : "오늘 루틴 완료"}
+              </div>
+            </div>
+            <div className="rounded-[1.6rem] border border-stone-200 bg-white/85 px-4 py-4">
+              <div className="text-xs uppercase tracking-[0.18em] text-stone-400">오늘 진행</div>
+              <div className="mt-2 text-lg font-black text-stone-900">
+                {completedCount}/{questDefs.length}
+              </div>
+            </div>
+            <div className="col-span-2 rounded-[1.6rem] border border-stone-200 bg-white/85 px-4 py-4 sm:col-span-1">
+              <div className="text-xs uppercase tracking-[0.18em] text-stone-400">누적 진행률</div>
+              <div className="mt-2 text-lg font-black text-stone-900">{planProgressPercent}%</div>
+            </div>
           </div>
 
-          {allDone ? (
-            <div className="rounded-[2rem] border border-emerald-200 bg-[linear-gradient(135deg,#effaf1,#fff6ea)] px-6 py-8 text-center shadow-[0_18px_44px_rgba(102,120,84,0.08)]">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-500">
-                Quiet Finish
-              </p>
-              <h3 className="mt-2 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-emerald-700">
-                오늘 루틴 완료
-              </h3>
-              <p className="mt-2 text-sm text-emerald-700">
-                오늘의 한 장면이 저장되었습니다. 내일 Day {Math.min(activePlan.totalDays, currentDay + 1)}로 이어집니다.
-              </p>
+          <div className="mt-6">
+            <div className="mb-2 flex items-center justify-between text-sm font-semibold text-stone-600">
+              <span>루틴 진행선</span>
+              <span>{planProgressPercent}%</span>
             </div>
-          ) : currentQuestIdx >= 0 ? (
-            <button
-              onClick={() => void markComplete(questDefs[currentQuestIdx].key)}
-              className="w-full rounded-[1.8rem] bg-[linear-gradient(135deg,#31473a,#c96f43)] px-4 py-4 text-sm font-black text-white shadow-[0_16px_34px_rgba(70,54,36,0.14)] transition hover:brightness-105"
-            >
-              지금 단계 마무리하기
-            </button>
-          ) : null}
+            <div className="h-3 overflow-hidden rounded-full bg-stone-100">
+              <div
+                className="h-full rounded-full bg-[linear-gradient(90deg,#f6ad55,#c96f43,#31473a)] transition-all"
+                style={{ width: `${planProgressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          <Link
+            href="/study"
+            className="mt-6 flex w-full items-center justify-center rounded-[1.8rem] bg-[linear-gradient(135deg,#31473a,#c96f43)] px-4 py-4 text-sm font-black text-white shadow-[0_16px_34px_rgba(70,54,36,0.14)] transition hover:brightness-105"
+          >
+            학습 탭 열기
+          </Link>
         </section>
       )}
     </div>
