@@ -19,7 +19,7 @@ import {
 const USER_IDS: UserId[] = ["me", "wife"];
 
 export default function Home() {
-  const [userId, setUserId] = useState<UserId>("me");
+  const [userId, setUserId] = useState<UserId>(() => getCurrentUserId());
   const [user, setUser] = useState<User | null>(null);
   const [quests, setQuests] = useState<DailyQuests | null>(null);
   const [progress, setProgressState] = useState<UserProgress | null>(null);
@@ -61,15 +61,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const id = getCurrentUserId();
-    setUserId(id);
-    loadUser(id);
-  }, [loadUser]);
+    const timer = window.setTimeout(() => {
+      void loadUser(userId);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [loadUser, userId]);
 
   const switchUser = (id: UserId) => {
     setCurrentUserId(id);
     setUserId(id);
-    loadUser(id);
   };
 
   const openEdit = () => {
