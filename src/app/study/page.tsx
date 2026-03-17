@@ -15,8 +15,8 @@ import {
 
 const USER_IDS: UserId[] = ["me", "wife"];
 const USER_LABELS: Record<UserId, string> = {
-  me: "나",
-  wife: "와이프",
+  me: "용훈",
+  wife: "지혜",
 };
 
 const EMPTY_STATE: HomeState = {

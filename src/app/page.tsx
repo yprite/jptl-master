@@ -17,8 +17,8 @@ import {
 
 const USER_IDS: UserId[] = ["me", "wife"];
 const USER_LABELS: Record<UserId, string> = {
-  me: "나",
-  wife: "와이프",
+  me: "용훈",
+  wife: "지혜",
 };
 type TargetRange = {
   min: number;
@@ -194,7 +194,7 @@ function CompanionJourneyScene({
         <h2 className="mt-2.5 font-[family:var(--font-noto-serif-kr)] text-[1.35rem] font-semibold leading-snug text-stone-900 sm:mt-3 sm:text-2xl">
           {isOnboarding
             ? "손을 맞잡기 전, 두 사람의 시작점을 먼저 맞춥니다."
-            : "나와 와이프가 같은 목표 쪽으로 천천히 걸어가는 장면입니다."}
+            : "용훈과 지혜가 같은 목표 쪽으로 천천히 걸어가는 장면입니다."}
         </h2>
         <p className="mt-2.5 text-[13px] leading-6 text-stone-600 sm:mt-3 sm:text-sm sm:leading-7">
           {isOnboarding

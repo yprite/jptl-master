@@ -11,8 +11,8 @@ export type StudyLevel = "N5" | "N4" | "N3";
 export type SupportedStudyLevel = StudyLevel;
 
 const USER_LABELS: Record<UserId, string> = {
-  me: "나",
-  wife: "와이프",
+  me: "용훈",
+  wife: "지혜",
 };
 
 export function useActiveStudyProfile() {
