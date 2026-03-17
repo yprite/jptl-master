@@ -6,6 +6,7 @@ import {
   getFlashcardSrsState,
   saveFlashcardSrsState,
   type FlashcardReviewRecord,
+  type FlashcardSrsUserId,
   type FlashcardSrsState,
 } from "@/lib/flashcard-srs-store";
 import {
@@ -13,6 +14,7 @@ import {
   formatReviewInterval,
   type Difficulty,
 } from "@/lib/spaced-repetition";
+import UserSelectionNotice from "@/components/user-selection-notice";
 import type { StudyFlashcard } from "@/lib/study-data-types";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
@@ -111,13 +113,18 @@ function getEarliestFutureReview(
 }
 
 export default function FlashcardPage() {
-  const { isLoading: isProfileLoading, supportedLevel, userId, userLabel } =
-    useActiveStudyProfile();
+  const {
+    isLoading: isProfileLoading,
+    supportedLevel,
+    userId,
+    userLabel,
+    requiresSelection,
+  } = useActiveStudyProfile();
   const [flipped, setFlipped] = useState(false);
   const [stats, setStats] = useState({ reviewed: 0, correct: 0 });
   const [clock, setClock] = useState(() => Date.now());
   const [srsState, setSrsState] = useState<FlashcardSrsState>(EMPTY_SRS_STATE);
-  const [isSrsLoading, setIsSrsLoading] = useState(true);
+  const [isSrsLoading, setIsSrsLoading] = useState(() => Boolean(userId));
   const [srsError, setSrsError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const { data: vocabs, error, isLoading: isStudyLoading } = useStudyData<
@@ -136,9 +143,10 @@ export default function FlashcardPage() {
   }, []);
 
   useEffect(() => {
-    if (isProfileLoading) {
+    if (isProfileLoading || !userId) {
       return;
     }
+    const selectedUserId: FlashcardSrsUserId = userId;
 
     let cancelled = false;
 
@@ -147,7 +155,7 @@ export default function FlashcardPage() {
       setSrsError(null);
 
       try {
-        const state = await getFlashcardSrsState(userId, supportedLevel);
+        const state = await getFlashcardSrsState(selectedUserId, supportedLevel);
         if (!cancelled) {
           setSrsState(state);
           setIsSrsLoading(false);
@@ -209,7 +217,7 @@ export default function FlashcardPage() {
     );
 
   async function handleDifficulty(difficulty: Difficulty) {
-    if (!current || isSaving) {
+    if (!current || isSaving || !userId) {
       return;
     }
 
@@ -265,6 +273,10 @@ export default function FlashcardPage() {
 
   if (isProfileLoading || isStudyLoading || isSrsLoading) {
     return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
+  }
+
+  if (requiresSelection || !userId || !userLabel) {
+    return <UserSelectionNotice />;
   }
 
   const errorMessage = srsError ?? error;

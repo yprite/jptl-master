@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import UserSelectionNotice from "@/components/user-selection-notice";
 import {
   type GeneratedVocabularyQuestion,
   type GeneratedVocabularyQuestionType,
@@ -16,7 +17,7 @@ const vocabQuestionTypeLabels: Record<GeneratedVocabularyQuestionType, string> =
 };
 
 export default function VocabularyPage() {
-  const { isLoading: isProfileLoading, supportedLevel, userLabel } =
+  const { isLoading: isProfileLoading, supportedLevel, userLabel, requiresSelection } =
     useActiveStudyProfile();
   const [selectedType, setSelectedType] = useState<
     GeneratedVocabularyQuestionType | "all"
@@ -66,6 +67,10 @@ export default function VocabularyPage() {
 
   if (isProfileLoading || isStudyLoading) {
     return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
+  }
+
+  if (requiresSelection || !userLabel) {
+    return <UserSelectionNotice />;
   }
 
   return (

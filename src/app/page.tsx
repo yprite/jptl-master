@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
+  clearCurrentUserId,
   type DailyQuests,
   type HomeState,
   type StudyPlan,
   type StudyPlanDraft,
   type UserId,
-  getCurrentUserId,
+  getSelectedUserId,
   getHomeState,
   resetUserState,
   saveStudyPlan,
@@ -309,9 +310,10 @@ function getTargetProgress(value: number, range: TargetRange): number {
 }
 
 export default function Home() {
-  const [userId, setUserId] = useState<UserId>(() => getCurrentUserId());
+  const initialUserId = getSelectedUserId();
+  const [userId, setUserId] = useState<UserId | null>(initialUserId);
   const [states, setStates] = useState<Record<UserId, HomeState>>(createEmptyStates);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialUserId !== null);
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [showPlanSetup, setShowPlanSetup] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -333,7 +335,16 @@ export default function Home() {
   }, []);
 
   const loadStates = useCallback(
-    async (activeUserId: UserId) => {
+    async (activeUserId: UserId | null) => {
+      if (!activeUserId) {
+        setStates(createEmptyStates());
+        setShowProfileSetup(false);
+        setShowPlanSetup(false);
+        setShowSettings(false);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
 
       const entries = await Promise.all(
@@ -353,6 +364,8 @@ export default function Home() {
   );
 
   useEffect(() => {
+    if (!userId) return;
+
     const timer = window.setTimeout(() => {
       void loadStates(userId);
     }, 0);
@@ -360,7 +373,7 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [loadStates, userId]);
 
-  const activeState = states[userId] ?? EMPTY_STATE;
+  const activeState = userId ? states[userId] ?? EMPTY_STATE : EMPTY_STATE;
   const activeUser = activeState.user;
   const activePlan = activeState.plan;
 
@@ -370,6 +383,8 @@ export default function Home() {
   };
 
   const saveProfile = async () => {
+    if (!userId) return;
+
     const baselineTargets = deriveDailyTargets(activePlan?.totalDays ?? 84, formLevel);
 
     await upsertUser(userId, {
@@ -385,6 +400,8 @@ export default function Home() {
   };
 
   const savePlan = async () => {
+    if (!userId) return;
+
     const draft = deriveDailyTargets(planDays, activeUser?.level ?? formLevel);
 
     await saveStudyPlan(userId, draft);
@@ -406,6 +423,8 @@ export default function Home() {
   };
 
   const resetCurrentUser = async () => {
+    if (!userId) return;
+
     if (!window.confirm(`${getDisplayName(userId)}의 프로필과 진도를 초기화할까요?`)) {
       return;
     }
@@ -416,10 +435,71 @@ export default function Home() {
     setResetting(false);
   };
 
+  const reopenUserSelection = () => {
+    clearCurrentUserId();
+    setUserId(null);
+    setShowSettings(false);
+    setShowProfileSetup(false);
+    setShowPlanSetup(false);
+    setLoading(false);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
         <div className="text-stone-400">불러오는 중...</div>
+      </div>
+    );
+  }
+
+  if (!userId) {
+    return (
+      <div className="space-y-6">
+        <section className="relative overflow-hidden rounded-[2rem] border border-stone-200/70 bg-[linear-gradient(135deg,rgba(38,52,44,0.96),rgba(72,93,78,0.94)_42%,rgba(201,111,67,0.92)_100%)] p-5 text-white shadow-[0_30px_80px_rgba(83,63,38,0.16)] sm:rounded-[2.2rem] sm:p-8">
+          <div className="absolute -left-16 top-6 h-40 w-40 rounded-full bg-[rgba(255,245,220,0.14)] blur-3xl" />
+          <div className="absolute right-0 top-0 h-56 w-56 rounded-full bg-[rgba(255,210,133,0.22)] blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-40 w-48 rounded-full bg-[rgba(152,204,180,0.18)] blur-3xl" />
+
+          <div className="relative">
+            <div className="max-w-2xl space-y-2.5 sm:space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/55">
+                Device Selection
+              </p>
+              <h1 className="max-w-xl font-[family:var(--font-noto-serif-kr)] text-[2.15rem] font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">
+                이 기기의 학습 사용자를 먼저 정합니다.
+              </h1>
+              <p className="max-w-xl text-[13px] leading-6 text-white/76 sm:text-base sm:leading-7">
+                처음 한 번만 고르면 됩니다. 그다음부터는 같은 사람의 동행 화면과 학습 루틴이 바로 열립니다.
+              </p>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-[1.2fr_0.9fr]">
+              <div className="rounded-[1.65rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-4 backdrop-blur sm:rounded-[1.8rem] sm:p-5">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
+                  Who is using this phone?
+                </p>
+                <div className="mt-4 grid gap-3">
+                  {USER_IDS.map((id) => (
+                    <button
+                      key={id}
+                      onClick={() => switchUser(id)}
+                      className="rounded-[1.5rem] border border-white/12 bg-[rgba(255,255,255,0.14)] px-4 py-4 text-left transition hover:bg-[rgba(255,255,255,0.2)]"
+                    >
+                      <div className="text-lg font-black text-white">{USER_LABELS[id]}</div>
+                      <div className="mt-1 text-sm leading-6 text-white/72">
+                        {id === "me"
+                          ? "용훈의 진도와 플래시카드 상태로 바로 이어집니다."
+                          : "지혜의 루틴과 복습 흐름으로 바로 이어집니다."}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <CompanionJourneyScene isOnboarding currentDay={1} />
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
@@ -719,7 +799,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="mt-4 grid gap-3 md:grid-cols-4">
             <button
               onClick={openProfileEditor}
               className="rounded-[1.6rem] border border-stone-200 bg-white/80 px-4 py-4 text-left transition hover:-translate-y-0.5 hover:border-stone-300 hover:bg-white"
@@ -733,6 +813,13 @@ export default function Home() {
             >
               <div className="text-sm font-bold text-stone-900">계획 다시 세우기</div>
               <div className="mt-1 text-sm text-stone-500">총 학습 일수와 하루 루틴을 다시 정합니다.</div>
+            </button>
+            <button
+              onClick={reopenUserSelection}
+              className="rounded-[1.6rem] border border-stone-200 bg-white/80 px-4 py-4 text-left transition hover:-translate-y-0.5 hover:border-stone-300 hover:bg-white"
+            >
+              <div className="text-sm font-bold text-stone-900">기기 사용자 바꾸기</div>
+              <div className="mt-1 text-sm text-stone-500">이 폰에서 사용할 사람을 다시 선택합니다.</div>
             </button>
             <button
               onClick={() => void resetCurrentUser()}

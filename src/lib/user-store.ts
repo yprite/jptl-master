@@ -8,6 +8,7 @@ import type { User } from "./database.types";
 
 export type UserId = "me" | "wife";
 const USER_IDS: UserId[] = ["me", "wife"];
+const VALID_USER_IDS = new Set<UserId>(USER_IDS);
 
 export interface DailyQuests {
   flashcard: boolean;
@@ -468,13 +469,28 @@ async function fetchRemoteState(userId: UserId): Promise<HomeState> {
 }
 
 export function getCurrentUserId(): UserId {
-  if (!canUseStorage()) return "me";
-  return (window.localStorage.getItem(STORAGE_KEY_USER) as UserId) || "me";
+  return getSelectedUserId() ?? "me";
+}
+
+export function getSelectedUserId(): UserId | null {
+  if (!canUseStorage()) return null;
+
+  const stored = window.localStorage.getItem(STORAGE_KEY_USER);
+  if (!stored || !VALID_USER_IDS.has(stored as UserId)) {
+    return null;
+  }
+
+  return stored as UserId;
 }
 
 export function setCurrentUserId(id: UserId): void {
   if (!canUseStorage()) return;
   window.localStorage.setItem(STORAGE_KEY_USER, id);
+}
+
+export function clearCurrentUserId(): void {
+  if (!canUseStorage()) return;
+  window.localStorage.removeItem(STORAGE_KEY_USER);
 }
 
 export async function getHomeState(userId: UserId): Promise<HomeState> {

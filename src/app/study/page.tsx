@@ -8,10 +8,11 @@ import {
   type StudyPlan,
   type UserId,
   completeDailyQuest,
-  getCurrentUserId,
+  getSelectedUserId,
   getHomeState,
   setCurrentUserId,
 } from "@/lib/user-store";
+import UserSelectionNotice from "@/components/user-selection-notice";
 
 const USER_IDS: UserId[] = ["me", "wife"];
 const USER_LABELS: Record<UserId, string> = {
@@ -81,9 +82,10 @@ function getTopicLabel(id: UserId): string {
 }
 
 export default function StudyPage() {
-  const [userId, setUserId] = useState<UserId>(() => getCurrentUserId());
+  const initialUserId = getSelectedUserId();
+  const [userId, setUserId] = useState<UserId | null>(initialUserId);
   const [states, setStates] = useState<Record<UserId, HomeState>>(createEmptyStates);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialUserId !== null);
 
   const loadStates = useCallback(async () => {
     setLoading(true);
@@ -96,6 +98,8 @@ export default function StudyPage() {
   }, []);
 
   useEffect(() => {
+    if (!userId) return;
+
     const timer = window.setTimeout(() => {
       void loadStates();
     }, 0);
@@ -103,7 +107,7 @@ export default function StudyPage() {
     return () => window.clearTimeout(timer);
   }, [loadStates, userId]);
 
-  const activeState = states[userId] ?? EMPTY_STATE;
+  const activeState = userId ? states[userId] ?? EMPTY_STATE : EMPTY_STATE;
   const activeUser = activeState.user;
   const activePlan = activeState.plan;
   const activeQuests = activeState.quests;
@@ -115,6 +119,8 @@ export default function StudyPage() {
   };
 
   const markComplete = async (quest: keyof DailyQuests) => {
+    if (!userId) return;
+
     const updated = await completeDailyQuest(userId, quest);
     setStates((prev) => ({
       ...prev,
@@ -128,6 +134,10 @@ export default function StudyPage() {
         <div className="text-stone-400">불러오는 중...</div>
       </div>
     );
+  }
+
+  if (!userId) {
+    return <UserSelectionNotice />;
   }
 
   if (!activeUser || !activePlan) {
