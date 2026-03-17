@@ -29,8 +29,27 @@ export interface UserProgress {
   readingCount: number;
 }
 
+export interface StudyPlan {
+  totalDays: number;
+  dailyFlashcard: number;
+  dailyVocabulary: number;
+  dailyGrammar: number;
+  dailyReading: number;
+  startDate: string;
+  createdAt: string;
+}
+
+export interface StudyPlanDraft {
+  totalDays: number;
+  dailyFlashcard: number;
+  dailyVocabulary: number;
+  dailyGrammar: number;
+  dailyReading: number;
+}
+
 export interface HomeState {
   user: User | null;
+  plan: StudyPlan | null;
   quests: DailyQuests;
   progress: UserProgress;
 }
@@ -47,6 +66,7 @@ type LocalQuestRow = {
 
 const STORAGE_KEY_USER = "jptl-current-user";
 const STORAGE_KEY_USERS = "jptl-users";
+const STORAGE_KEY_PLANS = "jptl-study-plans";
 const STORAGE_KEY_QUESTS = "jptl-daily-quests";
 const STORAGE_KEY_PROGRESS = "jptl-progress-cache";
 const DEFAULT_DAILY_QUESTS: DailyQuests = {
@@ -105,6 +125,14 @@ function setLocalUsers(users: Partial<Record<UserId, User>>): void {
   writeJson(STORAGE_KEY_USERS, users);
 }
 
+function getLocalPlans(): Partial<Record<UserId, StudyPlan | null>> {
+  return readJson<Partial<Record<UserId, StudyPlan | null>>>(STORAGE_KEY_PLANS, {});
+}
+
+function setLocalPlans(plans: Partial<Record<UserId, StudyPlan | null>>): void {
+  writeJson(STORAGE_KEY_PLANS, plans);
+}
+
 function getLocalQuestRows(): LocalQuestRow[] {
   return readJson<LocalQuestRow[]>(STORAGE_KEY_QUESTS, []);
 }
@@ -138,6 +166,18 @@ function toLocalUser(
   };
 }
 
+function toLocalPlan(draft: StudyPlanDraft): StudyPlan {
+  return {
+    totalDays: draft.totalDays,
+    dailyFlashcard: draft.dailyFlashcard,
+    dailyVocabulary: draft.dailyVocabulary,
+    dailyGrammar: draft.dailyGrammar,
+    dailyReading: draft.dailyReading,
+    startDate: today(),
+    createdAt: new Date().toISOString(),
+  };
+}
+
 function getLocalUser(id: UserId): User | null {
   return getLocalUsers()[id] ?? null;
 }
@@ -158,6 +198,23 @@ function upsertLocalUser(
   users[id] = user;
   setLocalUsers(users);
   return user;
+}
+
+function getLocalPlan(userId: UserId): StudyPlan | null {
+  return getLocalPlans()[userId] ?? null;
+}
+
+function setLocalPlan(userId: UserId, plan: StudyPlan | null): StudyPlan | null {
+  const plans = getLocalPlans();
+  plans[userId] = plan;
+  setLocalPlans(plans);
+  return plan;
+}
+
+function saveLocalPlan(userId: UserId, draft: StudyPlanDraft): StudyPlan {
+  const plan = toLocalPlan(draft);
+  setLocalPlan(userId, plan);
+  return plan;
 }
 
 function getLocalDailyQuests(userId: UserId): DailyQuests {
@@ -197,6 +254,29 @@ function syncLocalProgress(userId: UserId, progress: UserProgress): void {
   setLocalProgressCache(cache);
 }
 
+function resetLocalState(userId: UserId): HomeState {
+  const users = getLocalUsers();
+  delete users[userId];
+  setLocalUsers(users);
+
+  const plans = getLocalPlans();
+  delete plans[userId];
+  setLocalPlans(plans);
+
+  const progress = getLocalProgressCache();
+  delete progress[userId];
+  setLocalProgressCache(progress);
+
+  setLocalQuestRows(getLocalQuestRows().filter((row) => row.user_id !== userId));
+
+  return {
+    user: null,
+    plan: null,
+    quests: { ...DEFAULT_DAILY_QUESTS },
+    progress: { ...DEFAULT_PROGRESS },
+  };
+}
+
 function upsertLocalDailyQuest(userId: UserId, quest: keyof DailyQuests): HomeState {
   const rows = getLocalQuestRows();
   const date = today();
@@ -211,6 +291,7 @@ function upsertLocalDailyQuest(userId: UserId, quest: keyof DailyQuests): HomeSt
   if (existing[quest]) {
     return {
       user: getLocalUser(userId),
+      plan: getLocalPlan(userId),
       quests: getLocalDailyQuests(userId),
       progress: getLocalProgress(userId),
     };
@@ -242,6 +323,7 @@ function upsertLocalDailyQuest(userId: UserId, quest: keyof DailyQuests): HomeSt
   syncLocalProgress(userId, updatedProgress);
   return {
     user: getLocalUser(userId),
+    plan: getLocalPlan(userId),
     quests: {
       flashcard: updated.flashcard,
       vocabulary: updated.vocabulary,
@@ -285,6 +367,7 @@ function getLocalProgress(userId: UserId): UserProgress {
 function getLocalState(userId: UserId): HomeState {
   return {
     user: getLocalUser(userId),
+    plan: getLocalPlan(userId),
     quests: getLocalDailyQuests(userId),
     progress: getLocalProgress(userId),
   };
@@ -293,6 +376,7 @@ function getLocalState(userId: UserId): HomeState {
 function hasMeaningfulState(state: HomeState): boolean {
   return (
     state.user !== null ||
+    state.plan !== null ||
     state.quests.flashcard ||
     state.quests.vocabulary ||
     state.quests.grammar ||
@@ -309,6 +393,7 @@ function syncLocalState(userId: UserId, state: HomeState): HomeState {
   if (state.user) {
     setLocalUser(state.user);
   }
+  setLocalPlan(userId, state.plan);
   syncLocalQuest(userId, state.quests);
   syncLocalProgress(userId, state.progress);
   return state;
@@ -396,18 +481,20 @@ export function setCurrentUserId(id: UserId): void {
 export async function getHomeState(userId: UserId): Promise<HomeState> {
   if (isLocalMode()) return getLocalState(userId);
 
+  const localState = getLocalState(userId);
+
   try {
     const remoteState = await fetchRemoteState(userId);
-    if (remoteState.user || !hasMeaningfulState(getLocalState(userId))) {
+    if (hasMeaningfulState(remoteState) || !hasMeaningfulState(localState)) {
       return syncLocalState(userId, remoteState);
     }
 
-    const seeded = await seedRemoteState(userId, getLocalState(userId));
+    const seeded = await seedRemoteState(userId, localState);
     return syncLocalState(userId, seeded);
   } catch (error) {
     if (shouldUseLocalFallback(error)) {
       activateLocalFallback(error);
-      return getLocalState(userId);
+      return localState;
     }
     throw error;
   }
@@ -439,6 +526,25 @@ export async function upsertUser(
   }
 }
 
+export async function saveStudyPlan(userId: UserId, draft: StudyPlanDraft): Promise<StudyPlan> {
+  if (isLocalMode()) return saveLocalPlan(userId, draft);
+
+  try {
+    const plan = await requestJson<StudyPlan>("/api/home/plan", {
+      method: "PUT",
+      body: JSON.stringify({ userId, plan: draft }),
+    });
+    setLocalPlan(userId, plan);
+    return plan;
+  } catch (error) {
+    if (shouldUseLocalFallback(error)) {
+      activateLocalFallback(error);
+      return saveLocalPlan(userId, draft);
+    }
+    throw error;
+  }
+}
+
 export async function getDailyQuests(userId: UserId): Promise<DailyQuests> {
   const state = await getHomeState(userId);
   return state.quests;
@@ -457,6 +563,7 @@ export async function completeDailyQuest(
     });
     return syncLocalState(userId, {
       user: getLocalUser(userId),
+      plan: getLocalPlan(userId),
       quests: payload.quests,
       progress: payload.progress,
     });
@@ -472,4 +579,22 @@ export async function completeDailyQuest(
 export async function getProgress(userId: UserId): Promise<UserProgress> {
   const state = await getHomeState(userId);
   return state.progress;
+}
+
+export async function resetUserState(userId: UserId): Promise<HomeState> {
+  if (isLocalMode()) return resetLocalState(userId);
+
+  try {
+    const state = await requestJson<HomeState>("/api/home/reset", {
+      method: "POST",
+      body: JSON.stringify({ userId }),
+    });
+    return syncLocalState(userId, state);
+  } catch (error) {
+    if (shouldUseLocalFallback(error)) {
+      activateLocalFallback(error);
+      return resetLocalState(userId);
+    }
+    throw error;
+  }
 }

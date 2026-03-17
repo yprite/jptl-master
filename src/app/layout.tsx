@@ -14,42 +14,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased">
-        <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-          <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-4 overflow-x-auto">
-            <Link href="/" className="text-lg font-bold shrink-0">
+      <body className="antialiased bg-stone-50 text-stone-950">
+        <nav className="border-b border-stone-200/80 bg-white/90 backdrop-blur">
+          <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
+            <Link href="/" className="text-lg font-black tracking-[0.24em]">
               JPTL
             </Link>
-            <Link
-              href="/flashcard"
-              className="text-sm hover:text-blue-600 transition-colors shrink-0"
-            >
-              암기
-            </Link>
-            <Link
-              href="/vocabulary"
-              className="text-sm hover:text-indigo-600 transition-colors shrink-0"
-            >
-              어휘
-            </Link>
-            <Link
-              href="/grammar"
-              className="text-sm hover:text-amber-600 transition-colors shrink-0"
-            >
-              문법
-            </Link>
-            <Link
-              href="/reading"
-              className="text-sm hover:text-green-600 transition-colors shrink-0"
-            >
-              독해
-            </Link>
-            <Link
-              href="/plan"
-              className="text-sm hover:text-purple-600 transition-colors shrink-0"
-            >
-              계획
-            </Link>
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
+              Daily Race
+            </span>
           </div>
         </nav>
         <main className="max-w-4xl mx-auto px-4 py-8">{children}</main>

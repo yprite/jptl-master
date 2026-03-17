@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getRemoteState, replaceRemoteState } from "@/lib/home-state-server";
 import type { User } from "@/lib/database.types";
-import type { DailyQuests, HomeState, UserId, UserProgress } from "@/lib/user-store";
+import type {
+  DailyQuests,
+  HomeState,
+  StudyPlan,
+  UserId,
+  UserProgress,
+} from "@/lib/user-store";
 
 export const runtime = "nodejs";
 
@@ -62,6 +68,21 @@ function parseUser(value: unknown, userId: UserId): User | null {
   };
 }
 
+function parsePlan(value: unknown): StudyPlan | null {
+  if (value === null || value === undefined) return null;
+  if (!isRecord(value)) throw new Error("Invalid plan");
+
+  return {
+    totalDays: Number(value.totalDays ?? 84),
+    dailyFlashcard: Number(value.dailyFlashcard ?? 10),
+    dailyVocabulary: Number(value.dailyVocabulary ?? 5),
+    dailyGrammar: Number(value.dailyGrammar ?? 5),
+    dailyReading: Number(value.dailyReading ?? 2),
+    startDate: typeof value.startDate === "string" ? value.startDate : new Date().toISOString(),
+    createdAt: typeof value.createdAt === "string" ? value.createdAt : new Date().toISOString(),
+  };
+}
+
 function jsonError(error: unknown): NextResponse {
   const message = error instanceof Error ? error.message : "Unknown error";
   return NextResponse.json({ message }, { status: 500 });
@@ -87,6 +108,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const state: HomeState = {
       user: parseUser(body.state.user, userId),
+      plan: parsePlan(body.state.plan),
       quests: parseQuests(body.state.quests),
       progress: parseProgress(body.state.progress),
     };

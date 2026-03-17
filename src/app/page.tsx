@@ -1,30 +1,106 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import type { User } from "@/lib/database.types";
 import {
-  type UserId,
   type DailyQuests,
-  type UserProgress,
-  getHomeState,
+  type HomeState,
+  type StudyPlan,
+  type StudyPlanDraft,
+  type UserId,
+  completeDailyQuest,
   getCurrentUserId,
+  getHomeState,
+  resetUserState,
+  saveStudyPlan,
   setCurrentUserId,
   upsertUser,
-  completeDailyQuest,
 } from "@/lib/user-store";
 
 const USER_IDS: UserId[] = ["me", "wife"];
+const USER_LABELS: Record<UserId, string> = {
+  me: "유저 1",
+  wife: "유저 2",
+};
+type SliderField = [
+  string,
+  number,
+  Dispatch<SetStateAction<number>>,
+  number,
+  number,
+  number,
+];
+const EMPTY_STATE: HomeState = {
+  user: null,
+  plan: null,
+  quests: {
+    flashcard: false,
+    vocabulary: false,
+    grammar: false,
+    reading: false,
+  },
+  progress: {
+    totalDays: 0,
+    flashcardCount: 0,
+    vocabCount: 0,
+    grammarCount: 0,
+    readingCount: 0,
+  },
+};
+
+function createEmptyStates(): Record<UserId, HomeState> {
+  return {
+    me: {
+      user: null,
+      plan: null,
+      quests: { ...EMPTY_STATE.quests },
+      progress: { ...EMPTY_STATE.progress },
+    },
+    wife: {
+      user: null,
+      plan: null,
+      quests: { ...EMPTY_STATE.quests },
+      progress: { ...EMPTY_STATE.progress },
+    },
+  };
+}
+
+function getCompletedCount(quests: DailyQuests): number {
+  return Object.values(quests).filter(Boolean).length;
+}
+
+function getPlanDayNumber(plan: StudyPlan | null): number {
+  if (!plan) return 1;
+
+  const currentDate = new Date();
+  const startDate = new Date(`${plan.startDate}T00:00:00`);
+  const diffMs = currentDate.getTime() - startDate.getTime();
+  const diffDays = Math.max(0, Math.floor(diffMs / 86_400_000));
+  return Math.min(plan.totalDays, diffDays + 1);
+}
+
+function getLeader(states: Record<UserId, HomeState>): UserId | null {
+  const score = (state: HomeState) => state.progress.totalDays * 10 + getCompletedCount(state.quests);
+  const meScore = score(states.me);
+  const wifeScore = score(states.wife);
+  if (meScore === wifeScore) return null;
+  return meScore > wifeScore ? "me" : "wife";
+}
+
+function getDisplayName(id: UserId, state: HomeState): string {
+  return state.user?.name || USER_LABELS[id];
+}
 
 export default function Home() {
   const [userId, setUserId] = useState<UserId>(() => getCurrentUserId());
-  const [user, setUser] = useState<User | null>(null);
-  const [quests, setQuests] = useState<DailyQuests | null>(null);
-  const [progress, setProgressState] = useState<UserProgress | null>(null);
+  const [states, setStates] = useState<Record<UserId, HomeState>>(createEmptyStates);
   const [loading, setLoading] = useState(true);
-  const [showSetup, setShowSetup] = useState(false);
+  const [showProfileSetup, setShowProfileSetup] = useState(false);
+  const [showPlanSetup, setShowPlanSetup] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
-  // 설정 폼 state
   const [formName, setFormName] = useState("");
   const [formLevel, setFormLevel] = useState<"N5" | "N4" | "N3">("N4");
   const [formFlashcard, setFormFlashcard] = useState(10);
@@ -32,55 +108,81 @@ export default function Home() {
   const [formGrammar, setFormGrammar] = useState(5);
   const [formReading, setFormReading] = useState(2);
 
-  const loadUser = useCallback(async (id: UserId) => {
-    setLoading(true);
-    const state = await getHomeState(id);
-    setUser(state.user);
-    setQuests(state.quests);
-    setProgressState(state.progress);
+  const [planDays, setPlanDays] = useState(84);
+  const [planFlashcard, setPlanFlashcard] = useState(10);
+  const [planVocab, setPlanVocab] = useState(5);
+  const [planGrammar, setPlanGrammar] = useState(5);
+  const [planReading, setPlanReading] = useState(2);
 
-    // 유저가 없으면 셋업 모드
-    if (!state.user) {
-      setFormName(id === "me" ? "" : "");
+  const hydrateForms = useCallback((state: HomeState) => {
+    if (state.user) {
+      setFormName(state.user.name);
+      setFormLevel(state.user.level);
+      setFormFlashcard(state.user.daily_flashcard);
+      setFormVocab(state.user.daily_vocab);
+      setFormGrammar(state.user.daily_grammar);
+      setFormReading(state.user.daily_reading);
+    } else {
+      setFormName("");
       setFormLevel("N4");
       setFormFlashcard(10);
       setFormVocab(5);
       setFormGrammar(5);
       setFormReading(2);
-      setShowSetup(true);
-    } else {
-      setShowSetup(false);
     }
-    setLoading(false);
+
+    const plan = state.plan;
+    setPlanDays(plan?.totalDays ?? 84);
+    setPlanFlashcard(plan?.dailyFlashcard ?? state.user?.daily_flashcard ?? 10);
+    setPlanVocab(plan?.dailyVocabulary ?? state.user?.daily_vocab ?? 5);
+    setPlanGrammar(plan?.dailyGrammar ?? state.user?.daily_grammar ?? 5);
+    setPlanReading(plan?.dailyReading ?? state.user?.daily_reading ?? 2);
   }, []);
+
+  const loadStates = useCallback(
+    async (activeUserId: UserId) => {
+      setLoading(true);
+
+      const entries = await Promise.all(
+        USER_IDS.map(async (id) => [id, await getHomeState(id)] as const)
+      );
+      const nextStates = Object.fromEntries(entries) as Record<UserId, HomeState>;
+      const activeState = nextStates[activeUserId];
+
+      setStates(nextStates);
+      hydrateForms(activeState);
+      setShowProfileSetup(!activeState.user);
+      setShowPlanSetup(Boolean(activeState.user && !activeState.plan));
+      setShowSettings(false);
+      setLoading(false);
+    },
+    [hydrateForms]
+  );
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      void loadUser(userId);
+      void loadStates(userId);
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, [loadUser, userId]);
+  }, [loadStates, userId]);
+
+  const activeState = states[userId] ?? EMPTY_STATE;
+  const activeUser = activeState.user;
+  const activePlan = activeState.plan;
+  const activeQuests = activeState.quests;
+  const activeProgress = activeState.progress;
+  const leader = getLeader(states);
 
   const switchUser = (id: UserId) => {
     setCurrentUserId(id);
     setUserId(id);
   };
 
-  const openEdit = () => {
-    if (!user) return;
-    setFormName(user.name);
-    setFormLevel(user.level);
-    setFormFlashcard(user.daily_flashcard);
-    setFormVocab(user.daily_vocab);
-    setFormGrammar(user.daily_grammar);
-    setFormReading(user.daily_reading);
-    setShowSetup(true);
-  };
-
   const saveProfile = async () => {
     if (!formName.trim()) return;
-    const saved = await upsertUser(userId, {
+
+    await upsertUser(userId, {
       name: formName.trim(),
       level: formLevel,
       daily_flashcard: formFlashcard,
@@ -88,359 +190,534 @@ export default function Home() {
       daily_grammar: formGrammar,
       daily_reading: formReading,
     });
-    const state = await getHomeState(userId);
-    setUser(saved);
-    setQuests(state.quests);
-    setProgressState(state.progress);
-    setShowSetup(false);
+
+    await loadStates(userId);
+  };
+
+  const savePlan = async () => {
+    const draft: StudyPlanDraft = {
+      totalDays: planDays,
+      dailyFlashcard: planFlashcard,
+      dailyVocabulary: planVocab,
+      dailyGrammar: planGrammar,
+      dailyReading: planReading,
+    };
+
+    await saveStudyPlan(userId, draft);
+    await loadStates(userId);
   };
 
   const markComplete = async (quest: keyof DailyQuests) => {
     const updated = await completeDailyQuest(userId, quest);
-    setQuests(updated.quests);
-    setProgressState(updated.progress);
+    setStates((prev) => ({
+      ...prev,
+      [userId]: updated,
+    }));
+  };
+
+  const openProfileEditor = () => {
+    hydrateForms(activeState);
+    setShowSettings(false);
+    setShowPlanSetup(false);
+    setShowProfileSetup(true);
+  };
+
+  const openPlanEditor = () => {
+    hydrateForms(activeState);
+    setShowSettings(false);
+    setShowProfileSetup(false);
+    setShowPlanSetup(true);
+  };
+
+  const resetCurrentUser = async () => {
+    if (!window.confirm(`${getDisplayName(userId, activeState)}의 프로필과 진도를 초기화할까요?`)) {
+      return;
+    }
+
+    setResetting(true);
+    await resetUserState(userId);
+    await loadStates(userId);
+    setResetting(false);
   };
 
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="text-gray-400">불러오는 중...</div>
+        <div className="text-stone-400">불러오는 중...</div>
       </div>
     );
   }
 
-  // --- 프로필 설정 화면 ---
-  if (showSetup) {
-    return (
-      <div className="space-y-6">
-        {/* 유저 선택 (항상 상단에) */}
-        <div className="flex gap-2 justify-center">
-          {USER_IDS.map((id) => (
-            <button
-              key={id}
-              onClick={() => switchUser(id)}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
-                userId === id
-                  ? "bg-violet-600 text-white shadow-lg shadow-violet-600/25 scale-105"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-              }`}
-            >
-              {id === "me" ? "유저 1" : "유저 2"}
-            </button>
-          ))}
-        </div>
+  const questDefs = activePlan
+    ? [
+        {
+          key: "flashcard" as const,
+          title: "단어 암기",
+          desc: `플래시카드 ${activePlan.dailyFlashcard}장`,
+          href: "/flashcard",
+          accent: "from-sky-500 to-blue-600",
+        },
+        {
+          key: "vocabulary" as const,
+          title: "어휘 문제",
+          desc: `어휘 문제 ${activePlan.dailyVocabulary}개`,
+          href: "/vocabulary",
+          accent: "from-indigo-500 to-violet-600",
+        },
+        {
+          key: "grammar" as const,
+          title: "문법 문제",
+          desc: `문법 문제 ${activePlan.dailyGrammar}개`,
+          href: "/grammar",
+          accent: "from-amber-400 to-orange-500",
+        },
+        {
+          key: "reading" as const,
+          title: "독해",
+          desc: `독해 문제 ${activePlan.dailyReading}개`,
+          href: "/reading",
+          accent: "from-emerald-400 to-green-600",
+        },
+      ]
+    : [];
 
-        <h1 className="text-2xl font-bold text-center">
-          {user ? "목표 수정" : "프로필 설정"}
-        </h1>
-
-        <div className="space-y-4 p-5 rounded-xl border border-gray-200 dark:border-gray-800">
-          {/* 이름 */}
-          <div>
-            <label className="block text-sm font-medium mb-1.5">이름</label>
-            <input
-              type="text"
-              value={formName}
-              onChange={(e) => setFormName(e.target.value)}
-              placeholder="이름을 입력하세요"
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm"
-            />
-          </div>
-
-          {/* 목표 레벨 */}
-          <div>
-            <label className="block text-sm font-medium mb-1.5">목표 레벨</label>
-            <div className="flex gap-2">
-              {(["N5", "N4", "N3"] as const).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setFormLevel(l)}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    formLevel === l
-                      ? "bg-violet-600 text-white"
-                      : "bg-gray-100 dark:bg-gray-800"
-                  }`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 일일 목표량 */}
-          <div className="space-y-3">
-            <label className="block text-sm font-medium">일일 목표량</label>
-
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">단어 암기</span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="range"
-                  min={5}
-                  max={30}
-                  step={5}
-                  value={formFlashcard}
-                  onChange={(e) => setFormFlashcard(Number(e.target.value))}
-                  className="w-24"
-                />
-                <span className="text-sm font-medium w-10 text-right">{formFlashcard}장</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">어휘 문제</span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="range"
-                  min={3}
-                  max={20}
-                  value={formVocab}
-                  onChange={(e) => setFormVocab(Number(e.target.value))}
-                  className="w-24"
-                />
-                <span className="text-sm font-medium w-10 text-right">{formVocab}개</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">문법 문제</span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="range"
-                  min={3}
-                  max={20}
-                  value={formGrammar}
-                  onChange={(e) => setFormGrammar(Number(e.target.value))}
-                  className="w-24"
-                />
-                <span className="text-sm font-medium w-10 text-right">{formGrammar}개</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">독해 문제</span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="range"
-                  min={1}
-                  max={10}
-                  value={formReading}
-                  onChange={(e) => setFormReading(Number(e.target.value))}
-                  className="w-24"
-                />
-                <span className="text-sm font-medium w-10 text-right">{formReading}개</span>
-              </div>
-            </div>
-          </div>
-
-          <button
-            onClick={saveProfile}
-            disabled={!formName.trim()}
-            className="w-full py-3 rounded-xl bg-violet-600 text-white font-medium hover:bg-violet-700 transition-colors disabled:opacity-40"
-          >
-            {user ? "저장" : "시작하기"}
-          </button>
-
-          {user && (
-            <button
-              onClick={() => setShowSetup(false)}
-              className="w-full py-2 text-sm text-gray-500 hover:text-gray-700"
-            >
-              취소
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // --- 메인 대시보드 ---
-  if (!user || !quests || !progress) return null;
-
-  const questDefs = [
-    {
-      key: "flashcard" as const,
-      title: "단어 암기",
-      desc: `플래시카드 ${user.daily_flashcard}장 학습`,
-      href: "/flashcard",
-      icon: "1",
-    },
-    {
-      key: "vocabulary" as const,
-      title: "어휘 문제",
-      desc: `어휘 문제 ${user.daily_vocab}개 풀기`,
-      href: "/vocabulary",
-      icon: "2",
-    },
-    {
-      key: "grammar" as const,
-      title: "문법 문제",
-      desc: `문법 문제 ${user.daily_grammar}개 풀기`,
-      href: "/grammar",
-      icon: "3",
-    },
-    {
-      key: "reading" as const,
-      title: "독해",
-      desc: `독해 문제 ${user.daily_reading}개 풀기`,
-      href: "/reading",
-      icon: "4",
-    },
+  const completedCount = getCompletedCount(activeQuests);
+  const allDone = completedCount === questDefs.length && questDefs.length > 0;
+  const currentQuestIdx = questDefs.findIndex((quest) => !activeQuests[quest.key]);
+  const currentDay = getPlanDayNumber(activePlan);
+  const planProgressPercent = activePlan
+    ? Math.min(100, Math.round((activeProgress.totalDays / activePlan.totalDays) * 100))
+    : 0;
+  const profileSliderFields: SliderField[] = [
+    ["단어 암기", formFlashcard, setFormFlashcard, 5, 30, 5],
+    ["어휘 문제", formVocab, setFormVocab, 3, 20, 1],
+    ["문법 문제", formGrammar, setFormGrammar, 3, 20, 1],
+    ["독해 문제", formReading, setFormReading, 1, 10, 1],
   ];
-
-  const completedCount = Object.values(quests).filter(Boolean).length;
-  const allDone = completedCount === 4;
-  const currentQuestIdx = questDefs.findIndex((q) => !quests[q.key]);
+  const planSliderFields: SliderField[] = [
+    ["단어 암기", planFlashcard, setPlanFlashcard, 5, 30, 5],
+    ["어휘 문제", planVocab, setPlanVocab, 3, 20, 1],
+    ["문법 문제", planGrammar, setPlanGrammar, 3, 20, 1],
+    ["독해 문제", planReading, setPlanReading, 1, 10, 1],
+  ];
 
   return (
     <div className="space-y-6">
-      {/* 유저 선택 */}
-      <div className="flex gap-2 justify-center">
-        {USER_IDS.map((id) => (
-          <button
-            key={id}
-            onClick={() => switchUser(id)}
-            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
-              userId === id
-                ? "bg-violet-600 text-white shadow-lg shadow-violet-600/25 scale-105"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            {id === userId && user ? user.name : id === "me" ? "유저 1" : "유저 2"}
-          </button>
-        ))}
-      </div>
-
-      {/* 인사 & 진도 */}
-      <div className="text-center space-y-1">
-        <div className="flex items-center justify-center gap-2">
-          <h1 className="text-2xl font-bold">{user.name}의 학습</h1>
-          <button
-            onClick={openEdit}
-            className="text-gray-400 hover:text-violet-500 transition-colors"
-            title="목표 수정"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
-        </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          목표: {user.level} · 총 {progress.totalDays}일 학습
-        </p>
-      </div>
-
-      {/* 누적 통계 */}
-      <div className="grid grid-cols-4 gap-2 text-center">
-        {[
-          { label: "암기", value: progress.flashcardCount, color: "text-blue-600 dark:text-blue-400" },
-          { label: "어휘", value: progress.vocabCount, color: "text-indigo-600 dark:text-indigo-400" },
-          { label: "문법", value: progress.grammarCount, color: "text-amber-600 dark:text-amber-400" },
-          { label: "독해", value: progress.readingCount, color: "text-green-600 dark:text-green-400" },
-        ].map((s) => (
-          <div key={s.label} className="p-3 rounded-xl bg-gray-50 dark:bg-gray-900">
-            <div className={`text-xl font-bold ${s.color}`}>{s.value}</div>
-            <div className="text-xs text-gray-500">{s.label}</div>
+      <section className="overflow-hidden rounded-[2rem] border border-stone-200 bg-[radial-gradient(circle_at_top_left,_rgba(217,119,6,0.18),_transparent_35%),linear-gradient(135deg,_#111827,_#1f2937_55%,_#312e81)] p-6 text-white shadow-xl shadow-stone-300/30">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/60">
+              Daily Rivalry
+            </p>
+            <h1 className="text-3xl font-black tracking-tight">오늘의 학습 레이스</h1>
+            <p className="text-sm text-white/70">
+              프로필 설정은 한 번만, 이후엔 계획대로 하루 루틴만 진행합니다.
+            </p>
           </div>
-        ))}
-      </div>
+          {activeUser && (
+            <button
+              onClick={() => setShowSettings(true)}
+              className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+            >
+              설정
+            </button>
+          )}
+        </div>
 
-      {/* 오늘의 진행률 */}
-      <div>
-        <div className="flex justify-between text-sm mb-1.5">
-          <span className="font-medium">오늘의 퀘스트</span>
-          <span className="text-gray-500">{completedCount}/4</span>
-        </div>
-        <div className="h-2.5 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ${
-              allDone ? "bg-green-500" : "bg-violet-600"
-            }`}
-            style={{ width: `${(completedCount / 4) * 100}%` }}
-          />
-        </div>
-      </div>
+        <div className="mt-5 flex flex-wrap gap-2">
+          {USER_IDS.map((id) => {
+            const state = states[id];
+            const isActive = id === userId;
 
-      {/* 올클리어 */}
-      {allDone && (
-        <div className="text-center py-6 rounded-2xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-          <div className="text-3xl mb-2">&#x2705;</div>
-          <p className="font-bold text-green-700 dark:text-green-400">오늘 퀘스트 올클리어!</p>
-          <p className="text-sm text-green-600 dark:text-green-500 mt-1">내일도 화이팅!</p>
+            return (
+              <button
+                key={id}
+                onClick={() => void switchUser(id)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  isActive
+                    ? "bg-white text-stone-900 shadow-lg"
+                    : "bg-white/10 text-white/80 hover:bg-white/20"
+                }`}
+              >
+                {getDisplayName(id, state)}
+              </button>
+            );
+          })}
         </div>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-2">
+          {USER_IDS.map((id) => {
+            const state = states[id];
+            const completed = getCompletedCount(state.quests);
+            const isLeader = leader === id;
+
+            return (
+              <div
+                key={id}
+                className={`rounded-3xl border px-5 py-4 ${
+                  id === userId
+                    ? "border-white/40 bg-white/14"
+                    : "border-white/10 bg-black/10"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.18em] text-white/50">
+                      {USER_LABELS[id]}
+                    </p>
+                    <p className="text-xl font-bold">{getDisplayName(id, state)}</p>
+                  </div>
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
+                    {state.user ? `${completed}/4 완료` : "미설정"}
+                  </span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div className="rounded-2xl bg-white/10 px-4 py-3">
+                    <div className="text-xs text-white/55">완주 일수</div>
+                    <div className="mt-1 text-2xl font-black">{state.progress.totalDays}</div>
+                  </div>
+                  <div className="rounded-2xl bg-white/10 px-4 py-3">
+                    <div className="text-xs text-white/55">오늘 진행</div>
+                    <div className="mt-1 text-2xl font-black">{completed}</div>
+                  </div>
+                </div>
+
+                <p className="mt-4 text-sm text-white/70">
+                  {isLeader
+                    ? "현재 선두입니다."
+                    : leader === null
+                    ? "현재 동률입니다."
+                    : "조금만 더 하면 따라잡을 수 있습니다."}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {showSettings && activeUser && (
+        <section className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-black text-stone-900">설정</h2>
+              <p className="text-sm text-stone-500">
+                {activeUser.name}의 학습 루틴을 관리합니다.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowSettings(false)}
+              className="rounded-full bg-stone-100 px-3 py-1 text-sm font-semibold text-stone-600"
+            >
+              닫기
+            </button>
+          </div>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            <button
+              onClick={openProfileEditor}
+              className="rounded-2xl border border-stone-200 px-4 py-4 text-left transition hover:border-stone-300 hover:bg-stone-50"
+            >
+              <div className="text-sm font-bold text-stone-900">프로필 수정</div>
+              <div className="mt-1 text-sm text-stone-500">이름과 기본 목표량을 바꿉니다.</div>
+            </button>
+            <button
+              onClick={openPlanEditor}
+              className="rounded-2xl border border-stone-200 px-4 py-4 text-left transition hover:border-stone-300 hover:bg-stone-50"
+            >
+              <div className="text-sm font-bold text-stone-900">계획 다시 세우기</div>
+              <div className="mt-1 text-sm text-stone-500">총 학습 일수와 하루 루틴을 다시 정합니다.</div>
+            </button>
+            <button
+              onClick={() => void resetCurrentUser()}
+              disabled={resetting}
+              className="rounded-2xl border border-red-200 px-4 py-4 text-left text-red-700 transition hover:bg-red-50 disabled:opacity-50"
+            >
+              <div className="text-sm font-bold">초기화</div>
+              <div className="mt-1 text-sm text-red-500">
+                프로필, 계획, 오늘 진도까지 모두 초기 상태로 되돌립니다.
+              </div>
+            </button>
+          </div>
+        </section>
       )}
 
-      {/* 퀘스트 목록 */}
-      <div className="space-y-3">
-        {questDefs.map((q, idx) => {
-          const done = quests[q.key];
-          const isCurrent = idx === currentQuestIdx;
-          const isLocked = !done && idx > currentQuestIdx && currentQuestIdx >= 0;
+      {showProfileSetup && (
+        <section className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
+              Step 1
+            </p>
+            <h2 className="text-2xl font-black text-stone-900">프로필 설정</h2>
+            <p className="text-sm text-stone-500">
+              이 단계는 처음 한 번만 필요합니다. 저장해두면 다음부터는 바로 학습 화면으로 들어옵니다.
+            </p>
+          </div>
 
-          return (
-            <div
-              key={q.key}
-              className={`relative rounded-xl border p-4 transition-all ${
-                done
-                  ? "border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/10"
-                  : isCurrent
-                  ? "border-violet-300 dark:border-violet-700 bg-violet-50/50 dark:bg-violet-900/10 shadow-sm"
-                  : "border-gray-200 dark:border-gray-800 opacity-50"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${
-                    done
-                      ? "bg-green-500 text-white"
-                      : isCurrent
-                      ? "bg-violet-600 text-white"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-500"
-                  }`}
-                >
-                  {done ? "\u2713" : q.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-sm">{q.title}</div>
-                  <div className="text-xs text-gray-500">{q.desc}</div>
-                </div>
-                {done ? (
-                  <span className="text-xs text-green-600 dark:text-green-400 font-medium shrink-0">완료</span>
-                ) : isCurrent ? (
-                  <Link
-                    href={q.href}
-                    className="px-4 py-1.5 rounded-lg bg-violet-600 text-white text-sm font-medium hover:bg-violet-700 transition-colors shrink-0"
+          <div className="mt-6 space-y-4">
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-stone-700">이름</label>
+              <input
+                type="text"
+                value={formName}
+                onChange={(event) => setFormName(event.target.value)}
+                placeholder="이름을 입력하세요"
+                className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-stone-400 focus:bg-white"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-stone-700">목표 레벨</label>
+              <div className="grid grid-cols-3 gap-2">
+                {(["N5", "N4", "N3"] as const).map((level) => (
+                  <button
+                    key={level}
+                    onClick={() => setFormLevel(level)}
+                    className={`rounded-2xl px-4 py-3 text-sm font-bold transition ${
+                      formLevel === level
+                        ? "bg-stone-900 text-white"
+                        : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    }`}
                   >
-                    시작
-                  </Link>
-                ) : isLocked ? (
-                  <span className="text-xs text-gray-400 shrink-0">잠김</span>
-                ) : (
-                  <Link
-                    href={q.href}
-                    className="px-4 py-1.5 rounded-lg bg-gray-200 dark:bg-gray-700 text-sm font-medium hover:bg-gray-300 transition-colors shrink-0"
-                  >
-                    시작
-                  </Link>
-                )}
+                    {level}
+                  </button>
+                ))}
               </div>
-              {isCurrent && (
-                <div className="absolute -left-px top-0 bottom-0 w-1 rounded-full bg-violet-600" />
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-2">
+              {profileSliderFields.map(([label, value, setter, min, max, step]) => (
+                <label
+                  key={String(label)}
+                  className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4"
+                >
+                  <div className="flex items-center justify-between text-sm font-semibold text-stone-700">
+                    <span>{label}</span>
+                    <span>{Number(value)}{label === "단어 암기" ? "장" : "개"}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={Number(min)}
+                    max={Number(max)}
+                    step={Number(step)}
+                    value={Number(value)}
+                    onChange={(event) => setter(Number(event.target.value))}
+                    className="mt-3 w-full"
+                  />
+                </label>
+              ))}
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => void saveProfile()}
+                disabled={!formName.trim()}
+                className="flex-1 rounded-2xl bg-stone-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-stone-800 disabled:opacity-40"
+              >
+                저장하고 계속하기
+              </button>
+              {activeUser && (
+                <button
+                  onClick={() => setShowProfileSetup(false)}
+                  className="rounded-2xl bg-stone-100 px-4 py-3 text-sm font-bold text-stone-600"
+                >
+                  취소
+                </button>
               )}
             </div>
-          );
-        })}
-      </div>
+          </div>
+        </section>
+      )}
 
-      {/* 퀘스트 완료 버튼 */}
-      {currentQuestIdx >= 0 && (
-        <button
-          onClick={() => markComplete(questDefs[currentQuestIdx].key)}
-          className="w-full py-3 rounded-xl bg-violet-600 text-white font-medium hover:bg-violet-700 transition-colors"
-        >
-          &quot;{questDefs[currentQuestIdx].title}&quot; 완료 체크
-        </button>
+      {!showProfileSetup && showPlanSetup && activeUser && (
+        <section className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
+              Step 2
+            </p>
+            <h2 className="text-2xl font-black text-stone-900">학습 계획 세우기</h2>
+            <p className="text-sm text-stone-500">
+              프로필을 저장했으니 이제 하루 루틴을 고정합니다. 이후에는 이 계획대로 하루치만 차례대로 진행합니다.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
+            <label className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4 md:col-span-2">
+              <div className="flex items-center justify-between text-sm font-semibold text-stone-700">
+                <span>완주 기간</span>
+                <span>{planDays}일</span>
+              </div>
+              <input
+                type="range"
+                min={30}
+                max={180}
+                step={5}
+                value={planDays}
+                onChange={(event) => setPlanDays(Number(event.target.value))}
+                className="mt-3 w-full"
+              />
+            </label>
+
+            {planSliderFields.map(([label, value, setter, min, max, step]) => (
+              <label
+                key={String(label)}
+                className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4"
+              >
+                <div className="flex items-center justify-between text-sm font-semibold text-stone-700">
+                  <span>{label}</span>
+                  <span>{Number(value)}{label === "단어 암기" ? "장" : "개"}</span>
+                </div>
+                <input
+                  type="range"
+                  min={Number(min)}
+                  max={Number(max)}
+                  step={Number(step)}
+                  value={Number(value)}
+                  onChange={(event) => setter(Number(event.target.value))}
+                  className="mt-3 w-full"
+                />
+              </label>
+            ))}
+          </div>
+
+          <div className="mt-5 flex gap-3">
+            <button
+              onClick={() => void savePlan()}
+              className="flex-1 rounded-2xl bg-stone-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-stone-800"
+            >
+              계획 저장하고 시작하기
+            </button>
+            {activePlan && (
+              <button
+                onClick={() => setShowPlanSetup(false)}
+                className="rounded-2xl bg-stone-100 px-4 py-3 text-sm font-bold text-stone-600"
+              >
+                취소
+              </button>
+            )}
+          </div>
+        </section>
+      )}
+
+      {!showProfileSetup && !showPlanSetup && activeUser && activePlan && (
+        <section className="space-y-6">
+          <div className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
+                  Step 3
+                </p>
+                <h2 className="mt-1 text-2xl font-black text-stone-900">
+                  Day {currentDay} 루틴
+                </h2>
+                <p className="mt-1 text-sm text-stone-500">
+                  {activeUser.name}님은 오늘{" "}
+                  <span className="font-semibold text-stone-900">암기 → 어휘 → 문법 → 독해</span>{" "}
+                  순서로 진행합니다.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-stone-100 px-4 py-3 text-right">
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
+                  Challenge
+                </div>
+                <div className="mt-1 text-lg font-black text-stone-900">
+                  {activeProgress.totalDays}/{activePlan.totalDays}일
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <div className="mb-2 flex items-center justify-between text-sm font-semibold text-stone-600">
+                <span>누적 진행률</span>
+                <span>{planProgressPercent}%</span>
+              </div>
+              <div className="h-3 overflow-hidden rounded-full bg-stone-100">
+                <div
+                  className="h-full rounded-full bg-[linear-gradient(90deg,#f59e0b,#7c3aed)] transition-all"
+                  style={{ width: `${planProgressPercent}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {questDefs.map((quest, index) => {
+              const done = activeQuests[quest.key];
+              const isCurrent = index === currentQuestIdx;
+              const locked = !done && index > currentQuestIdx && currentQuestIdx >= 0;
+
+              return (
+                <div
+                  key={quest.key}
+                  className={`rounded-[1.75rem] border p-5 shadow-sm transition ${
+                    done
+                      ? "border-emerald-200 bg-emerald-50"
+                      : isCurrent
+                      ? "border-stone-300 bg-white"
+                      : "border-stone-200 bg-stone-50"
+                  }`}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-lg font-black text-white ${
+                          done ? "from-emerald-500 to-green-600" : quest.accent
+                        }`}
+                      >
+                        {done ? "✓" : index + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-black text-stone-900">{quest.title}</h3>
+                        <p className="text-sm text-stone-500">{quest.desc}</p>
+                      </div>
+                    </div>
+
+                    {done ? (
+                      <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700">
+                        완료
+                      </span>
+                    ) : isCurrent ? (
+                      <Link
+                        href={quest.href}
+                        className="rounded-full bg-stone-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-stone-800"
+                      >
+                        시작
+                      </Link>
+                    ) : locked ? (
+                      <span className="rounded-full bg-stone-200 px-4 py-2 text-sm font-bold text-stone-500">
+                        잠김
+                      </span>
+                    ) : (
+                      <Link
+                        href={quest.href}
+                        className="rounded-full bg-stone-200 px-4 py-2 text-sm font-bold text-stone-700"
+                      >
+                        이동
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {allDone ? (
+            <div className="rounded-[2rem] border border-emerald-200 bg-emerald-50 px-6 py-8 text-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-500">
+                Perfect Day
+              </p>
+              <h3 className="mt-2 text-3xl font-black text-emerald-700">오늘 루틴 완료</h3>
+              <p className="mt-2 text-sm text-emerald-600">내일 Day {Math.min(activePlan.totalDays, currentDay + 1)}로 이어집니다.</p>
+            </div>
+          ) : currentQuestIdx >= 0 ? (
+            <button
+              onClick={() => void markComplete(questDefs[currentQuestIdx].key)}
+              className="w-full rounded-[1.75rem] bg-stone-900 px-4 py-4 text-sm font-black text-white transition hover:bg-stone-800"
+            >
+              현재 단계 완료 체크
+            </button>
+          ) : null}
+        </section>
       )}
     </div>
   );

@@ -2,9 +2,18 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { User } from "./database.types";
-import type { DailyQuests, UserGoals, UserId, UserProgress } from "./user-store";
+import type {
+  DailyQuests,
+  HomeState,
+  StudyPlan,
+  StudyPlanDraft,
+  UserGoals,
+  UserId,
+  UserProgress,
+} from "./user-store";
 
 const BUCKET_NAME = "jptl-home-state";
+const LIST_LIMIT = 100;
 const DEFAULT_DAILY_QUESTS: DailyQuests = {
   flashcard: false,
   vocabulary: false,
@@ -18,7 +27,6 @@ const DEFAULT_PROGRESS: UserProgress = {
   grammarCount: 0,
   readingCount: 0,
 };
-const LIST_LIMIT = 100;
 
 let adminClient: SupabaseClient | null = null;
 let bucketReady: Promise<void> | null = null;
@@ -79,6 +87,14 @@ function profilePath(userId: UserId): string {
   return `${profilePrefix(userId)}/${timestampedName("profile")}`;
 }
 
+function planPrefix(userId: UserId): string {
+  return `plans/${userId}`;
+}
+
+function planPath(userId: UserId): string {
+  return `${planPrefix(userId)}/${timestampedName("plan")}`;
+}
+
 function questsPrefix(userId: UserId, date: string): string {
   return `quests/${userId}/${date}`;
 }
@@ -108,10 +124,8 @@ async function resolveLatestPath(folder: string): Promise<string | null> {
   return latest ? `${folder}/${latest.name}` : null;
 }
 
-async function readJson<T>(path: string): Promise<T | null> {
-  await ensureBucket();
-
-  const resolvedPath = await resolveLatestPath(path);
+async function readJson<T>(folder: string): Promise<T | null> {
+  const resolvedPath = await resolveLatestPath(folder);
   if (!resolvedPath) {
     return null;
   }
@@ -164,20 +178,30 @@ function toUser(
   };
 }
 
-export async function getRemoteState(userId: UserId): Promise<{
-  user: User | null;
-  quests: DailyQuests;
-  progress: UserProgress;
-}> {
+function toPlan(draft: StudyPlanDraft): StudyPlan {
+  return {
+    totalDays: draft.totalDays,
+    dailyFlashcard: draft.dailyFlashcard,
+    dailyVocabulary: draft.dailyVocabulary,
+    dailyGrammar: draft.dailyGrammar,
+    dailyReading: draft.dailyReading,
+    startDate: getToday(),
+    createdAt: new Date().toISOString(),
+  };
+}
+
+export async function getRemoteState(userId: UserId): Promise<HomeState> {
   const date = getToday();
-  const [user, quests, progress] = await Promise.all([
+  const [user, plan, quests, progress] = await Promise.all([
     readJson<User>(profilePrefix(userId)),
+    readJson<StudyPlan>(planPrefix(userId)),
     readJson<DailyQuests>(questsPrefix(userId, date)),
     readJson<UserProgress>(progressPrefix(userId)),
   ]);
 
   return {
     user,
+    plan,
     quests: quests ?? { ...DEFAULT_DAILY_QUESTS },
     progress: progress ?? { ...DEFAULT_PROGRESS },
   };
@@ -191,6 +215,12 @@ export async function saveUserProfile(
   const user = toUser(userId, profile, existing);
   await writeJson(profilePath(userId), user);
   return user;
+}
+
+export async function saveRemotePlan(userId: UserId, draft: StudyPlanDraft): Promise<StudyPlan> {
+  const plan = toPlan(draft);
+  await writeJson(planPath(userId), plan);
+  return plan;
 }
 
 export async function completeRemoteQuest(
@@ -237,29 +267,27 @@ export async function completeRemoteQuest(
   return { quests: updatedQuests, progress: updatedProgress };
 }
 
-export async function replaceRemoteState(
-  userId: UserId,
-  state: {
-    user: User | null;
-    quests: DailyQuests;
-    progress: UserProgress;
-  }
-): Promise<{
-  user: User | null;
-  quests: DailyQuests;
-  progress: UserProgress;
-}> {
-  await ensureBucket();
-
+export async function replaceRemoteState(userId: UserId, state: HomeState): Promise<HomeState> {
   const writes: Promise<void>[] = [
+    writeJson(planPath(userId), state.plan),
     writeJson(questsPath(userId, getToday()), state.quests),
     writeJson(progressPath(userId), state.progress),
   ];
 
-  if (state.user) {
-    writes.push(writeJson(profilePath(userId), state.user));
-  }
+  writes.push(writeJson(profilePath(userId), state.user));
 
   await Promise.all(writes);
   return state;
+}
+
+export async function resetRemoteState(userId: UserId): Promise<HomeState> {
+  const resetState: HomeState = {
+    user: null,
+    plan: null,
+    quests: { ...DEFAULT_DAILY_QUESTS },
+    progress: { ...DEFAULT_PROGRESS },
+  };
+
+  await replaceRemoteState(userId, resetState);
+  return resetState;
 }
