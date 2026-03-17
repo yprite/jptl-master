@@ -49,11 +49,18 @@ body {
 .companion-scene {
   position: relative;
   overflow: hidden;
-  height: 13.5rem;
-  border-radius: 1.45rem;
+  height: 11.75rem;
+  border-radius: 1.25rem;
   background:
     radial-gradient(circle at top, rgba(255, 244, 209, 0.9), rgba(255, 244, 209, 0) 34%),
     linear-gradient(180deg, rgba(255, 251, 243, 0.98) 0%, rgba(248, 239, 222, 0.98) 58%, rgba(235, 224, 202, 0.98) 100%);
+}
+
+@media (min-width: 640px) {
+  .companion-scene {
+    height: 13rem;
+    border-radius: 1.45rem;
+  }
 }
 
 .companion-skyline {

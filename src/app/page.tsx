@@ -153,7 +153,7 @@ function CompanionJourneyScene({
   currentDay: number;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-[1.8rem] border border-white/12 bg-[rgba(249,244,233,0.92)] p-5 text-stone-900 shadow-[0_18px_45px_rgba(53,39,24,0.12),inset_0_1px_0_rgba(255,255,255,0.42)]">
+    <div className="relative overflow-hidden rounded-[1.65rem] border border-white/12 bg-[rgba(249,244,233,0.92)] p-4 text-stone-900 shadow-[0_18px_45px_rgba(53,39,24,0.12),inset_0_1px_0_rgba(255,255,255,0.42)] sm:rounded-[1.8rem] sm:p-5">
       <div className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-[rgba(255,207,128,0.34)] blur-2xl" />
       <div className="pointer-events-none absolute left-0 top-8 h-24 w-24 rounded-full bg-[rgba(152,204,180,0.18)] blur-2xl" />
 
@@ -188,16 +188,16 @@ function CompanionJourneyScene({
         </div>
       </div>
 
-      <div className="relative mt-5">
+      <div className="relative mt-4 sm:mt-5">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-stone-400">
           Shared Motion
         </p>
-        <h2 className="mt-3 font-[family:var(--font-noto-serif-kr)] text-2xl font-semibold leading-snug text-stone-900">
+        <h2 className="mt-2.5 font-[family:var(--font-noto-serif-kr)] text-[1.35rem] font-semibold leading-snug text-stone-900 sm:mt-3 sm:text-2xl">
           {isOnboarding
             ? "손을 맞잡기 전, 두 사람의 시작점을 먼저 맞춥니다."
             : "나와 와이프가 같은 목표 쪽으로 천천히 걸어가는 장면입니다."}
         </h2>
-        <p className="mt-3 text-sm leading-7 text-stone-600">
+        <p className="mt-2.5 text-[13px] leading-6 text-stone-600 sm:mt-3 sm:text-sm sm:leading-7">
           {isOnboarding
             ? "프로필과 계획이 정해지면 이 장면이 하루 루틴 쪽으로 자연스럽게 이어집니다."
             : "빠르게 몰아붙이지 않고, 오늘 해야 할 만큼만 함께 앞으로 간다는 감각을 남겨 두었습니다."}
@@ -408,21 +408,21 @@ export default function Home() {
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-[2.2rem] border border-stone-200/70 bg-[linear-gradient(135deg,rgba(38,52,44,0.96),rgba(72,93,78,0.94)_42%,rgba(201,111,67,0.92)_100%)] p-6 text-white shadow-[0_30px_80px_rgba(83,63,38,0.16)] sm:p-8">
+      <section className="relative overflow-hidden rounded-[2rem] border border-stone-200/70 bg-[linear-gradient(135deg,rgba(38,52,44,0.96),rgba(72,93,78,0.94)_42%,rgba(201,111,67,0.92)_100%)] p-5 text-white shadow-[0_30px_80px_rgba(83,63,38,0.16)] sm:rounded-[2.2rem] sm:p-8">
         <div className="absolute -left-16 top-6 h-40 w-40 rounded-full bg-[rgba(255,245,220,0.14)] blur-3xl" />
         <div className="absolute right-0 top-0 h-56 w-56 rounded-full bg-[rgba(255,210,133,0.22)] blur-3xl" />
         <div className="absolute bottom-0 left-1/3 h-40 w-48 rounded-full bg-[rgba(152,204,180,0.18)] blur-3xl" />
 
         <div className="relative">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="max-w-2xl space-y-3">
+            <div className="max-w-2xl space-y-2.5 sm:space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/55">
                 {isOnboarding ? "Shared Setup" : "Study Companions"}
               </p>
-              <h1 className="max-w-xl font-[family:var(--font-noto-serif-kr)] text-4xl font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">
+              <h1 className="max-w-xl font-[family:var(--font-noto-serif-kr)] text-[2.15rem] font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">
                 {getTogetherHeadline(isOnboarding)}
               </h1>
-              <p className="max-w-xl text-sm leading-7 text-white/76 sm:text-base">
+              <p className="max-w-xl text-[13px] leading-6 text-white/76 sm:text-base sm:leading-7">
                 {getTogetherCaption(isOnboarding)}
               </p>
             </div>
@@ -436,8 +436,8 @@ export default function Home() {
             )}
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-[1.4fr_0.9fr]">
-            <div className="rounded-[1.8rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-5 backdrop-blur">
+          <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-[1.4fr_0.9fr]">
+            <div className="rounded-[1.65rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-4 backdrop-blur sm:rounded-[1.8rem] sm:p-5">
               <div className="flex flex-wrap items-center gap-2">
                 {USER_IDS.map((id) => {
                   const isActive = id === userId;
@@ -458,34 +458,34 @@ export default function Home() {
                 })}
               </div>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-[1.4rem] border border-white/10 bg-black/10 px-4 py-4">
+              <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-3">
+                <div className="rounded-[1.25rem] border border-white/10 bg-black/10 px-3.5 py-3.5 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
                   <p className="text-xs uppercase tracking-[0.24em] text-white/50">
                     함께 설정
                   </p>
-                  <p className="mt-2 text-3xl font-black text-white">
+                  <p className="mt-1.5 text-[1.7rem] font-black text-white sm:mt-2 sm:text-3xl">
                     {configuredCount}/2
                   </p>
                 </div>
-                <div className="rounded-[1.4rem] border border-white/10 bg-black/10 px-4 py-4">
+                <div className="rounded-[1.25rem] border border-white/10 bg-black/10 px-3.5 py-3.5 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
                   <p className="text-xs uppercase tracking-[0.24em] text-white/50">
                     누적 Day
                   </p>
-                  <p className="mt-2 text-3xl font-black text-white">
+                  <p className="mt-1.5 text-[1.7rem] font-black text-white sm:mt-2 sm:text-3xl">
                     {sharedCompletedDays}
                   </p>
                 </div>
-                <div className="rounded-[1.4rem] border border-white/10 bg-black/10 px-4 py-4">
+                <div className="rounded-[1.25rem] border border-white/10 bg-black/10 px-3.5 py-3.5 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
                   <p className="text-xs uppercase tracking-[0.24em] text-white/50">
                     오늘의 걸음
                   </p>
-                  <p className="mt-2 text-3xl font-black text-white">
+                  <p className="mt-1.5 text-[1.7rem] font-black text-white sm:mt-2 sm:text-3xl">
                     {sharedTodayCount}
                   </p>
                 </div>
               </div>
 
-              <p className="mt-6 max-w-2xl text-sm leading-7 text-white/72">
+              <p className="mt-5 max-w-2xl text-[13px] leading-6 text-white/72 sm:mt-6 sm:text-sm sm:leading-7">
                 {getSharedMood(states)}
               </p>
             </div>
@@ -497,7 +497,7 @@ export default function Home() {
           </div>
 
           {!isOnboarding && (
-            <div className="mt-6 grid gap-3 md:grid-cols-2">
+            <div className="mt-5 grid gap-3 sm:mt-6 md:grid-cols-2">
               {USER_IDS.map((id) => {
                 const state = states[id];
                 const completed = getCompletedCount(state.quests);
@@ -509,7 +509,7 @@ export default function Home() {
                 return (
                   <div
                     key={id}
-                    className={`rounded-[1.8rem] border p-5 transition ${
+                    className={`rounded-[1.6rem] border p-4 transition sm:rounded-[1.8rem] sm:p-5 ${
                       id === userId
                         ? "border-white/30 bg-[rgba(255,255,255,0.16)]"
                         : "border-white/10 bg-[rgba(0,0,0,0.12)]"
@@ -520,7 +520,7 @@ export default function Home() {
                         <p className="text-xs uppercase tracking-[0.2em] text-white/50">
                           {id === userId ? "지금 보고 있는 사람" : "함께 걷는 사람"}
                         </p>
-                        <p className="mt-1 text-2xl font-black text-white">
+                        <p className="mt-1 text-[1.35rem] font-black text-white sm:text-2xl">
                           {getDisplayName(id)}
                         </p>
                       </div>
@@ -529,20 +529,20 @@ export default function Home() {
                       </span>
                     </div>
 
-                    <div className="mt-5 grid grid-cols-2 gap-3">
-                      <div className="rounded-[1.4rem] bg-white/10 px-4 py-4">
+                    <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5">
+                      <div className="rounded-[1.2rem] bg-white/10 px-3.5 py-3 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
                         <div className="text-xs uppercase tracking-[0.18em] text-white/45">
                           완주 일수
                         </div>
-                        <div className="mt-2 text-3xl font-black text-white">
+                        <div className="mt-1.5 text-[1.6rem] font-black text-white sm:mt-2 sm:text-3xl">
                           {state.progress.totalDays}
                         </div>
                       </div>
-                      <div className="rounded-[1.4rem] bg-white/10 px-4 py-4">
+                      <div className="rounded-[1.2rem] bg-white/10 px-3.5 py-3 sm:rounded-[1.4rem] sm:px-4 sm:py-4">
                         <div className="text-xs uppercase tracking-[0.18em] text-white/45">
                           오늘 루틴
                         </div>
-                        <div className="mt-2 text-3xl font-black text-white">
+                        <div className="mt-1.5 text-[1.6rem] font-black text-white sm:mt-2 sm:text-3xl">
                           {completed}
                         </div>
                       </div>
@@ -561,7 +561,7 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <p className="mt-4 text-sm leading-6 text-white/72">
+                    <p className="mt-3.5 text-[13px] leading-6 text-white/72 sm:mt-4 sm:text-sm">
                       {getJourneyNote(id, states)}
                     </p>
                   </div>
