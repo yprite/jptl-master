@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { saveRemotePlan } from "@/lib/home-state-server";
+import { saveSharedRemotePlan } from "@/lib/home-state-server";
 import type { StudyPlanDraft, UserId } from "@/lib/user-store";
 
 export const runtime = "nodejs";
@@ -20,7 +20,7 @@ function parseUserId(value: unknown): UserId {
 export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
     const body = (await request.json()) as { userId?: unknown; plan?: unknown };
-    const userId = parseUserId(body.userId);
+    parseUserId(body.userId);
     if (!isRecord(body.plan)) {
       throw new Error("Invalid plan");
     }
@@ -33,7 +33,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       dailyReading: Number(body.plan.dailyReading ?? 2),
     };
 
-    const saved = await saveRemotePlan(userId, plan);
+    const saved = await saveSharedRemotePlan(plan);
     return NextResponse.json(saved);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

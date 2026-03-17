@@ -7,6 +7,7 @@ import { resetLocalFlashcardSrs } from "./flashcard-srs-store";
 import type { User } from "./database.types";
 
 export type UserId = "me" | "wife";
+const USER_IDS: UserId[] = ["me", "wife"];
 
 export interface DailyQuests {
   flashcard: boolean;
@@ -218,10 +219,20 @@ function setLocalPlan(userId: UserId, plan: StudyPlan | null): StudyPlan | null 
   return plan;
 }
 
-function saveLocalPlan(userId: UserId, draft: StudyPlanDraft): StudyPlan {
+function saveLocalSharedPlan(draft: StudyPlanDraft): Record<UserId, StudyPlan> {
   const plan = toLocalPlan(draft);
-  setLocalPlan(userId, plan);
-  return plan;
+  const plans = getLocalPlans();
+
+  for (const userId of USER_IDS) {
+    plans[userId] = plan;
+  }
+
+  setLocalPlans(plans);
+
+  return {
+    me: plan,
+    wife: plan,
+  };
 }
 
 function getLocalDailyQuests(userId: UserId): DailyQuests {
@@ -509,20 +520,25 @@ export async function upsertUser(
   }
 }
 
-export async function saveStudyPlan(userId: UserId, draft: StudyPlanDraft): Promise<StudyPlan> {
-  if (isLocalMode()) return saveLocalPlan(userId, draft);
+export async function saveStudyPlan(
+  userId: UserId,
+  draft: StudyPlanDraft
+): Promise<Record<UserId, StudyPlan>> {
+  if (isLocalMode()) return saveLocalSharedPlan(draft);
 
   try {
-    const plan = await requestJson<StudyPlan>("/api/home/plan", {
+    const plans = await requestJson<Record<UserId, StudyPlan>>("/api/home/plan", {
       method: "PUT",
       body: JSON.stringify({ userId, plan: draft }),
     });
-    setLocalPlan(userId, plan);
-    return plan;
+    for (const id of USER_IDS) {
+      setLocalPlan(id, plans[id]);
+    }
+    return plans;
   } catch (error) {
     if (shouldUseLocalFallback(error)) {
       activateLocalFallback(error);
-      return saveLocalPlan(userId, draft);
+      return saveLocalSharedPlan(draft);
     }
     throw error;
   }

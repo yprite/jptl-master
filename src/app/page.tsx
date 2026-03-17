@@ -821,7 +821,7 @@ export default function Home() {
               {USER_LABELS[userId]} 학습 계획
             </h2>
             <p className="text-sm text-stone-500">
-              학습 일수만 정하면 하루 목표는 자동으로 맞춰집니다. 슬라이더를 움직이면 루틴 강도가 바로 바뀝니다.
+              학습 일수를 정하면 두 사람 모두 같은 일정으로 맞춰집니다. 슬라이더를 움직이면 공통 루틴 강도가 바로 바뀝니다.
             </p>
           </div>
 
@@ -880,9 +880,9 @@ export default function Home() {
           <div className="mt-4 rounded-[1.7rem] border border-emerald-200 bg-[linear-gradient(135deg,rgba(240,251,244,0.96),rgba(255,247,232,0.92))] px-4 py-4 text-sm text-stone-800">
             <div className="font-bold">자동 추천 루틴</div>
             <div className="mt-1 text-stone-600">
-              {planDays}일 완주 기준으로 하루에 단어 암기 {derivedPlanTargets.dailyFlashcard}장,
+              용훈이 이 계획을 저장하면 지혜에게도 같은 플랜이 적용됩니다. {planDays}일 완주 기준으로 하루에 단어 암기 {derivedPlanTargets.dailyFlashcard}장,
               어휘 {derivedPlanTargets.dailyVocabulary}개, 문법 {derivedPlanTargets.dailyGrammar}개,
-              독해 {derivedPlanTargets.dailyReading}개를 진행합니다.
+              독해 {derivedPlanTargets.dailyReading}개를 함께 진행합니다.
             </div>
           </div>
 

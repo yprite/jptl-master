@@ -14,6 +14,7 @@ import type {
 
 const BUCKET_NAME = "jptl-home-state";
 const LIST_LIMIT = 100;
+const USER_IDS: UserId[] = ["me", "wife"];
 const DEFAULT_DAILY_QUESTS: DailyQuests = {
   flashcard: false,
   vocabulary: false,
@@ -235,6 +236,19 @@ export async function saveRemotePlan(userId: UserId, draft: StudyPlanDraft): Pro
   const plan = toPlan(draft);
   await writeJson(planPath(userId), plan);
   return plan;
+}
+
+export async function saveSharedRemotePlan(
+  draft: StudyPlanDraft
+): Promise<Record<UserId, StudyPlan>> {
+  const plan = toPlan(draft);
+
+  await Promise.all(USER_IDS.map((userId) => writeJson(planPath(userId), plan)));
+
+  return {
+    me: plan,
+    wife: plan,
+  };
 }
 
 export async function completeRemoteQuest(
