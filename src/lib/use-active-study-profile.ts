@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
-  getCurrentUserId,
+  getSelectedUserId,
   getHomeState,
   type UserId,
 } from "@/lib/user-store";
@@ -16,14 +16,27 @@ const USER_LABELS: Record<UserId, string> = {
 };
 
 export function useActiveStudyProfile() {
-  const [userId, setUserId] = useState<UserId>("me");
+  const [userId, setUserId] = useState<UserId | null>(null);
   const [level, setLevel] = useState<StudyLevel | null>(null);
+  const [requiresSelection, setRequiresSelection] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      const nextUserId = getCurrentUserId();
+      const nextUserId = getSelectedUserId();
+      if (!nextUserId) {
+        if (!cancelled) {
+          setUserId(null);
+          setLevel("N4");
+          setRequiresSelection(true);
+        }
+        return;
+      }
+
+      if (!cancelled) {
+        setRequiresSelection(false);
+      }
       setUserId(nextUserId);
 
       try {
@@ -46,10 +59,11 @@ export function useActiveStudyProfile() {
   }, []);
 
   return {
-    isLoading: level === null,
+    isLoading: level === null && !requiresSelection,
+    requiresSelection,
     level: level ?? "N4",
     supportedLevel: (level ?? "N4") as SupportedStudyLevel,
     userId,
-    userLabel: USER_LABELS[userId],
+    userLabel: userId ? USER_LABELS[userId] : null,
   };
 }

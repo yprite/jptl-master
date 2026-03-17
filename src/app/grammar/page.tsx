@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import UserSelectionNotice from "@/components/user-selection-notice";
 import type { GeneratedGrammarQuestion } from "@/lib/study-data-types";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
@@ -8,7 +9,7 @@ import { useStudyData } from "@/lib/use-study-data";
 const EMPTY_QUESTIONS: GeneratedGrammarQuestion[] = [];
 
 export default function GrammarPage() {
-  const { isLoading: isProfileLoading, supportedLevel, userLabel } =
+  const { isLoading: isProfileLoading, supportedLevel, userLabel, requiresSelection } =
     useActiveStudyProfile();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -44,6 +45,10 @@ export default function GrammarPage() {
 
   if (isProfileLoading || isStudyLoading) {
     return <p className="text-center text-gray-500">학습 레벨을 불러오는 중입니다.</p>;
+  }
+
+  if (requiresSelection || !userLabel) {
+    return <UserSelectionNotice />;
   }
 
   return (
