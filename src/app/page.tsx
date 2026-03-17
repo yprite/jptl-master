@@ -92,12 +92,58 @@ function getPlanDayNumber(plan: StudyPlan | null): number {
   return Math.min(plan.totalDays, diffDays + 1);
 }
 
-function getLeader(states: Record<UserId, HomeState>): UserId | null {
-  const score = (state: HomeState) => state.progress.totalDays * 10 + getCompletedCount(state.quests);
-  const meScore = score(states.me);
-  const wifeScore = score(states.wife);
-  if (meScore === wifeScore) return null;
-  return meScore > wifeScore ? "me" : "wife";
+function getJourneyNote(id: UserId, states: Record<UserId, HomeState>): string {
+  const current = states[id];
+  const companion = states[id === "me" ? "wife" : "me"];
+
+  if (!current.user) {
+    return "아직 출발 전입니다. 프로필을 정하면 오늘 루틴이 열립니다.";
+  }
+
+  if (!companion.user) {
+    return "먼저 길을 밝히고 있습니다. 다른 한 사람의 설정이 끝나면 리듬이 맞춰집니다.";
+  }
+
+  const currentScore = current.progress.totalDays * 10 + getCompletedCount(current.quests);
+  const companionScore = companion.progress.totalDays * 10 + getCompletedCount(companion.quests);
+
+  if (currentScore === companionScore) {
+    return "같은 속도로 나란히 가고 있습니다.";
+  }
+
+  if (currentScore > companionScore) {
+    return "오늘은 한 걸음 앞에서 페이스를 만들어 주고 있습니다.";
+  }
+
+  return "상대의 리듬을 따라가며 천천히 간격을 좁히는 중입니다.";
+}
+
+function getTogetherHeadline(isOnboarding: boolean): string {
+  return isOnboarding ? "JPTL 시작 설정" : "오늘의 학습 동행";
+}
+
+function getTogetherCaption(isOnboarding: boolean): string {
+  return isOnboarding
+    ? "먼저 두 사람의 출발점을 맞추고, 같은 루틴으로 하루를 열어 둡니다."
+    : "누가 앞서는지보다, 오늘도 같이 책상 앞에 앉았다는 감각을 남깁니다.";
+}
+
+function getSharedMood(states: Record<UserId, HomeState>): string {
+  const configured = USER_IDS.filter((id) => states[id].user).length;
+  const completedDays = USER_IDS.reduce(
+    (sum, id) => sum + states[id].progress.totalDays,
+    0
+  );
+
+  if (configured < USER_IDS.length) {
+    return "두 사람의 이름 대신, 두 사람의 페이스를 맞추는 준비 단계입니다.";
+  }
+
+  if (completedDays === 0) {
+    return "아직 첫 장면입니다. 루틴이 쌓이면 오늘의 분위기가 자연스럽게 달라집니다.";
+  }
+
+  return "서로의 진도가 벽이 아니라 풍경처럼 보이도록, 한 화면에 조용히 나란히 두었습니다.";
 }
 
 function getDisplayName(id: UserId): string {
@@ -187,7 +233,6 @@ export default function Home() {
   const activePlan = activeState.plan;
   const activeQuests = activeState.quests;
   const activeProgress = activeState.progress;
-  const leader = getLeader(states);
 
   const switchUser = (id: UserId) => {
     setCurrentUserId(id);
@@ -299,112 +344,200 @@ export default function Home() {
     : 0;
   const derivedPlanTargets = deriveDailyTargets(planDays, activeUser?.level ?? formLevel);
   const isOnboarding = showProfileSetup || showPlanSetup;
+  const configuredCount = USER_IDS.filter((id) => states[id].user).length;
+  const sharedCompletedDays = USER_IDS.reduce(
+    (sum, id) => sum + states[id].progress.totalDays,
+    0
+  );
+  const sharedTodayCount = USER_IDS.reduce(
+    (sum, id) => sum + getCompletedCount(states[id].quests),
+    0
+  );
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-stone-200 bg-[radial-gradient(circle_at_top_left,_rgba(217,119,6,0.18),_transparent_35%),linear-gradient(135deg,_#111827,_#1f2937_55%,_#312e81)] p-6 text-white shadow-xl shadow-stone-300/30">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/60">
-              {isOnboarding ? "Setup" : "Daily Rivalry"}
-            </p>
-            <h1 className="text-3xl font-black tracking-tight">
-              {isOnboarding ? "JPTL 시작 설정" : "오늘의 학습 레이스"}
-            </h1>
-            <p className="text-sm text-white/70">
-              {isOnboarding
-                ? "먼저 사용자별 프로필과 학습 계획을 정한 뒤 하루 루틴으로 들어갑니다."
-                : "프로필 설정은 한 번만, 이후엔 계획대로 하루 루틴만 진행합니다."}
-            </p>
-          </div>
-          {!isOnboarding && activeUser && (
-            <button
-              onClick={() => setShowSettings(true)}
-              className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
-            >
-              설정
-            </button>
-          )}
-        </div>
+      <section className="relative overflow-hidden rounded-[2.2rem] border border-stone-200/70 bg-[linear-gradient(135deg,rgba(38,52,44,0.96),rgba(72,93,78,0.94)_42%,rgba(201,111,67,0.92)_100%)] p-6 text-white shadow-[0_30px_80px_rgba(83,63,38,0.16)] sm:p-8">
+        <div className="absolute -left-16 top-6 h-40 w-40 rounded-full bg-[rgba(255,245,220,0.14)] blur-3xl" />
+        <div className="absolute right-0 top-0 h-56 w-56 rounded-full bg-[rgba(255,210,133,0.22)] blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 h-40 w-48 rounded-full bg-[rgba(152,204,180,0.18)] blur-3xl" />
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          {USER_IDS.map((id) => {
-            const isActive = id === userId;
-
-            return (
+        <div className="relative">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="max-w-2xl space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/55">
+                {isOnboarding ? "Shared Setup" : "Study Companions"}
+              </p>
+              <h1 className="max-w-xl font-[family:var(--font-noto-serif-kr)] text-4xl font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">
+                {getTogetherHeadline(isOnboarding)}
+              </h1>
+              <p className="max-w-xl text-sm leading-7 text-white/76 sm:text-base">
+                {getTogetherCaption(isOnboarding)}
+              </p>
+            </div>
+            {!isOnboarding && activeUser && (
               <button
-                key={id}
-                onClick={() => void switchUser(id)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  isActive
-                    ? "bg-white text-stone-900 shadow-lg"
-                    : "bg-white/10 text-white/80 hover:bg-white/20"
-                }`}
+                onClick={() => setShowSettings(true)}
+                className="rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/18"
               >
-                {USER_LABELS[id]}
+                설정
               </button>
-            );
-          })}
-        </div>
+            )}
+          </div>
 
-        {!isOnboarding && (
-          <div className="mt-6 grid gap-3 md:grid-cols-2">
-            {USER_IDS.map((id) => {
-              const state = states[id];
-              const completed = getCompletedCount(state.quests);
-              const isLeader = leader === id;
+          <div className="mt-6 grid gap-3 sm:grid-cols-[1.4fr_0.9fr]">
+            <div className="rounded-[1.8rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-5 backdrop-blur">
+              <div className="flex flex-wrap items-center gap-2">
+                {USER_IDS.map((id) => {
+                  const isActive = id === userId;
 
-              return (
-                <div
-                  key={id}
-                  className={`rounded-3xl border px-5 py-4 ${
-                    id === userId
-                      ? "border-white/40 bg-white/14"
-                      : "border-white/10 bg-black/10"
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-white/50">
-                        지정 사용자
-                      </p>
-                      <p className="text-xl font-bold">{getDisplayName(id)}</p>
-                    </div>
-                    <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
-                      {state.user ? `${completed}/4 완료` : "미설정"}
-                    </span>
-                  </div>
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => void switchUser(id)}
+                      className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                        isActive
+                          ? "bg-white text-stone-900 shadow-lg"
+                          : "border border-white/15 bg-white/8 text-white/80 hover:bg-white/14"
+                      }`}
+                    >
+                      {USER_LABELS[id]}
+                    </button>
+                  );
+                })}
+              </div>
 
-                  <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                    <div className="rounded-2xl bg-white/10 px-4 py-3">
-                      <div className="text-xs text-white/55">완주 일수</div>
-                      <div className="mt-1 text-2xl font-black">{state.progress.totalDays}</div>
-                    </div>
-                    <div className="rounded-2xl bg-white/10 px-4 py-3">
-                      <div className="text-xs text-white/55">오늘 진행</div>
-                      <div className="mt-1 text-2xl font-black">{completed}</div>
-                    </div>
-                  </div>
-
-                  <p className="mt-4 text-sm text-white/70">
-                    {isLeader
-                      ? "현재 선두입니다."
-                      : leader === null
-                      ? "현재 동률입니다."
-                      : "조금만 더 하면 따라잡을 수 있습니다."}
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-[1.4rem] border border-white/10 bg-black/10 px-4 py-4">
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/50">
+                    함께 설정
+                  </p>
+                  <p className="mt-2 text-3xl font-black text-white">
+                    {configuredCount}/2
                   </p>
                 </div>
-              );
-            })}
+                <div className="rounded-[1.4rem] border border-white/10 bg-black/10 px-4 py-4">
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/50">
+                    누적 Day
+                  </p>
+                  <p className="mt-2 text-3xl font-black text-white">
+                    {sharedCompletedDays}
+                  </p>
+                </div>
+                <div className="rounded-[1.4rem] border border-white/10 bg-black/10 px-4 py-4">
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/50">
+                    오늘의 걸음
+                  </p>
+                  <p className="mt-2 text-3xl font-black text-white">
+                    {sharedTodayCount}
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-6 max-w-2xl text-sm leading-7 text-white/72">
+                {getSharedMood(states)}
+              </p>
+            </div>
+
+            <div className="rounded-[1.8rem] border border-white/12 bg-[rgba(249,244,233,0.9)] p-5 text-stone-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-stone-400">
+                오늘의 안내
+              </p>
+              <h2 className="mt-3 font-[family:var(--font-noto-serif-kr)] text-2xl font-semibold leading-snug text-stone-900">
+                {isOnboarding
+                  ? "두 사람의 시작 리듬을 먼저 맞춥니다."
+                  : `${getDisplayName(userId)}의 오늘 루틴은 Day ${currentDay}입니다.`}
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-stone-600">
+                {isOnboarding
+                  ? "프로필과 기간만 정하면 하루 목표가 자동으로 부드럽게 맞춰집니다."
+                  : `오늘도 ${getDisplayName(userId)}가 부담 없이 이어갈 수 있도록, 가장 먼저 해야 할 단계만 앞에 놓아 두었습니다.`}
+              </p>
+            </div>
           </div>
-        )}
+
+          {!isOnboarding && (
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
+              {USER_IDS.map((id) => {
+                const state = states[id];
+                const completed = getCompletedCount(state.quests);
+                const plan = state.plan;
+                const ratio = plan
+                  ? Math.min(100, Math.round((state.progress.totalDays / plan.totalDays) * 100))
+                  : 0;
+
+                return (
+                  <div
+                    key={id}
+                    className={`rounded-[1.8rem] border p-5 transition ${
+                      id === userId
+                        ? "border-white/30 bg-[rgba(255,255,255,0.16)]"
+                        : "border-white/10 bg-[rgba(0,0,0,0.12)]"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+                          {id === userId ? "지금 보고 있는 사람" : "함께 걷는 사람"}
+                        </p>
+                        <p className="mt-1 text-2xl font-black text-white">
+                          {getDisplayName(id)}
+                        </p>
+                      </div>
+                      <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-semibold text-white/80">
+                        {state.user ? `${completed}/4 진행` : "대기 중"}
+                      </span>
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <div className="rounded-[1.4rem] bg-white/10 px-4 py-4">
+                        <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                          완주 일수
+                        </div>
+                        <div className="mt-2 text-3xl font-black text-white">
+                          {state.progress.totalDays}
+                        </div>
+                      </div>
+                      <div className="rounded-[1.4rem] bg-white/10 px-4 py-4">
+                        <div className="text-xs uppercase tracking-[0.18em] text-white/45">
+                          오늘 루틴
+                        </div>
+                        <div className="mt-2 text-3xl font-black text-white">
+                          {completed}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-5">
+                      <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-white/45">
+                        <span>Journey line</span>
+                        <span>{ratio}%</span>
+                      </div>
+                      <div className="h-2 overflow-hidden rounded-full bg-white/12">
+                        <div
+                          className="h-full rounded-full bg-[linear-gradient(90deg,#fbf6dd,#f6ad55,#9dd5b0)] transition-all duration-500"
+                          style={{ width: `${ratio}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <p className="mt-4 text-sm leading-6 text-white/72">
+                      {getJourneyNote(id, states)}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </section>
 
       {showSettings && activeUser && (
-        <section className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
+        <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,250,242,0.92)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)] backdrop-blur">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-black text-stone-900">설정</h2>
+              <h2 className="font-[family:var(--font-noto-serif-kr)] text-2xl font-semibold text-stone-900">
+                설정
+              </h2>
               <p className="text-sm text-stone-500">
                 {getDisplayName(userId)} 학습 루틴을 관리합니다.
               </p>
@@ -420,14 +553,14 @@ export default function Home() {
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             <button
               onClick={openProfileEditor}
-              className="rounded-2xl border border-stone-200 px-4 py-4 text-left transition hover:border-stone-300 hover:bg-stone-50"
+              className="rounded-[1.6rem] border border-stone-200 bg-white/80 px-4 py-4 text-left transition hover:-translate-y-0.5 hover:border-stone-300 hover:bg-white"
             >
               <div className="text-sm font-bold text-stone-900">프로필 수정</div>
               <div className="mt-1 text-sm text-stone-500">목표 레벨을 다시 고릅니다.</div>
             </button>
             <button
               onClick={openPlanEditor}
-              className="rounded-2xl border border-stone-200 px-4 py-4 text-left transition hover:border-stone-300 hover:bg-stone-50"
+              className="rounded-[1.6rem] border border-stone-200 bg-white/80 px-4 py-4 text-left transition hover:-translate-y-0.5 hover:border-stone-300 hover:bg-white"
             >
               <div className="text-sm font-bold text-stone-900">계획 다시 세우기</div>
               <div className="mt-1 text-sm text-stone-500">총 학습 일수와 하루 루틴을 다시 정합니다.</div>
@@ -435,7 +568,7 @@ export default function Home() {
             <button
               onClick={() => void resetCurrentUser()}
               disabled={resetting}
-              className="rounded-2xl border border-red-200 px-4 py-4 text-left text-red-700 transition hover:bg-red-50 disabled:opacity-50"
+              className="rounded-[1.6rem] border border-red-200 bg-red-50/70 px-4 py-4 text-left text-red-700 transition hover:bg-red-50 disabled:opacity-50"
             >
               <div className="text-sm font-bold">초기화</div>
               <div className="mt-1 text-sm text-red-500">
@@ -447,19 +580,21 @@ export default function Home() {
       )}
 
       {showProfileSetup && (
-        <section className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
+        <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
               Step 1
             </p>
-            <h2 className="text-2xl font-black text-stone-900">{USER_LABELS[userId]} 프로필 설정</h2>
+            <h2 className="font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
+              {USER_LABELS[userId]} 프로필 설정
+            </h2>
             <p className="text-sm text-stone-500">
               이 단계는 처음 한 번만 필요합니다. 사용자는 이미 {USER_LABELS[userId]}로 고정되어 있고, 목표 레벨만 정하면 학습 일수에 맞춰 하루 루틴은 다음 단계에서 자동으로 잡힙니다.
             </p>
           </div>
 
           <div className="mt-6 space-y-4">
-            <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4">
+            <div className="rounded-[1.7rem] border border-stone-200 bg-[linear-gradient(135deg,#fffdf7,#f3ece1)] px-4 py-4">
               <div className="text-sm font-semibold text-stone-700">지정된 사용자</div>
               <div className="mt-2 text-xl font-black text-stone-900">{USER_LABELS[userId]}</div>
             </div>
@@ -471,9 +606,9 @@ export default function Home() {
                   <button
                     key={level}
                     onClick={() => setFormLevel(level)}
-                    className={`rounded-2xl px-4 py-3 text-sm font-bold transition ${
+                    className={`rounded-[1.5rem] px-4 py-3 text-sm font-bold transition ${
                       formLevel === level
-                        ? "bg-stone-900 text-white"
+                        ? "bg-[linear-gradient(135deg,#31473a,#c96f43)] text-white shadow-[0_10px_30px_rgba(70,54,36,0.16)]"
                         : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                     }`}
                   >
@@ -483,21 +618,21 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4 text-sm text-stone-600">
+            <div className="rounded-[1.6rem] border border-stone-200 bg-stone-50/80 px-4 py-4 text-sm text-stone-600">
               저장 후 다음 단계에서 학습 일수를 조절하면 단어 암기, 어휘, 문법, 독해 목표가 자동으로 계산됩니다.
             </div>
 
             <div className="flex gap-3">
               <button
                 onClick={() => void saveProfile()}
-                className="flex-1 rounded-2xl bg-stone-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-stone-800"
+                className="flex-1 rounded-[1.6rem] bg-[linear-gradient(135deg,#31473a,#c96f43)] px-4 py-3 text-sm font-bold text-white shadow-[0_14px_35px_rgba(70,54,36,0.14)] transition hover:brightness-105"
               >
                 저장하고 계속하기
               </button>
               {activeUser && (
                 <button
                   onClick={() => setShowProfileSetup(false)}
-                  className="rounded-2xl bg-stone-100 px-4 py-3 text-sm font-bold text-stone-600"
+                  className="rounded-[1.6rem] bg-stone-100 px-4 py-3 text-sm font-bold text-stone-600"
                 >
                   취소
                 </button>
@@ -508,19 +643,21 @@ export default function Home() {
       )}
 
       {!showProfileSetup && showPlanSetup && activeUser && (
-        <section className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
+        <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
               Step 2
             </p>
-            <h2 className="text-2xl font-black text-stone-900">{USER_LABELS[userId]} 학습 계획</h2>
+            <h2 className="font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
+              {USER_LABELS[userId]} 학습 계획
+            </h2>
             <p className="text-sm text-stone-500">
               학습 일수만 정하면 하루 목표는 자동으로 맞춰집니다. 슬라이더를 움직이면 루틴 강도가 바로 바뀝니다.
             </p>
           </div>
 
           <div className="mt-6 grid gap-3 md:grid-cols-2">
-            <label className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4 md:col-span-2">
+            <label className="rounded-[1.7rem] border border-stone-200 bg-[linear-gradient(135deg,#fffef9,#f3ece1)] px-4 py-4 md:col-span-2">
               <div className="flex items-center justify-between text-sm font-semibold text-stone-700">
                 <span>완주 기간</span>
                 <span>{planDays}일</span>
@@ -547,7 +684,7 @@ export default function Home() {
               return (
                 <div
                   key={key}
-                  className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4"
+                  className="rounded-[1.6rem] border border-stone-200 bg-stone-50/85 px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
                 >
                   <div className="flex items-center justify-between text-sm font-semibold text-stone-700">
                     <span>{range.label}</span>
@@ -571,9 +708,9 @@ export default function Home() {
             })}
           </div>
 
-          <div className="mt-4 rounded-2xl border border-violet-200 bg-violet-50 px-4 py-4 text-sm text-violet-900">
+          <div className="mt-4 rounded-[1.7rem] border border-emerald-200 bg-[linear-gradient(135deg,rgba(240,251,244,0.96),rgba(255,247,232,0.92))] px-4 py-4 text-sm text-stone-800">
             <div className="font-bold">자동 추천 루틴</div>
-            <div className="mt-1 text-violet-700">
+            <div className="mt-1 text-stone-600">
               {planDays}일 완주 기준으로 하루에 단어 암기 {derivedPlanTargets.dailyFlashcard}장,
               어휘 {derivedPlanTargets.dailyVocabulary}개, 문법 {derivedPlanTargets.dailyGrammar}개,
               독해 {derivedPlanTargets.dailyReading}개를 진행합니다.
@@ -583,14 +720,14 @@ export default function Home() {
           <div className="mt-5 flex gap-3">
             <button
               onClick={() => void savePlan()}
-              className="flex-1 rounded-2xl bg-stone-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-stone-800"
+              className="flex-1 rounded-[1.6rem] bg-[linear-gradient(135deg,#31473a,#c96f43)] px-4 py-3 text-sm font-bold text-white shadow-[0_14px_35px_rgba(70,54,36,0.14)] transition hover:brightness-105"
             >
               계획 저장하고 시작하기
             </button>
             {activePlan && (
               <button
                 onClick={() => setShowPlanSetup(false)}
-                className="rounded-2xl bg-stone-100 px-4 py-3 text-sm font-bold text-stone-600"
+                className="rounded-[1.6rem] bg-stone-100 px-4 py-3 text-sm font-bold text-stone-600"
               >
                 취소
               </button>
@@ -601,13 +738,13 @@ export default function Home() {
 
       {!showProfileSetup && !showPlanSetup && activeUser && activePlan && (
         <section className="space-y-6">
-          <div className="rounded-[2rem] border border-stone-200 bg-white p-6 shadow-sm">
+          <div className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
                   Step 3
                 </p>
-                <h2 className="mt-1 text-2xl font-black text-stone-900">
+                <h2 className="mt-1 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
                   Day {currentDay} 루틴
                 </h2>
                 <p className="mt-1 text-sm text-stone-500">
@@ -616,9 +753,9 @@ export default function Home() {
                   순서로 진행합니다.
                 </p>
               </div>
-              <div className="rounded-2xl bg-stone-100 px-4 py-3 text-right">
+              <div className="rounded-[1.6rem] bg-[linear-gradient(135deg,#f4efe4,#ebe2d4)] px-4 py-3 text-right">
                 <div className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
-                  Challenge
+                  Gentle Pace
                 </div>
                 <div className="mt-1 text-lg font-black text-stone-900">
                   {activeProgress.totalDays}/{activePlan.totalDays}일
@@ -649,12 +786,12 @@ export default function Home() {
               return (
                 <div
                   key={quest.key}
-                  className={`rounded-[1.75rem] border p-5 shadow-sm transition ${
+                  className={`rounded-[1.8rem] border p-5 shadow-[0_12px_34px_rgba(90,68,40,0.06)] transition ${
                     done
-                      ? "border-emerald-200 bg-emerald-50"
+                      ? "border-emerald-200 bg-[linear-gradient(135deg,#f2fbf4,#ecf7ef)]"
                       : isCurrent
                       ? "border-stone-300 bg-white"
-                      : "border-stone-200 bg-stone-50"
+                      : "border-stone-200 bg-[rgba(249,245,238,0.85)]"
                   }`}
                 >
                   <div className="flex flex-wrap items-center justify-between gap-4">
@@ -674,12 +811,12 @@ export default function Home() {
 
                     {done ? (
                       <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700">
-                        완료
+                        오늘 완료
                       </span>
                     ) : isCurrent ? (
                       <Link
                         href={quest.href}
-                        className="rounded-full bg-stone-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-stone-800"
+                        className="rounded-full bg-[linear-gradient(135deg,#31473a,#c96f43)] px-4 py-2 text-sm font-bold text-white transition hover:brightness-105"
                       >
                         시작
                       </Link>
@@ -702,19 +839,23 @@ export default function Home() {
           </div>
 
           {allDone ? (
-            <div className="rounded-[2rem] border border-emerald-200 bg-emerald-50 px-6 py-8 text-center">
+            <div className="rounded-[2rem] border border-emerald-200 bg-[linear-gradient(135deg,#effaf1,#fff6ea)] px-6 py-8 text-center shadow-[0_18px_44px_rgba(102,120,84,0.08)]">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-500">
-                Perfect Day
+                Quiet Finish
               </p>
-              <h3 className="mt-2 text-3xl font-black text-emerald-700">오늘 루틴 완료</h3>
-              <p className="mt-2 text-sm text-emerald-600">내일 Day {Math.min(activePlan.totalDays, currentDay + 1)}로 이어집니다.</p>
+              <h3 className="mt-2 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-emerald-700">
+                오늘 루틴 완료
+              </h3>
+              <p className="mt-2 text-sm text-emerald-700">
+                오늘의 한 장면이 저장되었습니다. 내일 Day {Math.min(activePlan.totalDays, currentDay + 1)}로 이어집니다.
+              </p>
             </div>
           ) : currentQuestIdx >= 0 ? (
             <button
               onClick={() => void markComplete(questDefs[currentQuestIdx].key)}
-              className="w-full rounded-[1.75rem] bg-stone-900 px-4 py-4 text-sm font-black text-white transition hover:bg-stone-800"
+              className="w-full rounded-[1.8rem] bg-[linear-gradient(135deg,#31473a,#c96f43)] px-4 py-4 text-sm font-black text-white shadow-[0_16px_34px_rgba(70,54,36,0.14)] transition hover:brightness-105"
             >
-              현재 단계 완료 체크
+              지금 단계 마무리하기
             </button>
           ) : null}
         </section>
