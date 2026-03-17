@@ -206,6 +206,78 @@ function CompanionJourneyScene({
   );
 }
 
+function CompanionStatusCard({
+  id,
+  active,
+  configured,
+  completed,
+  totalDays,
+  ratio,
+  note,
+  className,
+  compact = false,
+}: {
+  id: UserId;
+  active: boolean;
+  configured: boolean;
+  completed: number;
+  totalDays: number;
+  ratio: number;
+  note: string;
+  className: string;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className={`${className} ${
+        active
+          ? "border-white/28 bg-[rgba(255,255,255,0.18)]"
+          : "border-white/10 bg-[rgba(0,0,0,0.14)]"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-white/50">
+            {active ? "지금 보고 있는 사람" : "함께 걷는 사람"}
+          </p>
+          <p className={`mt-1 font-black text-white ${compact ? "text-[1.3rem]" : "text-2xl"}`}>
+            {getDisplayName(id)}
+          </p>
+        </div>
+        <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-semibold text-white/80">
+          {configured ? `${completed}/4 진행` : "대기 중"}
+        </span>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <span className="rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/82">
+          오늘 {completed}/4
+        </span>
+        <span className="rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/82">
+          누적 {totalDays}일
+        </span>
+      </div>
+
+      <div className="mt-4">
+        <div className="mb-2 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-white/45">
+          <span>Journey line</span>
+          <span>{ratio}%</span>
+        </div>
+        <div className="h-2 overflow-hidden rounded-full bg-white/12">
+          <div
+            className="h-full rounded-full bg-[linear-gradient(90deg,#fbf6dd,#f6ad55,#9dd5b0)] transition-all duration-500"
+            style={{ width: `${ratio}%` }}
+          />
+        </div>
+      </div>
+
+      <p className={`text-white/72 ${compact ? "mt-3 text-[13px] leading-6" : "mt-4 text-sm leading-6"}`}>
+        {note}
+      </p>
+    </div>
+  );
+}
+
 function getDisplayName(id: UserId): string {
   return USER_LABELS[id];
 }
@@ -542,64 +614,18 @@ export default function Home() {
                   </p>
                   <div className="mobile-rail no-scrollbar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1">
                     {companionSnapshots.map(({ id, state, completed, ratio, note }) => (
-                      <div
+                      <CompanionStatusCard
                         key={id}
-                        className={`min-w-[calc(100vw-3rem)] max-w-[22rem] snap-start rounded-[1.55rem] border p-4 backdrop-blur ${
-                          id === userId
-                            ? "border-white/28 bg-[rgba(255,255,255,0.18)]"
-                            : "border-white/10 bg-[rgba(0,0,0,0.14)]"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="text-[11px] uppercase tracking-[0.2em] text-white/50">
-                              {id === userId ? "지금 보고 있는 사람" : "함께 걷는 사람"}
-                            </p>
-                            <p className="mt-1 text-[1.35rem] font-black text-white">
-                              {getDisplayName(id)}
-                            </p>
-                          </div>
-                          <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-semibold text-white/80">
-                            {state.user ? `${completed}/4 진행` : "대기 중"}
-                          </span>
-                        </div>
-
-                        <div className="mt-4 grid grid-cols-2 gap-3">
-                          <div className="rounded-[1.2rem] bg-white/10 px-3.5 py-3">
-                            <div className="text-xs uppercase tracking-[0.18em] text-white/45">
-                              완주 일수
-                            </div>
-                            <div className="mt-1.5 text-[1.6rem] font-black text-white">
-                              {state.progress.totalDays}
-                            </div>
-                          </div>
-                          <div className="rounded-[1.2rem] bg-white/10 px-3.5 py-3">
-                            <div className="text-xs uppercase tracking-[0.18em] text-white/45">
-                              오늘 루틴
-                            </div>
-                            <div className="mt-1.5 text-[1.6rem] font-black text-white">
-                              {completed}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mt-4">
-                          <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-white/45">
-                            <span>Journey line</span>
-                            <span>{ratio}%</span>
-                          </div>
-                          <div className="h-2 overflow-hidden rounded-full bg-white/12">
-                            <div
-                              className="h-full rounded-full bg-[linear-gradient(90deg,#fbf6dd,#f6ad55,#9dd5b0)] transition-all duration-500"
-                              style={{ width: `${ratio}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        <p className="mt-3.5 text-[13px] leading-6 text-white/72">
-                          {note}
-                        </p>
-                      </div>
+                        id={id}
+                        active={id === userId}
+                        configured={Boolean(state.user)}
+                        completed={completed}
+                        totalDays={state.progress.totalDays}
+                        ratio={ratio}
+                        note={note}
+                        compact
+                        className="min-w-[calc(100vw-3rem)] max-w-[22rem] snap-start rounded-[1.55rem] border p-4 backdrop-blur"
+                      />
                     ))}
                   </div>
                 </div>
@@ -656,64 +682,17 @@ export default function Home() {
 
               <div className="mt-6 hidden gap-3 md:grid md:grid-cols-2">
                 {companionSnapshots.map(({ id, state, completed, ratio, note }) => (
-                  <div
+                  <CompanionStatusCard
                     key={id}
-                    className={`rounded-[1.8rem] border p-5 transition ${
-                      id === userId
-                        ? "border-white/30 bg-[rgba(255,255,255,0.16)]"
-                        : "border-white/10 bg-[rgba(0,0,0,0.12)]"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-white/50">
-                          {id === userId ? "지금 보고 있는 사람" : "함께 걷는 사람"}
-                        </p>
-                        <p className="mt-1 text-2xl font-black text-white">
-                          {getDisplayName(id)}
-                        </p>
-                      </div>
-                      <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-semibold text-white/80">
-                        {state.user ? `${completed}/4 진행` : "대기 중"}
-                      </span>
-                    </div>
-
-                    <div className="mt-5 grid grid-cols-2 gap-3">
-                      <div className="rounded-[1.4rem] bg-white/10 px-4 py-4">
-                        <div className="text-xs uppercase tracking-[0.18em] text-white/45">
-                          완주 일수
-                        </div>
-                        <div className="mt-2 text-3xl font-black text-white">
-                          {state.progress.totalDays}
-                        </div>
-                      </div>
-                      <div className="rounded-[1.4rem] bg-white/10 px-4 py-4">
-                        <div className="text-xs uppercase tracking-[0.18em] text-white/45">
-                          오늘 루틴
-                        </div>
-                        <div className="mt-2 text-3xl font-black text-white">
-                          {completed}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-5">
-                      <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-white/45">
-                        <span>Journey line</span>
-                        <span>{ratio}%</span>
-                      </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-white/12">
-                        <div
-                          className="h-full rounded-full bg-[linear-gradient(90deg,#fbf6dd,#f6ad55,#9dd5b0)] transition-all duration-500"
-                          style={{ width: `${ratio}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    <p className="mt-4 text-sm leading-6 text-white/72">
-                      {note}
-                    </p>
-                  </div>
+                    id={id}
+                    active={id === userId}
+                    configured={Boolean(state.user)}
+                    completed={completed}
+                    totalDays={state.progress.totalDays}
+                    ratio={ratio}
+                    note={note}
+                    className="rounded-[1.8rem] border p-5 transition"
+                  />
                 ))}
               </div>
             </>
