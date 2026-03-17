@@ -10,6 +10,8 @@ import type {
 } from "@/lib/user-store";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const VALID_USER_IDS = new Set<UserId>(["me", "wife"]);
 const VALID_LEVELS = new Set(["N3", "N4", "N5"]);
@@ -92,7 +94,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const userId = parseUserId(request.nextUrl.searchParams.get("user_id"));
     const state = await getRemoteState(userId);
-    return NextResponse.json(state satisfies HomeState);
+    return NextResponse.json(state satisfies HomeState, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      },
+    });
   } catch (error) {
     return jsonError(error);
   }

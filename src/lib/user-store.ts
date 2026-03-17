@@ -450,7 +450,7 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 async function fetchRemoteState(userId: UserId): Promise<HomeState> {
-  return requestJson<HomeState>(`/api/home/state?user_id=${userId}`);
+  return requestJson<HomeState>(`/api/home/state?user_id=${userId}&ts=${Date.now()}`);
 }
 
 export function getCurrentUserId(): UserId {
