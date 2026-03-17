@@ -146,6 +146,68 @@ function getSharedMood(states: Record<UserId, HomeState>): string {
   return "서로의 진도가 벽이 아니라 풍경처럼 보이도록, 한 화면에 조용히 나란히 두었습니다.";
 }
 
+function CompanionJourneyScene({
+  isOnboarding,
+  currentDay,
+}: {
+  isOnboarding: boolean;
+  currentDay: number;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-[1.8rem] border border-white/12 bg-[rgba(249,244,233,0.92)] p-5 text-stone-900 shadow-[0_18px_45px_rgba(53,39,24,0.12),inset_0_1px_0_rgba(255,255,255,0.42)]">
+      <div className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-[rgba(255,207,128,0.34)] blur-2xl" />
+      <div className="pointer-events-none absolute left-0 top-8 h-24 w-24 rounded-full bg-[rgba(152,204,180,0.18)] blur-2xl" />
+
+      <div className="companion-scene">
+        <div className="companion-skyline" />
+        <div className="companion-hill companion-hill-back" />
+        <div className="companion-hill companion-hill-front" />
+        <div className="companion-path-ribbon" />
+        <div className="companion-goal">
+          <div className="companion-goal-core" />
+          <div className="companion-goal-ring" />
+        </div>
+        <div className="companion-pair">
+          <div className="companion-figure companion-figure-left">
+            <span className="companion-head" />
+            <span className="companion-body" />
+            <span className="companion-arm companion-arm-forward" />
+            <span className="companion-leg companion-leg-left" />
+            <span className="companion-leg companion-leg-right" />
+          </div>
+          <div className="companion-hand-link" />
+          <div className="companion-figure companion-figure-right">
+            <span className="companion-head" />
+            <span className="companion-body" />
+            <span className="companion-arm companion-arm-forward" />
+            <span className="companion-leg companion-leg-left" />
+            <span className="companion-leg companion-leg-right" />
+          </div>
+        </div>
+        <div className="companion-step-chip">
+          {isOnboarding ? "출발점 정렬" : `Day ${currentDay}로 향하는 중`}
+        </div>
+      </div>
+
+      <div className="relative mt-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-stone-400">
+          Shared Motion
+        </p>
+        <h2 className="mt-3 font-[family:var(--font-noto-serif-kr)] text-2xl font-semibold leading-snug text-stone-900">
+          {isOnboarding
+            ? "손을 맞잡기 전, 두 사람의 시작점을 먼저 맞춥니다."
+            : "나와 와이프가 같은 목표 쪽으로 천천히 걸어가는 장면입니다."}
+        </h2>
+        <p className="mt-3 text-sm leading-7 text-stone-600">
+          {isOnboarding
+            ? "프로필과 계획이 정해지면 이 장면이 하루 루틴 쪽으로 자연스럽게 이어집니다."
+            : "빠르게 몰아붙이지 않고, 오늘 해야 할 만큼만 함께 앞으로 간다는 감각을 남겨 두었습니다."}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function getDisplayName(id: UserId): string {
   return USER_LABELS[id];
 }
@@ -438,21 +500,10 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="rounded-[1.8rem] border border-white/12 bg-[rgba(249,244,233,0.9)] p-5 text-stone-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-stone-400">
-                오늘의 안내
-              </p>
-              <h2 className="mt-3 font-[family:var(--font-noto-serif-kr)] text-2xl font-semibold leading-snug text-stone-900">
-                {isOnboarding
-                  ? "두 사람의 시작 리듬을 먼저 맞춥니다."
-                  : `${getDisplayName(userId)}의 오늘 루틴은 Day ${currentDay}입니다.`}
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-stone-600">
-                {isOnboarding
-                  ? "프로필과 기간만 정하면 하루 목표가 자동으로 부드럽게 맞춰집니다."
-                  : `오늘도 ${getDisplayName(userId)}가 부담 없이 이어갈 수 있도록, 가장 먼저 해야 할 단계만 앞에 놓아 두었습니다.`}
-              </p>
-            </div>
+            <CompanionJourneyScene
+              isOnboarding={isOnboarding}
+              currentDay={currentDay}
+            />
           </div>
 
           {!isOnboarding && (
