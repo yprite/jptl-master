@@ -95,14 +95,10 @@ function progressPath(userId: UserId): string {
   return `${progressPrefix(userId)}/${timestampedName("progress")}`;
 }
 
-async function resolveLatestPath(prefix: string): Promise<string | null> {
+async function resolveLatestPath(folder: string): Promise<string | null> {
   await ensureBucket();
 
-  const segments = prefix.split("/");
-  const search = segments.pop();
-  const folder = segments.join("/");
   const { data, error } = await getAdminClient().storage.from(BUCKET_NAME).list(folder, {
-    search,
     limit: LIST_LIMIT,
     sortBy: { column: "name", order: "desc" },
   });
