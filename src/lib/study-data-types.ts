@@ -6,6 +6,9 @@ export interface StudyFlashcard {
   meaning: string;
   level: StudyLevel;
   example: string | null;
+  example_jp: string | null;
+  example_reading: string | null;
+  example_kr: string | null;
 }
 
 export type GeneratedVocabularyQuestionType = "meaning" | "reading";

@@ -100,7 +100,7 @@ export default function VocabularyPage() {
           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
             selectedType === "all"
               ? "bg-indigo-600 text-white"
-              : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+              : "bg-gray-100 hover:bg-gray-200"
           }`}
         >
           전체
@@ -112,7 +112,7 @@ export default function VocabularyPage() {
             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
               selectedType === t
                 ? "bg-indigo-600 text-white"
-                : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+                : "bg-gray-100 hover:bg-gray-200"
             }`}
           >
             {vocabQuestionTypeLabels[t]}
@@ -142,11 +142,11 @@ export default function VocabularyPage() {
           </div>
 
           {/* Question */}
-          <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+          <div className="p-6 rounded-xl bg-white border border-gray-200">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500">
               {current.prompt}
             </p>
-            <p className="text-lg leading-relaxed whitespace-pre-wrap">
+            <p className="text-lg leading-relaxed whitespace-pre-wrap text-gray-900">
               {current.question}
             </p>
           </div>
@@ -155,21 +155,21 @@ export default function VocabularyPage() {
           <div className="space-y-2">
             {current.choices.map((choice, i) => {
               let style =
-                "border border-gray-200 dark:border-gray-800 hover:border-indigo-400 dark:hover:border-indigo-600";
+                "border border-gray-200 hover:border-indigo-400";
 
               if (showResult) {
                 if (choice === current.correct_answer) {
                   style =
-                    "border-2 border-green-500 bg-green-50 dark:bg-green-900/20";
+                    "border-2 border-green-500 bg-green-50";
                 } else if (
                   choice === selectedAnswer &&
                   choice !== current.correct_answer
                 ) {
                   style =
-                    "border-2 border-red-500 bg-red-50 dark:bg-red-900/20";
+                    "border-2 border-red-500 bg-red-50";
                 } else {
                   style =
-                    "border border-gray-200 dark:border-gray-800 opacity-50";
+                    "border border-gray-200 opacity-50";
                 }
               }
 
@@ -195,8 +195,8 @@ export default function VocabularyPage() {
               <div
                 className={`p-4 rounded-xl text-sm ${
                   selectedAnswer === current.correct_answer
-                    ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300"
-                    : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300"
+                    ? "bg-green-50 text-green-800"
+                    : "bg-red-50 text-red-800"
                 }`}
               >
                 <p className="font-semibold mb-1">

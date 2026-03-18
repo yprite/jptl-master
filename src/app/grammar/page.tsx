@@ -6,6 +6,13 @@ import type { GeneratedGrammarQuestion } from "@/lib/study-data-types";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
 
+function parseJapaneseExample(text: string): { japanese: string; yomigana: string } {
+  const clean = text.replace(/\[/g, "").replace(/\]/g, "");
+  const japanese = clean.replace(/\(([^)]+)\)/g, "");
+  const yomigana = clean.replace(/([^\s(,、。！？～〜「」…·]+)\(([^)]+)\)/g, "$2");
+  return { japanese, yomigana };
+}
+
 const EMPTY_QUESTIONS: GeneratedGrammarQuestion[] = [];
 
 export default function GrammarPage() {
@@ -92,46 +99,56 @@ export default function GrammarPage() {
           </div>
 
           {/* Question */}
-          <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+          <div className="p-6 rounded-xl bg-white border border-gray-200">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
               {current.badge}
             </p>
-            <p className="text-lg leading-relaxed whitespace-pre-wrap">
+            <p className="text-lg leading-relaxed whitespace-pre-wrap text-gray-900">
               {current.question}
             </p>
-            {(current.example_jp || current.example_kr) && (
-              <div className="mt-4 space-y-2 rounded-xl bg-white/70 px-4 py-3 text-sm text-gray-600 dark:bg-gray-950/40 dark:text-gray-300">
-                {current.example_jp && (
-                  <p className="whitespace-pre-wrap">{current.example_jp}</p>
-                )}
-                {current.example_kr && (
-                  <p className="whitespace-pre-wrap text-gray-500 dark:text-gray-400">
-                    {current.example_kr}
-                  </p>
-                )}
-              </div>
-            )}
+            {(current.example_jp || current.example_kr) && (() => {
+              const parsed = current.example_jp ? parseJapaneseExample(current.example_jp) : null;
+              return (
+                <div className="mt-4 space-y-1.5 rounded-xl bg-gray-50 px-4 py-3 text-sm border border-gray-100">
+                  {parsed && (
+                    <>
+                      <p className="whitespace-pre-wrap text-gray-900 font-medium">
+                        {parsed.japanese}
+                      </p>
+                      <p className="whitespace-pre-wrap text-gray-500 text-xs">
+                        {parsed.yomigana}
+                      </p>
+                    </>
+                  )}
+                  {current.example_kr && (
+                    <p className="whitespace-pre-wrap text-blue-700 text-sm">
+                      {current.example_kr}
+                    </p>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Choices */}
           <div className="space-y-2">
             {current.choices.map((choice, i) => {
               let style =
-                "border border-gray-200 dark:border-gray-800 hover:border-amber-400 dark:hover:border-amber-600";
+                "border border-gray-200 hover:border-amber-400";
 
               if (showResult) {
                 if (choice === current.correct_answer) {
                   style =
-                    "border-2 border-green-500 bg-green-50 dark:bg-green-900/20";
+                    "border-2 border-green-500 bg-green-50";
                 } else if (
                   choice === selectedAnswer &&
                   choice !== current.correct_answer
                 ) {
                   style =
-                    "border-2 border-red-500 bg-red-50 dark:bg-red-900/20";
+                    "border-2 border-red-500 bg-red-50";
                 } else {
                   style =
-                    "border border-gray-200 dark:border-gray-800 opacity-50";
+                    "border border-gray-200 opacity-50";
                 }
               }
 
@@ -157,8 +174,8 @@ export default function GrammarPage() {
               <div
                 className={`p-4 rounded-xl text-sm ${
                   selectedAnswer === current.correct_answer
-                    ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300"
-                    : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300"
+                    ? "bg-green-50 text-green-800"
+                    : "bg-red-50 text-red-800"
                 }`}
               >
                 <p className="font-semibold mb-1">

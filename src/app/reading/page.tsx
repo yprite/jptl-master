@@ -111,8 +111,8 @@ export default function ReadingPage() {
         % ({stats.correct}/{stats.total})
       </div>
 
-      <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
-        <p className="text-lg leading-relaxed whitespace-pre-wrap">
+      <div className="p-6 rounded-xl bg-white border border-gray-200">
+        <p className="text-lg leading-relaxed whitespace-pre-wrap text-gray-900">
           {current.passage}
         </p>
       </div>
@@ -122,21 +122,21 @@ export default function ReadingPage() {
       <div className="space-y-2">
         {current.choices.map((choice, i) => {
           let style =
-            "border border-gray-200 dark:border-gray-800 hover:border-green-400 dark:hover:border-green-600";
+            "border border-gray-200 hover:border-green-400";
 
           if (showResult) {
             if (choice === current.correct_answer) {
               style =
-                "border-2 border-green-500 bg-green-50 dark:bg-green-900/20";
+                "border-2 border-green-500 bg-green-50";
             } else if (
               choice === selectedAnswer &&
               choice !== current.correct_answer
             ) {
               style =
-                "border-2 border-red-500 bg-red-50 dark:bg-red-900/20";
+                "border-2 border-red-500 bg-red-50";
             } else {
               style =
-                "border border-gray-200 dark:border-gray-800 opacity-50";
+                "border border-gray-200 opacity-50";
             }
           }
 
@@ -161,8 +161,8 @@ export default function ReadingPage() {
           <div
             className={`p-4 rounded-xl text-sm ${
               selectedAnswer === current.correct_answer
-                ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300"
-                : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300"
+                ? "bg-green-50 text-green-800"
+                : "bg-red-50 text-red-800"
             }`}
           >
             <p className="font-semibold mb-1">

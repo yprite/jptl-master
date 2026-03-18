@@ -412,10 +412,22 @@ export default function FlashcardPage() {
                 <p className="text-2xl text-blue-600 font-semibold mb-4">
                   {current.meaning}
                 </p>
-                {current.example && (
-                  <p className="text-sm text-gray-500 bg-gray-50 rounded-lg px-4 py-2">
-                    {current.example}
-                  </p>
+                {(current.example_jp || current.example) && (
+                  <div className="w-full text-sm bg-gray-50 rounded-lg px-4 py-3 border border-gray-100 space-y-1">
+                    <p className="text-gray-900 font-medium">
+                      {current.example_jp ?? current.example}
+                    </p>
+                    {current.example_reading && (
+                      <p className="text-gray-500 text-xs">
+                        {current.example_reading}
+                      </p>
+                    )}
+                    {current.example_kr && (
+                      <p className="text-blue-700 text-sm">
+                        {current.example_kr}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
