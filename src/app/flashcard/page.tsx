@@ -119,6 +119,8 @@ export default function FlashcardPage() {
     userId,
     userLabel,
     requiresSelection,
+    plan,
+    currentDay,
   } = useActiveStudyProfile();
   const [flipped, setFlipped] = useState(false);
   const [stats, setStats] = useState({ reviewed: 0, correct: 0 });
@@ -193,14 +195,18 @@ export default function FlashcardPage() {
 
   const reviews = srsState.reviews;
   const queue = getReviewQueue(cards, reviews, clock);
-  const current = queue[0];
+  const dailyCardLimit = Math.min(plan?.dailyFlashcard ?? cards.length, cards.length);
+  const sessionRemainingCount = Math.max(dailyCardLimit - stats.reviewed, 0);
+  const sessionQueue = sessionRemainingCount > 0 ? queue.slice(0, sessionRemainingCount) : [];
+  const current = sessionQueue[0];
   const currentReview = current ? reviews[current.cardId] : null;
   const nextScheduledReview = formatNextReviewLabel(
     getEarliestFutureReview(cards, reviews, clock)
   );
-  const dueReviewCount = queue.filter((card) => Boolean(reviews[card.cardId])).length;
-  const newCardCount = queue.filter((card) => !reviews[card.cardId]).length;
+  const dueReviewCount = sessionQueue.filter((card) => Boolean(reviews[card.cardId])).length;
+  const newCardCount = sessionQueue.filter((card) => !reviews[card.cardId]).length;
   const reviewedCardCount = Object.keys(reviews).length;
+  const isSessionComplete = dailyCardLimit > 0 && stats.reviewed >= dailyCardLimit;
 
   useEffect(() => {
     setFlipped(false);
@@ -293,6 +299,16 @@ export default function FlashcardPage() {
             <span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-700">
               설정 레벨 {supportedLevel}
             </span>
+            {plan && (
+              <>
+                <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-700">
+                  Day {currentDay}
+                </span>
+                <span className="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-700">
+                  오늘 분량 {dailyCardLimit}장
+                </span>
+              </>
+            )}
           </div>
         </div>
         {errorMessage && (
@@ -318,6 +334,16 @@ export default function FlashcardPage() {
           <span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-700">
             설정 레벨 {supportedLevel}
           </span>
+          {plan && (
+            <>
+              <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-700">
+                Day {currentDay}
+              </span>
+              <span className="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-700">
+                오늘 분량 {dailyCardLimit}장
+              </span>
+            </>
+          )}
         </div>
       </div>
 
@@ -333,7 +359,7 @@ export default function FlashcardPage() {
             세션
           </p>
           <p className="mt-1 font-semibold text-gray-900">
-            {stats.reviewed}장 / 정답률{" "}
+            {stats.reviewed}/{dailyCardLimit || cards.length}장 / 정답률{" "}
             {stats.reviewed > 0
               ? Math.round((stats.correct / stats.reviewed) * 100)
               : 0}
@@ -365,18 +391,20 @@ export default function FlashcardPage() {
       {!current ? (
         <div className="rounded-3xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center">
           <p className="text-lg font-semibold text-gray-900">
-            지금 복습할 카드가 없습니다.
+            {isSessionComplete ? "오늘 단어 분량을 모두 학습했습니다." : "지금 복습할 카드가 없습니다."}
           </p>
           <p className="mt-3 text-sm text-gray-600">
-            {nextScheduledReview
-              ? `다음 복습은 ${nextScheduledReview} 예정입니다.`
-              : "현재 레벨의 카드 복습이 모두 끝났습니다."}
+            {isSessionComplete
+              ? `Day ${currentDay} 목표 ${dailyCardLimit}장을 마쳤습니다.`
+              : nextScheduledReview
+                ? `다음 복습은 ${nextScheduledReview} 예정입니다.`
+                : "현재 레벨의 카드 복습이 모두 끝났습니다."}
           </p>
         </div>
       ) : (
         <>
           <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
-            <span>남은 카드 {queue.length}장</span>
+            <span>남은 카드 {sessionRemainingCount}장</span>
             <span>•</span>
             <span>{currentReview ? "복습 카드" : "새 카드"}</span>
             {currentReview?.nextReviewAt && (

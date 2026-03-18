@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import {
   getSelectedUserId,
   getHomeState,
+  type StudyPlan,
   type UserId,
 } from "@/lib/user-store";
+import { getPlanDayNumber } from "@/lib/study-plan";
 
 export type StudyLevel = "N5" | "N4" | "N3";
 export type SupportedStudyLevel = StudyLevel;
@@ -18,6 +20,8 @@ const USER_LABELS: Record<UserId, string> = {
 export function useActiveStudyProfile() {
   const [userId, setUserId] = useState<UserId | null>(null);
   const [level, setLevel] = useState<StudyLevel | null>(null);
+  const [plan, setPlan] = useState<StudyPlan | null>(null);
+  const [currentDay, setCurrentDay] = useState(1);
   const [requiresSelection, setRequiresSelection] = useState(false);
 
   useEffect(() => {
@@ -29,6 +33,8 @@ export function useActiveStudyProfile() {
         if (!cancelled) {
           setUserId(null);
           setLevel("N4");
+          setPlan(null);
+          setCurrentDay(1);
           setRequiresSelection(true);
         }
         return;
@@ -43,10 +49,14 @@ export function useActiveStudyProfile() {
         const state = await getHomeState(nextUserId);
         if (!cancelled) {
           setLevel(state.user?.level ?? "N4");
+          setPlan(state.plan);
+          setCurrentDay(getPlanDayNumber(state.plan));
         }
       } catch {
         if (!cancelled) {
           setLevel("N4");
+          setPlan(null);
+          setCurrentDay(1);
         }
       }
     }
@@ -65,5 +75,7 @@ export function useActiveStudyProfile() {
     supportedLevel: (level ?? "N4") as SupportedStudyLevel,
     userId,
     userLabel: userId ? USER_LABELS[userId] : null,
+    plan,
+    currentDay,
   };
 }

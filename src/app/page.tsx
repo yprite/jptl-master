@@ -5,7 +5,6 @@ import {
   clearCurrentUserId,
   type DailyQuests,
   type HomeState,
-  type StudyPlan,
   type StudyPlanDraft,
   type UserId,
   getSelectedUserId,
@@ -15,6 +14,7 @@ import {
   setCurrentUserId,
   upsertUser,
 } from "@/lib/user-store";
+import { getPlanDayNumber } from "@/lib/study-plan";
 
 const USER_IDS: UserId[] = ["me", "wife"];
 const USER_LABELS: Record<UserId, string> = {
@@ -79,16 +79,6 @@ function createEmptyStates(): Record<UserId, HomeState> {
 
 function getCompletedCount(quests: DailyQuests): number {
   return Object.values(quests).filter(Boolean).length;
-}
-
-function getPlanDayNumber(plan: StudyPlan | null): number {
-  if (!plan) return 1;
-
-  const currentDate = new Date();
-  const startDate = new Date(`${plan.startDate}T00:00:00`);
-  const diffMs = currentDate.getTime() - startDate.getTime();
-  const diffDays = Math.max(0, Math.floor(diffMs / 86_400_000));
-  return Math.min(plan.totalDays, diffDays + 1);
 }
 
 function getJourneyNote(id: UserId, states: Record<UserId, HomeState>): string {

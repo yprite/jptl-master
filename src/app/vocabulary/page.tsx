@@ -6,6 +6,7 @@ import {
   type GeneratedVocabularyQuestion,
   type GeneratedVocabularyQuestionType,
 } from "@/lib/study-data-types";
+import { getDailyStudyItems } from "@/lib/study-plan";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
 
@@ -17,8 +18,14 @@ const vocabQuestionTypeLabels: Record<GeneratedVocabularyQuestionType, string> =
 };
 
 export default function VocabularyPage() {
-  const { isLoading: isProfileLoading, supportedLevel, userLabel, requiresSelection } =
-    useActiveStudyProfile();
+  const {
+    isLoading: isProfileLoading,
+    supportedLevel,
+    userLabel,
+    requiresSelection,
+    plan,
+    currentDay,
+  } = useActiveStudyProfile();
   const [selectedType, setSelectedType] = useState<
     GeneratedVocabularyQuestionType | "all"
   >("all");
@@ -33,12 +40,17 @@ export default function VocabularyPage() {
     EMPTY_QUESTIONS
   );
 
-  const filtered = vocabQuestions.filter(
+  const levelQuestions = vocabQuestions.filter((q) => q.level === supportedLevel);
+  const dailyQuestions = plan
+    ? getDailyStudyItems(levelQuestions, currentDay, plan.dailyVocabulary)
+    : levelQuestions;
+  const filtered = dailyQuestions.filter(
     (q) =>
-      q.level === supportedLevel &&
       (selectedType === "all" || q.type === selectedType)
   );
-  const current = filtered[currentIndex];
+  const isSessionComplete = filtered.length > 0 && currentIndex >= filtered.length;
+  const current = isSessionComplete ? null : filtered[currentIndex] ?? null;
+  const progressCount = Math.min(currentIndex + 1, filtered.length);
 
   const handleAnswer = (choice: string) => {
     if (showResult || !current) return;
@@ -55,7 +67,7 @@ export default function VocabularyPage() {
     if (filtered.length === 0) return;
     setSelectedAnswer(null);
     setShowResult(false);
-    setCurrentIndex((prev) => (prev + 1) % filtered.length);
+    setCurrentIndex((prev) => (prev + 1 >= filtered.length ? filtered.length : prev + 1));
   };
 
   const resetWith = (newType?: GeneratedVocabularyQuestionType | "all") => {
@@ -63,6 +75,13 @@ export default function VocabularyPage() {
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setShowResult(false);
+  };
+
+  const restartSession = () => {
+    setCurrentIndex(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setStats({ total: 0, correct: 0 });
   };
 
   if (isProfileLoading || isStudyLoading) {
@@ -84,6 +103,16 @@ export default function VocabularyPage() {
           <span className="rounded-full bg-indigo-100 px-3 py-1 font-medium text-indigo-700">
             설정 레벨 {supportedLevel}
           </span>
+          {plan && (
+            <>
+              <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-700">
+                Day {currentDay}
+              </span>
+              <span className="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-700">
+                오늘 분량 {dailyQuestions.length}개
+              </span>
+            </>
+          )}
         </div>
       </div>
 
@@ -121,16 +150,33 @@ export default function VocabularyPage() {
       </div>
 
       {!current ? (
-        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
-          해당 유형의 어휘 문제가 없습니다.
-        </p>
+        filtered.length === 0 ? (
+          <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+            해당 유형의 어휘 문제가 없습니다.
+          </p>
+        ) : (
+          <div className="space-y-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-6 py-8 text-center">
+            <p className="text-lg font-semibold text-emerald-900">
+              오늘 어휘 분량을 모두 풀었습니다.
+            </p>
+            <p className="text-sm text-emerald-700">
+              Day {currentDay} 목표 {filtered.length}개를 마쳤습니다.
+            </p>
+            <button
+              onClick={restartSession}
+              className="mx-auto inline-flex rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
+            >
+              오늘 분량 다시 풀기
+            </button>
+          </div>
+        )
       ) : (
         <>
           {/* Stats */}
           <div className="flex justify-between text-sm text-gray-500">
             <span>
               {vocabQuestionTypeLabels[current.type]} |{" "}
-              {currentIndex + 1}/{filtered.length}
+              {progressCount}/{filtered.length}
             </span>
             <span>
               정답률:{" "}
