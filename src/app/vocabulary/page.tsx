@@ -7,6 +7,7 @@ import {
   type GeneratedVocabularyQuestionType,
 } from "@/lib/study-data-types";
 import { getDailyStudyItems } from "@/lib/study-plan";
+import { useAutoCompleteQuest } from "@/lib/use-auto-complete-quest";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
 
@@ -21,6 +22,7 @@ export default function VocabularyPage() {
   const {
     isLoading: isProfileLoading,
     supportedLevel,
+    userId,
     userLabel,
     requiresSelection,
     plan,
@@ -49,8 +51,18 @@ export default function VocabularyPage() {
       (selectedType === "all" || q.type === selectedType)
   );
   const isSessionComplete = filtered.length > 0 && currentIndex >= filtered.length;
+  const isDailySessionComplete =
+    selectedType === "all" &&
+    dailyQuestions.length > 0 &&
+    currentIndex >= dailyQuestions.length;
   const current = isSessionComplete ? null : filtered[currentIndex] ?? null;
   const progressCount = Math.min(currentIndex + 1, filtered.length);
+
+  useAutoCompleteQuest({
+    enabled: isDailySessionComplete,
+    quest: "vocabulary",
+    userId,
+  });
 
   const handleAnswer = (choice: string) => {
     if (showResult || !current) return;

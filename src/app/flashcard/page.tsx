@@ -16,6 +16,7 @@ import {
 } from "@/lib/spaced-repetition";
 import UserSelectionNotice from "@/components/user-selection-notice";
 import type { StudyFlashcard } from "@/lib/study-data-types";
+import { useAutoCompleteQuest } from "@/lib/use-auto-complete-quest";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
 
@@ -207,6 +208,36 @@ export default function FlashcardPage() {
   const newCardCount = sessionQueue.filter((card) => !reviews[card.cardId]).length;
   const reviewedCardCount = Object.keys(reviews).length;
   const isSessionComplete = dailyCardLimit > 0 && stats.reviewed >= dailyCardLimit;
+  const sessionAccuracy =
+    stats.reviewed > 0 ? Math.round((stats.correct / stats.reviewed) * 100) : 0;
+  const summaryItems = [
+    {
+      label: "세션",
+      value: `${stats.reviewed}/${dailyCardLimit || cards.length}장`,
+      detail: `정답률 ${sessionAccuracy}%`,
+    },
+    {
+      label: "복습 대기",
+      value: `${dueReviewCount}장`,
+      detail: "오늘 처리할 복습",
+    },
+    {
+      label: "새 카드",
+      value: `${newCardCount}장`,
+      detail: "이번 세션 기준",
+    },
+    {
+      label: "누적 학습",
+      value: `${reviewedCardCount}/${cards.length}장`,
+      detail: "전체 카드 기준",
+    },
+  ];
+
+  useAutoCompleteQuest({
+    enabled: isSessionComplete,
+    quest: "flashcard",
+    userId,
+  });
 
   useEffect(() => {
     setFlipped(false);
@@ -324,7 +355,7 @@ export default function FlashcardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">단어 학습</h1>
         <div className="flex flex-wrap gap-2 text-sm">
@@ -353,39 +384,21 @@ export default function FlashcardPage() {
         </p>
       )}
 
-      <div className="grid gap-3 text-sm md:grid-cols-4">
-        <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-            세션
-          </p>
-          <p className="mt-1 font-semibold text-gray-900">
-            {stats.reviewed}/{dailyCardLimit || cards.length}장 / 정답률{" "}
-            {stats.reviewed > 0
-              ? Math.round((stats.correct / stats.reviewed) * 100)
-              : 0}
-            %
-          </p>
-        </div>
-        <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-            복습 대기
-          </p>
-          <p className="mt-1 font-semibold text-gray-900">{dueReviewCount}장</p>
-        </div>
-        <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-            새 카드
-          </p>
-          <p className="mt-1 font-semibold text-gray-900">{newCardCount}장</p>
-        </div>
-        <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-            누적 학습
-          </p>
-          <p className="mt-1 font-semibold text-gray-900">
-            {reviewedCardCount}/{cards.length}장
-          </p>
-        </div>
+      <div className="flex flex-wrap gap-2">
+        {summaryItems.map((item) => (
+          <div
+            key={item.label}
+            className="min-w-[8.8rem] flex-1 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2"
+          >
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+              {item.label}
+            </p>
+            <p className="mt-1 text-sm font-semibold leading-none text-gray-900">
+              {item.value}
+            </p>
+            <p className="mt-1 text-[11px] leading-none text-gray-500">{item.detail}</p>
+          </div>
+        ))}
       </div>
 
       {!current ? (

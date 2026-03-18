@@ -4,6 +4,7 @@ import { useState } from "react";
 import UserSelectionNotice from "@/components/user-selection-notice";
 import type { GeneratedReadingQuestion } from "@/lib/study-data-types";
 import { getDailyStudyItems } from "@/lib/study-plan";
+import { useAutoCompleteQuest } from "@/lib/use-auto-complete-quest";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
 
@@ -13,6 +14,7 @@ export default function ReadingPage() {
   const {
     isLoading: isProfileLoading,
     supportedLevel,
+    userId,
     userLabel,
     requiresSelection,
     plan,
@@ -34,6 +36,12 @@ export default function ReadingPage() {
     : questions;
   const isSessionComplete = dailyQuestions.length > 0 && currentIndex >= dailyQuestions.length;
   const current = isSessionComplete ? null : dailyQuestions[currentIndex] ?? null;
+
+  useAutoCompleteQuest({
+    enabled: isSessionComplete,
+    quest: "reading",
+    userId,
+  });
 
   const handleAnswer = (choice: string) => {
     if (showResult || !current) return;

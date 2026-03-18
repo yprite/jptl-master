@@ -4,6 +4,7 @@ import { useState } from "react";
 import UserSelectionNotice from "@/components/user-selection-notice";
 import type { GeneratedGrammarQuestion } from "@/lib/study-data-types";
 import { getDailyStudyItems } from "@/lib/study-plan";
+import { useAutoCompleteQuest } from "@/lib/use-auto-complete-quest";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
 import { useStudyData } from "@/lib/use-study-data";
 
@@ -20,6 +21,7 @@ export default function GrammarPage() {
   const {
     isLoading: isProfileLoading,
     supportedLevel,
+    userId,
     userLabel,
     requiresSelection,
     plan,
@@ -42,6 +44,12 @@ export default function GrammarPage() {
   const isSessionComplete = dailyQuestions.length > 0 && currentIndex >= dailyQuestions.length;
   const current = isSessionComplete ? null : dailyQuestions[currentIndex] ?? null;
   const questionLabel = current?.type === "pattern" ? "예문 문법" : "문형 의미";
+
+  useAutoCompleteQuest({
+    enabled: isSessionComplete,
+    quest: "grammar",
+    userId,
+  });
 
   const handleAnswer = (choice: string) => {
     if (showResult || !current) return;
