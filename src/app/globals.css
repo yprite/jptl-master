@@ -25,6 +25,16 @@ body {
   font-family: var(--font-noto-sans-kr), sans-serif;
 }
 
+ruby {
+  ruby-align: space-around;
+}
+
+rt {
+  font-size: 0.62em;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
 .jptl-shell {
   background:
     radial-gradient(circle at top left, rgba(246, 173, 85, 0.24), transparent 24%),

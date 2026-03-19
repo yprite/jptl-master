@@ -174,13 +174,13 @@ function CompanionJourneyScene({
           </div>
         </div>
         <div className="companion-step-chip">
-          {isOnboarding ? "출발점 정렬" : `Day ${currentDay}로 향하는 중`}
+          {isOnboarding ? "출발점 정렬" : `${currentDay}일차로 향하는 중`}
         </div>
       </div>
 
       <div className="relative mt-4 sm:mt-5">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-stone-400">
-          Shared Motion
+          함께 걷는 장면
         </p>
         <h2 className="mt-2.5 font-[family:var(--font-noto-serif-kr)] text-[1.35rem] font-semibold leading-snug text-stone-900 sm:mt-3 sm:text-2xl">
           {isOnboarding
@@ -251,7 +251,7 @@ function CompanionStatusCard({
 
       <div className="mt-4">
         <div className="mb-2 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-white/45">
-          <span>Journey line</span>
+          <span>나란한 흐름</span>
           <span>{ratio}%</span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-white/12">
@@ -453,7 +453,7 @@ export default function Home() {
           <div className="relative">
             <div className="max-w-2xl space-y-2.5 sm:space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/55">
-                Device Selection
+                기기 선택
               </p>
               <h1 className="max-w-xl font-[family:var(--font-noto-serif-kr)] text-[2.15rem] font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">
                 이 기기의 학습 사용자를 먼저 정합니다.
@@ -466,7 +466,7 @@ export default function Home() {
             <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-[1.2fr_0.9fr]">
               <div className="rounded-[1.65rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-4 backdrop-blur sm:rounded-[1.8rem] sm:p-5">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
-                  Who is using this phone?
+                  이 기기를 쓰는 사람
                 </p>
                 <div className="mt-4 grid gap-3">
                   {USER_IDS.map((id) => (
@@ -514,7 +514,7 @@ export default function Home() {
         configuredCount === USER_IDS.length ? "두 사람 모두 루틴 준비 완료" : "한 사람의 출발 준비가 남아 있습니다.",
     },
     {
-      label: "누적 Day",
+      label: "누적 일수",
       value: `${sharedCompletedDays}`,
       note: "함께 쌓인 날짜만 조용히 남겨 둡니다.",
     },
@@ -552,7 +552,7 @@ export default function Home() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="max-w-2xl space-y-2.5 sm:space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/55">
-                {isOnboarding ? "Shared Setup" : "Study Companions"}
+                {isOnboarding ? "함께 시작 설정" : "오늘의 학습 동행"}
               </p>
               <h1 className="max-w-xl font-[family:var(--font-noto-serif-kr)] text-[2.15rem] font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">
                 {getTogetherHeadline(isOnboarding)}
@@ -656,7 +656,7 @@ export default function Home() {
 
                 <div>
                   <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
-                    Today in one swipe
+                    오늘 한눈에
                   </p>
                   <div className="mobile-rail no-scrollbar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1">
                     {sharedSummaryCards.map((card) => (
@@ -680,7 +680,7 @@ export default function Home() {
 
                 <div>
                   <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
-                    Side by side
+                    나란히 보기
                   </p>
                   <div className="mobile-rail no-scrollbar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1">
                     {companionSnapshots.map(({ id, state, completed, ratio, note }) => (
@@ -829,7 +829,7 @@ export default function Home() {
         <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-              Step 1
+              1단계
             </p>
             <h2 className="font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
               {USER_LABELS[userId]} 프로필 설정
@@ -892,7 +892,7 @@ export default function Home() {
         <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-              Step 2
+              2단계
             </p>
             <h2 className="font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
               {USER_LABELS[userId]} 학습 계획

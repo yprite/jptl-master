@@ -134,7 +134,7 @@ export default function StudyPage() {
     return (
       <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-          Study Page
+          학습 안내
         </p>
         <h1 className="mt-2 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
           먼저 동행 탭에서 시작 설정을 마쳐 주세요.
@@ -198,10 +198,10 @@ export default function StudyPage() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-              Study Page
+              학습 루틴
             </p>
             <h1 className="mt-2 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
-              Day {currentDay} 루틴
+              {currentDay}일차 루틴
             </h1>
             <p className="mt-2 text-sm leading-7 text-stone-600">
               {getTopicLabel(userId)} 오늘 암기에서 시작해 어휘, 문법, 독해 순서로 천천히 이어갑니다.
@@ -209,7 +209,7 @@ export default function StudyPage() {
           </div>
           <div className="rounded-[1.5rem] bg-white/80 px-4 py-3 text-right shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
-              Today
+              오늘
             </div>
             <div className="mt-1 text-lg font-black text-stone-900">
               {completedCount}/{questDefs.length}
@@ -330,14 +330,14 @@ export default function StudyPage() {
       {allDone ? (
         <section className="rounded-[2rem] border border-emerald-200 bg-[linear-gradient(135deg,#effaf1,#fff6ea)] px-6 py-8 text-center shadow-[0_18px_44px_rgba(102,120,84,0.08)]">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-500">
-            Quiet Finish
+            오늘 마무리
           </p>
           <h2 className="mt-2 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-emerald-700">
             오늘 루틴 완료
           </h2>
           <p className="mt-2 text-sm text-emerald-700">
-            오늘의 한 장면이 저장되었습니다. 내일 Day{" "}
-            {Math.min(activePlan.totalDays, currentDay + 1)}로 이어집니다.
+            오늘의 한 장면이 저장되었습니다. 내일{" "}
+            {Math.min(activePlan.totalDays, currentDay + 1)}일차로 이어집니다.
           </p>
         </section>
       ) : currentQuestIdx >= 0 ? (

@@ -6,7 +6,7 @@ export default function UserSelectionNotice() {
   return (
     <section className="rounded-[2rem] border border-stone-200/80 bg-[rgba(255,252,246,0.95)] p-6 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
       <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-        Device Setup
+        기기 설정
       </p>
       <h1 className="mt-2 font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
         먼저 이 기기의 학습 사용자를 선택해 주세요.

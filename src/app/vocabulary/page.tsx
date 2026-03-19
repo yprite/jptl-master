@@ -7,6 +7,7 @@ import {
   type GeneratedVocabularyQuestion,
   type GeneratedVocabularyQuestionType,
 } from "@/lib/study-data-types";
+import { localizeStudyText } from "@/lib/study-text-localizer";
 import { getDailyStudyItems } from "@/lib/study-plan";
 import { useAutoCompleteQuest } from "@/lib/use-auto-complete-quest";
 import { useActiveStudyProfile } from "@/lib/use-active-study-profile";
@@ -111,7 +112,7 @@ export default function VocabularyPage() {
   }
 
   const sessionDescription = plan
-    ? `${userLabel}의 Day ${currentDay} 어휘 ${dailyQuestions.length}개를 풉니다. 유형을 바꾸면 같은 분량 안에서 바로 묶어 볼 수 있습니다.`
+    ? `${userLabel}의 ${currentDay}일차 어휘 ${dailyQuestions.length}개를 풉니다. 유형을 바꾸면 같은 분량 안에서 바로 묶어 볼 수 있습니다.`
     : `${userLabel}의 현재 레벨 어휘 문제를 바로 이어서 풉니다. 유형을 바꾸면 필요한 묶음만 빠르게 볼 수 있습니다.`;
   const heroBadges = [
     {
@@ -125,7 +126,7 @@ export default function VocabularyPage() {
     ...(plan
       ? [
           {
-            label: `Day ${currentDay}`,
+            label: `${currentDay}일차`,
             className: "bg-emerald-100 text-emerald-700",
           },
           {
@@ -165,7 +166,7 @@ export default function VocabularyPage() {
   return (
     <div className="space-y-4">
       <StudySessionHero
-        eyebrow="Vocabulary Session"
+        eyebrow="어휘 세션"
         title="어휘 문제"
         description={sessionDescription}
         progressLabel={`${answeredCount}/${filtered.length}`}
@@ -226,7 +227,7 @@ export default function VocabularyPage() {
               오늘 어휘 분량을 모두 풀었습니다.
             </p>
             <p className="text-sm text-emerald-700">
-              Day {currentDay} 목표 {filtered.length}개를 마쳤습니다.
+              {currentDay}일차 목표 {filtered.length}개를 마쳤습니다.
             </p>
             <button
               onClick={restartSession}
@@ -252,10 +253,10 @@ export default function VocabularyPage() {
 
           <div className="rounded-[1.8rem] border border-stone-200/80 bg-white/88 p-6 shadow-[0_18px_45px_rgba(92,71,47,0.08)]">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500">
-              {current.prompt}
+              {localizeStudyText(current.prompt)}
             </p>
             <p className="mt-3 text-xl leading-relaxed whitespace-pre-wrap text-stone-900">
-              {current.question}
+              {localizeStudyText(current.question)}
             </p>
           </div>
 
@@ -286,7 +287,7 @@ export default function VocabularyPage() {
                   <span className="mr-2 text-sm font-medium text-stone-400">
                     {i + 1}.
                   </span>
-                  {choice}
+                  {localizeStudyText(choice)}
                 </button>
               );
             })}
@@ -304,9 +305,9 @@ export default function VocabularyPage() {
                 <p className="font-semibold mb-1">
                   {selectedAnswer === current.correct_answer
                     ? "정답입니다!"
-                    : `오답입니다. 정답: ${current.correct_answer}`}
+                    : `오답입니다. 정답: ${localizeStudyText(current.correct_answer)}`}
                 </p>
-                <p>{current.explanation}</p>
+                <p>{localizeStudyText(current.explanation)}</p>
               </div>
               <button
                 onClick={handleNext}

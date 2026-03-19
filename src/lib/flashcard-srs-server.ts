@@ -5,6 +5,7 @@ import type { StudyLevel } from "./study-data-types";
 import { readLatestJsonInFolder, writeJsonAtPath } from "./home-state-server";
 
 type UserId = "me" | "wife";
+type FlashcardPrioritySource = "reading-unknown-word";
 
 export interface FlashcardReviewRecord {
   cardId: string;
@@ -17,9 +18,18 @@ export interface FlashcardReviewRecord {
   reviewCount: number;
 }
 
+export interface FlashcardPriorityRecord {
+  cardId: string;
+  source: FlashcardPrioritySource;
+  boostedAt: string;
+  boostCount: number;
+  lastQuestionId: string | null;
+}
+
 export interface FlashcardSrsState {
   updatedAt: string;
   reviews: Record<string, FlashcardReviewRecord>;
+  priorities: Record<string, FlashcardPriorityRecord>;
 }
 
 const VALID_LEVELS: StudyLevel[] = ["N5", "N4", "N3"];
@@ -29,6 +39,7 @@ function createEmptyState(): FlashcardSrsState {
   return {
     updatedAt: "",
     reviews: {},
+    priorities: {},
   };
 }
 
@@ -50,6 +61,10 @@ function normalizeDifficulty(value: unknown): Difficulty {
   }
 
   return "good";
+}
+
+function normalizePrioritySource(value: unknown): FlashcardPrioritySource {
+  return value === "reading-unknown-word" ? value : "reading-unknown-word";
 }
 
 function normalizeRecord(value: unknown): FlashcardReviewRecord | null {
@@ -75,13 +90,31 @@ function normalizeRecord(value: unknown): FlashcardReviewRecord | null {
   };
 }
 
+function normalizePriorityRecord(value: unknown): FlashcardPriorityRecord | null {
+  if (!isRecord(value) || typeof value.cardId !== "string") {
+    return null;
+  }
+
+  return {
+    cardId: value.cardId,
+    source: normalizePrioritySource(value.source),
+    boostedAt:
+      typeof value.boostedAt === "string" ? value.boostedAt : new Date().toISOString(),
+    boostCount: Math.max(1, Number(value.boostCount ?? 1)),
+    lastQuestionId:
+      typeof value.lastQuestionId === "string" ? value.lastQuestionId : null,
+  };
+}
+
 export function normalizeFlashcardSrsState(value: unknown): FlashcardSrsState {
   if (!isRecord(value)) {
     return createEmptyState();
   }
 
   const sourceReviews = isRecord(value.reviews) ? value.reviews : {};
+  const sourcePriorities = isRecord(value.priorities) ? value.priorities : {};
   const reviews: Record<string, FlashcardReviewRecord> = {};
+  const priorities: Record<string, FlashcardPriorityRecord> = {};
 
   for (const [cardId, rawRecord] of Object.entries(sourceReviews)) {
     const normalized = normalizeRecord(rawRecord);
@@ -89,9 +122,16 @@ export function normalizeFlashcardSrsState(value: unknown): FlashcardSrsState {
     reviews[cardId] = normalized;
   }
 
+  for (const [cardId, rawRecord] of Object.entries(sourcePriorities)) {
+    const normalized = normalizePriorityRecord(rawRecord);
+    if (!normalized) continue;
+    priorities[cardId] = normalized;
+  }
+
   return {
     updatedAt: typeof value.updatedAt === "string" ? value.updatedAt : "",
     reviews,
+    priorities,
   };
 }
 

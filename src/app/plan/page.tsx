@@ -230,7 +230,7 @@ export default function PlanPage() {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">
-                  Day {day}{" "}
+                  {day}일차{" "}
                   <span className="text-sm text-gray-400">({dayOfWeek})</span>
                 </span>
                 {isDone && (

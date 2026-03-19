@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import {
   buildFlashcardId,
+  clearFlashcardPriority,
   getFlashcardSrsState,
   saveFlashcardSrsState,
   type FlashcardReviewRecord,
-  type FlashcardSrsUserId,
   type FlashcardSrsState,
 } from "@/lib/flashcard-srs-store";
 import {
@@ -29,7 +29,46 @@ const EMPTY_FLASHCARDS: StudyFlashcard[] = [];
 const EMPTY_SRS_STATE: FlashcardSrsState = {
   updatedAt: "",
   reviews: {},
+  priorities: {},
 };
+
+function endOfLocalDay(nowMs: number): number {
+  const date = new Date(nowMs);
+  date.setHours(23, 59, 59, 999);
+  return date.getTime();
+}
+
+function parseTimestamp(iso: string | null | undefined): number {
+  if (!iso) return Number.NaN;
+  return Date.parse(iso);
+}
+
+function isResolvedForToday(
+  review: FlashcardReviewRecord | null | undefined,
+  nowMs: number
+): boolean {
+  const nextReviewAt = parseTimestamp(review?.nextReviewAt);
+  return !Number.isNaN(nextReviewAt) && nextReviewAt > endOfLocalDay(nowMs);
+}
+
+function isDueNow(review: FlashcardReviewRecord | null | undefined, nowMs: number): boolean {
+  if (!review) return true;
+
+  const nextReviewAt = parseTimestamp(review.nextReviewAt);
+  return Number.isNaN(nextReviewAt) || nextReviewAt <= nowMs;
+}
+
+function isWaitingLaterToday(
+  review: FlashcardReviewRecord | null | undefined,
+  nowMs: number
+): boolean {
+  const nextReviewAt = parseTimestamp(review?.nextReviewAt);
+  return (
+    !Number.isNaN(nextReviewAt) &&
+    nextReviewAt > nowMs &&
+    nextReviewAt <= endOfLocalDay(nowMs)
+  );
+}
 
 function formatNextReviewLabel(iso: string | null): string | null {
   if (!iso) return null;
@@ -54,32 +93,102 @@ function formatNextReviewLabel(iso: string | null): string | null {
   return `${diffDays}일 뒤`;
 }
 
-function getReviewQueue(
+function buildCardMap(cards: FlashcardWithId[]): Record<string, FlashcardWithId> {
+  return Object.fromEntries(cards.map((card) => [card.cardId, card]));
+}
+
+function sortSessionCandidates(
   cards: FlashcardWithId[],
   reviews: Record<string, FlashcardReviewRecord>,
+  priorities: FlashcardSrsState["priorities"],
   nowMs: number
 ): FlashcardWithId[] {
-  const queue = cards.filter((card) => {
+  const candidates = cards.filter((card) => {
     const review = reviews[card.cardId];
     if (!review) {
       return true;
     }
 
-    const nextReviewAt = Date.parse(review.nextReviewAt);
-    return Number.isNaN(nextReviewAt) || nextReviewAt <= nowMs;
+    return !isResolvedForToday(review, nowMs);
   });
 
-  queue.sort((left, right) => {
+  candidates.sort((left, right) => {
+    const leftPriority = Boolean(priorities[left.cardId]);
+    const rightPriority = Boolean(priorities[right.cardId]);
+    if (leftPriority !== rightPriority) {
+      return leftPriority ? -1 : 1;
+    }
+
     const leftReview = reviews[left.cardId];
     const rightReview = reviews[right.cardId];
+    if (Boolean(leftReview) !== Boolean(rightReview)) {
+      return leftReview ? -1 : 1;
+    }
 
-    if (leftReview && !rightReview) return -1;
-    if (!leftReview && rightReview) return 1;
-    if (!leftReview && !rightReview) return left.sourceIndex - right.sourceIndex;
+    const leftTime = parseTimestamp(leftReview?.nextReviewAt);
+    const rightTime = parseTimestamp(rightReview?.nextReviewAt);
+    if (!Number.isNaN(leftTime) && !Number.isNaN(rightTime) && leftTime !== rightTime) {
+      return leftTime - rightTime;
+    }
 
-    const leftTime = Date.parse(leftReview.nextReviewAt);
-    const rightTime = Date.parse(rightReview.nextReviewAt);
-    if (leftTime !== rightTime) {
+    return left.sourceIndex - right.sourceIndex;
+  });
+
+  return candidates;
+}
+
+function buildSessionCardIds(
+  cards: FlashcardWithId[],
+  reviews: Record<string, FlashcardReviewRecord>,
+  priorities: FlashcardSrsState["priorities"],
+  dailyLimit: number,
+  nowMs: number
+): string[] {
+  const candidates = sortSessionCandidates(cards, reviews, priorities, nowMs);
+  const priorityCards = candidates.filter((card) => Boolean(priorities[card.cardId]));
+  const selected: string[] = priorityCards.map((card) => card.cardId);
+  const selectedIds = new Set(selected);
+
+  for (const card of candidates) {
+    if (selectedIds.has(card.cardId)) {
+      continue;
+    }
+
+    if (selectedIds.size >= dailyLimit) {
+      break;
+    }
+
+    selectedIds.add(card.cardId);
+    selected.push(card.cardId);
+  }
+
+  return selected;
+}
+
+function getDueNowQueue(
+  cards: FlashcardWithId[],
+  reviews: Record<string, FlashcardReviewRecord>,
+  priorities: FlashcardSrsState["priorities"],
+  nowMs: number
+): FlashcardWithId[] {
+  const queue = cards.filter((card) => isDueNow(reviews[card.cardId], nowMs));
+
+  queue.sort((left, right) => {
+    const leftPriority = Boolean(priorities[left.cardId]);
+    const rightPriority = Boolean(priorities[right.cardId]);
+    if (leftPriority !== rightPriority) {
+      return leftPriority ? -1 : 1;
+    }
+
+    const leftReview = reviews[left.cardId];
+    const rightReview = reviews[right.cardId];
+    if (Boolean(leftReview) !== Boolean(rightReview)) {
+      return leftReview ? -1 : 1;
+    }
+
+    const leftTime = parseTimestamp(leftReview?.nextReviewAt);
+    const rightTime = parseTimestamp(rightReview?.nextReviewAt);
+    if (!Number.isNaN(leftTime) && !Number.isNaN(rightTime) && leftTime !== rightTime) {
       return leftTime - rightTime;
     }
 
@@ -98,10 +207,12 @@ function getEarliestFutureReview(
 
   for (const card of cards) {
     const review = reviews[card.cardId];
-    if (!review) continue;
+    if (!isWaitingLaterToday(review, nowMs)) {
+      continue;
+    }
 
-    const nextReviewAt = Date.parse(review.nextReviewAt);
-    if (Number.isNaN(nextReviewAt) || nextReviewAt <= nowMs) {
+    const nextReviewAt = parseTimestamp(review?.nextReviewAt);
+    if (Number.isNaN(nextReviewAt)) {
       continue;
     }
 
@@ -124,12 +235,13 @@ export default function FlashcardPage() {
     currentDay,
   } = useActiveStudyProfile();
   const [flipped, setFlipped] = useState(false);
-  const [stats, setStats] = useState({ reviewed: 0, correct: 0 });
+  const [stats, setStats] = useState({ attempts: 0, correct: 0 });
   const [clock, setClock] = useState(() => Date.now());
   const [srsState, setSrsState] = useState<FlashcardSrsState>(EMPTY_SRS_STATE);
   const [isSrsLoading, setIsSrsLoading] = useState(() => Boolean(userId));
   const [srsError, setSrsError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [sessionCardIds, setSessionCardIds] = useState<string[]>([]);
   const { data: vocabs, error, isLoading: isStudyLoading } = useStudyData<
     StudyFlashcard[]
   >(
@@ -149,8 +261,8 @@ export default function FlashcardPage() {
     if (isProfileLoading || !userId) {
       return;
     }
-    const selectedUserId: FlashcardSrsUserId = userId;
 
+    const selectedUserId = userId;
     let cancelled = false;
 
     async function loadSrs() {
@@ -169,7 +281,7 @@ export default function FlashcardPage() {
           setSrsError(
             loadError instanceof Error
               ? loadError.message
-              : "SRS 상태를 불러오지 못했습니다."
+              : "복습 상태를 불러오지 못했습니다."
           );
           setIsSrsLoading(false);
         }
@@ -183,56 +295,91 @@ export default function FlashcardPage() {
     };
   }, [isProfileLoading, supportedLevel, userId]);
 
-  useEffect(() => {
-    setFlipped(false);
-    setStats({ reviewed: 0, correct: 0 });
-  }, [supportedLevel, userId]);
-
   const cards: FlashcardWithId[] = vocabs.map((card, index) => ({
     ...card,
     cardId: buildFlashcardId(card, index),
     sourceIndex: index,
   }));
-
+  const cardMap = buildCardMap(cards);
   const reviews = srsState.reviews;
-  const queue = getReviewQueue(cards, reviews, clock);
+  const priorities = srsState.priorities;
   const dailyCardLimit = Math.min(plan?.dailyFlashcard ?? cards.length, cards.length);
-  const sessionRemainingCount = Math.max(dailyCardLimit - stats.reviewed, 0);
-  const sessionQueue = sessionRemainingCount > 0 ? queue.slice(0, sessionRemainingCount) : [];
-  const current = sessionQueue[0];
+  const todayKey = new Date(clock).toLocaleDateString("ko-KR");
+  const priorityKey = Object.keys(priorities).sort().join("|");
+  const resetSession = useEffectEvent(() => {
+    setSessionCardIds(
+      buildSessionCardIds(cards, reviews, priorities, dailyCardLimit || cards.length, clock)
+    );
+    setFlipped(false);
+    setStats({ attempts: 0, correct: 0 });
+  });
+
+  useEffect(() => {
+    if (isProfileLoading || isStudyLoading || isSrsLoading || !userId) {
+      return;
+    }
+
+    resetSession();
+  }, [
+    isProfileLoading,
+    isStudyLoading,
+    isSrsLoading,
+    userId,
+    supportedLevel,
+    dailyCardLimit,
+    priorityKey,
+    todayKey,
+  ]);
+
+  const sessionCards = sessionCardIds
+    .map((cardId) => cardMap[cardId])
+    .filter((card): card is FlashcardWithId => Boolean(card));
+  const sessionTargetCount = sessionCards.length;
+  const completedCardCount = sessionCards.filter((card) =>
+    isResolvedForToday(reviews[card.cardId], clock)
+  ).length;
+  const sessionRemainingCount = Math.max(sessionTargetCount - completedCardCount, 0);
+  const sessionQueue = getDueNowQueue(sessionCards, reviews, priorities, clock);
+  const current = sessionQueue[0] ?? null;
   const currentReview = current ? reviews[current.cardId] : null;
+  const currentPriority = current ? priorities[current.cardId] : null;
   const nextScheduledReview = formatNextReviewLabel(
-    getEarliestFutureReview(cards, reviews, clock)
+    getEarliestFutureReview(sessionCards, reviews, clock)
   );
-  const dueReviewCount = sessionQueue.filter((card) => Boolean(reviews[card.cardId])).length;
-  const newCardCount = sessionQueue.filter((card) => !reviews[card.cardId]).length;
+  const dueReviewCount = sessionCards.filter((card) => Boolean(reviews[card.cardId])).length;
+  const newCardCount = sessionCards.filter((card) => !reviews[card.cardId]).length;
   const reviewedCardCount = Object.keys(reviews).length;
-  const isSessionComplete = dailyCardLimit > 0 && stats.reviewed >= dailyCardLimit;
+  const waitingLaterCount = sessionCards.filter((card) =>
+    isWaitingLaterToday(reviews[card.cardId], clock)
+  ).length;
+  const isSessionComplete = sessionTargetCount > 0 && completedCardCount >= sessionTargetCount;
+  const isWaitingForRepeat = !current && !isSessionComplete && waitingLaterCount > 0;
   const sessionAccuracy =
-    stats.reviewed > 0 ? Math.round((stats.correct / stats.reviewed) * 100) : 0;
-  const sessionCardTarget = dailyCardLimit || cards.length;
+    stats.attempts > 0 ? Math.round((stats.correct / stats.attempts) * 100) : 0;
   const sessionProgressPercent =
-    sessionCardTarget > 0 ? Math.min(100, Math.round((stats.reviewed / sessionCardTarget) * 100)) : 0;
+    sessionTargetCount > 0
+      ? Math.min(100, Math.round((completedCardCount / sessionTargetCount) * 100))
+      : 0;
   const summaryItems = [
     {
       label: "세션",
-      value: `${stats.reviewed}/${sessionCardTarget}장`,
-      detail: `정답률 ${sessionAccuracy}%`,
+      value: `${completedCardCount}/${sessionTargetCount}장`,
+      detail: `시도 ${stats.attempts}회`,
     },
     {
-      label: "복습 대기",
+      label: "오늘 복습",
       value: `${dueReviewCount}장`,
-      detail: "오늘 처리할 복습",
+      detail: waitingLaterCount > 0 ? `같은 날 재등장 ${waitingLaterCount}장` : "오늘 처리할 카드",
     },
     {
       label: "새 카드",
       value: `${newCardCount}장`,
-      detail: "이번 세션 기준",
+      detail: Object.keys(priorities).length > 0 ? `우선 복습 ${Object.keys(priorities).length}장` : "이번 세션 기준",
     },
     {
       label: "누적 학습",
       value: `${reviewedCardCount}/${cards.length}장`,
-      detail: "전체 카드 기준",
+      detail: `정답률 ${sessionAccuracy}%`,
     },
   ];
 
@@ -268,8 +415,10 @@ export default function FlashcardPage() {
       difficulty
     );
     const reviewedAt = new Date().toISOString();
+    const nextReviewAt = result.nextReview.toISOString();
+    const staysInTodayQueue = parseTimestamp(nextReviewAt) <= endOfLocalDay(Date.now());
 
-    const nextState: FlashcardSrsState = {
+    let nextState: FlashcardSrsState = {
       updatedAt: reviewedAt,
       reviews: {
         ...reviews,
@@ -278,18 +427,23 @@ export default function FlashcardPage() {
           easeFactor: result.easeFactor,
           intervalDays: result.intervalDays,
           repetitions: result.repetitions,
-          nextReviewAt: result.nextReview.toISOString(),
+          nextReviewAt,
           lastReviewedAt: reviewedAt,
           lastDifficulty: difficulty,
           reviewCount: (currentReview?.reviewCount ?? 0) + 1,
         },
       },
+      priorities: { ...priorities },
     };
+
+    if (currentPriority && !staysInTodayQueue) {
+      nextState = clearFlashcardPriority(nextState, current.cardId);
+    }
 
     setSrsState(nextState);
     setSrsError(null);
     setStats((prev) => ({
-      reviewed: prev.reviewed + 1,
+      attempts: prev.attempts + 1,
       correct: difficulty !== "again" ? prev.correct + 1 : prev.correct,
     }));
     setFlipped(false);
@@ -303,7 +457,7 @@ export default function FlashcardPage() {
       setSrsError(
         saveError instanceof Error
           ? saveError.message
-          : "SRS 상태를 저장하지 못했습니다."
+          : "복습 상태를 저장하지 못했습니다."
       );
     } finally {
       setIsSaving(false);
@@ -321,8 +475,8 @@ export default function FlashcardPage() {
 
   const errorMessage = srsError ?? error;
   const sessionDescription = plan
-    ? `${userLabel}의 Day ${currentDay} 분량 ${sessionCardTarget}장을 SRS 순서대로 이어갑니다. 카드를 먼저 보고, 뒤집은 다음 난도를 선택합니다.`
-    : `${userLabel}의 현재 레벨 카드를 SRS 순서대로 이어갑니다. 카드를 먼저 보고, 뒤집은 다음 난도를 선택합니다.`;
+    ? `${userLabel}의 ${currentDay}일차 분량 ${sessionTargetCount || dailyCardLimit}장을 복습 순서대로 이어갑니다. 오늘 안에 다시 나와야 하는 카드는 사라지지 않고 다시 등장합니다.`
+    : `${userLabel}의 현재 레벨 카드를 복습 순서대로 이어갑니다. 오늘 안에 다시 나와야 하는 카드는 대기 후 다시 나타납니다.`;
   const headerBadges = [
     {
       label: `현재 사용자 ${userLabel}`,
@@ -335,12 +489,20 @@ export default function FlashcardPage() {
     ...(plan
       ? [
           {
-            label: `Day ${currentDay}`,
+            label: `${currentDay}일차`,
             className: "bg-emerald-100 text-emerald-700",
           },
           {
-            label: `오늘 분량 ${sessionCardTarget}장`,
+            label: `오늘 묶음 ${sessionTargetCount || dailyCardLimit}장`,
             className: "bg-amber-100 text-amber-700",
+          },
+        ]
+      : []),
+    ...(Object.keys(priorities).length > 0
+      ? [
+          {
+            label: `우선 복습 ${Object.keys(priorities).length}장`,
+            className: "bg-rose-100 text-rose-700",
           },
         ]
       : []),
@@ -353,7 +515,7 @@ export default function FlashcardPage() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-2xl space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-              Flashcard Session
+              단어 복습 세션
             </p>
             <h1 className="font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
               단어 학습
@@ -366,7 +528,7 @@ export default function FlashcardPage() {
               오늘 진행
             </div>
             <div className="mt-1 text-2xl font-black text-stone-900">
-              {stats.reviewed}/{sessionCardTarget}
+              {completedCardCount}/{sessionTargetCount}
             </div>
             <div className="mt-1 text-xs text-stone-500">완료율 {sessionProgressPercent}%</div>
           </div>
@@ -441,14 +603,18 @@ export default function FlashcardPage() {
       {!current ? (
         <div className="rounded-[1.8rem] border border-dashed border-stone-300 bg-white/72 px-6 py-10 text-center">
           <p className="text-lg font-semibold text-stone-900">
-            {isSessionComplete ? "오늘 단어 분량을 모두 학습했습니다." : "지금 복습할 카드가 없습니다."}
+            {isSessionComplete
+              ? "오늘 단어 분량을 모두 학습했습니다."
+              : isWaitingForRepeat
+                ? "조금 뒤에 다시 나올 카드가 있습니다."
+                : "지금 바로 열 카드가 없습니다."}
           </p>
           <p className="mt-3 text-sm text-stone-600">
             {isSessionComplete
-              ? `Day ${currentDay} 목표 ${dailyCardLimit}장을 마쳤습니다.`
+              ? `${currentDay}일차 목표 ${sessionTargetCount}장을 마쳤습니다.`
               : nextScheduledReview
-                ? `다음 복습은 ${nextScheduledReview} 예정입니다.`
-                : "현재 레벨의 카드 복습이 모두 끝났습니다."}
+                ? `다음 카드는 ${nextScheduledReview} 다시 나타납니다.`
+                : "현재 레벨에서 오늘 안에 다시 볼 카드가 없습니다."}
           </p>
         </div>
       ) : (
@@ -457,8 +623,20 @@ export default function FlashcardPage() {
             <span className="rounded-full bg-white/80 px-3 py-1 font-medium text-stone-700 shadow-sm">
               남은 카드 {sessionRemainingCount}장
             </span>
-            <span className="rounded-full bg-sky-100 px-3 py-1 font-medium text-sky-700">
-              {currentReview ? "복습 카드" : "새 카드"}
+            <span
+              className={`rounded-full px-3 py-1 font-medium ${
+                currentPriority
+                  ? "bg-rose-100 text-rose-700"
+                  : currentReview
+                    ? "bg-sky-100 text-sky-700"
+                    : "bg-emerald-100 text-emerald-700"
+              }`}
+            >
+              {currentPriority
+                ? "독해에서 올린 우선 카드"
+                : currentReview
+                  ? "복습 카드"
+                  : "새 카드"}
             </span>
             {currentReview?.nextReviewAt && (
               <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-600">

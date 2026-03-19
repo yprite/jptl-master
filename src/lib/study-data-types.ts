@@ -42,8 +42,11 @@ export interface GeneratedReadingQuestion {
   id: string;
   level: StudyLevel;
   passage: string;
+  passage_yomigana?: string | null;
   question: string;
+  question_yomigana?: string | null;
   choices: string[];
+  choices_yomigana?: string[] | null;
   correct_answer: string;
   explanation: string;
   difficulty: number;
