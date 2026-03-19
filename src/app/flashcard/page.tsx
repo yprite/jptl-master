@@ -210,10 +210,13 @@ export default function FlashcardPage() {
   const isSessionComplete = dailyCardLimit > 0 && stats.reviewed >= dailyCardLimit;
   const sessionAccuracy =
     stats.reviewed > 0 ? Math.round((stats.correct / stats.reviewed) * 100) : 0;
+  const sessionCardTarget = dailyCardLimit || cards.length;
+  const sessionProgressPercent =
+    sessionCardTarget > 0 ? Math.min(100, Math.round((stats.reviewed / sessionCardTarget) * 100)) : 0;
   const summaryItems = [
     {
       label: "세션",
-      value: `${stats.reviewed}/${dailyCardLimit || cards.length}장`,
+      value: `${stats.reviewed}/${sessionCardTarget}장`,
       detail: `정답률 ${sessionAccuracy}%`,
     },
     {
@@ -317,37 +320,108 @@ export default function FlashcardPage() {
   }
 
   const errorMessage = srsError ?? error;
+  const sessionDescription = plan
+    ? `${userLabel}의 Day ${currentDay} 분량 ${sessionCardTarget}장을 SRS 순서대로 이어갑니다. 카드를 먼저 보고, 뒤집은 다음 난도를 선택합니다.`
+    : `${userLabel}의 현재 레벨 카드를 SRS 순서대로 이어갑니다. 카드를 먼저 보고, 뒤집은 다음 난도를 선택합니다.`;
+  const headerBadges = [
+    {
+      label: `현재 사용자 ${userLabel}`,
+      className: "bg-stone-900 text-white",
+    },
+    {
+      label: `설정 레벨 ${supportedLevel}`,
+      className: "bg-white text-stone-700",
+    },
+    ...(plan
+      ? [
+          {
+            label: `Day ${currentDay}`,
+            className: "bg-emerald-100 text-emerald-700",
+          },
+          {
+            label: `오늘 분량 ${sessionCardTarget}장`,
+            className: "bg-amber-100 text-amber-700",
+          },
+        ]
+      : []),
+  ];
+  const headerSection = (
+    <section className="relative overflow-hidden rounded-[2rem] border border-stone-200/80 bg-[linear-gradient(135deg,rgba(255,251,245,0.98),rgba(245,236,222,0.98))] p-5 shadow-[0_22px_60px_rgba(97,74,45,0.08)]">
+      <div className="absolute -left-10 top-4 h-32 w-32 rounded-full bg-[rgba(255,216,154,0.24)] blur-3xl" />
+      <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-[rgba(153,191,163,0.18)] blur-3xl" />
+      <div className="relative">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="max-w-2xl space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
+              Flashcard Session
+            </p>
+            <h1 className="font-[family:var(--font-noto-serif-kr)] text-3xl font-semibold text-stone-900">
+              단어 학습
+            </h1>
+            <p className="text-sm leading-7 text-stone-600">{sessionDescription}</p>
+          </div>
+
+          <div className="min-w-[8.8rem] rounded-[1.5rem] border border-white/70 bg-white/82 px-4 py-3 text-right shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
+              오늘 진행
+            </div>
+            <div className="mt-1 text-2xl font-black text-stone-900">
+              {stats.reviewed}/{sessionCardTarget}
+            </div>
+            <div className="mt-1 text-xs text-stone-500">완료율 {sessionProgressPercent}%</div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {headerBadges.map((badge) => (
+            <span
+              key={badge.label}
+              className={`rounded-full px-3 py-1 text-sm font-medium shadow-sm ${badge.className}`}
+            >
+              {badge.label}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-4 rounded-[1.5rem] border border-stone-200/70 bg-white/78 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
+          <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+            {summaryItems.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-[1.15rem] bg-stone-50/80 px-3 py-3"
+              >
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-400">
+                  {item.label}
+                </p>
+                <p className="mt-1 text-base font-semibold leading-none text-stone-900">
+                  {item.value}
+                </p>
+                <p className="mt-1 text-[11px] leading-none text-stone-500">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-stone-100">
+            <div
+              className="h-full rounded-full bg-[linear-gradient(90deg,#31473a,#c96f43)] transition-[width]"
+              style={{ width: `${sessionProgressPercent}%` }}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 
   if (!cards.length) {
     return (
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <h1 className="text-2xl font-bold">단어 학습</h1>
-          <div className="flex flex-wrap gap-2 text-sm">
-            <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
-              현재 사용자 {userLabel}
-            </span>
-            <span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-700">
-              설정 레벨 {supportedLevel}
-            </span>
-            {plan && (
-              <>
-                <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-700">
-                  Day {currentDay}
-                </span>
-                <span className="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-700">
-                  오늘 분량 {dailyCardLimit}장
-                </span>
-              </>
-            )}
-          </div>
-        </div>
+      <div className="space-y-4">
+        {headerSection}
         {errorMessage && (
-          <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <p className="rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {errorMessage}
           </p>
         )}
-        <p className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-500">
+        <p className="rounded-[1.8rem] border border-dashed border-stone-300 bg-white/70 px-6 py-10 text-center text-stone-500">
           {supportedLevel} 단어 데이터가 없습니다.
         </p>
       </div>
@@ -356,57 +430,20 @@ export default function FlashcardPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">단어 학습</h1>
-        <div className="flex flex-wrap gap-2 text-sm">
-          <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
-            현재 사용자 {userLabel}
-          </span>
-          <span className="rounded-full bg-blue-100 px-3 py-1 font-medium text-blue-700">
-            설정 레벨 {supportedLevel}
-          </span>
-          {plan && (
-            <>
-              <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-700">
-                Day {currentDay}
-              </span>
-              <span className="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-700">
-                오늘 분량 {dailyCardLimit}장
-              </span>
-            </>
-          )}
-        </div>
-      </div>
+      {headerSection}
 
       {errorMessage && (
-        <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+        <p className="rounded-[1.5rem] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
           {errorMessage}
         </p>
       )}
 
-      <div className="flex flex-wrap gap-2">
-        {summaryItems.map((item) => (
-          <div
-            key={item.label}
-            className="min-w-[8.8rem] flex-1 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2"
-          >
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-              {item.label}
-            </p>
-            <p className="mt-1 text-sm font-semibold leading-none text-gray-900">
-              {item.value}
-            </p>
-            <p className="mt-1 text-[11px] leading-none text-gray-500">{item.detail}</p>
-          </div>
-        ))}
-      </div>
-
       {!current ? (
-        <div className="rounded-3xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center">
-          <p className="text-lg font-semibold text-gray-900">
+        <div className="rounded-[1.8rem] border border-dashed border-stone-300 bg-white/72 px-6 py-10 text-center">
+          <p className="text-lg font-semibold text-stone-900">
             {isSessionComplete ? "오늘 단어 분량을 모두 학습했습니다." : "지금 복습할 카드가 없습니다."}
           </p>
-          <p className="mt-3 text-sm text-gray-600">
+          <p className="mt-3 text-sm text-stone-600">
             {isSessionComplete
               ? `Day ${currentDay} 목표 ${dailyCardLimit}장을 마쳤습니다.`
               : nextScheduledReview
@@ -415,56 +452,63 @@ export default function FlashcardPage() {
           </p>
         </div>
       ) : (
-        <>
-          <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
-            <span>남은 카드 {sessionRemainingCount}장</span>
-            <span>•</span>
-            <span>{currentReview ? "복습 카드" : "새 카드"}</span>
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-stone-600">
+            <span className="rounded-full bg-white/80 px-3 py-1 font-medium text-stone-700 shadow-sm">
+              남은 카드 {sessionRemainingCount}장
+            </span>
+            <span className="rounded-full bg-sky-100 px-3 py-1 font-medium text-sky-700">
+              {currentReview ? "복습 카드" : "새 카드"}
+            </span>
             {currentReview?.nextReviewAt && (
-              <>
-                <span>•</span>
-                <span>직전 예약 간격 {formatReviewInterval(currentReview.intervalDays)}</span>
-              </>
+              <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-600">
+                직전 예약 간격 {formatReviewInterval(currentReview.intervalDays)}
+              </span>
+            )}
+            {nextScheduledReview && (
+              <span className="rounded-full bg-amber-100 px-3 py-1 font-medium text-amber-700">
+                다음 대기 {nextScheduledReview}
+              </span>
             )}
           </div>
 
           <div
-            className="flashcard cursor-pointer"
+            className="flashcard cursor-pointer [touch-action:manipulation]"
             onClick={() => setFlipped((prev) => !prev)}
           >
             <div
-              className={`flashcard-inner relative w-full min-h-[280px] ${
+              className={`flashcard-inner relative w-full min-h-[21rem] sm:min-h-[26rem] ${
                 flipped ? "flipped" : ""
               }`}
             >
-              <div className="flashcard-front absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-8">
-                <p className="text-5xl font-bold mb-4">{current.word}</p>
+              <div className="flashcard-front absolute inset-0 flex flex-col items-center justify-center rounded-[2rem] border border-stone-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,241,232,0.96))] p-8 text-center shadow-[0_24px_60px_rgba(92,71,47,0.12)]">
+                <p className="mb-4 text-5xl font-bold text-stone-900 sm:text-6xl">{current.word}</p>
                 {current.reading && (
-                  <p className="text-xl text-gray-400">{current.reading}</p>
+                  <p className="text-lg text-stone-400 sm:text-xl">{current.reading}</p>
                 )}
-                <p className="mt-6 text-sm text-gray-400">탭하여 뜻 확인</p>
+                <p className="mt-6 text-sm text-stone-400">탭하여 뜻 확인</p>
               </div>
 
-              <div className="flashcard-back absolute inset-0 flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-8">
-                <p className="text-3xl font-bold mb-2">{current.word}</p>
+              <div className="flashcard-back absolute inset-0 flex flex-col items-center justify-center rounded-[2rem] border border-stone-200/80 bg-[linear-gradient(180deg,rgba(255,250,246,0.98),rgba(244,234,222,0.98))] p-8 text-center shadow-[0_24px_60px_rgba(92,71,47,0.12)]">
+                <p className="mb-2 text-3xl font-bold text-stone-900">{current.word}</p>
                 {current.reading && (
-                  <p className="text-lg text-gray-400 mb-4">{current.reading}</p>
+                  <p className="mb-4 text-lg text-stone-400">{current.reading}</p>
                 )}
-                <p className="text-2xl text-blue-600 font-semibold mb-4">
+                <p className="mb-4 text-2xl font-semibold text-sky-700">
                   {current.meaning}
                 </p>
                 {(current.example_jp || current.example) && (
-                  <div className="w-full text-sm bg-gray-50 rounded-lg px-4 py-3 border border-gray-100 space-y-1">
-                    <p className="text-gray-900 font-medium">
+                  <div className="w-full max-w-xl space-y-1 rounded-[1.1rem] border border-stone-200 bg-white/72 px-4 py-3 text-sm">
+                    <p className="font-medium text-stone-900">
                       {current.example_jp ?? current.example}
                     </p>
                     {current.example_reading && (
-                      <p className="text-gray-500 text-xs">
+                      <p className="text-xs text-stone-500">
                         {current.example_reading}
                       </p>
                     )}
                     {current.example_kr && (
-                      <p className="text-blue-700 text-sm">
+                      <p className="text-sm text-sky-700">
                         {current.example_kr}
                       </p>
                     )}
@@ -474,12 +518,18 @@ export default function FlashcardPage() {
             </div>
           </div>
 
+          {!flipped && (
+            <div className="rounded-[1.4rem] border border-dashed border-stone-200 bg-white/72 px-4 py-3 text-sm text-stone-500">
+              카드를 눌러 뜻을 확인한 뒤 난도를 선택합니다.
+            </div>
+          )}
+
           {flipped && (
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               <button
                 onClick={() => void handleDifficulty("again")}
                 disabled={isSaving}
-                className="py-3 rounded-xl bg-red-100 text-red-700 font-medium hover:bg-red-200 transition-colors disabled:opacity-60"
+                className="rounded-[1.1rem] bg-red-100 py-3 text-red-700 transition-colors hover:bg-red-200 disabled:opacity-60"
               >
                 다시
                 <span className="block text-xs opacity-70">{previewInterval("again")}</span>
@@ -487,7 +537,7 @@ export default function FlashcardPage() {
               <button
                 onClick={() => void handleDifficulty("hard")}
                 disabled={isSaving}
-                className="py-3 rounded-xl bg-orange-100 text-orange-700 font-medium hover:bg-orange-200 transition-colors disabled:opacity-60"
+                className="rounded-[1.1rem] bg-orange-100 py-3 text-orange-700 transition-colors hover:bg-orange-200 disabled:opacity-60"
               >
                 어려움
                 <span className="block text-xs opacity-70">{previewInterval("hard")}</span>
@@ -495,7 +545,7 @@ export default function FlashcardPage() {
               <button
                 onClick={() => void handleDifficulty("good")}
                 disabled={isSaving}
-                className="py-3 rounded-xl bg-green-100 text-green-700 font-medium hover:bg-green-200 transition-colors disabled:opacity-60"
+                className="rounded-[1.1rem] bg-green-100 py-3 text-green-700 transition-colors hover:bg-green-200 disabled:opacity-60"
               >
                 보통
                 <span className="block text-xs opacity-70">{previewInterval("good")}</span>
@@ -503,7 +553,7 @@ export default function FlashcardPage() {
               <button
                 onClick={() => void handleDifficulty("easy")}
                 disabled={isSaving}
-                className="py-3 rounded-xl bg-blue-100 text-blue-700 font-medium hover:bg-blue-200 transition-colors disabled:opacity-60"
+                className="rounded-[1.1rem] bg-blue-100 py-3 text-blue-700 transition-colors hover:bg-blue-200 disabled:opacity-60"
               >
                 쉬움
                 <span className="block text-xs opacity-70">{previewInterval("easy")}</span>
@@ -512,11 +562,11 @@ export default function FlashcardPage() {
           )}
 
           {isSaving && (
-            <p className="text-center text-sm text-gray-500">
+            <p className="text-center text-sm text-stone-500">
               복습 상태를 저장하는 중입니다.
             </p>
           )}
-        </>
+        </section>
       )}
     </div>
   );

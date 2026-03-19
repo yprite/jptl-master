@@ -32,12 +32,13 @@ export function useAutoCompleteQuest({
       return;
     }
 
+    const currentUserId = userId;
     hasTriggeredRef.current = true;
     let cancelled = false;
 
     async function completeAndReturn() {
       try {
-        await completeDailyQuest(userId, quest);
+        await completeDailyQuest(currentUserId, quest);
       } finally {
         if (!cancelled) {
           router.replace("/study");
