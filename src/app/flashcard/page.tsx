@@ -165,47 +165,37 @@ function buildSessionCardIds(
   return selected;
 }
 
-function getDueNowQueue(
+function getSessionQueue(
   cards: FlashcardWithId[],
   reviews: Record<string, FlashcardReviewRecord>,
   priorities: FlashcardSrsState["priorities"],
   nowMs: number
 ): FlashcardWithId[] {
-  const queue = cards.filter((card) => isDueNow(reviews[card.cardId], nowMs));
+  const unresolvedQueue = sortSessionCandidates(cards, reviews, priorities, nowMs);
+  const dueNowQueue = unresolvedQueue.filter((card) =>
+    isDueNow(reviews[card.cardId], nowMs)
+  );
 
-  queue.sort((left, right) => {
-    const leftPriority = Boolean(priorities[left.cardId]);
-    const rightPriority = Boolean(priorities[right.cardId]);
-    if (leftPriority !== rightPriority) {
-      return leftPriority ? -1 : 1;
-    }
+  if (dueNowQueue.length > 0) {
+    return dueNowQueue;
+  }
 
-    const leftReview = reviews[left.cardId];
-    const rightReview = reviews[right.cardId];
-    if (Boolean(leftReview) !== Boolean(rightReview)) {
-      return leftReview ? -1 : 1;
-    }
-
-    const leftTime = parseTimestamp(leftReview?.nextReviewAt);
-    const rightTime = parseTimestamp(rightReview?.nextReviewAt);
-    if (!Number.isNaN(leftTime) && !Number.isNaN(rightTime) && leftTime !== rightTime) {
-      return leftTime - rightTime;
-    }
-
-    return left.sourceIndex - right.sourceIndex;
-  });
-
-  return queue;
+  return unresolvedQueue;
 }
 
 function getEarliestFutureReview(
   cards: FlashcardWithId[],
   reviews: Record<string, FlashcardReviewRecord>,
-  nowMs: number
+  nowMs: number,
+  excludeCardId?: string | null
 ): string | null {
   let earliest: number | null = null;
 
   for (const card of cards) {
+    if (excludeCardId && card.cardId === excludeCardId) {
+      continue;
+    }
+
     const review = reviews[card.cardId];
     if (!isWaitingLaterToday(review, nowMs)) {
       continue;
@@ -339,12 +329,18 @@ export default function FlashcardPage() {
     isResolvedForToday(reviews[card.cardId], clock)
   ).length;
   const sessionRemainingCount = Math.max(sessionTargetCount - completedCardCount, 0);
-  const sessionQueue = getDueNowQueue(sessionCards, reviews, priorities, clock);
+  const sessionQueue = getSessionQueue(sessionCards, reviews, priorities, clock);
   const current = sessionQueue[0] ?? null;
   const currentReview = current ? reviews[current.cardId] : null;
   const currentPriority = current ? priorities[current.cardId] : null;
+  const isCurrentAheadOfSchedule = current ? !isDueNow(currentReview, clock) : false;
   const nextScheduledReview = formatNextReviewLabel(
-    getEarliestFutureReview(sessionCards, reviews, clock)
+    getEarliestFutureReview(
+      sessionCards,
+      reviews,
+      clock,
+      isCurrentAheadOfSchedule ? current?.cardId : null
+    )
   );
   const dueReviewCount = sessionCards.filter((card) => Boolean(reviews[card.cardId])).length;
   const newCardCount = sessionCards.filter((card) => !reviews[card.cardId]).length;
@@ -353,7 +349,6 @@ export default function FlashcardPage() {
     isWaitingLaterToday(reviews[card.cardId], clock)
   ).length;
   const isSessionComplete = sessionTargetCount > 0 && completedCardCount >= sessionTargetCount;
-  const isWaitingForRepeat = !current && !isSessionComplete && waitingLaterCount > 0;
   const sessionAccuracy =
     stats.attempts > 0 ? Math.round((stats.correct / stats.attempts) * 100) : 0;
   const sessionProgressPercent =
@@ -475,8 +470,8 @@ export default function FlashcardPage() {
 
   const errorMessage = srsError ?? error;
   const sessionDescription = plan
-    ? `${userLabel}의 ${currentDay}일차 분량 ${sessionTargetCount || dailyCardLimit}장을 복습 순서대로 이어갑니다. 오늘 안에 다시 나와야 하는 카드는 사라지지 않고 다시 등장합니다.`
-    : `${userLabel}의 현재 레벨 카드를 복습 순서대로 이어갑니다. 오늘 안에 다시 나와야 하는 카드는 대기 후 다시 나타납니다.`;
+    ? `${userLabel}의 ${currentDay}일차 분량 ${sessionTargetCount || dailyCardLimit}장을 안키식 우선순위로 이어갑니다. 지금 due 카드가 없으면 오늘 남은 카드를 먼저 보여주고, 같은 날 다시 나와야 하는 카드는 다시 등장합니다.`
+    : `${userLabel}의 현재 레벨 카드를 안키식 우선순위로 이어갑니다. 지금 due 카드가 없으면 오늘 남은 카드를 먼저 보여주고, 같은 날 다시 나와야 하는 카드는 다시 등장합니다.`;
   const headerBadges = [
     {
       label: `현재 사용자 ${userLabel}`,
@@ -605,9 +600,7 @@ export default function FlashcardPage() {
           <p className="text-lg font-semibold text-stone-900">
             {isSessionComplete
               ? "오늘 단어 분량을 모두 학습했습니다."
-              : isWaitingForRepeat
-                ? "조금 뒤에 다시 나올 카드가 있습니다."
-                : "지금 바로 열 카드가 없습니다."}
+              : "지금 바로 열 카드가 없습니다."}
           </p>
           <p className="mt-3 text-sm text-stone-600">
             {isSessionComplete
@@ -635,7 +628,9 @@ export default function FlashcardPage() {
               {currentPriority
                 ? "독해에서 올린 우선 카드"
                 : currentReview
-                  ? "복습 카드"
+                  ? isCurrentAheadOfSchedule
+                    ? "미리 보는 복습 카드"
+                    : "복습 카드"
                   : "새 카드"}
             </span>
             {currentReview?.nextReviewAt && (
